@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-25 14:38+0200\n"
-"PO-Revision-Date: 2010-03-25 13:44+0000\n"
-"Last-Translator: ITO Naoharu <ito.naoharu@gmail.com>\n"
+"POT-Creation-Date: 2010-04-11 18:07+0300\n"
+"PO-Revision-Date: 2010-08-15 13:18+0000\n"
+"Last-Translator: kawaji <jiro.kawada@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2010-03-26 04:43+0000\n"
+"X-Launchpad-Export-Date: 2010-08-16 06:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -48,66 +48,66 @@ msgstr ""
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:100
 msgid "Disabled"
-msgstr ""
+msgstr "無効"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:410
 #: ../applets/maintained/calendar/calendarprefs.py:75
 msgid "Preferences"
-msgstr "Online Calendar の設定"
+msgstr "設定"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:425
 #: ../applets/maintained/file-browser-launcher/prefs.py:154
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:16
 #, c-format
 msgid "Behavior"
-msgstr ""
+msgstr "挙動"
 
 #. focus out behavior checkbox
 #: ../applets/maintained/awnterm/awn-terminal.vala:437
 msgid "Hide when focus is lost"
-msgstr ""
+msgstr "フォーカスを失ったとき隠す"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:456
 #: ../applets/maintained/file-browser-launcher/prefs.py:253
 #: ../applets/maintained/file-browser-launcher/prefs.py:328
 msgid "Action"
-msgstr ""
+msgstr "アクション"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:476
 msgid "Shortcut"
-msgstr ""
+msgstr "ショートカット"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:482
 msgid "Activate"
-msgstr ""
+msgstr "起動"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:491
 #, c-format
 msgid "Background image"
-msgstr ""
+msgstr "背景の画像"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:503
 msgid "Select a file"
-msgstr ""
+msgstr "ファイルを選択してください"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:545
 #, c-format
 msgid "Terminal opacity"
-msgstr ""
+msgstr "端末の不透過率"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:572
 #, c-format
 msgid "External Terminal"
-msgstr ""
+msgstr "外部端末"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:1
 msgid "A simple popup terminal"
-msgstr ""
+msgstr "シンプルなポップアップ表示の端末です"
 
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:2
 msgid "Terminal Applet"
-msgstr ""
+msgstr "端末アプレット"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:1
 msgid " Upload/Download"
@@ -155,75 +155,75 @@ msgstr ""
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:231
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:2
 msgid "Bandwidth Monitor"
-msgstr ""
+msgstr "帯域モニタ"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:41
 msgid "Network Bandwidth monitor"
-msgstr ""
+msgstr "ネットワーク帯域モニタ"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:225
 msgid "Unable to caclulate statistics"
-msgstr ""
+msgstr "統計の計算ができません"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:225
 msgid "Statistics calculation requires read access to /proc/net/dev"
-msgstr ""
+msgstr "統計の計算には、/proc/net/dev を読み込みするアクセス権が必要です"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:244
 msgid "Change Unit"
-msgstr ""
+msgstr "単位変更"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:295
 msgid "Scanning"
-msgstr ""
+msgstr "スキャン中"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:296
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:4
 msgid "Devices"
-msgstr ""
+msgstr "デバイス"
 
 #. kilobytes per second
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:323
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:19
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:50
 msgid "KBps"
-msgstr ""
+msgstr "KBps"
 
 #. kilobits per second
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:327
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:53
 msgid "Kbps"
-msgstr ""
+msgstr "Kbps"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:349
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:468
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:469
 msgid "Interface"
-msgstr ""
+msgstr "インターフェイス"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:354
 msgid "Sent"
-msgstr ""
+msgstr "送信"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:359
 msgid "Received"
-msgstr ""
+msgstr "受信"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:364
 msgid "Sending"
-msgstr ""
+msgstr "送信中"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:369
 msgid "Receiving"
-msgstr ""
+msgstr "受信中"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:417
 msgid "Please select a valid Network Device"
-msgstr ""
+msgstr "有効なネットワークデバイスを選択してください"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:419
 #, python-format
 msgid "Total Sent: %s - Total Received: %s (All Interfaces)"
-msgstr ""
+msgstr "送信合計: %s - 受信合計: %s (全インターフェイス)"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:610
 msgid "No"
@@ -232,15 +232,15 @@ msgstr ""
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:611
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:136
 msgid "Device"
-msgstr ""
+msgstr "デバイス"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:612
 msgid "Please select a valid device"
-msgstr ""
+msgstr "有効なデバイスを選択してください"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:1
 msgid "A Network Bandwidth monitor for AWN"
-msgstr ""
+msgstr "AWN用のネットワーク帯域モニタです"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:1
 #: ../applets/maintained/battery/battery.ui.h:1
@@ -253,47 +253,47 @@ msgstr ""
 #: ../applets/maintained/volume-control/volume-control.ui.h:4
 #: ../applets/maintained/weather/weather.ui.h:2
 msgid "<b>Display</b>"
-msgstr ""
+msgstr "<b>表示</b>"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:2
 msgid "Background Color"
-msgstr ""
+msgstr "背景の色"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:3
 msgid "Border Color"
-msgstr ""
+msgstr "境界線の色"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:5
 msgid "Display MBps/KBps (bytes) instead of Mbps/Kbps (bits)"
-msgstr ""
+msgstr "Mbps/Kbps (ビット) の代わりに MBps/KBps (バイト) で表示する"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:6
 msgid "Display Speed Text"
-msgstr ""
+msgstr "速度の文字表示"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:7
 msgid "Display the sum of upload and download"
-msgstr ""
+msgstr "アップロードとダウンロードの合算を表示します"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:8
 msgid "Display upload and download text representation of speed"
-msgstr ""
+msgstr "アップロードとダウンロードの速度を文字で表示します"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:9
 msgid "Do not display the speed as text, only draw the graph"
-msgstr ""
+msgstr "速度を文字で表示せず、グラフのみ描画します"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:10
 msgid "Draw 0 bps in graphs"
-msgstr ""
+msgstr "グラフに 0 bps を描画する"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:11
 msgid "Draw Background"
-msgstr ""
+msgstr "背景を描画する"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:12
 msgid "Draw Border"
-msgstr ""
+msgstr "境界線を描画する"
 
 #. Put the general tab together
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:13
@@ -306,33 +306,33 @@ msgstr "全般"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:14
 msgid "Graph Only"
-msgstr ""
+msgstr "グラフのみ"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:15
 msgid ""
 "If enabled, this will draw a line at the bottom of the graph even if the "
 "value is 0. If unchecked, values below 1 are not drawn in the graph."
-msgstr ""
+msgstr "有効にした場合、値が 0 のときであってもグラフの底に線が描画されます。チェックを外した場合、1 未満の値はグラフに描画されません。"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:16
 msgid ""
 "If this is checked the applet background will use the selected color. If "
 "unchecked, background will be transparent"
-msgstr ""
+msgstr "これにチェックを入れた場合、アプレットの背景に選択色が使用されます。チェックを外した場合、背景は透明になります"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:17
 msgid ""
 "If this is checked the applet border will use the selected color. If "
 "unchecked, border will be transparent"
-msgstr ""
+msgstr "これにチェックを入れた場合、アプレットの境界線に選択色が使用されます。チェックを外した場合、境界線は透明になります"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:18
 msgid "If this is checked, the common display unit will be Bytes"
-msgstr ""
+msgstr "これにチェックを入れた場合、共通表示単位はバイトになります"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:20
 msgid "Minimum Scaling threshold"
-msgstr ""
+msgstr "目盛の下限しきい値"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:21
 msgid ""
@@ -340,36 +340,38 @@ msgid ""
 "amounts of traffic. e.g.: Setting to 32.0 KBps will cause the graph to only "
 "draw if throughput exceeds 32.0 KBps"
 msgstr ""
+"少量の通信でグラフに大きな山が表示されてしまわないようにするため設定する目盛の下限しきい値です。 例： 32.0 KBps に設定すると、スループットが "
+"32.0 KBps を超えた場合にのみグラフ描画されます"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:22
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:141
 msgid "Sum"
-msgstr ""
+msgstr "合算"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:147
 msgid "Multi"
-msgstr ""
+msgstr "マルチ"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:155
 msgid "Upload Color"
-msgstr ""
+msgstr "アップロードの色"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:166
 msgid "Download Color"
-msgstr ""
+msgstr "ダウンロードの色"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:239
 msgid "Upload"
-msgstr ""
+msgstr "アップロード"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:241
 msgid "Download"
-msgstr ""
+msgstr "ダウンロード"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:243
 #, python-format
 msgid "%s %s Color"
-msgstr ""
+msgstr "%s %s の色"
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:1
 msgid "HAL UDI of battery."
@@ -405,21 +407,21 @@ msgstr ""
 
 #: ../applets/maintained/battery/battery.desktop.in.h:1
 msgid "Battery"
-msgstr ""
+msgstr "バッテリー"
 
 #: ../applets/maintained/battery/battery.desktop.in.h:2
 msgid "Display battery state"
-msgstr ""
+msgstr "バッテリーの状態を表示します"
 
 #: ../applets/maintained/battery/battery.ui.h:2
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:5
 #: ../applets/maintained/weather/weather.ui.h:3
 msgid "<b>General Options</b>"
-msgstr ""
+msgstr "<b>全般オプション</b>"
 
 #: ../applets/maintained/battery/battery.ui.h:3
 msgid "<b>Notifications</b>"
-msgstr ""
+msgstr "<b>通知</b>"
 
 #: ../applets/maintained/battery/battery.ui.h:4
 msgid ""
@@ -433,19 +435,19 @@ msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:6
 msgid "Percent"
-msgstr ""
+msgstr "パーセント"
 
 #: ../applets/maintained/battery/battery.ui.h:7
 msgid "Time Remaining"
-msgstr ""
+msgstr "残量時間"
 
 #: ../applets/maintained/battery/battery.ui.h:8
 msgid "_Battery:"
-msgstr ""
+msgstr "バッテリー(_B):"
 
 #: ../applets/maintained/battery/battery.ui.h:9
 msgid "_Notify when charge level reaches:"
-msgstr ""
+msgstr "充電レベルが指定値に達したとき通知する(_N):"
 
 #: ../applets/maintained/battery/battery.ui.h:10
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:23
@@ -453,11 +455,11 @@ msgstr ""
 #: ../applets/maintained/volume-control/volume-control.ui.h:7
 #: ../applets/maintained/weather/weather.ui.h:18
 msgid "_Theme:"
-msgstr ""
+msgstr "テーマ(_T):"
 
 #: ../applets/maintained/battery/battery.ui.h:11
 msgid "_Warn when charge level drops to:"
-msgstr ""
+msgstr "充電レベルが指定値にまで落ちたとき警告する(_W):"
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:1
 msgid "A custom time format (strftime()), used if not empty."
@@ -504,7 +506,7 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:1
 msgid "Cairo Clock"
-msgstr ""
+msgstr "Cairo Clock"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:2
 msgid ""
@@ -519,19 +521,19 @@ msgstr " "
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:2
 msgid "12 _hour format"
-msgstr ""
+msgstr "12時間制(_H)"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:3
 msgid "24 h_our format"
-msgstr ""
+msgstr "24時間制(_O)"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:4
 msgid "<b>Clock Display</b>"
-msgstr ""
+msgstr "<b>時計の表示</b>"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:6
 msgid "<b>Title Options</b>"
-msgstr ""
+msgstr "<b>タイトルのオプション</b>"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:7
 msgid "Beaufort"
@@ -539,58 +541,58 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:8
 msgid "Celcius"
-msgstr ""
+msgstr "摂氏"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:9
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
 msgid "Fahrenheit"
-msgstr ""
+msgstr "華氏"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:10
 msgid "Find _Next"
-msgstr ""
+msgstr "次を検索(_N)"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:11
 msgid ""
 "If enabled, besides hours and minutes, the seconds will be visible too"
-msgstr ""
+msgstr "有効にした場合、時、分に加えて、秒も表示されます"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:12
 msgid "If enabled, the date will be shown in the title"
-msgstr ""
+msgstr "有効にした場合、タイトルに日付が表示されます"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:13
 msgid "If enabled, the seconds hand will be visible in the clock"
-msgstr ""
+msgstr "有効にした場合、時計に秒針が表示されます"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:14
 msgid "If enabled, time will be shown like 1:23 AM"
-msgstr ""
+msgstr "有効にした場合、時刻は 1:23 AM のように表示されます"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:15
 msgid "If enabled, time will be shown like 23:45"
-msgstr ""
+msgstr "有効にした場合、時刻は 23:45 のように表示されます"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:16
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "Kelvin"
-msgstr ""
+msgstr "ケルビン"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:17
 msgid "Location Name:"
-msgstr ""
+msgstr "地名："
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:18
 msgid "Show _seconds"
-msgstr ""
+msgstr "秒を表示する(_S)"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:19
 msgid "Show seco_nds hand"
-msgstr ""
+msgstr "秒針を表示する(_N)"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:20
 msgid "Show the _date"
-msgstr ""
+msgstr "日付を表示する(_D)"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:21
 msgid "_Show weather of current location"
@@ -598,58 +600,58 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:22
 msgid "_Temperature unit:"
-msgstr ""
+msgstr "気温の単位(_T):"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:24
 msgid "_Wind speed unit:"
-msgstr ""
+msgstr "風速の単位(_W):"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:25
 msgid "km/h"
-msgstr ""
+msgstr "km/h"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:26
 msgid "knots"
-msgstr ""
+msgstr "ノット"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:27
 msgid "m/s"
-msgstr ""
+msgstr "m/s"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:28
 msgid "mph"
-msgstr ""
+msgstr "mph"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:107
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:111
 msgid "Logout"
-msgstr ""
+msgstr "ログアウト"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:115
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:117
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:122
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:1
 msgid "Lock Screen"
-msgstr ""
+msgstr "画面のロック"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:126
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:128
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:139
 msgid "Suspend"
-msgstr ""
+msgstr "サスペンド"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:131
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:133
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:144
 msgid "Hibernate"
-msgstr ""
+msgstr "ハイバネート"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:152
 msgid "Shutdown"
-msgstr ""
+msgstr "シャットダウン"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:187
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:562
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:566
 msgid "Computer"
 msgstr "コンピュータ"
 
@@ -659,60 +661,63 @@ msgstr "ホーム"
 
 #. Check if this is the Desktop directory
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:189
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:520
-#: ../applets/maintained/places/applet.c:341
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:524
+#: ../applets/maintained/places/applet.c:344
 msgid "Desktop"
-msgstr ""
+msgstr "デスクトップ"
 
 #. 
 #. TODO: check the trash and set to stock_trash_empty if trash is empty
 #. 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:193
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:592
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:595
 msgid "Trash"
 msgstr "ゴミ箱"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:194
 msgid "File System"
-msgstr ""
+msgstr "ファイルシステム"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:315
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:565
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:569
 msgid "Network"
 msgstr "ネットワーク"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:316
 msgid "Connect to Server"
-msgstr ""
+msgstr "サーバへ接続"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:946
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:947
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:961
 #: ../applets/maintained/file-browser-launcher/prefs.py:243
 #: ../applets/maintained/places/places.desktop.in.in.h:2
 msgid "Places"
-msgstr ""
+msgstr "場所"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:984
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:985
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:999
 msgid "Recent Documents"
-msgstr ""
+msgstr "最近開いたドキュメント"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1029
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1030
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1041
 msgid "Session"
-msgstr ""
+msgstr "セッション"
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1056
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1057
 msgid "Search\\u2026"
 msgstr ""
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1073
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1074
 msgid "Launch\\u2026"
 msgstr ""
 
-#: ../applets/maintained/cairo-menu/misc.c:356
+#: ../applets/maintained/cairo-menu/misc.c:344
 msgid "Clear Recent Documents"
-msgstr ""
+msgstr "最近開いたドキュメントのクリア"
 
 #: ../applets/maintained/calendar/awn-applet-calendar.schema-ini.in.h:1
 msgid "X"
@@ -732,7 +737,7 @@ msgstr "Login to "
 
 #: ../applets/maintained/calendar/calendarlogin.py:48
 msgid "Online Calendar"
-msgstr "Online Calendar"
+msgstr "オンラインカレンダー"
 
 #: ../applets/maintained/calendar/calendarlogin.py:53
 msgid "Calendar Username"
@@ -835,7 +840,7 @@ msgstr "Evolution"
 
 #: ../applets/maintained/calendar/calendarprefs.py:123
 msgid "Google Calendar"
-msgstr "Google Calendar"
+msgstr "Google カレンダー"
 
 #: ../applets/maintained/calendar/calendarprefs.py:124
 msgid "Outlook Web Access"
@@ -911,6 +916,9 @@ msgid ""
 "\n"
 "Press \"apply\" to add <i>%s</i>."
 msgstr ""
+"このガイドは終了です。\n"
+"\n"
+"<i>%s</i> を追加するには「適用」を押してください。"
 
 #: ../applets/maintained/comics/comics_add.py:198
 #, python-format
@@ -919,10 +927,13 @@ msgid ""
 "\n"
 "<i>%(description)s</i>"
 msgstr ""
+"<b>%(name)s</b> を発見しました！\n"
+"\n"
+"<i>%(description)s</i>"
 
 #. Initialise notifications
 #: ../applets/maintained/comics/comics.desktop.in.h:1
-#: ../applets/maintained/comics/comics.py:181
+#: ../applets/maintained/comics/comics.py:179
 #: ../applets/maintained/comics/main.py:294
 #: ../applets/maintained/comics/main.py:300
 msgid "Comics!"
@@ -930,15 +941,15 @@ msgstr ""
 
 #: ../applets/maintained/comics/comics.desktop.in.h:2
 msgid "View your favourite comics on your desktop"
-msgstr ""
+msgstr "デスクトップにお気に入りのコミックを表示します"
 
 #: ../applets/maintained/comics/comics_manage.py:51
 msgid "Shared comics"
-msgstr ""
+msgstr "共有コミック"
 
 #: ../applets/maintained/comics/comics_manage.py:52
 msgid "Your comics"
-msgstr ""
+msgstr "自分のコミック"
 
 #: ../applets/maintained/comics/comics_manage.py:119
 #, python-format
@@ -950,12 +961,15 @@ msgstr "<i>%s</i> の削除に失敗しました。"
 msgid "Error"
 msgstr "エラー"
 
-#: ../applets/maintained/comics/comics.py:156
-#: ../applets/maintained/comics/ui/main.ui.h:1
+#: ../applets/maintained/comics/comics.py:155
 msgid "Comics"
 msgstr "コミックス"
 
-#: ../applets/maintained/comics/comics.py:217
+#: ../applets/maintained/comics/comics.py:159
+msgid "Manage Comics"
+msgstr "コミックの管理"
+
+#: ../applets/maintained/comics/comics.py:211
 #: ../applets/maintained/comics/main.py:192
 #, python-format
 msgid "There is a new strip of %s!"
@@ -972,31 +986,31 @@ msgstr "<i>%s</i> の保存に失敗しました。"
 
 #: ../applets/maintained/comics/ui/add.ui.h:1
 msgid "Add Comic"
-msgstr ""
+msgstr "コミックの追加"
 
 #: ../applets/maintained/comics/ui/add.ui.h:2
 msgid "Downloading Comic"
-msgstr ""
+msgstr "コミックのダウンロード"
 
 #: ../applets/maintained/comics/ui/add.ui.h:3
 msgid "Enter the URL of the RSS feed:"
-msgstr ""
+msgstr "RSSフィードのURLの入力:"
 
 #: ../applets/maintained/comics/ui/add.ui.h:4
 msgid "Ready to add comic!"
-msgstr ""
+msgstr "コミック追加の用意完了！"
 
 #: ../applets/maintained/comics/ui/add.ui.h:5
 msgid "Select Comic"
-msgstr ""
+msgstr "コミックの選択"
 
 #: ../applets/maintained/comics/ui/add.ui.h:6
 msgid "Select Image"
-msgstr ""
+msgstr "画像の選択"
 
 #: ../applets/maintained/comics/ui/add.ui.h:7
 msgid "The guide found more than one image. Please select which one to use."
-msgstr ""
+msgstr "ガイドが複数の画像を見つけました。どちらを使用するか選択してください。"
 
 #: ../applets/maintained/comics/ui/add.ui.h:8
 msgid ""
@@ -1007,15 +1021,19 @@ msgid ""
 "\n"
 "Press \"next\" to proceed."
 msgstr ""
+"このガイドは新しいコミックの追加を手助けします。\n"
+"\n"
+"追加に適したコミックを見つけるには、インターネットで \"comic rss\" を検索してください。\n"
+"\n"
+"「進む」を押すと先へ進みます。"
 
-#: ../applets/maintained/comics/ui/main.ui.h:2
 #: ../applets/maintained/comics/ui/manage.ui.h:1
 msgid "Manage comics"
-msgstr ""
+msgstr "コミックの管理"
 
 #: ../applets/maintained/comics/ui/manage.ui.h:2
 msgid "The following comics are installed:"
-msgstr ""
+msgstr "次のコミックがインストールされています:"
 
 #: ../applets/maintained/comics/ui/view.ui.h:1
 msgid "Show link"
@@ -1036,7 +1054,7 @@ msgstr ""
 
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:1
 msgid "An applet to monitor and control the CPU frequency"
-msgstr ""
+msgstr "CPU周波数の監視と制御のためのアプレット"
 
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:2
 msgid "CPU Frequency Monitor"
@@ -1044,11 +1062,11 @@ msgstr ""
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:1
 msgid "<b>Monitored CPU</b>"
-msgstr ""
+msgstr "<b>モニタ対象CPU</b>"
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:2
 msgid "_Processor:"
-msgstr ""
+msgstr "プロセッサ(_P):"
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:1
 msgid " 0.9)."
@@ -1085,7 +1103,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:2
 msgid "Change your keyboard input layout from Awn."
-msgstr ""
+msgstr "Awnからキーボード入力レイアウトの変更を行います"
 
 #: ../applets/maintained/dialect/dialect.ui.h:1
 msgid ""
@@ -1181,11 +1199,11 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:67
 msgid "Allow scroll wheel to change layout"
-msgstr ""
+msgstr "スクロールホイールによるレイアウト変更を許可する"
 
 #: ../applets/maintained/dialect/dialect.ui.h:68
 msgid "Change your keyboard layout from Awn."
-msgstr ""
+msgstr "Awnからキーボードレイアウトの変更操作"
 
 #: ../applets/maintained/dialect/dialect.ui.h:69
 msgid "Dialect Applet Help"
@@ -1213,29 +1231,29 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:76
 msgid "Layout Lists"
-msgstr ""
+msgstr "レイアウト一覧"
 
 #: ../applets/maintained/dialect/dialect.ui.h:77
 #: ../applets/maintained/file-browser-launcher/prefs.py:318
 msgid "Left Click"
-msgstr ""
+msgstr "左クリック"
 
 #: ../applets/maintained/dialect/dialect.ui.h:78
 msgid "Menu"
-msgstr ""
+msgstr "メニュー"
 
 #: ../applets/maintained/dialect/dialect.ui.h:79
 #: ../applets/maintained/file-browser-launcher/prefs.py:393
 msgid "Middle Click"
-msgstr ""
+msgstr "中クリック"
 
 #: ../applets/maintained/dialect/dialect.ui.h:80
 msgid "Mouse Actions"
-msgstr ""
+msgstr "マウスアクション"
 
 #: ../applets/maintained/dialect/dialect.ui.h:81
 msgid "Next Layout"
-msgstr ""
+msgstr "次のレイアウト"
 
 #: ../applets/maintained/dialect/dialect.ui.h:83
 msgid "Overlay layout flag on applet icon"
@@ -1243,7 +1261,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:84
 msgid "Previous Layout"
-msgstr ""
+msgstr "前のレイアウト"
 
 #: ../applets/maintained/dialect/dialect.ui.h:85
 msgid "System List"
@@ -1571,75 +1589,75 @@ msgstr ""
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:1
 msgid "12 hour format"
-msgstr ""
+msgstr "12時間制"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:2
 msgid "24 hour format"
-msgstr ""
+msgstr "24時間制"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:3
 msgid "<b>Clock Format</b>"
-msgstr ""
+msgstr "<b>時刻の書式</b>"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:5
 msgid "Appearance"
-msgstr ""
+msgstr "外観"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:6
 msgid "Commands"
-msgstr ""
+msgstr "コマンド"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:7
 msgid "Date below time"
-msgstr ""
+msgstr "日付表示を時刻の下にする"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:8
 msgid "Digital Clock Preferences"
-msgstr ""
+msgstr "デジタル時計の設定"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:9
 msgid "Run Calendar:"
-msgstr ""
+msgstr "カレンダーの実行:"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:10
 msgid "Run Time Admin:"
-msgstr ""
+msgstr "時刻管理の実行:"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:11
 msgid "Show the date"
-msgstr ""
+msgstr "日付を表示する"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:12
 msgid "Use default Awn colors"
-msgstr ""
+msgstr "Awnのデフォルトの配色を使用する"
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:1
 msgid "A clock and calendar in one."
-msgstr ""
+msgstr "時計とカレンダーが一体です"
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:2
 #: ../applets/maintained/digital-clock/digital-clock.vala:57
 msgid "Digital Clock"
-msgstr ""
+msgstr "デジタル時計"
 
 #. "Copy Time" menu item
 #: ../applets/maintained/digital-clock/digital-clock.vala:335
 msgid "Copy Time"
-msgstr ""
+msgstr "時刻のコピー"
 
 #. "Copy Date" menu item
 #: ../applets/maintained/digital-clock/digital-clock.vala:354
 msgid "Copy Date"
-msgstr ""
+msgstr "日付のコピー"
 
 #. "Adjust Date & Time" menu item
 #: ../applets/maintained/digital-clock/digital-clock.vala:366
 msgid "Adjust Date & Time"
-msgstr ""
+msgstr "日付と時刻の調整"
 
 #: ../applets/maintained/digital-clock/digital-clock.vala:412
 msgid "Displays digital clock."
-msgstr ""
+msgstr "デジタル時計を表示します。"
 
 #. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
 #: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:1
@@ -1660,20 +1678,20 @@ msgstr ""
 
 #: ../applets/maintained/feeds/classes.py:328
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #: ../applets/maintained/feeds/classes.py:488
 #: ../applets/maintained/feeds/prefs.py:516
 msgid "Google Reader"
-msgstr ""
+msgstr "Google リーダー"
 
 #: ../applets/maintained/feeds/classes.py:533
 msgid "Google Wave"
-msgstr ""
+msgstr "Google Wave"
 
 #: ../applets/maintained/feeds/classes.py:619
 msgid "Reddit Inbox"
-msgstr ""
+msgstr "Reddit Inbox"
 
 #: ../applets/maintained/feeds/classes.py:720
 #, python-format
@@ -1688,11 +1706,11 @@ msgstr ""
 #: ../applets/maintained/feeds/classes.py:765
 #: ../applets/maintained/feeds/prefs.py:410
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #: ../applets/maintained/feeds/classes.py:892
 msgid "Untitled"
-msgstr ""
+msgstr "無題"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:1
 #: ../applets/maintained/feeds/feeds.py:241
@@ -1700,24 +1718,24 @@ msgstr ""
 #: ../applets/maintained/feeds/feeds.py:480
 #: ../applets/maintained/feeds/feeds.py:1031
 msgid "Feeds Applet"
-msgstr ""
+msgstr "フィード・アプレット"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
 #: ../applets/maintained/feeds/feeds.py:1036
 msgid "Monitor Web Feeds"
-msgstr ""
+msgstr "ウェブ・フィードの監視"
 
 #. "Loading feeds..." label
 #: ../applets/maintained/feeds/feeds.py:96
 #: ../applets/maintained/feeds/feeds.py:153
 #: ../applets/maintained/feeds/feeds.py:230
 msgid "Loading feeds..."
-msgstr ""
+msgstr "フィードを読み込んでいます..."
 
 #. No feeds label
 #: ../applets/maintained/feeds/feeds.py:160
 msgid "You don't have any feeds."
-msgstr ""
+msgstr "フィードは全くありません。"
 
 #: ../applets/maintained/feeds/feeds.py:472
 #, python-format
@@ -1727,107 +1745,111 @@ msgid ""
 "  <a href='%s'>%s</a>\n"
 "(%s More)\n"
 msgstr ""
+"%s\n"
+"  <a href='%s'>%s</a>\n"
+"  <a href='%s'>%s</a>\n"
+"(他 %s 件)\n"
 
 #: ../applets/maintained/feeds/feeds.py:481
 #, python-format
 msgid "%s New Item%s - Feeds Applet"
-msgstr ""
+msgstr "%s 新着アイテム%s - フィード・アプレット"
 
 #. +Add Feed button
 #: ../applets/maintained/feeds/feeds.py:518
 msgid "_Add Feed"
-msgstr ""
+msgstr "フィード追加(_A)"
 
 #: ../applets/maintained/feeds/feeds.py:567
 msgid "Open this feed's website"
-msgstr ""
+msgstr "このフィードのウェブサイトを開く"
 
 #: ../applets/maintained/feeds/feeds.py:576
 #: ../applets/maintained/feeds/prefs.py:257
 msgid "Loading..."
-msgstr ""
+msgstr "読み込み中..."
 
 #: ../applets/maintained/feeds/feeds.py:614
 #: ../applets/maintained/feeds/feeds.py:773
 msgid "Show this feed's items"
-msgstr ""
+msgstr "このフィードアイテムを表示"
 
 #: ../applets/maintained/feeds/feeds.py:763
 msgid "Hide this feed's items"
-msgstr ""
+msgstr "このフィードアイテムを隠す"
 
 #. Create the items
 #: ../applets/maintained/feeds/feeds.py:991
 #: ../applets/maintained/feeds/prefs.py:341
 msgid "Add Feed"
-msgstr ""
+msgstr "フィード追加"
 
 #: ../applets/maintained/feeds/feeds.py:1079
 msgid "OPML Import"
-msgstr ""
+msgstr "OPML のインポート"
 
 #: ../applets/maintained/feeds/feeds.py:1083
 msgid "Do you want to add this feed?"
-msgstr ""
+msgstr "このフィードを追加しますか？"
 
 #: ../applets/maintained/feeds/feeds.py:1086
 #, python-format
 msgid "Do you want to add these %s feeds?"
-msgstr ""
+msgstr "これら %s フィードを追加しますか？"
 
 #: ../applets/maintained/feeds/prefs.py:58
 msgid "Feeds Applet Preferences"
-msgstr ""
+msgstr "フィード・アプレットの設定"
 
 #: ../applets/maintained/feeds/prefs.py:68
 msgid "Feeds"
-msgstr ""
+msgstr "フィード"
 
 #: ../applets/maintained/feeds/prefs.py:69
 msgid "Updating"
-msgstr ""
+msgstr "更新動作"
 
 #: ../applets/maintained/feeds/prefs.py:108
 msgid "_Show website icons"
-msgstr ""
+msgstr "ウェブサイトのアイコンを表示する(_S)"
 
 #. TODO: this position is a little ugly, but I don't know how to do it better.
 #. Import and export buttons (OPML)
 #: ../applets/maintained/feeds/prefs.py:115
 msgid "Import"
-msgstr ""
+msgstr "インポート"
 
 #: ../applets/maintained/feeds/prefs.py:118
 msgid "Export"
-msgstr ""
+msgstr "エクスポート"
 
 #. Updating section (enable/disable automatically updating and change how often)
 #. Checkbox: Notify for updated feeds
 #: ../applets/maintained/feeds/prefs.py:144
 msgid "_Notify for updated feeds"
-msgstr ""
+msgstr "更新されたフィードを通知する(_N)"
 
 #. Checkbox: Update automatically
 #: ../applets/maintained/feeds/prefs.py:150
 msgid "_Update automatically"
-msgstr ""
+msgstr "自動的に更新する(_U)"
 
 #. Update every [SpinButton] minutes
 #: ../applets/maintained/feeds/prefs.py:156
 msgid "Update every "
-msgstr ""
+msgstr "更新間隔 "
 
 #: ../applets/maintained/feeds/prefs.py:157
 msgid " minutes"
-msgstr ""
+msgstr " 分毎"
 
 #: ../applets/maintained/feeds/prefs.py:264
 msgid "Open OPML File"
-msgstr ""
+msgstr "OPML ファイルを開く"
 
 #: ../applets/maintained/feeds/prefs.py:278
 msgid "Save OPML File"
-msgstr ""
+msgstr "OPML ファイルを保存"
 
 #. Note: the following string is used as an exmaple filename
 #: ../applets/maintained/feeds/prefs.py:284
@@ -1836,93 +1858,98 @@ msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:295
 msgid "Awn Feeds Applet Items"
-msgstr ""
+msgstr "Awn フィード・アプレット アイテム"
 
 #. Source: label and radio buttons
 #: ../applets/maintained/feeds/prefs.py:345
 msgid "Source:"
-msgstr ""
+msgstr "ソース:"
 
 #: ../applets/maintained/feeds/prefs.py:355
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:594
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:598
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:151
 msgid "Search"
 msgstr "検索"
 
 #: ../applets/maintained/feeds/prefs.py:358
 msgid "You must sign in to a Google service to search for feeds."
-msgstr ""
+msgstr "フィードの検索には Google サービスへのサインインが必要です。"
 
 #: ../applets/maintained/feeds/prefs.py:367
 msgid "RSS/Atom"
-msgstr ""
+msgstr "RSS/Atom"
 
 #: ../applets/maintained/feeds/prefs.py:412
 msgid "Timeline"
-msgstr ""
+msgstr "タイムライン"
 
 #: ../applets/maintained/feeds/prefs.py:417
 msgid "Replies"
-msgstr ""
+msgstr "リプライ"
 
 #. "Search for" label and entry
 #: ../applets/maintained/feeds/prefs.py:446
 msgid "Search for"
-msgstr ""
+msgstr "検索ワード"
 
 #. URL: label and entry
 #: ../applets/maintained/feeds/prefs.py:460
 #: ../applets/maintained/webapplet/applet.c:276
 msgid "URL:"
-msgstr ""
+msgstr "URL:"
 
 #. Username: label and entry
 #: ../applets/maintained/feeds/prefs.py:474
-#: ../applets/maintained/mail/mail.py:393
-#: ../applets/maintained/mail/mail.py:630
-#: ../applets/maintained/mail/mail.py:758
-#: ../applets/maintained/mail/mail.py:851
+#: ../applets/maintained/mail/mail.py:394
+#: ../applets/maintained/mail/mail.py:642
+#: ../applets/maintained/mail/mail.py:772
+#: ../applets/maintained/mail/mail.py:865
 msgid "Username:"
 msgstr "ユーザ名:"
 
 #. Password: label and entry
 #: ../applets/maintained/feeds/prefs.py:488
-#: ../applets/maintained/mail/mail.py:397
-#: ../applets/maintained/mail/mail.py:633
-#: ../applets/maintained/mail/mail.py:761
-#: ../applets/maintained/mail/mail.py:854
+#: ../applets/maintained/mail/mail.py:398
+#: ../applets/maintained/mail/mail.py:645
+#: ../applets/maintained/mail/mail.py:775
+#: ../applets/maintained/mail/mail.py:868
 msgid "Password:"
 msgstr "パスワード:"
 
 #: ../applets/maintained/feeds/prefs.py:515
 msgid "Feed search by "
-msgstr ""
+msgstr "フィード検索先 "
 
 #. If signed in to Google Reader
 #: ../applets/maintained/feeds/prefs.py:553
 msgid "_Search"
-msgstr ""
+msgstr "検索(_S)"
 
 #: ../applets/maintained/feeds/prefs.py:760
 msgid ""
 "There was an error while searching.\n"
 "Please try again later."
 msgstr ""
+"検索中にエラーが発生しました。\n"
+"後で再び試してみてください。"
 
 #: ../applets/maintained/feeds/prefs.py:810
 msgid ""
 "No results found.\n"
 "Try checking your spelling or using different search terms."
 msgstr ""
+"検索結果はありませんでした。\n"
+"スペルをチェックしたり、違う検索語句を試してみてください。"
 
 #: ../applets/maintained/file-browser-launcher/about.py:39
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:2
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:63
 msgid "File Browser Launcher"
-msgstr ""
+msgstr "ファイルブラウザ・ランチャー"
 
 #: ../applets/maintained/file-browser-launcher/about.py:42
 msgid "A customizable launcher for browsing your files."
-msgstr ""
+msgstr "ファイルを参照するためのカスタマイズ可能なランチャー。"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:1
 msgid " persistent docklet"
@@ -1982,169 +2009,169 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:1
 msgid "A launcher for your file manager"
-msgstr ""
+msgstr "ファイルマネージャ用のランチャーです"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:346
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:347
 msgid "Home Folder"
-msgstr ""
+msgstr "ホームフォルダ"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:350
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:351
 #: ../applets/maintained/file-browser-launcher/prefs.py:223
 msgid "Filesystem"
 msgstr "ファイルシステム"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:473
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:474
 msgid "Connect to Server..."
-msgstr ""
+msgstr "サーバへ接続..."
 
 #. Documents
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:524
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:528
 msgid "Documents"
 msgstr ""
 
 #. Downloads
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:528
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:532
 msgid "Downloads"
-msgstr ""
+msgstr "ダウンロード"
 
 #. Music
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:532
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:536
 msgid "Music"
 msgstr ""
 
 #. Pictures
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:536
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:540
 #: ../applets/maintained/slickswitcher/prefs.py:347
 msgid "Pictures"
 msgstr ""
 
 #. Public
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:540
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:544
 msgid "Public"
 msgstr ""
 
 #. Templates
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:544
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:548
 msgid "Templates"
 msgstr ""
 
 #. Videos
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:548
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:552
 msgid "Videos"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:597
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:601
 msgid "CD/DVD Burner"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:600
-msgid "Fonts"
-msgstr ""
-
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:604
+msgid "Fonts"
+msgstr "フォント"
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:608
 #: ../applets/maintained/file-browser-launcher/prefs.py:289
 #: ../applets/maintained/file-browser-launcher/prefs.py:364
 msgid "Folder"
-msgstr ""
-
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:709
-msgid "DVD Drive"
-msgstr ""
+msgstr "フォルダ"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:713
-msgid "CD Drive"
-msgstr ""
+msgid "DVD Drive"
+msgstr "DVD ドライブ"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1017
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:717
+msgid "CD Drive"
+msgstr "CD ドライブ"
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1020
 msgid "Eject"
 msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:44
 msgid "File Browser Launcher Preferences"
-msgstr ""
+msgstr "ファイルブラウザ・ランチャーの設定"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:93
 msgid "File Browser"
-msgstr ""
+msgstr "ファイルブラウザ"
 
 #. xdg-open (aka system default)
 #: ../applets/maintained/file-browser-launcher/prefs.py:103
 msgid "System Default"
-msgstr ""
+msgstr "システムのデフォルト"
 
 #. Last option: custom with an entry for the app name
 #: ../applets/maintained/file-browser-launcher/prefs.py:127
 msgid "Other"
-msgstr ""
+msgstr "その他"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:163
 msgid "One icon with dialog"
-msgstr ""
+msgstr "単独アイコンとダイアログ"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:168
 msgid "One icon with docklet"
-msgstr ""
+msgstr "単独アイコンとドックレット"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:175
 msgid "Multiple icons"
-msgstr ""
+msgstr "複数アイコン"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:182
 msgid "Focus text entry"
-msgstr ""
+msgstr "文字入力欄をフォーカスする"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:191
 msgid "Open place when clicked"
-msgstr ""
+msgstr "クリックしたとき場所を開く"
 
 #. Show all places
 #: ../applets/maintained/file-browser-launcher/prefs.py:211
 msgid "Show all places"
-msgstr ""
+msgstr "全ての場所を表示する"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:223
 msgid "Home folder"
-msgstr ""
+msgstr "ホームフォルダ"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:224
 msgid "Mounted local drives"
-msgstr ""
+msgstr "マウント済みローカルドライブ"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:224
 msgid "Mounted network drives"
-msgstr ""
+msgstr "マウント済みネットワークドライバ"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:225
 msgid "Connect to server"
-msgstr ""
+msgstr "サーバへ接続"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:225
 msgid "Bookmarks"
-msgstr ""
+msgstr "ブックマーク"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:264
 #: ../applets/maintained/file-browser-launcher/prefs.py:339
 msgid "Display dialog/docklet"
-msgstr ""
+msgstr "ダイアログ/ドックレットを表示する"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:264
 #: ../applets/maintained/file-browser-launcher/prefs.py:339
 msgid "Open the folder"
-msgstr ""
+msgstr "指定フォルダを開く"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:265
 #: ../applets/maintained/file-browser-launcher/prefs.py:340
 msgid "Nothing"
-msgstr ""
+msgstr "なし"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:540
 msgid "Choose a folder"
-msgstr ""
+msgstr "フォルダを選択してください"
 
 #: ../applets/maintained/garbage/applet.vala:57
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:2
 msgid "Garbage"
-msgstr ""
+msgstr "ゴミ箱"
 
 #. set the title as well
 #. $display_name: $count item(s)
@@ -2152,13 +2179,12 @@ msgstr ""
 #, c-format
 msgid "%s: %u item"
 msgid_plural "%s: %u items"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s: %u アイテム"
 
 #: ../applets/maintained/garbage/applet.vala:194
 #, c-format
 msgid "Could not open the trash folder with your file manager: %s"
-msgstr ""
+msgstr "ゴミ箱のフォルダをファイルマネージャで開くことができませんでした: %s"
 
 #: ../applets/maintained/garbage/applet.vala:209
 msgid "_Empty Trash"
@@ -2168,12 +2194,12 @@ msgstr "ゴミ箱を空にする(_E)"
 #, c-format
 msgid ""
 "Are you sure you want to empty your trash? It currently contains %u item(s)."
-msgstr ""
+msgstr "本当にゴミ箱を空にしますか？ ゴミ箱には現在 %u アイテムあります。"
 
 #: ../applets/maintained/garbage/applet.vala:344
 #, c-format
 msgid "Could not send the dragged file(s) to the trash: %s"
-msgstr ""
+msgstr "ドラッグしたファイルをゴミ箱に送ることができませんでした: %s"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:1
@@ -2192,15 +2218,15 @@ msgstr ""
 #: ../applets/maintained/garbage/prefs.vala:32
 #, c-format
 msgid "%s Preferences"
-msgstr ""
+msgstr "%s の設定"
 
 #: ../applets/maintained/garbage/prefs.vala:47
 msgid "Confirm when emptying the trash"
-msgstr ""
+msgstr "ゴミ箱を空にするとき確認を取る"
 
 #: ../applets/maintained/garbage/prefs.vala:52
 msgid "Show the item count on the icon"
-msgstr ""
+msgstr "アイコン上にアイテムの数を表示する"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:1
@@ -2262,127 +2288,133 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:1
 msgid "Applet to show the hw sensors readouts"
-msgstr ""
+msgstr "ハードウェア・センサーの読み出しを表示するアプレットです"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:2
 msgid "Hardware Sensors"
-msgstr ""
+msgstr "ハードウェア・センサー"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:49
 msgid "Applet to show the hardware sensors readouts"
-msgstr ""
+msgstr "ハードウェア・センサーの読み出しを表示するアプレット"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:83
+msgid "Warning from Hardware Sensors: No sensors found"
+msgstr "ハードウェアセンサーからの警告: センサーが見つかりません"
+
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:84
 msgid ""
-"Warning: No sensors found. Install one or more of ACPI, HDDTemp, LM-Sensors "
+"Install one or more of ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock "
 "and restart the applet."
 msgstr ""
+"ACPI, HDDTEMP, LM-Sensors, nividia-settings または nvclock "
+"のうちから1つ以上をインストールして、アプレットを再起動させてください。"
 
 #. == Dialog == #
 #. Create main applet dialog showing selected sensors.
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:117
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:118
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:14
 msgid "Sensors"
-msgstr ""
+msgstr "センサー"
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:470
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:471
 msgid "Name"
-msgstr ""
+msgstr "名前"
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:472
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:473
 msgid "Label"
-msgstr ""
+msgstr "ラベル"
 
 #. Set the cell "active" attribute to column_show - retrieve the state
 #. of the toggle button from that column in liststore
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:476
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:477
 msgid "In dialog"
-msgstr ""
+msgstr "ダイアログでの表示"
 
 #. Add treeview-column to treeview
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:514
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:515
 msgid "Sensors displayed in icon"
-msgstr ""
+msgstr "アイコンに表示するセンサー"
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:532
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:533
 msgid "properties"
-msgstr ""
+msgstr "プロパティ"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:1
 msgid "<b>Alarms</b>"
-msgstr ""
+msgstr "<b>アラーム</b>"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:3
 msgid "<b>Sensor value limits</b>"
-msgstr ""
+msgstr "<b>センサーの値の制限</b>"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:4
 #: ../applets/maintained/mail/mail.ui.h:3
 msgid "<b>Update</b>"
-msgstr ""
+msgstr "<b>更新</b>"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:5
 msgid "Add"
-msgstr ""
+msgstr "追加"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:6
 msgid "Enable high alarm"
-msgstr ""
+msgstr "高値警告を有効にする"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:7
 msgid "Enable low alarm"
-msgstr ""
+msgstr "低値警告を有効にする"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:8
 msgid "Font size:"
-msgstr ""
+msgstr "フォントの大きさ:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:10
 msgid "Meter hand color:"
-msgstr ""
+msgstr "メーターの針の色:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:11
 msgid "Remove"
-msgstr ""
+msgstr "削除"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:12
 msgid "Sensor high value"
-msgstr ""
+msgstr "センサーの高値"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:13
 msgid "Sensor low value"
-msgstr ""
+msgstr "センサーの低値"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:15
 msgid "Show value in icon"
-msgstr ""
+msgstr "アイコンに値を表示する"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:16
 msgid "Temperature unit:"
-msgstr ""
+msgstr "温度の単位:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:17
 msgid "Theme:"
-msgstr ""
+msgstr "テーマ:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:18
 #: ../applets/maintained/mail/mail.ui.h:4
 msgid "Update interval:"
-msgstr ""
+msgstr "更新間隔:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:19
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:45
 msgid "seconds"
-msgstr ""
+msgstr "秒"
 
 #. Unit long strings
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
 msgid "Celsius"
-msgstr ""
+msgstr "摂氏"
 
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "Volt"
-msgstr ""
+msgstr "ボルト"
 
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "rpm"
@@ -2394,7 +2426,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:2
 msgid "Hide the icon if there is no new mail"
-msgstr ""
+msgstr "新着メールがない場合はアイコンを隠す"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:3
 msgid "The Desktop Email client to use"
@@ -2418,11 +2450,11 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.desktop.in.h:1
 msgid "Check Your Email from AWN"
-msgstr ""
+msgstr "AWNから電子メールのチェック"
 
 #: ../applets/maintained/mail/mail.desktop.in.h:2
 #: ../applets/maintained/mail/mail.py:134
-#: ../applets/maintained/mail/mail.py:903
+#: ../applets/maintained/mail/mail.py:917
 msgid "Mail Applet"
 msgstr "メールアプレット"
 
@@ -2447,142 +2479,154 @@ msgstr "メールアプレット (クリックしてログイン)"
 msgid "Logging in as %s"
 msgstr "%s でログイン中"
 
+#: ../applets/maintained/mail/mail.py:156
+msgid "Network error - Mail Applet"
+msgstr "ネットワークエラー - メールアプレット"
+
 #: ../applets/maintained/mail/mail.py:165
 msgid "New Mail - Mail Applet"
 msgstr "新着メール - メールアプレット"
 
-#: ../applets/maintained/mail/mail.py:283
+#: ../applets/maintained/mail/mail.py:284
 msgid "Mail"
-msgstr ""
+msgstr "メール"
 
-#: ../applets/maintained/mail/mail.py:319
+#: ../applets/maintained/mail/mail.py:320
 msgid "Open Web Mail"
-msgstr ""
+msgstr "ウェブメールを開く"
 
-#: ../applets/maintained/mail/mail.py:328
+#: ../applets/maintained/mail/mail.py:329
 msgid "Open Desktop Client"
-msgstr ""
+msgstr "デスクトップクライアントを開く"
 
-#: ../applets/maintained/mail/mail.py:337
+#: ../applets/maintained/mail/mail.py:338
 msgid "Refresh"
-msgstr ""
+msgstr "更新"
 
-#: ../applets/maintained/mail/mail.py:346
+#: ../applets/maintained/mail/mail.py:347
 msgid "Log Out"
 msgstr "ログアウト"
 
-#: ../applets/maintained/mail/mail.py:376
+#: ../applets/maintained/mail/mail.py:377
 msgid "No unread messages"
-msgstr ""
+msgstr "未読メッセージなし"
 
-#: ../applets/maintained/mail/mail.py:378
+#: ../applets/maintained/mail/mail.py:379
 msgid "No new messages"
-msgstr ""
+msgstr "新着メッセージなし"
 
-#: ../applets/maintained/mail/mail.py:417
+#: ../applets/maintained/mail/mail.py:418
 msgid "Wrong username or password"
-msgstr ""
+msgstr "誤ったユーザー名またはパスワード"
 
-#: ../applets/maintained/mail/mail.py:425
-#: ../applets/maintained/mail/mail.py:486
+#: ../applets/maintained/mail/mail.py:426
+#: ../applets/maintained/mail/mail.py:487
 msgid "Log In"
 msgstr "ログイン"
 
-#: ../applets/maintained/mail/mail.py:462
+#: ../applets/maintained/mail/mail.py:463
 msgid "Type:"
-msgstr ""
+msgstr "種類:"
 
-#: ../applets/maintained/mail/mail.py:467
+#: ../applets/maintained/mail/mail.py:468
 msgid "Backend"
-msgstr ""
+msgstr "バックエンド"
 
-#: ../applets/maintained/mail/mail.py:525
-#: ../applets/maintained/mail/mail.py:584
+#: ../applets/maintained/mail/mail.py:523
+#: ../applets/maintained/mail/mail.py:732
+msgid "Could not log in: No username"
+msgstr "ログインできませんでした: ユーザー名なし"
+
+#: ../applets/maintained/mail/mail.py:531
+#: ../applets/maintained/mail/mail.py:596
 msgid ""
-"There seem to be problems with our                     connection to your "
-"account. Your best bet is probably                     to log out and try "
-"again."
-msgstr "アカウントの接続に問題があるようです。 一旦ログアウトし、再度ログインした方が最良と思われます。"
+"There seem to be problems with our connection to your account. Your best bet "
+"is probably to log out and try again."
+msgstr "アカウントへの接続に問題があるようです。ログアウトして再試行することがおそらく最善です。"
 
-#: ../applets/maintained/mail/mail.py:547
-#: ../applets/maintained/mail/mail.py:606
+#: ../applets/maintained/mail/mail.py:553
+#: ../applets/maintained/mail/mail.py:618
 msgid "[No Subject]"
 msgstr "[件名なし]"
 
-#: ../applets/maintained/mail/mail.py:569
+#: ../applets/maintained/mail/mail.py:575
 msgid "Google Apps"
-msgstr ""
+msgstr "Google Apps"
 
-#: ../applets/maintained/mail/mail.py:637
+#: ../applets/maintained/mail/mail.py:587
+msgid "Could not log in: No username or domain"
+msgstr "ログインできませんでした: ユーザー名またはドメイン名なし"
+
+#: ../applets/maintained/mail/mail.py:649
 msgid "Domain:"
 msgstr "ドメイン:"
 
-#: ../applets/maintained/mail/mail.py:659
+#: ../applets/maintained/mail/mail.py:671
 msgid "Unix Spool"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:681
+#: ../applets/maintained/mail/mail.py:693
 msgid "Spool Path:"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:714
-#: ../applets/maintained/mail/mail.py:716
+#: ../applets/maintained/mail/mail.py:726
+#: ../applets/maintained/mail/mail.py:728
 msgid "Could not log in: "
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:723
+#: ../applets/maintained/mail/mail.py:737
 msgid "Could not log in: Username or password incorrect"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:765
-#: ../applets/maintained/mail/mail.py:858
+#: ../applets/maintained/mail/mail.py:779
+#: ../applets/maintained/mail/mail.py:872
 msgid "Server:"
 msgstr "サーバ名:"
 
-#: ../applets/maintained/mail/mail.py:768
-#: ../applets/maintained/mail/mail.py:861
+#: ../applets/maintained/mail/mail.py:782
+#: ../applets/maintained/mail/mail.py:875
 msgid "Use SSL encryption"
 msgstr "SSL暗号化を使用"
 
-#: ../applets/maintained/mail/mail.py:804
+#: ../applets/maintained/mail/mail.py:818
 msgid "Could not log in"
 msgstr "ログイン失敗"
 
-#: ../applets/maintained/mail/mail.py:810
+#: ../applets/maintained/mail/mail.py:824
 msgid "Folder does not exst"
 msgstr "フォルダが存在しません"
 
-#: ../applets/maintained/mail/mail.py:864
+#: ../applets/maintained/mail/mail.py:878
 msgid "Get messages from only one folder"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:871
+#: ../applets/maintained/mail/mail.py:885
 msgid "Folder:"
 msgstr "フォルダ:"
 
-#: ../applets/maintained/mail/mail.py:906
+#: ../applets/maintained/mail/mail.py:920
 msgid "An applet to check one's email"
 msgstr "新着メールをチェックするアプレット"
 
 #: ../applets/maintained/mail/mail.ui.h:2
 msgid "<b>Mail</b>"
-msgstr ""
+msgstr "<b>メール</b>"
 
 #: ../applets/maintained/mail/mail.ui.h:5
 msgid "_Alert on network errors"
-msgstr ""
+msgstr "ネットワークエラー時に警告する(_A)"
 
 #: ../applets/maintained/mail/mail.ui.h:6
 msgid "_Email client:"
-msgstr ""
+msgstr "メールクライアント(_E):"
 
 #: ../applets/maintained/mail/mail.ui.h:7
 msgid "_Hide applet if no new messages"
-msgstr ""
+msgstr "新着メッセージがない場合はアプレットを隠す(_H)"
 
 #: ../applets/maintained/mail/mail.ui.h:9
 msgid "minutes"
-msgstr ""
+msgstr "分"
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:1
 msgid "Close the docklet when mouse moves out from it."
@@ -2606,43 +2650,43 @@ msgstr ""
 
 #: ../applets/maintained/media-control/media-control.desktop.in.h:1
 msgid "Control your music player"
-msgstr ""
+msgstr "音楽プレイヤーの操作"
 
 #: ../applets/maintained/media-control/media-control.desktop.in.h:2
 msgid "Media Control"
-msgstr ""
+msgstr "メディア・コントロール"
 
 #: ../applets/maintained/media-control/media_control.py:612
 msgid "Title - Artist"
-msgstr ""
+msgstr "タイトル - アーティスト"
 
 #: ../applets/maintained/media-control/media_control.py:612
 msgid "Artist - Title"
-msgstr ""
+msgstr "アーティスト - タイトル"
 
 #: ../applets/maintained/media-control/media-control.ui.h:2
 msgid "Close docklet when mouse leaves it"
-msgstr ""
+msgstr "マウスが離れたときドックレットを閉じる"
 
 #: ../applets/maintained/media-control/media-control.ui.h:3
 msgid "Display _docklet instead of dialog"
-msgstr ""
+msgstr "ダイアログの代わりにドックレットを表示する(_D)"
 
 #: ../applets/maintained/media-control/media-control.ui.h:4
 msgid "Media-control preferences"
-msgstr ""
+msgstr "メディア・コントロールの設定"
 
 #: ../applets/maintained/media-control/media-control.ui.h:5
 msgid "Show _album art when available"
-msgstr ""
+msgstr "アルバムカバーが利用可能なときは表示する(_A)"
 
 #: ../applets/maintained/media-control/media-control.ui.h:6
 msgid "_Size of the album art:"
-msgstr ""
+msgstr "アルバムカバーの大きさ(_S):"
 
 #: ../applets/maintained/media-control/media-control.ui.h:7
 msgid "_Tooltip format:"
-msgstr ""
+msgstr "ツールチップの形式(_T):"
 
 #: ../applets/maintained/media-control/media-control.ui.h:8
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:8
@@ -2650,49 +2694,49 @@ msgstr ""
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:44
 #: ../applets/maintained/weather/weather.ui.h:19
 msgid "pixels"
-msgstr ""
+msgstr "ピクセル"
 
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:68
 msgid "A media-control applet (Next Track)"
-msgstr ""
+msgstr "メディア・コントロール アプレット（次のトラックへ）"
 
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:74
 msgid "Media Icons Next"
-msgstr ""
+msgstr "メディア・アイコン 次へ"
 
 #: ../applets/maintained/media-icons/media-icon-previous.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:69
 msgid "A media-control applet (Previous Track)"
-msgstr ""
+msgstr "メディア・コントロール アプレット（前のトラックへ）"
 
 #: ../applets/maintained/media-icons/media-icon-previous.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:75
 msgid "Media Icons Previous"
-msgstr ""
+msgstr "メディア・アイコン 前へ"
 
 #: ../applets/maintained/media-icons/media-icons.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:70
 msgid "A media-control applet (Play/Pause)"
-msgstr ""
+msgstr "メディア・コントロール アプレット（再生/一時停止）"
 
 #: ../applets/maintained/media-icons/media-icons.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:76
 msgid "Media Icons Play/Pause"
-msgstr ""
+msgstr "メディア・アイコン 再生/一時停止"
 
 #: ../applets/maintained/media-icons/media-icons.py:57
 msgid "Next"
-msgstr ""
+msgstr "次へ"
 
 #: ../applets/maintained/media-icons/media-icons.py:58
 msgid "Previous"
-msgstr ""
+msgstr "前へ"
 
 #: ../applets/maintained/media-icons/media-icons.py:59
 msgid "Play/Pause"
-msgstr ""
+msgstr "再生/一時停止"
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:1
 msgid "Audio sink to use."
@@ -2716,23 +2760,23 @@ msgstr ""
 
 #: ../applets/maintained/media-player/media-player.desktop.in.h:1
 msgid "Media Player"
-msgstr ""
+msgstr "メディアプレイヤー"
 
 #: ../applets/maintained/media-player/media-player.desktop.in.h:2
 msgid "Plays any media files you drop on the applet"
-msgstr ""
+msgstr "アプレットにドロップした各種メディア・ファイルを再生します"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:1
 msgid "<b>GStreamer properties</b>"
-msgstr ""
+msgstr "<b>GStreamer のプロパティ</b>"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:2
 msgid "<b>Video size</b>"
-msgstr ""
+msgstr "<b>動画サイズ</b>"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:3
 msgid "Media Player Preferences"
-msgstr ""
+msgstr "メディアプレイヤーの設定"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:4
 msgid "_Audiosink:"
@@ -2740,7 +2784,7 @@ msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:5
 msgid "_Height:"
-msgstr ""
+msgstr "高さ(_H):"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:6
 msgid "_Videosink:"
@@ -2748,7 +2792,7 @@ msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:7
 msgid "_Width:"
-msgstr ""
+msgstr "幅(_W):"
 
 #: ../applets/maintained/mount/awn-applet-mount.schema-ini.in.h:1
 msgid "Command to execute after mounting a mountpoint."
@@ -2760,11 +2804,11 @@ msgstr ""
 
 #: ../applets/maintained/mount/mount.desktop.in.h:1
 msgid "An applet to (un)mount devices"
-msgstr ""
+msgstr "デバイスを（アン）マウントするためのアプレットです"
 
 #: ../applets/maintained/mount/mount.desktop.in.h:2
 msgid "Mount Applet"
-msgstr ""
+msgstr "マウント・アプレット"
 
 #: ../applets/maintained/mount/mount.ui.h:2
 #, no-c-format
@@ -2826,43 +2870,43 @@ msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:3
 msgid "<b>Background Color</b>"
-msgstr ""
+msgstr "<b>背景の色</b>"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:4
 msgid "<b>Border Color</b>"
-msgstr ""
+msgstr "<b>境界線の色</b>"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:6
 msgid "Automatic"
-msgstr ""
+msgstr "自動"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:7
 msgid "Custom:"
-msgstr ""
+msgstr "カスタム:"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:8
 msgid "Extra _offset:"
-msgstr ""
+msgstr "追加のオフセット(_O):"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:9
 msgid "Icon _size:"
-msgstr ""
+msgstr "アイコンの大きさ(_S):"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:10
 msgid "Notification Area Preferences"
-msgstr ""
+msgstr "通知領域の設定"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:11
 msgid "_Number of icon rows:"
-msgstr ""
+msgstr "アイコンの行数(_N):"
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:1
 msgid "A Notification Area (systray)"
-msgstr ""
+msgstr "通知領域（シストレイ）"
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:2
 msgid "Notification Area"
-msgstr ""
+msgstr "通知領域"
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:1
 msgid "Background colour in the form (Hex) rrggbbaa"
@@ -2950,7 +2994,7 @@ msgstr ""
 msgid "Whether to the use configured awn theme color values for xxxx."
 msgstr ""
 
-#: ../applets/maintained/notification-daemon/daemon.c:1422
+#: ../applets/maintained/notification-daemon/daemon.c:1421
 #, c-format
 msgid "%u is not a valid notification ID"
 msgstr ""
@@ -3073,31 +3117,31 @@ msgstr ""
 
 #: ../applets/maintained/quit/quit.desktop.in.h:1
 msgid "An applet to exit or log out of your session"
-msgstr ""
+msgstr "セッションを終了したりログアウトするためのアプレットです"
 
 #: ../applets/maintained/quit/quit.desktop.in.h:2
 msgid "Quit-Log Out applet"
-msgstr ""
+msgstr "終了-ログアウト アプレット"
 
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:2
 msgid "Protect your computer from unauthorized use"
-msgstr ""
+msgstr "コンピュータの未承認使用の防止"
 
 #: ../applets/maintained/quit/quit-log-out.desktop.in.h:1
 msgid "Log Out..."
-msgstr ""
+msgstr "ログアウト..."
 
 #: ../applets/maintained/quit/quit-log-out.desktop.in.h:2
 msgid "Log out of this session to log in as a different user"
-msgstr ""
+msgstr "別ユーザーでログインするために今セッションからログアウト"
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:1
 msgid "Shut Down..."
-msgstr ""
+msgstr "シャットダウン..."
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:2
 msgid "Shut down the system"
-msgstr ""
+msgstr "コンピュータをシャットダウンします"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:1
 msgid " The color (RGBA) applet border."
@@ -3203,174 +3247,174 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:3
 msgid "<b>Background transparency</b>"
-msgstr ""
+msgstr "<b>背景の不透過率</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:4
 msgid "<b>Background</b>"
-msgstr ""
+msgstr "<b>背景</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:6
 msgid "<b>Icon transparency</b>"
-msgstr ""
+msgstr "<b>アイコンの不透過率</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:7
 msgid "<b>Timers</b>"
-msgstr ""
+msgstr "<b>タイマー</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:8
 msgid "<b>Viewport size</b>"
-msgstr ""
+msgstr "<b>ビューポートの大きさ</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:9
 msgid "<b>Windows</b>"
-msgstr ""
+msgstr "<b>ウィンドウ</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:10
 msgid "Active window:"
-msgstr ""
+msgstr "アクティブ・ウィンドウ:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:11
 msgid "Active workspace"
-msgstr ""
+msgstr "アクティブ・ワークスペース"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:12
 msgid "Active workspace:"
-msgstr ""
+msgstr "アクティブ・ワークスペース:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:13
 msgid "All window"
-msgstr ""
+msgstr "全てのウィンドウ"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:14
 msgid "All windows"
-msgstr ""
+msgstr "全てのウィンドウ"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:15
 msgid "B_order color:"
-msgstr ""
+msgstr "境界の色(_O):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:17
 msgid "Border _size:"
-msgstr ""
+msgstr "境界の大きさ(_S):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:18
 msgid "C_ustom color:"
-msgstr ""
+msgstr "カスタム色(_U):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:19
 msgid "Cache expiration:"
-msgstr ""
+msgstr "キャッシュ有効期限:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:20
 msgid "Center"
-msgstr ""
+msgstr "中央"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:21
 msgid "Co_lumns:"
-msgstr ""
+msgstr "列(_L):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:22
 msgid "Icon _display:"
-msgstr ""
+msgstr "アイコン表示(_D):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:23
 msgid "Icon _scaling:"
-msgstr ""
+msgstr "アイコンの縮尺(_S):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:24
 msgid "Inactive window:"
-msgstr ""
+msgstr "非アクティブ・ウィンドウ:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:25
 msgid "Inactive windows"
-msgstr ""
+msgstr "非アクティブ・ウィンドウ"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:26
 msgid "Inactive workspace:"
-msgstr ""
+msgstr "非アクティブ・ワークスペース:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:27
 msgid "Inactive workspaces"
-msgstr ""
+msgstr "非アクティブ・ワークスペース"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:28
 msgid "Look"
-msgstr ""
+msgstr "外観"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:29
 msgid "Lower left"
-msgstr ""
+msgstr "左下"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:30
 msgid "Lower right"
-msgstr ""
+msgstr "右下"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:31
 msgid "Never"
-msgstr ""
+msgstr "しない"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:33
 msgid "Only active window"
-msgstr ""
+msgstr "アクティブ・ウィンドウのみ"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:34
 msgid "Render update:"
-msgstr ""
+msgstr "描画の更新:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:35
 msgid "Scale _amount:"
-msgstr ""
+msgstr "縮尺率(_A):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:36
 msgid "Scaled icon _position:"
-msgstr ""
+msgstr "縮尺アイコン表示位置(_P):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:37
 msgid "Shiny Switcher Preferences"
-msgstr ""
+msgstr "Shiny Switcher の設定"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:38
 msgid "Upper left"
-msgstr ""
+msgstr "左上"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:39
 msgid "Upper right"
-msgstr ""
+msgstr "右上"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:40
 msgid "Use _desktop background"
-msgstr ""
+msgstr "デスクトップの背景を使用する(_D)"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:41
 msgid "_Applet size:"
-msgstr ""
+msgstr "アプレットの大きさ(_A):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:42
 msgid "_Rows:"
-msgstr ""
+msgstr "行(_R):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:43
 msgid "_Thumbnailing:"
-msgstr ""
+msgstr "サムネイル表示(_T):"
 
 #: ../applets/maintained/showdesktop/applet.vala:40
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:2
 msgid "Show Desktop"
-msgstr ""
+msgstr "デスクトップの表示"
 
 #. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
 #: ../applets/maintained/showdesktop/applet.vala:78
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:1
 msgid "Hides your windows and shows your desktop."
-msgstr ""
+msgstr "ウィンドウを隠して、デスクトップを表示します。"
 
 #: ../applets/maintained/showdesktop/applet.vala:93
 msgid "Show hidden windows"
-msgstr ""
+msgstr "隠したウィンドウを表示します"
 
 #: ../applets/maintained/showdesktop/applet.vala:98
 msgid "Hide windows and show desktop"
-msgstr ""
+msgstr "ウィンドウを隠して、デスクトップを表示します"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:1
 msgid "The background color of the dialog"
@@ -3450,159 +3494,159 @@ msgstr ""
 
 #: ../applets/maintained/slickswitcher/prefs.py:69
 msgid "SlickSwitcher Preferences"
-msgstr ""
+msgstr "SlickSwitcher の設定"
 
 #. Colors: Borders, Windows, and Dialog
 #. Border Colors
 #: ../applets/maintained/slickswitcher/prefs.py:94
 msgid "Border Colors"
-msgstr ""
+msgstr "境界線の配色"
 
 #. Icon Border
 #: ../applets/maintained/slickswitcher/prefs.py:100
 msgid "Icon border:"
-msgstr ""
+msgstr "アイコンの境界線:"
 
 #. Normal Border
 #: ../applets/maintained/slickswitcher/prefs.py:103
 msgid "Normal border:"
-msgstr ""
+msgstr "通常時の境界線:"
 
 #. Hovered Border
 #: ../applets/maintained/slickswitcher/prefs.py:106
 msgid "Hovered border:"
-msgstr ""
+msgstr "マウスホバー時の境界線:"
 
 #. Window Colors
 #: ../applets/maintained/slickswitcher/prefs.py:109
 msgid "Window Colors"
-msgstr ""
+msgstr "ウィンドウの配色"
 
 #. Main Color
 #: ../applets/maintained/slickswitcher/prefs.py:115
 #: ../applets/maintained/slickswitcher/prefs.py:200
 msgid "Main color:"
-msgstr ""
+msgstr "主要部の色:"
 
 #. Border Color
 #: ../applets/maintained/slickswitcher/prefs.py:118
 #: ../applets/maintained/slickswitcher/prefs.py:137
 msgid "Border color:"
-msgstr ""
+msgstr "境界線の色:"
 
 #. Dialog Colors
 #: ../applets/maintained/slickswitcher/prefs.py:121
 msgid "Dialog colors"
-msgstr ""
+msgstr "ダイアログの配色"
 
 #. Use custom colors (CheckButton)
 #: ../applets/maintained/slickswitcher/prefs.py:127
 #: ../applets/maintained/slickswitcher/prefs.py:193
 msgid "Use custom colors"
-msgstr ""
+msgstr "カスタム配色を使用する"
 
 #. Background Color
 #: ../applets/maintained/slickswitcher/prefs.py:134
 msgid "Background color:"
-msgstr ""
+msgstr "背景の色:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:183
 msgid "Colors"
-msgstr ""
+msgstr "配色"
 
 #. Other colors: text and shine
 #. Number Colors
 #: ../applets/maintained/slickswitcher/prefs.py:187
 msgid "Number Colors"
-msgstr ""
+msgstr "番号の配色"
 
 #. Drop-Shadow Color
 #: ../applets/maintained/slickswitcher/prefs.py:203
 msgid "Drop-shadow color:"
-msgstr ""
+msgstr "影の色:"
 
 #. Shine Colors
 #: ../applets/maintained/slickswitcher/prefs.py:206
 msgid "Shine Colors"
-msgstr ""
+msgstr "テカリ表現の配色"
 
 #. Top Color
 #: ../applets/maintained/slickswitcher/prefs.py:212
 msgid "Top color:"
-msgstr ""
+msgstr "上部の色:"
 
 #. Bottom Color
 #: ../applets/maintained/slickswitcher/prefs.py:215
 msgid "Bottom color:"
-msgstr ""
+msgstr "下部の色:"
 
 #. Hover Top Color
 #: ../applets/maintained/slickswitcher/prefs.py:218
 msgid "Hover top color:"
-msgstr ""
+msgstr "マウスホバー時の上部の色:"
 
 #. Hover Bottom Color
 #: ../applets/maintained/slickswitcher/prefs.py:221
 msgid "Hover bottom color:"
-msgstr ""
+msgstr "マウスホバー時の下部の色:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:254
 msgid "Other colors"
-msgstr ""
+msgstr "その他の配色"
 
 #. Width
 #: ../applets/maintained/slickswitcher/prefs.py:262
 msgid "Width:"
-msgstr ""
+msgstr "幅:"
 
 #. Height
 #: ../applets/maintained/slickswitcher/prefs.py:279
 msgid "Height:"
-msgstr ""
+msgstr "高さ:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:299
 msgid "Workspace Size"
-msgstr ""
+msgstr "ワークスペースの大きさ"
 
 #. Mode
 #: ../applets/maintained/slickswitcher/prefs.py:315
 msgid "Mode:"
-msgstr ""
+msgstr "モード:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:318
 msgid "GNOME"
-msgstr ""
+msgstr "GNOME"
 
 #: ../applets/maintained/slickswitcher/prefs.py:319
 msgid "Compiz Wallpaper Plugin"
-msgstr ""
+msgstr "Compiz 壁紙プラグイン"
 
 #: ../applets/maintained/slickswitcher/prefs.py:320
 msgid "File"
-msgstr ""
+msgstr "ファイル"
 
 #. File
 #: ../applets/maintained/slickswitcher/prefs.py:339
 msgid "File:"
-msgstr ""
+msgstr "ファイル:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:341
 msgid "Choose a Background Image"
-msgstr ""
+msgstr "背景画像を選択してください"
 
 #: ../applets/maintained/slickswitcher/prefs.py:367
-#: ../applets/maintained/to-do/prefs.py:444
+#: ../applets/maintained/to-do/prefs.py:445
 msgid "Background"
 msgstr "背景色"
 
 #: ../applets/maintained/slickswitcher/prefs.py:379
 msgid "Advanced"
-msgstr ""
+msgstr "詳細設定"
 
 #: ../applets/maintained/slickswitcher/slickswitcher.desktop.in.h:1
 #: ../applets/maintained/slickswitcher/slickswitcher.py:281
 msgid "A visual workspace switcher"
-msgstr ""
+msgstr "ビジュアルなワークスペース切り替え器"
 
 #: ../applets/maintained/slickswitcher/slickswitcher.desktop.in.h:2
 #: ../applets/maintained/slickswitcher/slickswitcher.py:63
@@ -3635,15 +3679,15 @@ msgstr ""
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:1
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:2
 msgid "Manage system activity"
-msgstr ""
+msgstr "システム活動の管理"
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:2
 msgid "System Monitor"
-msgstr ""
+msgstr "システム・モニタ"
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:1
 msgid "Applet that shows the shock protection status of your disks"
-msgstr ""
+msgstr "ハードディスクのショックプロテクションの状態を表示するアプレットです"
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:2
 msgid "ThinkHDAPS"
@@ -3813,7 +3857,7 @@ msgstr "タイトル"
 #. Label: Confirm when removing... (bold)
 #: ../applets/maintained/to-do/prefs.py:86
 msgid "Confirm when removing..."
-msgstr ""
+msgstr "削除するとき確認を取る..."
 
 #. CheckButton: Items
 #: ../applets/maintained/to-do/prefs.py:95
@@ -3863,7 +3907,7 @@ msgstr "アイコンの色"
 #. Label: Custom Colors (bold)
 #: ../applets/maintained/to-do/prefs.py:274
 msgid "Custom Colors"
-msgstr "カスタム色"
+msgstr "カスタム配色"
 
 #. Colors: Outer Border, Inner Border, Main Color, Text Color
 #: ../applets/maintained/to-do/prefs.py:283
@@ -3879,7 +3923,7 @@ msgid "Main"
 msgstr "メイン"
 
 #: ../applets/maintained/to-do/prefs.py:286
-#: ../applets/maintained/to-do/prefs.py:446
+#: ../applets/maintained/to-do/prefs.py:447
 msgid "Text"
 msgstr "テキスト"
 
@@ -3890,78 +3934,78 @@ msgstr "アイコンの種類"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:1
 msgid "Manage a simple To-Do list"
-msgstr ""
+msgstr "シンプルな To-Do リストの管理"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:2
 #: ../applets/maintained/to-do/to-do.py:68
-#: ../applets/maintained/to-do/to-do.py:216
-#: ../applets/maintained/to-do/to-do.py:268
-#: ../applets/maintained/to-do/to-do.py:906
+#: ../applets/maintained/to-do/to-do.py:217
+#: ../applets/maintained/to-do/to-do.py:269
+#: ../applets/maintained/to-do/to-do.py:907
 msgid "To-Do List"
 msgstr "To-Do リスト"
 
-#: ../applets/maintained/to-do/to-do.py:219
+#: ../applets/maintained/to-do/to-do.py:220
 msgid "A simple To-Do List"
 msgstr "シンプルな To-Do リスト"
 
-#: ../applets/maintained/to-do/to-do.py:298
+#: ../applets/maintained/to-do/to-do.py:299
 msgid "Remove item"
 msgstr "アイテムを削除"
 
-#: ../applets/maintained/to-do/to-do.py:380
+#: ../applets/maintained/to-do/to-do.py:381
 msgid "Remove category"
 msgstr "カテゴリを削除"
 
-#: ../applets/maintained/to-do/to-do.py:404
+#: ../applets/maintained/to-do/to-do.py:405
 msgid "View/Edit details"
 msgstr "詳細の表示/編集"
 
 #. Make the RadioButtons for each category
 #. First category: No category! (Uncategorized)
-#: ../applets/maintained/to-do/to-do.py:524
+#: ../applets/maintained/to-do/to-do.py:525
 msgid "_Uncategorized"
-msgstr ""
+msgstr "未分類(_U)"
 
 #. First RadioButton - ( )Category
-#: ../applets/maintained/to-do/to-do.py:548
+#: ../applets/maintained/to-do/to-do.py:549
 msgid "_Category"
-msgstr ""
+msgstr "カテゴリ(_C)"
 
 #. Second RadioButton - (-)To-Do item
 #. TODO: better text than "To-Do item"?
-#: ../applets/maintained/to-do/to-do.py:555
+#: ../applets/maintained/to-do/to-do.py:556
 msgid "_To-Do item"
-msgstr ""
+msgstr "To-Do アイテム(_T)"
 
 #. Label: Priority:
-#: ../applets/maintained/to-do/to-do.py:640
+#: ../applets/maintained/to-do/to-do.py:641
 msgid "Priority: "
 msgstr "優先度: "
 
 #. Neutral, Low, Medium, and High priority RadioButtons
-#: ../applets/maintained/to-do/to-do.py:643
+#: ../applets/maintained/to-do/to-do.py:644
 msgid "_Neutral"
 msgstr "ニュートラル(_N)"
 
-#: ../applets/maintained/to-do/to-do.py:645
+#: ../applets/maintained/to-do/to-do.py:646
 msgid "_Low"
 msgstr "低(_L)"
 
-#: ../applets/maintained/to-do/to-do.py:647
+#: ../applets/maintained/to-do/to-do.py:648
 msgid "_Medium"
 msgstr "中(_M)"
 
-#: ../applets/maintained/to-do/to-do.py:649
+#: ../applets/maintained/to-do/to-do.py:650
 msgid "_High"
 msgstr "高(_H)"
 
 #. Label: Progress(%):
-#: ../applets/maintained/to-do/to-do.py:677
+#: ../applets/maintained/to-do/to-do.py:678
 msgid "Progress(%): "
 msgstr "進捗状況(%): "
 
 #. Make Label
-#: ../applets/maintained/to-do/to-do.py:1127
+#: ../applets/maintained/to-do/to-do.py:1130
 #, python-format
 msgid ""
 "Are you sure you want to remove the category \"%s?\"\n"
@@ -3971,29 +4015,61 @@ msgstr ""
 "カテゴリ内に入っているすべてのアイテムも削除されます。"
 
 #. Make CheckButton
-#: ../applets/maintained/to-do/to-do.py:1131
-#: ../applets/maintained/to-do/to-do.py:1167
+#: ../applets/maintained/to-do/to-do.py:1134
+#: ../applets/maintained/to-do/to-do.py:1170
 msgid "Don't show this again."
-msgstr ""
+msgstr "これを再表示しない"
 
 #. Make Label
-#: ../applets/maintained/to-do/to-do.py:1164
+#: ../applets/maintained/to-do/to-do.py:1167
 msgid "Are you sure you want to remove this item?"
 msgstr "このアイテムを削除してよろしいですか?"
 
 #. Reset the tooltip
-#: ../applets/maintained/to-do/to-do.py:1363
+#: ../applets/maintained/to-do/to-do.py:1366
 #, python-format
 msgid "% done"
 msgstr ""
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:1
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:31
 msgid "Control Tomboy with D-Bus"
-msgstr ""
+msgstr "D-Bus で Tomboy を操作します"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:2
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:30
 msgid "Tomboy Applet"
-msgstr ""
+msgstr "Tomboy アプレット"
+
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:108
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:130
+msgid "Select a tag:"
+msgstr "タグの選択:"
+
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:114
+msgid "No tags were created yet"
+msgstr "タグはまだ作成されていません"
+
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:119
+msgid "Select a note:"
+msgstr "ノートの選択:"
+
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:149
+#, python-format
+msgid "Version: %s"
+msgstr "バージョン: %s"
+
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:155
+msgid "New Note"
+msgstr "新しいノート"
+
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:159
+msgid "New Tagged Note"
+msgstr "新しいタグ付きノート"
+
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:163
+msgid "View Tagged Note"
+msgstr "タグ付きノートの表示"
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:1
 msgid "A simple applet to test vala support"
@@ -4013,11 +4089,11 @@ msgstr ""
 
 #: ../applets/maintained/volume-control/volume-control.desktop.in.h:1
 msgid "Control your computer's volume"
-msgstr ""
+msgstr "コンピュータの音量を操作します"
 
 #: ../applets/maintained/volume-control/volume-control.desktop.in.h:2
 msgid "Volume Control"
-msgstr ""
+msgstr "音量コントロール"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:1
 msgid "+"
@@ -4029,15 +4105,15 @@ msgstr ""
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:3
 msgid "<b>Audio Options</b>"
-msgstr ""
+msgstr "<b>オーディオのオプション</b>"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:5
 msgid "_Device:"
-msgstr ""
+msgstr "デバイス(_D):"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:6
 msgid "_Mixer track:"
-msgstr ""
+msgstr "ミキサートラック(_M):"
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:1
 msgid "City, and country of the weather location."
@@ -4057,7 +4133,7 @@ msgstr ""
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:5
 msgid "Maximum width of map in pixels."
-msgstr ""
+msgstr "マップのピクセル単位の最大幅です。"
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:6
 msgid "Show days of forecast in a transparent, curved dialog."
@@ -4097,15 +4173,15 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.desktop.in.h:2
 msgid "Weather Applet"
-msgstr ""
+msgstr "ウェザー・アプレット"
 
 #: ../applets/maintained/weather/weather.py:215
 msgid "Fetching conditions for"
-msgstr ""
+msgstr "予報情報取得中："
 
 #: ../applets/maintained/weather/weather.py:254
 msgid "Show _Map"
-msgstr ""
+msgstr "マップ表示(_M)"
 
 #: ../applets/maintained/weather/weather.py:302
 #: ../applets/maintained/weather/weather.py:380
@@ -4118,62 +4194,62 @@ msgstr "検索中..."
 
 #: ../applets/maintained/weather/weather.ui.h:4
 msgid "<b>Icon Display</b>"
-msgstr ""
+msgstr "<b>アイコン上の表示</b>"
 
 #: ../applets/maintained/weather/weather.ui.h:5
 msgid ""
 "<i><b>Examples:</b> Boston; Portland, ME, Amsterdam; or Osaka, Japan.</i>"
-msgstr ""
+msgstr "<i><b>例:</b> Boston; Portland, ME, Amsterdam; または Osaka, Japan.</i>"
 
 #: ../applets/maintained/weather/weather.ui.h:6
 msgid "Current _location:"
-msgstr ""
+msgstr "現在地(_L):"
 
 #: ../applets/maintained/weather/weather.ui.h:7
 msgid ""
 "If enabled, the dialog will be transparent, and the five days of the "
 "forecast will be curved"
-msgstr ""
+msgstr "有効にした場合、ダイアログは透過され、5日間の予報がカーブ状に表示されます"
 
 #: ../applets/maintained/weather/weather.ui.h:8
 msgid "If enabled, the temperature will be displayed in the icon"
-msgstr ""
+msgstr "有効にした場合、アイコンに気温が表示されます"
 
 #: ../applets/maintained/weather/weather.ui.h:9
 msgid "Large"
-msgstr ""
+msgstr "大"
 
 #: ../applets/maintained/weather/weather.ui.h:10
 msgid "Maximum _map width:"
-msgstr ""
+msgstr "マップの最大幅(_M):"
 
 #: ../applets/maintained/weather/weather.ui.h:11
 msgid "Medium"
-msgstr ""
+msgstr "中"
 
 #: ../applets/maintained/weather/weather.ui.h:12
 msgid "Show temperature in _icon"
-msgstr ""
+msgstr "アイコンに気温を表示する(_I)"
 
 #: ../applets/maintained/weather/weather.ui.h:13
 msgid "Small"
-msgstr ""
+msgstr "小"
 
 #: ../applets/maintained/weather/weather.ui.h:14
 msgid "Temperature _unit:"
-msgstr ""
+msgstr "気温の単位(_U):"
 
 #: ../applets/maintained/weather/weather.ui.h:15
 msgid "Temperature font _size:"
-msgstr ""
+msgstr "気温の文字サイズ(_S):"
 
 #: ../applets/maintained/weather/weather.ui.h:16
 msgid "Use transparent/curved _forecast dialog"
-msgstr ""
+msgstr "透過/カーブ状の予報ダイアログを使用する(_F)"
 
 #: ../applets/maintained/weather/weather.ui.h:17
 msgid "_Location Name:"
-msgstr ""
+msgstr "地名(_L):"
 
 #. Make the dialog
 #: ../applets/maintained/webapplet/applet.c:262
@@ -4210,7 +4286,7 @@ msgstr ""
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:5
 msgid "URI"
-msgstr ""
+msgstr "URI"
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:7
 #, no-c-format
@@ -4224,7 +4300,7 @@ msgstr ""
 
 #: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:1
 msgid "Applet for Websites"
-msgstr ""
+msgstr "ウェブサイト用のアプレットです"
 
 #: ../applets/maintained/wobblyzini/wobblyzini.desktop.in.in.h:1
 msgid "A simple test animation"
@@ -4236,7 +4312,7 @@ msgstr ""
 
 #: ../applets/maintained/yama/yama.desktop.in.h:1
 msgid "Main menu with places and recent documents"
-msgstr ""
+msgstr "場所と最近開いたドキュメントを含んだメイン・メニュー"
 
 #: ../applets/maintained/yama/yama.desktop.in.h:2
 msgid "Yet Another Menu Applet"
@@ -4244,7 +4320,7 @@ msgstr ""
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:1
 msgid "Awn System Monitor"
-msgstr ""
+msgstr "Awn システム・モニタ"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:1
 msgid "Graph update frequency, in milliseconds."
@@ -4273,19 +4349,19 @@ msgstr ""
 #: ../applets/unmaintained/main-menu/applet.c:394
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:2
 msgid "Awn Main Menu"
-msgstr ""
+msgstr "Awn メイン・メニュー"
 
 #: ../applets/unmaintained/main-menu/applet.c:395
 msgid "Displays a list of all your applications"
-msgstr ""
+msgstr "あなたの全アプリケーションの一覧を表示します"
 
 #: ../applets/unmaintained/main-menu/applet.c:453
 msgid "Main Menu"
-msgstr ""
+msgstr "メイン・メニュー"
 
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:1
 msgid "A main menu for Awn"
-msgstr ""
+msgstr "Awn用のメイン・メニューです"
 
 #: ../applets/unmaintained/pandora/awn-applet-pandora.schema-ini.in.h:1
 msgid "The url of the Pandora mini flash player."
@@ -4453,3 +4529,9 @@ msgstr ""
 #: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:38
 msgid "Whether tooltips are enabled."
 msgstr ""
+
+#~ msgid ""
+#~ "There seem to be problems with our                     connection to your "
+#~ "account. Your best bet is probably                     to log out and try "
+#~ "again."
+#~ msgstr "アカウントの接続に問題があるようです。 一旦ログアウトし、再度ログインした方が最良と思われます。"

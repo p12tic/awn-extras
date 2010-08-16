@@ -15,7 +15,9 @@ applets/maintained/battery/battery.py
 [type: gettext/glade]applets/maintained/battery/battery.ui
 [type: gettext/ini]applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in
 applets/maintained/cairo-clock/cairo-clock.desktop.in
+applets/maintained/cairo-clock/cairo-clock.py
 [type: gettext/glade]applets/maintained/cairo-clock/cairo-clock.ui
+applets/maintained/cairo-clock/locations.py
 [type: gettext/ini]applets/maintained/cairo-menu/awn-applet-cairo-menu.schema-ini.in
 applets/maintained/cairo-menu/cairo-menu.desktop.in.in
 applets/maintained/cairo-menu/gnome-menu-builder.c
@@ -127,6 +129,7 @@ applets/maintained/tomboy-applet/tomboy-applet.py
 applets/maintained/vala-test/vala-test.desktop.in.in
 [type: gettext/ini]applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in
 applets/maintained/volume-control/volume-control.desktop.in
+applets/maintained/volume-control/volume-control.py
 [type: gettext/glade]applets/maintained/volume-control/volume-control.ui
 [type: gettext/ini]applets/maintained/weather/awn-applet-weather.schema-ini.in
 applets/maintained/weather/forecast.py

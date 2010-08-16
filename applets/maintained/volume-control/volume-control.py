@@ -25,7 +25,7 @@ pygtk.require("2.0")
 import gtk
 from gtk import gdk
 
-from awn.extras import awnlib, __version__
+from awn.extras import _, awnlib, __version__
 
 import pygst
 pygst.require("0.10")

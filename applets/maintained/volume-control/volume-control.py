@@ -64,8 +64,8 @@ volume_step = 4
 
 mixer_names = ("pulsemixer", "oss4mixer", "alsamixer")
 
-no_mixer_message = "Install one or more of the following GStreamer elements: %s."
-no_devices_message = "Could not find any devices."
+no_mixer_message = _("Install one or more of the following GStreamer elements: %s.")
+no_devices_message = _("Could not find any devices.")
 
 
 class BackendError(Exception):
@@ -373,13 +373,13 @@ class GStreamerBackend:
         useable_mixers = [i for i in mixer_names if i in found_mixers]
 
         if len(useable_mixers) == 0:
-            parent.applet.errors.general(("No mixer found", no_mixer_message % ", ".join(mixer_names)))
+            parent.applet.errors.general((_("No mixer found"), no_mixer_message % ", ".join(mixer_names)))
             raise BackendError("No mixer found")
 
         mixer_devices = self.find_mixer_and_devices(useable_mixers)
 
         if mixer_devices is None:
-            parent.applet.errors.general(("No devices found", no_devices_message))
+            parent.applet.errors.general((_("No devices found"), no_devices_message))
             raise BackendError("No devices found")
 
         self.__mixer, self.__devices = mixer_devices

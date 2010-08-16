@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-12 21:24+0200\n"
+"POT-Creation-Date: 2010-08-16 17:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -276,6 +276,7 @@ msgstr ""
 
 #. Put the general tab together
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:13
+#: ../applets/maintained/cairo-clock/cairo-clock.py:166
 #: ../applets/maintained/dialect/dialect.ui.h:74
 #: ../applets/maintained/file-browser-launcher/prefs.py:212
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:9
@@ -493,6 +494,7 @@ msgid "Wind speed unit (0: m/s, 1: km/h, 2: mph, 3: knots, 4: Beaufort)."
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:1
+#: ../applets/maintained/cairo-clock/cairo-clock.py:29
 msgid "Cairo Clock"
 msgstr ""
 
@@ -500,6 +502,12 @@ msgstr ""
 msgid ""
 "Displays an analog clock and supports additional clocks for different "
 "locations"
+msgstr ""
+
+#: ../applets/maintained/cairo-clock/cairo-clock.py:30
+msgid ""
+"Applet that displays an analog clock and supports additional clocks for "
+"different locations"
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:1
@@ -613,6 +621,14 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:28
 msgid "mph"
+msgstr ""
+
+#: ../applets/maintained/cairo-clock/locations.py:142
+msgid "Locations"
+msgstr ""
+
+#: ../applets/maintained/cairo-clock/locations.py:145
+msgid "Edit"
 msgstr ""
 
 #. hope that gnome-session-save exists; needed for GNOME 2.22, at least.
@@ -4182,7 +4198,21 @@ msgid "Control your computer's volume"
 msgstr ""
 
 #: ../applets/maintained/volume-control/volume-control.desktop.in.h:2
+#: ../applets/maintained/volume-control/volume-control.py:43
 msgid "Volume Control"
+msgstr ""
+
+#: ../applets/maintained/volume-control/volume-control.py:44
+msgid "Applet to control your computer's volume"
+msgstr ""
+
+#: ../applets/maintained/volume-control/volume-control.py:49
+#: ../applets/maintained/weather/weather.py:62
+msgid "System theme"
+msgstr ""
+
+#: ../applets/maintained/volume-control/volume-control.py:181
+msgid "_Open Volume Control"
 msgstr ""
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:2
@@ -4277,10 +4307,6 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.py:42
 msgid "Applet to display current weather and forecast"
-msgstr ""
-
-#: ../applets/maintained/weather/weather.py:62
-msgid "System theme"
 msgstr ""
 
 #: ../applets/maintained/weather/weather.py:71

@@ -48,8 +48,8 @@ def error_decorator(fn):
 class MediaControlApplet (awn.AppletSimple):
     """Displays a dialog with controls and track/album info and art"""
 
-    APPLET_NAME = "Media Control Applet"
-    APPLET_NAME_MARKUP = "<span weight=\"bold\">Media Control Applet</span>"
+    APPLET_NAME = _("Media Control Applet")
+    APPLET_NAME_MARKUP = '<span weight=\"bold\">%s</span>' % APPLET_NAME
 
     use_docklet = gobject.property(type=bool, nick='Use docklet',
                                    blurb='Use docklet if possible',
@@ -505,9 +505,11 @@ class MediaControlApplet (awn.AppletSimple):
             has_album = 'album' in song_info and song_info['album'] != ''
             markup = '<span weight="bold">' + gobject.markup_escape_text(song_info['title']) + '</span>'
             if has_artist:
-                markup += '\n<span style="italic">by</span> %s' % gobject.markup_escape_text(song_info['artist'])
+            	# Used in this sentence: Title by Artist from Album
+                markup += '\n<span style="italic">' + _("by") + '</span> %s' % gobject.markup_escape_text(song_info['artist'])
                 if has_album:
-                    markup += ' <span style="italic">from</span> %s' % gobject.markup_escape_text(song_info['album'])
+            	    # Used in this sentence: Title by Artist from Album
+                    markup += ' <span style="italic">' + _("from") + '</span> %s' % gobject.markup_escape_text(song_info['album'])
 
             self.label.set_markup(markup)
             try:
@@ -648,10 +650,10 @@ class MediaControlApplet (awn.AppletSimple):
         awn_icon = self.get_icon()
         about.set_logo(awn_icon.get_icon_at_size(48))
         about.set_icon(awn_icon.get_icon_at_size(64))
-        about.set_name("Media Control Applet")
+        about.set_name(_("Media Control Applet"))
         about.set_copyright("Copyright (c) 2007 Randal Barlow <im.tehk at gmail.com>")
         about.set_authors(["Randal Barlow <im.tehk at gmail.com>", "Michal Hruby <michal.mhr at gmail.com>"])
-        about.set_comments("Controls your favourite music player.")
+        about.set_comments(_("Controls your favourite music player."))
         about.set_license("This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.")
         about.set_wrap_license(True)
         about.set_documenters(["Randal Barlow <im.tehk at gmail.com>"])

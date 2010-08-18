@@ -50,6 +50,7 @@ class App(awn.AppletSimple):
         #AWN Applet Configuration
         awn.AppletSimple.__init__(self, 'to-do', uid, panel_id)
         self.dialog = awn.Dialog(self)
+        self.dialog.props.hide_on_unfocus = True
 
         self.uid = uid
         self.size = self.get_size()

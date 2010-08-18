@@ -225,7 +225,7 @@
     </columns>
     <data>
       <row>
-        <col id="0" translatable="yes">Celcius</col>
+        <col id="0" translatable="yes">Celsius</col>
       </row>
       <row>
         <col id="0" translatable="yes">Fahrenheit</col>

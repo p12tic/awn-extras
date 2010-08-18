@@ -1354,7 +1354,9 @@ class ProgressButton(gtk.Button):
           lambda *a: applet.edit_details(self.Id, True))
 
         #Set the tooltip: X% done
-        self.set_tooltip_text(str(int(progress)) + '% done')
+        # Translators: %d is a number, %% is a percent sign, please don't change them,
+        # but you may add a space character between them, e.g. in German: %d %% erledigt
+        self.set_tooltip_text(_("%d%% done") % int(progress))
 
     def update(self, *args):
         progress = self.settings['progress'][self.Id]
@@ -1363,7 +1365,9 @@ class ProgressButton(gtk.Button):
         self.image.queue_draw()
 
         #Reset the tooltip
-        self.set_tooltip_text(str(int(progress)) + _("% done"))
+        # Translators: %d is a number, %% is a percent sign, please don't change them,
+        # but you may add a space character between them, e.g. in German: %d %% erledigt
+        self.set_tooltip_text(_("%d%% done") % int(progress))
 
         #Update the applet's icon
         self.applet.update_icon('progress')

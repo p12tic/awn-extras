@@ -76,4 +76,4 @@ _description=Whether or not to focus the location text box
 [DEFAULT/mode]
 type = integer
 default = 0
-_description=0 = one icon with dialog; 1 = one icon with docklet on click; 2 = persistent docklet
+_description=0: one icon with dialog; 1: one icon with docklet on click; 2: persistent docklet

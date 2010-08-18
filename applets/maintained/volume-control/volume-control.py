@@ -25,7 +25,7 @@ pygtk.require("2.0")
 import gtk
 from gtk import gdk
 
-from awn.extras import awnlib, __version__
+from awn.extras import _, awnlib, __version__
 
 import pygst
 pygst.require("0.10")
@@ -40,13 +40,13 @@ read_volume_interval = 0.5
 # value-changed callback of the volume scale to avoid jittering
 gstreamer_freeze_messages_interval = 0.2
 
-applet_name = "Volume Control"
-applet_description = "Applet to control your computer's volume"
+applet_name = _("Volume Control")
+applet_description = _("Applet to control your computer's volume")
 
 theme_dir = "/usr/share/icons"
 ui_file = os.path.join(os.path.dirname(__file__), "volume-control.ui")
 
-system_theme_name = "System theme"
+system_theme_name = _("System theme")
 
 volume_control_apps = ["gnome-volume-control", "xfce4-mixer"]
 
@@ -64,8 +64,8 @@ volume_step = 4
 
 mixer_names = ("pulsemixer", "oss4mixer", "alsamixer")
 
-no_mixer_message = "Install one or more of the following GStreamer elements: %s."
-no_devices_message = "Could not find any devices."
+no_mixer_message = _("Install one or more of the following GStreamer elements: %s.")
+no_devices_message = _("Could not find any devices.")
 
 
 class BackendError(Exception):
@@ -178,7 +178,7 @@ class VolumeControlApplet:
         menu = self.applet.dialog.menu
         menu_index = len(menu) - 1
 
-        volume_control_item = gtk.MenuItem("_Open Volume Control")
+        volume_control_item = gtk.MenuItem(_("_Open Volume Control"))
         volume_control_item.connect("activate", self.show_volume_control_cb)
         menu.insert(volume_control_item, menu_index)
 
@@ -373,13 +373,13 @@ class GStreamerBackend:
         useable_mixers = [i for i in mixer_names if i in found_mixers]
 
         if len(useable_mixers) == 0:
-            parent.applet.errors.general(("No mixer found", no_mixer_message % ", ".join(mixer_names)))
+            parent.applet.errors.general((_("No mixer found"), no_mixer_message % ", ".join(mixer_names)))
             raise BackendError("No mixer found")
 
         mixer_devices = self.find_mixer_and_devices(useable_mixers)
 
         if mixer_devices is None:
-            parent.applet.errors.general(("No devices found", no_devices_message))
+            parent.applet.errors.general((_("No devices found"), no_devices_message))
             raise BackendError("No devices found")
 
         self.__mixer, self.__devices = mixer_devices

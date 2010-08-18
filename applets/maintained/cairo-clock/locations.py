@@ -27,6 +27,8 @@ import cairo
 import glib
 import pango
 
+from awn.extras import _
+
 try:
     from dateutil import tz
 except ImportError:
@@ -137,10 +139,10 @@ class Locations:
         return tz is not None and gweather is not None
 
     def get_name(self):
-        return "Locations"
+        return _("Locations")
 
     def get_callback(self):
-        return ("Edit", self.edit_action_cb)
+        return (_("Edit"), self.edit_action_cb)
 
     def edit_action_cb(self):
         self.__applet.applet.dialog.toggle("preferences", "show")

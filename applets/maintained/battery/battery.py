@@ -23,7 +23,7 @@ pygtk.require('2.0')
 import gtk
 from gtk import gdk
 
-from awn.extras import awnlib, __version__
+from awn.extras import _, awnlib, __version__
 from messagehandler import MessageHandler
 
 try:
@@ -34,8 +34,8 @@ except ImportError:
 # Interval in seconds between two successive checks of the status
 check_status_interval = 5.0
 
-applet_name = "Battery Status"
-applet_description = "An applet which displays battery information"
+applet_name = _("Battery Status")
+applet_description = _("An applet which displays battery information")
 
 # Themed logo of the applet, used as the applet's icon and shown in the GTK About dialog
 applet_theme_logo = "battery"
@@ -96,7 +96,7 @@ class BatteryStatusApplet:
             self.set_battery_missing()
 
     def set_battery_missing(self):
-        self.applet.tooltip.set("No batteries")
+        self.applet.tooltip.set(_("No batteries"))
 
         icon = os.path.join(themes_dir, self.settings["theme"], "battery-missing.svg")
         self.applet.icon.file(icon, size=awnlib.Icon.APPLET_SIZE)

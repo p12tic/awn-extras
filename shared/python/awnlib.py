@@ -25,7 +25,7 @@ import gtk
 
 from desktopagnostic import config, Color
 import awn
-from awn.extras import configbinder, __version__
+from awn.extras import _, configbinder, __version__
 
 import cairo
 import cPickle as cpickle
@@ -107,7 +107,7 @@ class Dialogs:
         if all([key in meta_keys for key in ("name", "author", "copyright-year")]):
             about_dialog = self.new("about")
 
-            about_item = gtk.ImageMenuItem("_About %s" % self.__parent.meta["name"])
+            about_item = gtk.ImageMenuItem(_("_About %s") % self.__parent.meta["name"])
             if gtk.gtk_version >= (2, 16, 0):
                 about_item.props.always_show_image = True
             about_item.set_image(gtk.image_new_from_stock(gtk.STOCK_ABOUT, gtk.ICON_SIZE_MENU))
@@ -363,7 +363,8 @@ class Dialogs:
             self.set_resizable(False)
             self.set_border_width(5)
 
-            self.set_title(parent.meta["name"] + " Preferences")
+            # This is a window title, %s is an applet's name.
+            self.set_title(_("%s Preferences") % parent.meta["name"])
             self.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
 
 

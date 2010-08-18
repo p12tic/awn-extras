@@ -74,7 +74,7 @@ _description=Stack tooltip description.
 [DEFAULT/sort_method]
 type = integer
 default = 1
-_description=Sort method to use (1 = sort by name, 2 = sort by date).
+_description=Sort method to use (1 - sort by name, 2 - sort by date).
 
 [DEFAULT/sort_folders_before_files]
 type = boolean

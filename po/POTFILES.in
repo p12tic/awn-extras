@@ -1,5 +1,6 @@
 # PLEASE KEEP THIS FILE ALPHABETIZED (case-insensitive)!
 applets/maintained/animal-farm/animal-farm.desktop.in
+applets/maintained/animal-farm/animal-farm.py
 [type: gettext/ini]applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in
 applets/maintained/awnterm/awn-terminal.vala
 applets/maintained/awnterm/awnterm.desktop.in.in
@@ -10,10 +11,13 @@ applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in
 applets/maintained/bandwidth-monitor/bwmprefs.py
 [type: gettext/ini]applets/maintained/battery/awn-applet-battery.schema-ini.in
 applets/maintained/battery/battery.desktop.in
+applets/maintained/battery/battery.py
 [type: gettext/glade]applets/maintained/battery/battery.ui
 [type: gettext/ini]applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in
 applets/maintained/cairo-clock/cairo-clock.desktop.in
+applets/maintained/cairo-clock/cairo-clock.py
 [type: gettext/glade]applets/maintained/cairo-clock/cairo-clock.ui
+applets/maintained/cairo-clock/locations.py
 [type: gettext/ini]applets/maintained/cairo-menu/awn-applet-cairo-menu.schema-ini.in
 applets/maintained/cairo-menu/cairo-menu.desktop.in.in
 applets/maintained/cairo-menu/gnome-menu-builder.c
@@ -39,6 +43,7 @@ applets/maintained/comics/feed/__init__.py
 applets/maintained/comics/main.py
 [type: gettext/ini]applets/maintained/cpufreq/awn-applet-cpufreq.schema-ini.in
 applets/maintained/cpufreq/cpufreq.desktop.in
+applets/maintained/cpufreq/cpufreq.py
 [type: gettext/glade]applets/maintained/cpufreq/cpufreq.ui
 [type: gettext/ini]applets/maintained/dialect/awn-applet-dialect.schema-ini.in
 applets/maintained/dialect/dialect.desktop.in
@@ -114,6 +119,7 @@ applets/maintained/slickswitcher/slickswitcher.py
 [type: gettext/ini]applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in
 applets/maintained/sysmon/sysmon.desktop.in.in
 applets/maintained/thinkhdaps/thinkhdaps.desktop.in
+applets/maintained/thinkhdaps/thinkhdaps.py
 [type: gettext/ini]applets/maintained/to-do/awn-applet-to-do.schema-ini.in
 applets/maintained/to-do/prefs.py
 applets/maintained/to-do/to-do.desktop.in
@@ -123,6 +129,7 @@ applets/maintained/tomboy-applet/tomboy-applet.py
 applets/maintained/vala-test/vala-test.desktop.in.in
 [type: gettext/ini]applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in
 applets/maintained/volume-control/volume-control.desktop.in
+applets/maintained/volume-control/volume-control.py
 [type: gettext/glade]applets/maintained/volume-control/volume-control.ui
 [type: gettext/ini]applets/maintained/weather/awn-applet-weather.schema-ini.in
 applets/maintained/weather/forecast.py
@@ -141,3 +148,4 @@ applets/unmaintained/main-menu/main-menu.desktop.in.in
 [type: gettext/ini]applets/unmaintained/pandora/awn-applet-pandora.schema-ini.in
 applets/unmaintained/pandora/pandora.desktop.in
 [type: gettext/ini]applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in
+shared/python/awnlib.py

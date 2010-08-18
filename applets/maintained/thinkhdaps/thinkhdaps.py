@@ -20,7 +20,7 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 
-from awn.extras import awnlib, __version__
+from awn.extras import _, awnlib, __version__
 from awn import OverlayThemedIcon
 
 import glib
@@ -31,14 +31,14 @@ try:
 except ImportError:
     pyinotify = None
 
-applet_name = "ThinkHDAPS"
-applet_description = "Applet that shows the shock protection status of your disks"
+applet_name = _("ThinkHDAPS")
+applet_description = _("Applet that shows the shock protection status of your disks")
 
 # Interval in seconds between two successive status checks
 check_status_interval = 0.1
 
-hdaps_short_description = "%s protected from shocks"
-no_hdaps_short_description = "%s not protected from shocks"
+hdaps_short_description = _("%s protected from shocks")
+no_hdaps_short_description = _("%s not protected from shocks")
 
 # Logo of the applet, shown in the GTK+ About dialog
 applet_logo = os.path.join(os.path.dirname(__file__), "images/thinkhdaps-logo.svg")
@@ -155,7 +155,7 @@ class ThinkHDAPSApplet:
                 applet.timing.register(self.check_status_cb, check_status_interval)
         else:
             self.set_error_icon()
-            applet.tooltip.set("No hard disk found")
+            applet.tooltip.set(_("No hard disk found"))
 
     def setup_inotify(self):
         if pyinotify is None:

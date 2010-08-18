@@ -109,6 +109,7 @@ applets/maintained/quit/quit.desktop.in
 applets/maintained/quit/quit-lock-screen.desktop.in
 applets/maintained/quit/quit-log-out.desktop.in
 applets/maintained/quit/quit-shut-down.desktop.in
+applets/maintained/quit/quit.py
 [type: gettext/ini]applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in
 [type: gettext/glade]applets/maintained/shiny-switcher/shiny-prefs.ui
 applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in

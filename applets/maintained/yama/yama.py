@@ -394,6 +394,7 @@ class YamaApplet:
                     else:
                         icon = "folder-remote"
                         display_uri = uri
+                    display_uri = unquote(display_uri)
 
                     item = self.create_menu_item(name, icon, "Open '%s'" % display_uri)
                     self.places_menu.insert(item, index)

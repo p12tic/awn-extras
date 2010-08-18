@@ -89,6 +89,7 @@ applets/maintained/media-player/media-player.desktop.in
 [type: gettext/glade]applets/maintained/media-player/media-player-prefs.ui
 [type: gettext/ini]applets/maintained/mount/awn-applet-mount.schema-ini.in
 applets/maintained/mount/mount.desktop.in
+applets/maintained/mount/mount.py
 [type: gettext/glade]applets/maintained/mount/mount.ui
 [type: gettext/ini]applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in
 applets/maintained/notification-area/egg-tray-child.c

@@ -86,6 +86,7 @@ applets/maintained/media-icons/media-icons.desktop.in
 applets/maintained/media-icons/media-icons.py
 [type: gettext/ini]applets/maintained/media-player/awn-applet-media-player.schema-ini.in
 applets/maintained/media-player/media-player.desktop.in
+applets/maintained/media-player/media-player.py
 [type: gettext/glade]applets/maintained/media-player/media-player-prefs.ui
 [type: gettext/ini]applets/maintained/mount/awn-applet-mount.schema-ini.in
 applets/maintained/mount/mount.desktop.in

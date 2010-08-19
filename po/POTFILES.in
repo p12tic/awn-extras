@@ -86,7 +86,7 @@ applets/maintained/media-icons/media-icons.desktop.in
 applets/maintained/media-icons/media-icons.py
 [type: gettext/ini]applets/maintained/media-player/awn-applet-media-player.schema-ini.in
 applets/maintained/media-player/media-player.desktop.in
-applets/maintained/media-player/media-player.py
+applets/maintained/media-player/media_player.py
 [type: gettext/glade]applets/maintained/media-player/media-player-prefs.ui
 [type: gettext/ini]applets/maintained/mount/awn-applet-mount.schema-ini.in
 applets/maintained/mount/mount.desktop.in
@@ -144,6 +144,7 @@ applets/maintained/webapplet/applet.c
 applets/maintained/webapplet/webapplet.desktop.in.in
 applets/maintained/wobblyzini/wobblyzini.desktop.in.in
 applets/maintained/yama/yama.desktop.in
+applets/maintained/yama/yama.py
 applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in
 applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in
 applets/unmaintained/main-menu/applet.c

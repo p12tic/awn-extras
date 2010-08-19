@@ -107,7 +107,7 @@ class Calendar(awn.AppletSimple):
     def build_popup_menu(self):
         self.popup_menu = self.create_default_menu()
         pref_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
-        forget_item = gtk.MenuItem("Forget Password")
+        forget_item = gtk.MenuItem(_("Forget Password"))
         about_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_ABOUT)
         self.popup_menu.append(pref_item)
         self.popup_menu.append(forget_item)
@@ -243,11 +243,10 @@ class Calendar(awn.AppletSimple):
 
     def about_callback(self, widget):
         about_dialog = gtk.AboutDialog()
-        about_dialog.set_name("Avant Calendar Applet")
+        about_dialog.set_name(_("Avant Calendar Applet"))
         about_dialog.set_copyright("Copyright 2007 Mike Desjardins")
-        about_dialog.set_comments("A Calendar Applet for the Avant Window " + \
-                                  "Navigator.  Images by Deleket " + \
-                                  "(http://deleket.deviantart.com)")
+        about_dialog.set_comments(_("A Calendar Applet for the Avant Window Navigator. Images by Deleket.") + \
+                                  "\n(http://deleket.deviantart.com)")
         about_dialog.set_authors(["Mike Desjardins"])
         about_dialog.set_artists(["Deleket", "Mike Desjardins"])
         about_dialog.connect("response", lambda d, r: d.destroy())

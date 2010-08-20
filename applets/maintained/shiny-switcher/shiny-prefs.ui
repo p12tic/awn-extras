@@ -94,7 +94,6 @@
     </data>
   </object>
   <object class="GtkDialog" id="dialog1">
-    <property name="width_request">375</property>
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Shiny Switcher Preferences</property>
     <property name="resizable">False</property>

@@ -2,8 +2,8 @@
 Type=Application
 X-AWN-Type=Applet
 X-AWN-AppletType=C
-Name=Shiny Switcher
-Comment=A prettier desktop switcher
+_Name=Shiny Switcher
+_Comment=A prettier desktop switcher
 Exec=awn-applet -p %k
 X-AWN-AppletExec=@LIBDIR@/awn/applets/shinyswitcher/shinyswitcher.so
 Icon=gnome-panel-workspace-switcher

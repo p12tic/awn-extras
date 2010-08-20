@@ -23,6 +23,7 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
+#include <glib/gi18n-lib.h>
 
 G_DEFINE_TYPE (AwnShinySwitcher, awn_shiny_switcher, AWN_TYPE_APPLET)
 
@@ -638,7 +639,7 @@ _button_workspace(GtkWidget *widget, GdkEventButton *event, Workplace_info * ws)
       GtkWidget *item;
       menu = awn_applet_create_default_menu(AWN_APPLET(shinyswitcher));
       gtk_menu_set_screen(GTK_MENU(menu), NULL);
-      item = gtk_image_menu_item_new_with_label("Applet Preferences");
+      item = gtk_image_menu_item_new_with_label(_("Applet Preferences"));
       gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item), 
                                      gtk_image_new_from_stock (GTK_STOCK_PREFERENCES,GTK_ICON_SIZE_MENU));     
       
@@ -732,7 +733,7 @@ _button_win(GtkWidget *widget, GdkEventButton *event, Win_press_data * data)
       gtk_widget_show(item);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
-      item = gtk_image_menu_item_new_with_label("Applet Preferences");
+      item = gtk_image_menu_item_new_with_label(_("Applet Preferences"));
       gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
                                     gtk_image_new_from_stock(GTK_STOCK_PREFERENCES,
                                                              GTK_ICON_SIZE_MENU));
@@ -1942,7 +1943,7 @@ create_windows(AwnShinySwitcher *shinyswitcher)
           GtkWidget *item;
           menu = awn_applet_create_default_menu(AWN_APPLET(shinyswitcher));
           gtk_menu_set_screen(GTK_MENU(menu), NULL);
-          item = gtk_image_menu_item_new_with_label("Applet Preferences");
+          item = gtk_image_menu_item_new_with_label(_("Applet Preferences"));
           gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
                                         gtk_image_new_from_stock(GTK_STOCK_PREFERENCES,
                                                                  GTK_ICON_SIZE_MENU));
@@ -2009,7 +2010,7 @@ _window_opened(WnckScreen *screen, WnckWindow *window, AwnShinySwitcher *shinysw
     GtkWidget *item;
     menu = awn_applet_create_default_menu(AWN_APPLET(shinyswitcher));
     gtk_menu_set_screen(GTK_MENU(menu), NULL);
-    item = gtk_image_menu_item_new_with_label("Applet Preferences");
+    item = gtk_image_menu_item_new_with_label(_("Applet Preferences"));
     gtk_image_menu_item_set_image(GTK_IMAGE_MENU_ITEM(item),
                                   gtk_image_new_from_stock(GTK_STOCK_PREFERENCES,
                                                            GTK_ICON_SIZE_MENU));
@@ -2426,6 +2427,8 @@ awn_shiny_switcher_class_init (AwnShinySwitcherClass *klass)
 static void
 awn_shiny_switcher_init (AwnShinySwitcher *self)
 {
+  bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+  textdomain (GETTEXT_PACKAGE);
 }
 
 AwnShinySwitcher*
@@ -2433,7 +2436,7 @@ awn_shiny_switcher_new (const gchar *name, const gchar *uid, gint panel_id)
 {
   return g_object_new (AWN_TYPE_SHINY_SWITCHER,
                        "canonical-name",name,
-                       "display-name","Shiny Switcher",
+                       "display-name",_("Shiny Switcher"),
                        "uid",uid,
                        "panel-id",panel_id,
                        NULL);

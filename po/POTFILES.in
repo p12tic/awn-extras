@@ -113,6 +113,7 @@ applets/maintained/quit/quit.py
 [type: gettext/ini]applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in
 [type: gettext/glade]applets/maintained/shiny-switcher/shiny-prefs.ui
 applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in
+applets/maintained/shiny-switcher/shinyswitcherapplet.c
 applets/maintained/showdesktop/applet.vala
 applets/maintained/showdesktop/showdesktop.desktop.in.in
 [type: gettext/ini]applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in

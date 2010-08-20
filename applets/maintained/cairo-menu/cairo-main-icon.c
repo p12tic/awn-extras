@@ -28,6 +28,7 @@
 #include "gnome-menu-builder.h"
 #include "misc.h"
 #include "config.h"
+#include <glib/gi18n-lib.h>
 
 #ifndef GSEAL
 #define gtk_selection_data_get_data(x) (x)->data
@@ -157,7 +158,7 @@ cairo_main_icon_constructed (GObject *object)
                                           0);
 
   g_idle_add ( (GSourceFunc)queue_menu_build, object);
-  awn_icon_set_tooltip_text (AWN_ICON (object), "Main Menu");  
+  awn_icon_set_tooltip_text (AWN_ICON (object), _("Main Menu"));  
 }
 
 static void 
@@ -212,6 +213,9 @@ cairo_main_icon_drag_data_received (GtkWidget        *widget,
 static void
 cairo_main_icon_class_init (CairoMainIconClass *klass)
 {
+  bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+  textdomain (GETTEXT_PACKAGE);
+
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *wid_class = GTK_WIDGET_CLASS (klass);  
   GParamSpec   *pspec;  

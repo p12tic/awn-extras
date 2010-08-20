@@ -19,6 +19,8 @@ applets/maintained/cairo-clock/cairo-clock.py
 [type: gettext/glade]applets/maintained/cairo-clock/cairo-clock.ui
 applets/maintained/cairo-clock/locations.py
 [type: gettext/ini]applets/maintained/cairo-menu/awn-applet-cairo-menu.schema-ini.in
+applets/maintained/cairo-menu/cairo-aux-icon.c
+applets/maintained/cairo-menu/cairo-main-icon.c
 applets/maintained/cairo-menu/cairo-menu.desktop.in.in
 applets/maintained/cairo-menu/gnome-menu-builder.c
 applets/maintained/cairo-menu/misc.c

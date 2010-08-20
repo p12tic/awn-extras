@@ -27,6 +27,7 @@
 #include "gnome-menu-builder.h"
 #include "misc.h"
 #include "config.h"
+#include <glib/gi18n-lib.h>
 
 extern MenuBuildFunc  menu_build;
 

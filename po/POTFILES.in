@@ -102,6 +102,7 @@ applets/maintained/notification-area/egg-tray-child.c
 applets/maintained/notification-area/eggtraymanager.c
 [type: gettext/glade]applets/maintained/notification-area/na-prefs.ui
 applets/maintained/notification-area/notification-area.desktop.in.in
+applets/maintained/notification-area/notification-area.vala
 [type: gettext/ini]applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in
 applets/maintained/notification-daemon/notification-daemon.desktop.in.in
 applets/maintained/notification-daemon/daemon.c

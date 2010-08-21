@@ -86,7 +86,7 @@ Floor, Boston, MA 02110-1301  USA.";
 
   GtkWidget *about = gtk_about_dialog_new();
 
-  gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(about), "Indicator Applet");
+  gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(about), _("Indicator Applet"));
   gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(about), VERSION);
   gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(about),
                                 _("An applet to hold all of the system indicators"));
@@ -1041,6 +1041,9 @@ applet_position_changed(AwnApplet *applet, GtkPositionType pos, IndicatorApplet 
 AwnApplet*
 awn_applet_factory_initp(const gchar *name, const gchar *uid, gint panel_id)
 {
+  bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+  textdomain (GETTEXT_PACKAGE);
+
   AwnApplet *applet = awn_applet_new(name, uid, panel_id);
 
   GtkWidget *da = gtk_drawing_area_new();

@@ -74,6 +74,9 @@ applets/maintained/hardware-sensors/hardware-sensors.desktop.in
 applets/maintained/hardware-sensors/hardware-sensors.py
 [type: gettext/glade]applets/maintained/hardware-sensors/hardware-sensors.ui
 applets/maintained/hardware-sensors/sensorvalues/units.py
+applets/maintained/indicator-applet/applet.c
+[type: gettext/ini]applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in
+applets/maintained/indicator-applet/indicator-applet.desktop.in
 [type: gettext/ini]applets/maintained/mail/awn-applet-mail.schema-ini.in
 applets/maintained/mail/mail.desktop.in
 applets/maintained/mail/mail.py

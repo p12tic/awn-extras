@@ -38,6 +38,7 @@
 #include "sysmoniconprivate.h"
 #include "config.h"
 #include "util.h"
+#include <glib/gi18n-lib.h>
 
 
 G_DEFINE_TYPE (AwnCPUicon, awn_CPUicon, AWN_TYPE_SYSMONICON)
@@ -156,7 +157,8 @@ _awn_CPUicon_update_icon(gpointer object)
   {   
     point = g_new0 (AwnGraphSinglePoint,1);    
     *point = awn_CPUicon_get_load (object);
-    text = g_strdup_printf ("CPU: %2.0lf%%",point->value);
+    /* Translators: %2.0lf is a number, %% is a percent sign, do not change them */
+    text = g_strdup_printf (_("CPU: %2.0lf%%"),point->value);
 //    awn_tooltip_set_text (AWN_TOOLTIP(sysmonicon_priv->tooltip),text);
     awn_icon_set_tooltip_text (AWN_ICON(object),text);    
     g_free (text);
@@ -199,7 +201,7 @@ _awn_CPUicon_update_icon(gpointer object)
       point->value = percent_used;
       list = g_list_prepend (list,point); 
     }
-    text = g_strdup_printf ("CPU: %2.0lf%%",
+    text = g_strdup_printf (_("CPU: %2.0lf%%"),
                             avg_point.value
                             );
 //    awn_tooltip_set_text (AWN_TOOLTIP(sysmonicon_priv->tooltip),text);
@@ -348,7 +350,7 @@ awn_CPUicon_constructed (GObject *object)
    measurement contains a partial point and it will average things out.
    */
   priv->dialog = awn_cpu_dialog_new_with_applet(GTK_WIDGET(object),applet);
-  gtk_window_set_title (GTK_WINDOW (priv->dialog),"CPU");
+  gtk_window_set_title (GTK_WINDOW (priv->dialog),_("CPU"));
   g_signal_connect(object, "button-press-event", 
                    G_CALLBACK(_awn_cpu_icon_clicked), 
                    priv->dialog);
@@ -425,6 +427,9 @@ awn_CPUicon_class_init (AwnCPUiconClass *klass)
 static void
 awn_CPUicon_init (AwnCPUicon *self)
 { 
+  bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+  textdomain (GETTEXT_PACKAGE);
+
   AwnCPUiconPrivate *priv;
   	
   priv = AWN_CPUICON_GET_PRIVATE (self);
@@ -572,22 +577,23 @@ awn_CPUicon_show_context_menu(AwnCPUicon *self)
                 NULL);
   
   priv->context_menu = awn_applet_create_default_menu(applet);
-  item = gtk_menu_item_new_with_label ("Graph Type");
+  item = gtk_menu_item_new_with_label (_("Graph Type"));
   gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
   
   submenu = gtk_menu_new ();
   gtk_menu_item_set_submenu (GTK_MENU_ITEM(item),submenu);
   
-  item = gtk_menu_item_new_with_label ("Area");
+  /* Translators: refers to a graph type */
+  item = gtk_menu_item_new_with_label (_("Area"));
   gtk_menu_shell_append(GTK_MENU_SHELL(submenu), item);
   g_signal_connect_swapped (item, "activate", G_CALLBACK(change_to_area), self);
-  item = gtk_menu_item_new_with_label ("Circle");
+  item = gtk_menu_item_new_with_label (_("Circle"));
   gtk_menu_shell_append(GTK_MENU_SHELL(submenu), item);
   g_signal_connect_swapped (item, "activate", G_CALLBACK(change_to_circle), self);  
-  item = gtk_menu_item_new_with_label ("Bars");
+  item = gtk_menu_item_new_with_label (_("Bars"));
   gtk_menu_shell_append(GTK_MENU_SHELL(submenu), item);
   g_signal_connect_swapped (item, "activate", G_CALLBACK(change_to_bars), self);  
-  item = gtk_menu_item_new_with_label ("Default");
+  item = gtk_menu_item_new_with_label (_("Default"));
   gtk_menu_shell_append(GTK_MENU_SHELL(submenu), item);
   g_signal_connect_swapped (item, "activate", G_CALLBACK(change_to_default), self);  
 
@@ -601,7 +607,7 @@ awn_CPUicon_show_context_menu(AwnCPUicon *self)
 /*  item = gtk_menu_item_new_with_label ("Remove Icon");
   gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);  
 */
-  item = gtk_check_menu_item_new_with_label ("Render Background");
+  item = gtk_check_menu_item_new_with_label (_("Render Background"));
   gtk_check_menu_item_set_active ( GTK_CHECK_MENU_ITEM (item),render_bg);  
   gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
   g_signal_connect_swapped (item, "activate", G_CALLBACK(change_render_bg), self);  

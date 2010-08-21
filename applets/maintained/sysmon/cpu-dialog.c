@@ -20,6 +20,8 @@
 
 #include "cpu-dialog.h"
 #include "util.h"
+#include "config.h"
+#include <glib/gi18n-lib.h>
 
 G_DEFINE_TYPE (AwnCPUDialog, awn_cpu_dialog, AWN_TYPE_DIALOG)
 
@@ -144,6 +146,9 @@ awn_cpu_dialog_class_init (AwnCPUDialogClass *klass)
 static void
 awn_cpu_dialog_init (AwnCPUDialog *self)
 {
+  bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+  textdomain (GETTEXT_PACKAGE);
+
   AwnCPUDialogPrivate * priv = AWN_CPU_DIALOG_GET_PRIVATE (self);
   priv->num_entries = 20;
   priv->cmp_func = (GCompareFunc) cmp_proc_info_percent_descending;
@@ -232,7 +237,7 @@ static void awn_cpu_dialog_populate_table (AwnCPUDialog *dialog)
   new_table = gtk_table_new (9,priv->num_entries,FALSE);    
 
   gtk_table_attach_defaults (GTK_TABLE(new_table),
-                             button = gtk_button_new_with_label ("PID"),
+                             button = gtk_button_new_with_label (_("PID")),
                                             0,
                                             1,
                                             0,
@@ -240,7 +245,7 @@ static void awn_cpu_dialog_populate_table (AwnCPUDialog *dialog)
   g_signal_connect (button,"clicked",G_CALLBACK(_pid_button_click),dialog);
   
   gtk_table_attach_defaults (GTK_TABLE(new_table),
-                             button = gtk_button_new_with_label ("Process Name "),
+                             button = gtk_button_new_with_label (_("Process Name")),
                                             1,
                                             2,
                                             0,
@@ -248,7 +253,7 @@ static void awn_cpu_dialog_populate_table (AwnCPUDialog *dialog)
   g_signal_connect (button,"clicked",G_CALLBACK(_proc_name_button_click),dialog);
   
   gtk_table_attach_defaults (GTK_TABLE(new_table),
-                             button = gtk_button_new_with_label ("CPU"),
+                             button = gtk_button_new_with_label (_("CPU")),
                                             2,
                                             3,
                                             0,

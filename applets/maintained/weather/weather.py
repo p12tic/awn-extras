@@ -564,7 +564,10 @@ class WeatherApplet:
         return str(int(round(converted_value)))
 
     def get_temperature_unit(self):
-        return temperature_units[self.applet.settings["temperature-unit"]][0]
+    	if temperature_units[self.applet.settings["temperature-unit"]] == _("Celsius"):
+    	    return "C"
+    	else:
+    	    return "F"
 
     def get_icon_name(self, hint, theme):
         if hint == "twc":

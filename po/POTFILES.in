@@ -145,6 +145,7 @@ applets/maintained/volume-control/volume-control.py
 [type: gettext/glade]applets/maintained/volume-control/volume-control.ui
 [type: gettext/ini]applets/maintained/weather/awn-applet-weather.schema-ini.in
 applets/maintained/weather/forecast.py
+applets/maintained/weather/weathertext.py
 applets/maintained/weather/weather.desktop.in
 applets/maintained/weather/weather.py
 [type: gettext/glade]applets/maintained/weather/weather.ui

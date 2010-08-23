@@ -549,7 +549,16 @@ class YamaApplet:
             if file is not None and file.exists():
                 entry = fdo.DesktopEntry.for_file(file)
 
-                item = self.append_menu_item(menu, entry.get_name(), entry.get_icon(), entry.get_string("Comment"))
+                if desktop_name == "gnome-search-tool":
+                    item = self.append_menu_item(menu, _("Search for Files..."), entry.get_icon(), _("Locate documents and folders on this computer by name or content"))
+                elif desktop_name == "network-scheme":
+                    item = self.append_menu_item(menu, _("Network"), entry.get_icon(), _("Browse bookmarked and local network locations"))
+                elif desktop_name == "nautilus-computer":
+                    item = self.append_menu_item(menu, _("Computer"), entry.get_icon(), _("Browse all local and remote disks and folders accessible from this computer"))
+                elif desktop_name == "nautilus-cd-burner":
+                    item = self.append_menu_item(menu, _("CD/DVD Creator"), entry.get_icon(), _("Open a folder into which you can drag files to burn to a CD or DVD"))
+                else:
+                    item = self.append_menu_item(menu, entry.get_name(), entry.get_icon(), entry.get_string("Comment"))
                 item.connect("activate", self.launch_app, file.props.path)
                 return True
         return False

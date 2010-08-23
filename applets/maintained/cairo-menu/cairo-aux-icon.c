@@ -192,7 +192,7 @@ cairo_aux_icon_constructed (GObject *object)
                                         priv->menu_name,
                                         0);
   g_idle_add ((GSourceFunc)queue_menu_build, object);
-  awn_icon_set_tooltip_text (AWN_ICON(object),priv->display_name);
+  awn_icon_set_tooltip_text (AWN_ICON(object),_(priv->display_name));
 }
 
 static void

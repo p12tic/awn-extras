@@ -46,7 +46,6 @@ conditions = [
     N_("Mixed Rain and Sleet"),
     N_("Mixed Rain and Snow"),
     N_("Mostly Cloudy"),
-    # Please keep translation very short (size of a temperature value, 3 to 4 characters)
     N_("N/A"),
     N_("Partly Cloudy"),
     N_("Scattered Showers"),

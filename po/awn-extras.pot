@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-23 16:15+0200\n"
+"POT-Creation-Date: 2010-08-25 21:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -697,7 +697,6 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:381
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:610
 #: ../applets/maintained/file-browser-launcher/prefs.py:234
-#: ../applets/maintained/yama/yama.py:557
 msgid "Computer"
 msgstr ""
 
@@ -728,7 +727,6 @@ msgstr ""
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:321
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:613
-#: ../applets/maintained/yama/yama.py:555
 msgid "Network"
 msgstr ""
 
@@ -757,7 +755,7 @@ msgstr ""
 
 #: ../applets/maintained/cairo-menu/misc.c:344
 #: ../applets/maintained/yama/yama.py:351
-#: ../applets/maintained/yama/yama.py:602
+#: ../applets/maintained/yama/yama.py:593
 msgid "Clear Recent Documents"
 msgstr ""
 
@@ -4723,236 +4721,267 @@ msgid "Isolated Thunderstorms"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:43
-msgid "Light Snow Showers"
+msgid "Light Rain Shower"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:44
-msgid "Mixed Precipitation"
+msgid "Light Rain with Thunder"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:45
-msgid "Mixed Rain and Hail"
+msgid "Light Snow Showers"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:46
-msgid "Mixed Rain and Sleet"
+msgid "Mixed Precipitation"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:47
-msgid "Mixed Rain and Snow"
+msgid "Mixed Rain and Hail"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:48
-msgid "Mostly Cloudy"
+msgid "Mixed Rain and Sleet"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:49
-msgid "N/A"
+msgid "Mixed Rain and Snow"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:50
-msgid "Partly Cloudy"
+msgid "Mostly Cloudy"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:51
-msgid "Scattered Showers"
+msgid "N/A"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:52
-msgid "Scattered Snow Showers"
+msgid "Partly Cloudy"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:53
-msgid "Scattered Thunderstorms"
+msgid "Scattered Showers"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:54
-msgid "Severe Thunderstorms"
+msgid "Scattered Snow Showers"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:55
-msgid "Showers"
+msgid "Scattered Thunderstorms"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:56
-msgid "Sleet"
+msgid "Severe Thunderstorms"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:57
-msgid "Smoke"
+msgid "Showers"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:58
-msgid "Snow"
+msgid "Sleet"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:59
-msgid "Snow Flurries"
+msgid "Smoke"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:60
-msgid "Snow Showers"
+msgid "Snow"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:61
-msgid "Thunder Showers"
+msgid "Snow Flurries"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:62
-msgid "Thunderstorms"
+msgid "Snow Showers"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:63
-msgid "Tornado"
+msgid "Thunder Showers"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:64
-msgid "Tropical Storm"
+msgid "Thunderstorms"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:65
+msgid "Tornado"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:66
+msgid "Tropical Storm"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:67
 msgid "Windy"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:70
+#: ../applets/maintained/weather/weathertext.py:72
 msgid "AM Clouds / PM Sun"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:72
+#: ../applets/maintained/weather/weathertext.py:74
 msgid "AM Drizzle / Wind"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:74
-msgid "AM Light Rain"
-msgstr ""
-
-#. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:76
-msgid "AM Rain / Wind"
+msgid "AM Fog / PM Sun"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:78
-msgid "AM Showers"
+msgid "AM Light Rain"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:80
-msgid "Few Showers"
+msgid "AM Rain / Wind"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:82
+msgid "AM Showers"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#. T-Showers = Thunder Showers
+#: ../applets/maintained/weather/weathertext.py:85
+msgid "AM T-Showers"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#. T-Storms = Thunderstorms
+#: ../applets/maintained/weather/weathertext.py:88
+msgid "AM T-Storms"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:90
+msgid "Few Showers"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:92
 msgid "Heavy Rain"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
-#: ../applets/maintained/weather/weathertext.py:85
+#: ../applets/maintained/weather/weathertext.py:95
 msgid "Isolated T-Storms"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:87
+#: ../applets/maintained/weather/weathertext.py:97
 msgid "Light Rain"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:89
+#: ../applets/maintained/weather/weathertext.py:99
 msgid "Mostly Sunny"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:91
+#: ../applets/maintained/weather/weathertext.py:101
 msgid "Partly Cloudy / Wind"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:93
+#: ../applets/maintained/weather/weathertext.py:103
 msgid "PM Light Rain"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:95
+#: ../applets/maintained/weather/weathertext.py:105
 msgid "PM Showers"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
-#: ../applets/maintained/weather/weathertext.py:98
+#: ../applets/maintained/weather/weathertext.py:108
 msgid "PM T-Showers"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
-#: ../applets/maintained/weather/weathertext.py:101
+#: ../applets/maintained/weather/weathertext.py:111
 msgid "PM T-Storms"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:103
+#: ../applets/maintained/weather/weathertext.py:113
 msgid "Rain"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:105
+#: ../applets/maintained/weather/weathertext.py:115
 msgid "Rain / Wind"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:107
+#: ../applets/maintained/weather/weathertext.py:117
 msgid "Rain / Thunder"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:109
+#: ../applets/maintained/weather/weathertext.py:119
 msgid "Scattered Showers / Wind"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
-#: ../applets/maintained/weather/weathertext.py:112
+#: ../applets/maintained/weather/weathertext.py:122
 msgid "Scattered T-Storms"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:114
+#: ../applets/maintained/weather/weathertext.py:124
 msgid "Sunny"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:116
+#: ../applets/maintained/weather/weathertext.py:126
 msgid "Sunny / Wind"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:120
+#. Please keep translation short, approx. 12 characters
+#. T-Showers = Thunder Showers
+#: ../applets/maintained/weather/weathertext.py:129
+msgid "T-Showers"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:133
 msgid "Monday"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:121
+#: ../applets/maintained/weather/weathertext.py:134
 msgid "Tuesday"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:122
+#: ../applets/maintained/weather/weathertext.py:135
 msgid "Wednesday"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:123
+#: ../applets/maintained/weather/weathertext.py:136
 msgid "Thursday"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:124
+#: ../applets/maintained/weather/weathertext.py:137
 msgid "Friday"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:125
+#: ../applets/maintained/weather/weathertext.py:138
 msgid "Saturday"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:126
+#: ../applets/maintained/weather/weathertext.py:139
 msgid "Sunday"
 msgstr ""
 
@@ -5152,43 +5181,18 @@ msgstr ""
 msgid "Mount %s"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:553
-msgid "Search for Files..."
-msgstr ""
-
-#: ../applets/maintained/yama/yama.py:553
-msgid "Locate documents and folders on this computer by name or content"
-msgstr ""
-
-#: ../applets/maintained/yama/yama.py:555
-msgid "Browse bookmarked and local network locations"
-msgstr ""
-
-#: ../applets/maintained/yama/yama.py:557
-msgid ""
-"Browse all local and remote disks and folders accessible from this computer"
-msgstr ""
-
-#: ../applets/maintained/yama/yama.py:559
-msgid "CD/DVD Creator"
-msgstr ""
-
-#: ../applets/maintained/yama/yama.py:559
-msgid "Open a folder into which you can drag files to burn to a CD or DVD"
-msgstr ""
-
-#: ../applets/maintained/yama/yama.py:597
+#: ../applets/maintained/yama/yama.py:588
 msgid "Clear the Recent Documents list?"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:603
+#: ../applets/maintained/yama/yama.py:594
 msgid ""
 "Clearing the Recent Documents list will clear the following:\n"
 "* All items from the Places > Recent Documents menu item.\n"
 "* All items from the recent documents list in all applications."
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:618
+#: ../applets/maintained/yama/yama.py:609
 #, python-format
 msgid "Unable to mount %s"
 msgstr ""

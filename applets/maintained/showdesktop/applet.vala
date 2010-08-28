@@ -33,9 +33,9 @@ class ShowDesktop : AppletSimple
   {
     unowned Wnck.Screen screen;
 
-    this.canonical_name = canonical_name;
-    this.uid = uid;
-    this.panel_id = panel_id;
+    GLib.Object (canonical_name: canonical_name,
+                 uid: uid,
+                 panel_id: panel_id);
 
     this.display_name = Gettext._ ("Show Desktop");
     this.clicked.connect (this.on_clicked);

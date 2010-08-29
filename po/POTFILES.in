@@ -9,6 +9,7 @@ applets/maintained/bandwidth-monitor/awn-bwm.py
 applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in
 [type: gettext/glade]applets/maintained/bandwidth-monitor/bandwidth-monitor.ui
 applets/maintained/bandwidth-monitor/bwmprefs.py
+applets/maintained/bandwidth-monitor/interfaces_dialog.py
 [type: gettext/ini]applets/maintained/battery/awn-applet-battery.schema-ini.in
 applets/maintained/battery/battery.desktop.in
 applets/maintained/battery/battery.py
@@ -72,6 +73,9 @@ applets/maintained/hardware-sensors/hardware-sensors.desktop.in
 applets/maintained/hardware-sensors/hardware-sensors.py
 [type: gettext/glade]applets/maintained/hardware-sensors/hardware-sensors.ui
 applets/maintained/hardware-sensors/sensorvalues/units.py
+applets/maintained/indicator-applet/applet.c
+applets/maintained/indicator-applet/indicator-applet.desktop.in
+applets/maintained/indicator-applet/indicator-applet.desktop.in.in
 [type: gettext/ini]applets/maintained/mail/awn-applet-mail.schema-ini.in
 applets/maintained/mail/mail.desktop.in
 applets/maintained/mail/mail.py
@@ -98,6 +102,7 @@ applets/maintained/notification-area/notification-area.desktop.in.in
 [type: gettext/ini]applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in
 applets/maintained/notification-daemon/notification-daemon.desktop.in.in
 applets/maintained/notification-daemon/daemon.c
+applets/maintained/notification-daemon/notification-daemon.desktop.in
 applets/maintained/places/applet.c
 [type: gettext/ini]applets/maintained/places/awn-applet-places.schema-ini.in
 applets/maintained/places/places.desktop.in.in
@@ -107,6 +112,8 @@ applets/maintained/quit/quit.desktop.in
 applets/maintained/quit/quit-lock-screen.desktop.in
 applets/maintained/quit/quit-log-out.desktop.in
 applets/maintained/quit/quit-shut-down.desktop.in
+applets/maintained/related/related.desktop.in
+applets/maintained/related/related.desktop.in.in
 [type: gettext/ini]applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in
 [type: gettext/glade]applets/maintained/shiny-switcher/shiny-prefs.ui
 applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in

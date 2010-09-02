@@ -510,7 +510,7 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
         }
         txt = gmenu_tree_entry_get_name( (GMenuTreeEntry*)item);
         desktop_file = g_strdup (gmenu_tree_entry_get_desktop_file_path ((GMenuTreeEntry*)item));
-        uri = g_strdup_printf("file://%s\n",desktop_file);
+        uri = g_strdup_printf("file://%s",desktop_file);
         if (desktop_file)
         {
           entry = get_desktop_entry (desktop_file);

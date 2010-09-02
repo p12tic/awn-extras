@@ -352,7 +352,6 @@ _get_places_menu (GtkWidget * menu)
     gchar *b_path;
     gchar *b_uri;
     gchar *shell_quoted = NULL;
-    gchar *icon_name = NULL;
     
     bookmark = (DesktopAgnosticVFSBookmark*)node->data;
     b_file = desktop_agnostic_vfs_bookmark_get_file (bookmark);
@@ -368,13 +367,11 @@ _get_places_menu (GtkWidget * menu)
       if (b_alias)
       {
         item = cairo_menu_item_new_with_label (b_alias);
-        icon_name = g_utf8_strdown (b_alias,-1);
       }
       else
       {
         gchar * base = g_path_get_basename (b_path);
         item = cairo_menu_item_new_with_label (base);        
-        icon_name = g_utf8_strdown (base,-1);        
         g_free (base);
       }
       g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);              
@@ -388,13 +385,11 @@ _get_places_menu (GtkWidget * menu)
       if (b_alias)
       {
         item = cairo_menu_item_new_with_label (b_alias);
-        icon_name = g_utf8_strdown (b_alias,-1);        
       }
       else
       {
         gchar * base = g_path_get_basename (b_uri);
         item = cairo_menu_item_new_with_label (b_uri);
-        icon_name = g_utf8_strdown (base,-1);        
         g_free (base);
       }
       g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);              
@@ -412,13 +407,11 @@ _get_places_menu (GtkWidget * menu)
       if (b_alias)
       {
         item = cairo_menu_item_new_with_label (b_alias);
-        icon_name = g_utf8_strdown (b_alias,-1);        
       }
       else
       {
         gchar * base = g_path_get_basename (b_uri);
         item = cairo_menu_item_new_with_label (base);
-        icon_name = g_utf8_strdown (base,-1);        
         g_free (base);
       }
       g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);      
@@ -432,22 +425,64 @@ _get_places_menu (GtkWidget * menu)
 
     if (item)
     {
-      if (icon_name)
+      /* Set icons for known paths and remote destinations */
+      
+      if (g_strcmp0 (b_uri, "computer:///") == 0)
       {
-        gchar * folderfied_icon_name = g_strdup_printf("folder-%s",icon_name);
-        g_free (icon_name);
-        icon_name = folderfied_icon_name;
-        image = get_gtk_image (icon_name);
-        g_free (icon_name);
+        image = get_gtk_image ("computer");
       }
+      else if (g_strcmp0 (b_path, homedir) == 0)
+      {
+        image = get_gtk_image ("folder-home");
+      }
+      else if (g_strcmp0 (b_path, desktop_dir) == 0)
+      {
+        image = get_gtk_image ("desktop");
+      }
+      else if (g_strcmp0 (b_path, g_get_user_special_dir (G_USER_DIRECTORY_DOCUMENTS)) == 0)
+      {
+        image = get_gtk_image ("folder-documents");
+      }
+      else if (g_strcmp0 (b_path, g_get_user_special_dir (G_USER_DIRECTORY_DOWNLOAD)) == 0)
+      {
+        image = get_gtk_image ("folder-download");
+      }
+      else if (g_strcmp0 (b_path, g_get_user_special_dir (G_USER_DIRECTORY_MUSIC)) == 0)
+      {
+        image = get_gtk_image ("folder-music");
+      }
+      else if (g_strcmp0 (b_path, g_get_user_special_dir (G_USER_DIRECTORY_PICTURES)) == 0)
+      {
+        image = get_gtk_image ("folder-pictures");
+      }
+      else if (g_strcmp0 (b_path, g_get_user_special_dir (G_USER_DIRECTORY_PUBLIC_SHARE)) == 0)
+      {
+        image = get_gtk_image ("folder-publicshare");
+      }
+      else if (g_strcmp0 (b_path, g_get_user_special_dir (G_USER_DIRECTORY_TEMPLATES)) == 0)
+      {
+        image = get_gtk_image ("folder-templates");
+      }
+      else if (g_strcmp0 (b_path, g_get_user_special_dir (G_USER_DIRECTORY_VIDEOS)) == 0)
+      {
+        image = get_gtk_image ("folder-videos");
+      }
+      else if (!b_path)
+      {
+        image = get_gtk_image ("folder-remote");
+      }
+      else
+      {
+        image = get_gtk_image ("stock_folder");
+      }
+
+      /* For icon themes that don't feature icons for special directories */
       if (!image)
       {
         image = get_gtk_image ("stock_folder");
       }
-      if (image)
-      {
-        gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
-      }
+
+      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
     }
     g_free (b_path);
     g_free (b_uri);

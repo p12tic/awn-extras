@@ -180,6 +180,7 @@ _get_places_menu (GtkWidget * menu)
 {  
   static GVolumeMonitor* vol_monitor = NULL;
   static DesktopAgnosticVFSGtkBookmarks *bookmarks_parser = NULL;  
+  static DesktopAgnosticVFSTrash* trash_handler = NULL;
   
   GtkWidget *item = NULL;
   GError *error = NULL;
@@ -187,16 +188,22 @@ _get_places_menu (GtkWidget * menu)
   gchar * exec;
   const gchar *desktop_dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
   const gchar *homedir = g_get_home_dir();
+  guint trash_file_count;    
 
   gtk_container_foreach (GTK_CONTAINER (menu),(GtkCallback)_remove_menu_item,menu);
 
   add_special_item (menu,_("Computer"),"computer","nautilus","computer:///");
   add_special_item (menu,_("Home"),"stock_home",XDG_OPEN,homedir);
   add_special_item (menu,_("Desktop"),"desktop",XDG_OPEN,desktop_dir?desktop_dir:homedir);
-/*
-TODO: check the trash and set to stock_trash_empty if trash is empty
-                     */
-  add_special_item (menu,_("Trash"),"stock_trash_full","nautilus","trash:///");
+  
+  if (trash_handler)
+    trash_file_count = desktop_agnostic_vfs_trash_get_file_count (trash_handler);
+
+  if (trash_file_count == 0)
+    add_special_item (menu,_("Trash"), "user-trash","nautilus","trash:///");
+  else
+    add_special_item (menu,_("Trash"),"stock_trash_full","nautilus","trash:///");
+
   add_special_item (menu,_("File System"),"system",XDG_OPEN,"/");
     
   if (!vol_monitor)
@@ -206,6 +213,12 @@ TODO: check the trash and set to stock_trash_empty if trash is empty
     these actions once.*/
     vol_monitor = g_volume_monitor_get();
     bookmarks_parser = desktop_agnostic_vfs_gtk_bookmarks_new (NULL, TRUE);
+    trash_handler = desktop_agnostic_vfs_trash_get_default (&error);
+    if (error)
+    {
+      g_critical ("Error with trash handler: %s", error->message);
+      g_error_free (error);
+    }
   }
   g_signal_handlers_disconnect_by_func (vol_monitor, G_CALLBACK(_get_places_menu), menu);
   g_signal_handlers_disconnect_by_func (vol_monitor, G_CALLBACK(_get_places_menu), menu);
@@ -215,6 +228,7 @@ TODO: check the trash and set to stock_trash_empty if trash is empty
   g_signal_handlers_disconnect_by_func (vol_monitor, G_CALLBACK(_get_places_menu), menu);
   g_signal_handlers_disconnect_by_func (vol_monitor, G_CALLBACK(_get_places_menu), menu);
   g_signal_handlers_disconnect_by_func (G_OBJECT (bookmarks_parser), G_CALLBACK (_get_places_menu), menu);
+  g_signal_handlers_disconnect_by_func (trash_handler, G_CALLBACK(_get_places_menu), menu);
     
   g_signal_connect_swapped(vol_monitor, "volume-changed", G_CALLBACK(_get_places_menu), menu);
   g_signal_connect_swapped(vol_monitor, "drive-changed", G_CALLBACK(_get_places_menu), menu);
@@ -225,6 +239,7 @@ TODO: check the trash and set to stock_trash_empty if trash is empty
   g_signal_connect_swapped(vol_monitor, "mount-removed", G_CALLBACK(_get_places_menu), menu);
   g_signal_connect_swapped (G_OBJECT (bookmarks_parser), "changed",
                       G_CALLBACK (_get_places_menu), menu);
+  g_signal_connect_swapped(trash_handler, "file-count-changed", G_CALLBACK(_get_places_menu), menu);
 
     /*process mount etc*/
   GList *drives = g_volume_monitor_get_connected_drives(vol_monitor);

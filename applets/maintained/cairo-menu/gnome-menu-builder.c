@@ -850,7 +850,7 @@ submenu_build (MenuInstance * instance)
   else if (g_strcmp0(instance->submenu_name,":::RECENT")==0)
   {
     g_assert (!instance->menu);    
-    menu = get_recent_menu ();
+    menu = get_recent_menu (instance->recent);
   }
   else if (g_strcmp0(instance->submenu_name,":::SESSION")==0)
   {
@@ -1036,9 +1036,9 @@ menu_build (MenuInstance * instance)
     }
     else
     {
-      sub_menu = get_recent_menu ();        
       gchar * icon_name;
       instance->recent = menu_item = cairo_menu_item_new_with_label (_("Recent Documents"));
+      sub_menu = get_recent_menu (menu_item);        
       image = get_gtk_image (icon_name = "document-open-recent");
       if (!image)
       {

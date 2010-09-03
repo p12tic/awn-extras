@@ -1059,7 +1059,9 @@ menu_build (MenuInstance * instance)
   {  
     if ( !instance->submenu_name)
     {    
-      menu_item = cairo_menu_item_new_with_label (_("Search…"));
+      /*generates a compiler warning due to the ellipse*/
+      menu_item = cairo_menu_item_new_with_label (_("Search\u2026"));
+      /* add proper ellipse*/
       image = get_gtk_image ("stock_search");
       if (image)
       {
@@ -1074,7 +1076,9 @@ menu_build (MenuInstance * instance)
   {
     if ( !instance->submenu_name)
     {    
-      menu_item = cairo_menu_item_new_with_label (_("Launch…"));
+      /*generates a compiler warning due to the ellipse*/    
+      menu_item = cairo_menu_item_new_with_label (_("Launch\u2026"));
+      /* add proper ellipse*/
       image = get_gtk_image ("gnome-run");
       if (image)
       {

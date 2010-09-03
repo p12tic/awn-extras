@@ -109,8 +109,6 @@ _description=
 [DEFAULT/aux_menu_names]
 type = list-string
 default = :::PLACES###Places###stock_folder;
-# Repeat display name (between '###' and '###') for translation purposes
-_display_name=Places
 _description=
 
 [DEFAULT/hidden_names]

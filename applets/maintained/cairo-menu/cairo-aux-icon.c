@@ -27,7 +27,6 @@
 #include "gnome-menu-builder.h"
 #include "misc.h"
 #include "config.h"
-#include <glib/gi18n-lib.h>
 
 extern MenuBuildFunc  menu_build;
 
@@ -192,7 +191,7 @@ cairo_aux_icon_constructed (GObject *object)
                                         priv->menu_name,
                                         0);
   g_idle_add ((GSourceFunc)queue_menu_build, object);
-  awn_icon_set_tooltip_text (AWN_ICON(object),_(priv->display_name));
+  awn_icon_set_tooltip_text (AWN_ICON(object),priv->display_name);
 }
 
 static void
@@ -346,7 +345,7 @@ _button_clicked_event (CairoAuxIcon *icon, GdkEventButton *event, gpointer null)
       gtk_widget_show(item);
       gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);*/
       gtk_menu_set_screen(GTK_MENU(priv->context_menu), NULL);
-      item = gtk_image_menu_item_new_with_label(_("Remove Icon"));
+      item = gtk_image_menu_item_new_with_label("Remove Icon");
       gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item), 
                                      gtk_image_new_from_stock (GTK_STOCK_REMOVE,GTK_ICON_SIZE_MENU));
 

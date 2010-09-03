@@ -205,7 +205,7 @@ _get_places_menu (GtkWidget * menu)
   gtk_container_foreach (GTK_CONTAINER (menu),(GtkCallback)_remove_menu_item,menu);
 
   add_special_item (menu,_("Computer"),"nautilus","computer:///","computer",NULL);
-  add_special_item (menu,_("Home"),XDG_OPEN,homedir,"stock-folder","stock_home",NULL);
+  add_special_item (menu,_("Home"),XDG_OPEN,homedir,"folder-home","stock_home",NULL);
   add_special_item (menu,_("Desktop"),XDG_OPEN,desktop_dir?desktop_dir:homedir,"desktop",NULL);
   
   if (trash_handler)

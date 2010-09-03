@@ -114,9 +114,11 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
 
   public AwnTerminalApplet (string canonical_name, string uid, int panel_id)
   {
-    this.canonical_name = canonical_name;
-    this.uid = uid;
-    this.panel_id = panel_id;
+    GLib.Object (canonical_name: canonical_name,
+                 uid: uid,
+                 panel_id: panel_id,
+                 panel_id: panel_id);
+
     this.display_name = "Terminal";
   }
 

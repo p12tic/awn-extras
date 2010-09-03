@@ -180,6 +180,7 @@ _get_places_menu (GtkWidget * menu)
 {  
   static GVolumeMonitor* vol_monitor = NULL;
   static DesktopAgnosticVFSGtkBookmarks *bookmarks_parser = NULL;  
+  static DesktopAgnosticVFSTrash* trash_handler = NULL;
   
   GtkWidget *item = NULL;
   GError *error = NULL;
@@ -187,16 +188,22 @@ _get_places_menu (GtkWidget * menu)
   gchar * exec;
   const gchar *desktop_dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
   const gchar *homedir = g_get_home_dir();
+  guint trash_file_count;    
 
   gtk_container_foreach (GTK_CONTAINER (menu),(GtkCallback)_remove_menu_item,menu);
 
   add_special_item (menu,_("Computer"),"computer","nautilus","computer:///");
   add_special_item (menu,_("Home"),"stock_home",XDG_OPEN,homedir);
   add_special_item (menu,_("Desktop"),"desktop",XDG_OPEN,desktop_dir?desktop_dir:homedir);
-/*
-TODO: check the trash and set to stock_trash_empty if trash is empty
-                     */
-  add_special_item (menu,_("Trash"),"stock_trash_full","nautilus","trash:///");
+  
+  if (trash_handler)
+    trash_file_count = desktop_agnostic_vfs_trash_get_file_count (trash_handler);
+
+  if (trash_file_count == 0)
+    add_special_item (menu,_("Trash"), "user-trash","nautilus","trash:///");
+  else
+    add_special_item (menu,_("Trash"),"stock_trash_full","nautilus","trash:///");
+
   add_special_item (menu,_("File System"),"system",XDG_OPEN,"/");
     
   if (!vol_monitor)
@@ -206,6 +213,12 @@ TODO: check the trash and set to stock_trash_empty if trash is empty
     these actions once.*/
     vol_monitor = g_volume_monitor_get();
     bookmarks_parser = desktop_agnostic_vfs_gtk_bookmarks_new (NULL, TRUE);
+    trash_handler = desktop_agnostic_vfs_trash_get_default (&error);
+    if (error)
+    {
+      g_critical ("Error with trash handler: %s", error->message);
+      g_error_free (error);
+    }
   }
   g_signal_handlers_disconnect_by_func (vol_monitor, G_CALLBACK(_get_places_menu), menu);
   g_signal_handlers_disconnect_by_func (vol_monitor, G_CALLBACK(_get_places_menu), menu);
@@ -215,6 +228,7 @@ TODO: check the trash and set to stock_trash_empty if trash is empty
   g_signal_handlers_disconnect_by_func (vol_monitor, G_CALLBACK(_get_places_menu), menu);
   g_signal_handlers_disconnect_by_func (vol_monitor, G_CALLBACK(_get_places_menu), menu);
   g_signal_handlers_disconnect_by_func (G_OBJECT (bookmarks_parser), G_CALLBACK (_get_places_menu), menu);
+  g_signal_handlers_disconnect_by_func (trash_handler, G_CALLBACK(_get_places_menu), menu);
     
   g_signal_connect_swapped(vol_monitor, "volume-changed", G_CALLBACK(_get_places_menu), menu);
   g_signal_connect_swapped(vol_monitor, "drive-changed", G_CALLBACK(_get_places_menu), menu);
@@ -225,6 +239,7 @@ TODO: check the trash and set to stock_trash_empty if trash is empty
   g_signal_connect_swapped(vol_monitor, "mount-removed", G_CALLBACK(_get_places_menu), menu);
   g_signal_connect_swapped (G_OBJECT (bookmarks_parser), "changed",
                       G_CALLBACK (_get_places_menu), menu);
+  g_signal_connect_swapped(trash_handler, "file-count-changed", G_CALLBACK(_get_places_menu), menu);
 
     /*process mount etc*/
   GList *drives = g_volume_monitor_get_connected_drives(vol_monitor);
@@ -337,7 +352,6 @@ TODO: check the trash and set to stock_trash_empty if trash is empty
     gchar *b_path;
     gchar *b_uri;
     gchar *shell_quoted = NULL;
-    gchar *icon_name = NULL;
     
     bookmark = (DesktopAgnosticVFSBookmark*)node->data;
     b_file = desktop_agnostic_vfs_bookmark_get_file (bookmark);
@@ -353,13 +367,11 @@ TODO: check the trash and set to stock_trash_empty if trash is empty
       if (b_alias)
       {
         item = cairo_menu_item_new_with_label (b_alias);
-        icon_name = g_utf8_strdown (b_alias,-1);
       }
       else
       {
         gchar * base = g_path_get_basename (b_path);
         item = cairo_menu_item_new_with_label (base);        
-        icon_name = g_utf8_strdown (base,-1);        
         g_free (base);
       }
       g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);              
@@ -373,13 +385,11 @@ TODO: check the trash and set to stock_trash_empty if trash is empty
       if (b_alias)
       {
         item = cairo_menu_item_new_with_label (b_alias);
-        icon_name = g_utf8_strdown (b_alias,-1);        
       }
       else
       {
         gchar * base = g_path_get_basename (b_uri);
         item = cairo_menu_item_new_with_label (b_uri);
-        icon_name = g_utf8_strdown (base,-1);        
         g_free (base);
       }
       g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);              
@@ -397,13 +407,11 @@ TODO: check the trash and set to stock_trash_empty if trash is empty
       if (b_alias)
       {
         item = cairo_menu_item_new_with_label (b_alias);
-        icon_name = g_utf8_strdown (b_alias,-1);        
       }
       else
       {
         gchar * base = g_path_get_basename (b_uri);
         item = cairo_menu_item_new_with_label (base);
-        icon_name = g_utf8_strdown (base,-1);        
         g_free (base);
       }
       g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);      
@@ -417,22 +425,64 @@ TODO: check the trash and set to stock_trash_empty if trash is empty
 
     if (item)
     {
-      if (icon_name)
+      /* Set icons for known paths and remote destinations */
+      
+      if (g_strcmp0 (b_uri, "computer:///") == 0)
       {
-        gchar * folderfied_icon_name = g_strdup_printf("folder-%s",icon_name);
-        g_free (icon_name);
-        icon_name = folderfied_icon_name;
-        image = get_gtk_image (icon_name);
-        g_free (icon_name);
+        image = get_gtk_image ("computer");
       }
+      else if (g_strcmp0 (b_path, homedir) == 0)
+      {
+        image = get_gtk_image ("folder-home");
+      }
+      else if (g_strcmp0 (b_path, desktop_dir) == 0)
+      {
+        image = get_gtk_image ("desktop");
+      }
+      else if (g_strcmp0 (b_path, g_get_user_special_dir (G_USER_DIRECTORY_DOCUMENTS)) == 0)
+      {
+        image = get_gtk_image ("folder-documents");
+      }
+      else if (g_strcmp0 (b_path, g_get_user_special_dir (G_USER_DIRECTORY_DOWNLOAD)) == 0)
+      {
+        image = get_gtk_image ("folder-download");
+      }
+      else if (g_strcmp0 (b_path, g_get_user_special_dir (G_USER_DIRECTORY_MUSIC)) == 0)
+      {
+        image = get_gtk_image ("folder-music");
+      }
+      else if (g_strcmp0 (b_path, g_get_user_special_dir (G_USER_DIRECTORY_PICTURES)) == 0)
+      {
+        image = get_gtk_image ("folder-pictures");
+      }
+      else if (g_strcmp0 (b_path, g_get_user_special_dir (G_USER_DIRECTORY_PUBLIC_SHARE)) == 0)
+      {
+        image = get_gtk_image ("folder-publicshare");
+      }
+      else if (g_strcmp0 (b_path, g_get_user_special_dir (G_USER_DIRECTORY_TEMPLATES)) == 0)
+      {
+        image = get_gtk_image ("folder-templates");
+      }
+      else if (g_strcmp0 (b_path, g_get_user_special_dir (G_USER_DIRECTORY_VIDEOS)) == 0)
+      {
+        image = get_gtk_image ("folder-videos");
+      }
+      else if (!b_path)
+      {
+        image = get_gtk_image ("folder-remote");
+      }
+      else
+      {
+        image = get_gtk_image ("stock_folder");
+      }
+
+      /* For icon themes that don't feature icons for special directories */
       if (!image)
       {
         image = get_gtk_image ("stock_folder");
       }
-      if (image)
-      {
-        gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
-      }
+
+      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
     }
     g_free (b_path);
     g_free (b_uri);
@@ -495,7 +545,7 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
         }
         txt = gmenu_tree_entry_get_name( (GMenuTreeEntry*)item);
         desktop_file = g_strdup (gmenu_tree_entry_get_desktop_file_path ((GMenuTreeEntry*)item));
-        uri = g_strdup_printf("file://%s\n",desktop_file);
+        uri = g_strdup_printf("file://%s",desktop_file);
         if (desktop_file)
         {
           entry = get_desktop_entry (desktop_file);
@@ -800,7 +850,7 @@ submenu_build (MenuInstance * instance)
   else if (g_strcmp0(instance->submenu_name,":::RECENT")==0)
   {
     g_assert (!instance->menu);    
-    menu = get_recent_menu ();
+    menu = get_recent_menu (instance->recent);
   }
   else if (g_strcmp0(instance->submenu_name,":::SESSION")==0)
   {
@@ -986,9 +1036,9 @@ menu_build (MenuInstance * instance)
     }
     else
     {
-      sub_menu = get_recent_menu ();        
       gchar * icon_name;
       instance->recent = menu_item = cairo_menu_item_new_with_label (_("Recent Documents"));
+      sub_menu = get_recent_menu (menu_item);        
       image = get_gtk_image (icon_name = "document-open-recent");
       if (!image)
       {

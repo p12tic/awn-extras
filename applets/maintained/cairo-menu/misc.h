@@ -43,9 +43,11 @@ DesktopAgnosticFDODesktopEntry * get_desktop_entry (gchar * desktop_file);
 
 void _launch (GtkWidget *widget,gchar * desktop_file);
 
+static GtkWidget * clear_recent_dialog;
+
 GtkWidget * get_gtk_image (const gchar const * icon_name);
 
-GtkWidget * get_recent_menu (void);
+GtkWidget * get_recent_menu (GtkWidget *parent);
 
 
 void  _remove_menu_item  (GtkWidget *menu_item,GtkWidget * menu);

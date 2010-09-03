@@ -273,7 +273,8 @@ _get_data (GtkWidget *widget,GdkDragContext   *drag_context,
            GtkSelectionData *data,guint info,guint time,gpointer null)
 {
   CairoMenuItemPrivate * priv = GET_PRIVATE(widget);
-  gtk_selection_data_set_text (data,priv->drag_source_data,-1);
+  gchar *uris[] = {priv->drag_source_data, NULL};
+  gtk_selection_data_set_uris (data,uris);
 }
 
 void

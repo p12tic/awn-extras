@@ -387,6 +387,8 @@ class YamaApplet:
                     uri, name = (url_name[0], url_name[1])
 
                     if uri.startswith("file://"):
+                        if not vfs.File.for_uri(uri).exists():
+                            continue
                         if uri in user_dirs:
                             icon = self.get_first_existing_icon([user_dirs[uri], "folder"])
                         else:

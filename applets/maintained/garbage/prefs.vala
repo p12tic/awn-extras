@@ -28,7 +28,7 @@ public class GarbagePrefs : Dialog
 
   public GarbagePrefs (GarbageApplet applet)
   {
-    this.type = WindowType.TOPLEVEL;
+    GLib.Object (type: Gtk.WindowType.TOPLEVEL);
     this.title = Gettext._ ("%s Preferences").printf (applet.display_name);
     this.icon_name = "gtk-preferences";
     this._applet = applet;

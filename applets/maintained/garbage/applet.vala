@@ -66,9 +66,9 @@ public class GarbageApplet : AppletSimple
 
   public GarbageApplet (string canonical_name, string uid, int panel_id)
   {
-    this.canonical_name = canonical_name;
-    this.uid = uid;
-    this.panel_id = panel_id;
+    GLib.Object (canonical_name: canonical_name,
+                 uid: uid,
+                 panel_id: panel_id);
     (this.get_icon () as Awn.ThemedIcon).set ("drag-and-drop", false);
     this.config = Awn.Config.get_default_for_applet (this);
     try

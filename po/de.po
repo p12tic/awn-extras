@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: notification-daemon trunk\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-08-16 23:27+0200\n"
-"PO-Revision-Date: 2010-08-19 08:22+0000\n"
-"Last-Translator: Gabor Karsay <Unknown>\n"
+"PO-Revision-Date: 2010-09-04 14:41+0000\n"
+"Last-Translator: Jens Maucher <Unknown>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-08-20 03:32+0000\n"
+"X-Launchpad-Export-Date: 2010-09-05 04:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -4486,7 +4486,7 @@ msgstr "Himmelblau"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Plum"
-msgstr "Pflaumen-farbig"
+msgstr "Pflaume"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Chocolate"

@@ -4,6 +4,7 @@
 #   Mike Rooney (launchpad.net/~michael) <mrooney@gmail.com>
 #     Please do not email the above person for support. The 
 #     email address is only there for license/copyright purposes.
+# Copyright (c) 2010 Gabor Karsay <gabor.karsay@gmx.at>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -17,6 +18,17 @@
 #
 # You should have received a copy of the GNU Lesser General Public
 # License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+
+
+# This is needed for i18n support.
+#
+# intltool extracts the strings and makes them translatable. It should cover
+# all possible strings that are delivered by weather.com. If you find missing
+# strings, please insert them in alphabetical order.
+#
+# The program is not intended to be executed, however, it provides a small
+# test routine in case it's run from command line. 
+
 
 from awn.extras import _
 
@@ -140,7 +152,7 @@ days = [
 ]
 
 
-# The important part are the lists above, the following is not necessary
+# Test routine
 
 print "Translation status for weekdays (C : your locale)"
 for a in days:

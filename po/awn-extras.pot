@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-03 18:33+0200\n"
+"POT-Creation-Date: 2010-09-09 21:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4724,336 +4724,336 @@ msgstr ""
 msgid "Weather data provided by weather.com"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:26
+#: ../applets/maintained/weather/weathertext.py:38
 msgid "Blowing Snow"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:27
+#: ../applets/maintained/weather/weathertext.py:39
 msgid "Blustery"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:28
+#: ../applets/maintained/weather/weathertext.py:40
 msgid "Clear"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:29
+#: ../applets/maintained/weather/weathertext.py:41
 msgid "Cloudy"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:30
+#: ../applets/maintained/weather/weathertext.py:42
 msgid "Cold"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:31
+#: ../applets/maintained/weather/weathertext.py:43
 msgid "Drizzle"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:32
+#: ../applets/maintained/weather/weathertext.py:44
 msgid "Dust"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:33
+#: ../applets/maintained/weather/weathertext.py:45
 msgid "Fair"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:34
+#: ../applets/maintained/weather/weathertext.py:46
 msgid "Fog"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:35
+#: ../applets/maintained/weather/weathertext.py:47
 msgid "Freezing Drizzle"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:36
+#: ../applets/maintained/weather/weathertext.py:48
 msgid "Freezing Rain"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:37
+#: ../applets/maintained/weather/weathertext.py:49
 msgid "Hail"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:38
+#: ../applets/maintained/weather/weathertext.py:50
 msgid "Haze"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:39
+#: ../applets/maintained/weather/weathertext.py:51
 msgid "Heavy Snow"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:40
+#: ../applets/maintained/weather/weathertext.py:52
 msgid "Hot"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:41
+#: ../applets/maintained/weather/weathertext.py:53
 msgid "Hurricane"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:42
+#: ../applets/maintained/weather/weathertext.py:54
 msgid "Isolated Thunderstorms"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:43
+#: ../applets/maintained/weather/weathertext.py:55
 msgid "Light Rain Shower"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:44
+#: ../applets/maintained/weather/weathertext.py:56
 msgid "Light Rain with Thunder"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:45
+#: ../applets/maintained/weather/weathertext.py:57
 msgid "Light Snow Showers"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:46
+#: ../applets/maintained/weather/weathertext.py:58
 msgid "Mixed Precipitation"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:47
+#: ../applets/maintained/weather/weathertext.py:59
 msgid "Mixed Rain and Hail"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:48
+#: ../applets/maintained/weather/weathertext.py:60
 msgid "Mixed Rain and Sleet"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:49
+#: ../applets/maintained/weather/weathertext.py:61
 msgid "Mixed Rain and Snow"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:50
+#: ../applets/maintained/weather/weathertext.py:62
 msgid "Mostly Cloudy"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:51
+#: ../applets/maintained/weather/weathertext.py:63
 msgid "N/A"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:52
+#: ../applets/maintained/weather/weathertext.py:64
 msgid "Partly Cloudy"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:53
+#: ../applets/maintained/weather/weathertext.py:65
 msgid "Scattered Showers"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:54
+#: ../applets/maintained/weather/weathertext.py:66
 msgid "Scattered Snow Showers"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:55
+#: ../applets/maintained/weather/weathertext.py:67
 msgid "Scattered Thunderstorms"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:56
+#: ../applets/maintained/weather/weathertext.py:68
 msgid "Severe Thunderstorms"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:57
+#: ../applets/maintained/weather/weathertext.py:69
 msgid "Showers"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:58
+#: ../applets/maintained/weather/weathertext.py:70
 msgid "Sleet"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:59
+#: ../applets/maintained/weather/weathertext.py:71
 msgid "Smoke"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:60
+#: ../applets/maintained/weather/weathertext.py:72
 msgid "Snow"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:61
+#: ../applets/maintained/weather/weathertext.py:73
 msgid "Snow Flurries"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:62
+#: ../applets/maintained/weather/weathertext.py:74
 msgid "Snow Showers"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:63
+#: ../applets/maintained/weather/weathertext.py:75
 msgid "Thunder Showers"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:64
+#: ../applets/maintained/weather/weathertext.py:76
 msgid "Thunderstorms"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:65
+#: ../applets/maintained/weather/weathertext.py:77
 msgid "Tornado"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:66
+#: ../applets/maintained/weather/weathertext.py:78
 msgid "Tropical Storm"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:67
+#: ../applets/maintained/weather/weathertext.py:79
 msgid "Windy"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:72
+#: ../applets/maintained/weather/weathertext.py:84
 msgid "AM Clouds / PM Sun"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:74
+#: ../applets/maintained/weather/weathertext.py:86
 msgid "AM Drizzle / Wind"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:76
+#: ../applets/maintained/weather/weathertext.py:88
 msgid "AM Fog / PM Sun"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:78
+#: ../applets/maintained/weather/weathertext.py:90
 msgid "AM Light Rain"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:80
+#: ../applets/maintained/weather/weathertext.py:92
 msgid "AM Rain / Wind"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:82
+#: ../applets/maintained/weather/weathertext.py:94
 msgid "AM Showers"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
-#: ../applets/maintained/weather/weathertext.py:85
+#: ../applets/maintained/weather/weathertext.py:97
 msgid "AM T-Showers"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
-#: ../applets/maintained/weather/weathertext.py:88
+#: ../applets/maintained/weather/weathertext.py:100
 msgid "AM T-Storms"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:90
+#: ../applets/maintained/weather/weathertext.py:102
 msgid "Few Showers"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:92
+#: ../applets/maintained/weather/weathertext.py:104
 msgid "Heavy Rain"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
-#: ../applets/maintained/weather/weathertext.py:95
+#: ../applets/maintained/weather/weathertext.py:107
 msgid "Isolated T-Storms"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:97
+#: ../applets/maintained/weather/weathertext.py:109
 msgid "Light Rain"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:99
+#: ../applets/maintained/weather/weathertext.py:111
 msgid "Mostly Sunny"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:101
+#: ../applets/maintained/weather/weathertext.py:113
 msgid "Partly Cloudy / Wind"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:103
+#: ../applets/maintained/weather/weathertext.py:115
 msgid "PM Light Rain"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:105
+#: ../applets/maintained/weather/weathertext.py:117
 msgid "PM Showers"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
-#: ../applets/maintained/weather/weathertext.py:108
+#: ../applets/maintained/weather/weathertext.py:120
 msgid "PM T-Showers"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
-#: ../applets/maintained/weather/weathertext.py:111
+#: ../applets/maintained/weather/weathertext.py:123
 msgid "PM T-Storms"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:113
+#: ../applets/maintained/weather/weathertext.py:125
 msgid "Rain"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:115
+#: ../applets/maintained/weather/weathertext.py:127
 msgid "Rain / Wind"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:117
+#: ../applets/maintained/weather/weathertext.py:129
 msgid "Rain / Thunder"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:119
+#: ../applets/maintained/weather/weathertext.py:131
 msgid "Scattered Showers / Wind"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
-#: ../applets/maintained/weather/weathertext.py:122
+#: ../applets/maintained/weather/weathertext.py:134
 msgid "Scattered T-Storms"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:124
+#: ../applets/maintained/weather/weathertext.py:136
 msgid "Sunny"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:126
+#: ../applets/maintained/weather/weathertext.py:138
 msgid "Sunny / Wind"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
-#: ../applets/maintained/weather/weathertext.py:129
+#: ../applets/maintained/weather/weathertext.py:141
 msgid "T-Showers"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:133
+#: ../applets/maintained/weather/weathertext.py:145
 msgid "Monday"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:134
+#: ../applets/maintained/weather/weathertext.py:146
 msgid "Tuesday"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:135
+#: ../applets/maintained/weather/weathertext.py:147
 msgid "Wednesday"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:136
+#: ../applets/maintained/weather/weathertext.py:148
 msgid "Thursday"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:137
+#: ../applets/maintained/weather/weathertext.py:149
 msgid "Friday"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:138
+#: ../applets/maintained/weather/weathertext.py:150
 msgid "Saturday"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:139
+#: ../applets/maintained/weather/weathertext.py:151
 msgid "Sunday"
 msgstr ""
 
@@ -5316,160 +5316,6 @@ msgstr ""
 
 #: ../applets/unmaintained/pandora/pandora.desktop.in.h:2
 msgid "Pandora Radio"
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:1
-msgid ""
-"Backend type for this applet (0 - file, 1 - folder, 2 - plugger, 3 - "
-"trasher, 4 - recent files)."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:2
-msgid "Close dialog on focusout."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:3
-msgid "Display number of items in the stack."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:4
-msgid "File operation to use."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:5
-msgid "Hoverbox background color 1."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:6
-msgid "Hoverbox background color 2."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:7
-msgid "Hoverbox border color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:8
-msgid "Icon to use for empty stack."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:9
-msgid "Icon to use for full stack."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:10
-msgid "Label background color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:11
-msgid "Label border color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:12
-msgid "Label hover background color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:13
-msgid "Label hover border color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:14
-msgid "Label length."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:15
-msgid "Label text color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:16
-msgid "Label text hover color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:17
-msgid "Layout direction."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:18
-msgid "Layout interval."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:19
-msgid "Layout radius."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:20
-msgid "Number of columns to use."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:21
-msgid "Number of rows to use."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:22
-msgid "Size of the icons inside stack."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:23
-msgid "Sort direction of the items."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:24
-msgid "Sort folders before files."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:25
-msgid "Sort method to use (1 - sort by name, 2 - sort by date)."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:26
-msgid "Stack tooltip description."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:27
-msgid "Stacks backend file/directory."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:28
-msgid "Tooltip background color 1."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:29
-msgid "Tooltip background color 2."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:30
-msgid "Tooltip border color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:31
-msgid "Tooltip font name."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:32
-msgid "Tooltip text color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:33
-msgid "Type of UI used for the stack."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:34
-msgid "Use Awn's tooltip font."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:35
-msgid "Whether hoverbox contains label."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:36
-msgid "Whether to browse stack contents."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:37
-msgid "Whether to combine icons of the files inside the stacks with its icon."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:38
-msgid "Whether tooltips are enabled."
 msgstr ""
 
 #: ../shared/python/awnlib.py:110

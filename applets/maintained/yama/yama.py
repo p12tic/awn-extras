@@ -174,22 +174,24 @@ class YamaApplet:
 
     def clicked_cb(self, widget):
         def get_position(menu):
+            magic_extra_offset = 5
+
             icon_x, icon_y = self.applet.get_icon().window.get_origin()
-
-            menu_size = self.menu.size_request()
-            # Make sure the bottom of the menu doesn't get below the bottom of the screen
-            icon_y = min(icon_y, self.menu.get_screen().get_height() - menu_size[1])
-
-            padding = 6
+            menu_width, menu_height = self.menu.size_request()
             orientation = self.applet.get_pos_type()
+
             if orientation == gtk.POS_BOTTOM:
-                icon_y = self.menu.get_screen().get_height() - self.applet.get_size() - self.applet.props.offset - menu_size[1] - padding
+                icon_y = icon_y - menu_height + self.applet.get_size()
             elif orientation == gtk.POS_TOP:
-                icon_y = self.applet.get_size() + self.applet.props.offset + padding
+                icon_y = icon_y + self.applet.get_size() + self.applet.get_offset() + magic_extra_offset
             elif orientation == gtk.POS_RIGHT:
-                icon_x = self.menu.get_screen().get_width() - self.applet.get_size() - self.applet.props.offset - menu_size[0] - padding
+                icon_x = icon_x - menu_width + self.applet.get_size()
             elif orientation == gtk.POS_LEFT:
-                icon_x = self.applet.get_size() + self.applet.props.offset + padding
+                icon_x = icon_x + self.applet.get_size() + self.applet.get_offset() + magic_extra_offset
+
+            # Make sure the menu fits on the screen completely
+            icon_x = min(icon_x, self.menu.get_screen().get_width() - menu_width)
+            icon_y = min(icon_y, self.menu.get_screen().get_height() - menu_height)
 
             return (icon_x, icon_y, False)
         self.menu.popup(None, None, get_position, 0, 0)
@@ -248,7 +250,7 @@ class YamaApplet:
     def open_uri(self, uri):
         file = vfs.File.for_uri(uri)
 
-        if file is not None and file.exists():
+        if file is not None and (not uri.startswith("file://") or file.exists()):
             try:
                 file.launch()
             except glib.GError, e:

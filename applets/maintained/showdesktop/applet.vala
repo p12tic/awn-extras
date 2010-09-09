@@ -82,7 +82,7 @@ class ShowDesktop : AppletSimple
       this._menu.append (about_item as Gtk.MenuItem);
     }
     this._menu.set_screen (null);
-    this._menu.popup (null, null, null, event.button, event.time);
+    this.get_icon ().popup_gtk_menu (this._menu, event.button, event.time);
   }
 
   private void

@@ -396,7 +396,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
       this.menu.append (about_item as MenuItem);
     }
     this.menu.set_screen (null);
-    this.menu.popup (null, null, null, evt.button, evt.time);
+    this.get_icon ().popup_gtk_menu (this.menu, evt.button, evt.time);
   }
 
   private void

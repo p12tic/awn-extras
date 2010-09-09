@@ -223,7 +223,7 @@ public class GarbageApplet : AppletSimple
     }
     ctx_menu = (Menu)this.menu;
     ctx_menu.set_screen (null);
-    ctx_menu.popup (null, null, null, evt.button, evt.time);
+    this.get_icon ().popup_gtk_menu (ctx_menu, evt.button, evt.time);
   }
   private void
   on_menu_empty_activate ()

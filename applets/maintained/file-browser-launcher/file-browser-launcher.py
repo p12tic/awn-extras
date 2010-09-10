@@ -1111,7 +1111,7 @@ class App(awn.Applet):
     menu.append(about)
 
     menu.show_all()
-    menu.popup(None, None, None, event.button, event.time)
+    icon.popup_gtk_menu (menu, event.button, event.time)
 
   def docklet_menu_eject(self, menu, num):
     self.unmount(num)

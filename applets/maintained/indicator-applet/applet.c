@@ -891,8 +891,7 @@ icon_button_press(AwnIcon *icon, GdkEventButton *event, IndicatorApplet *iapplet
 
   iapplet->popup_num = (gint)g_object_get_data(G_OBJECT(icon), "num");
 
-  gtk_menu_popup(GTK_MENU(g_list_nth_data(iapplet->shown_menus, iapplet->popup_num)), NULL, NULL,
-    (GtkMenuPositionFunc)icon_menu_position, (gpointer)iapplet, 1, event->time);
+  awn_icon_popup_gtk_menu (icon, GTK_MENU(g_list_nth_data(iapplet->shown_menus, iapplet->popup_num)), 1, event->time);
 
   return FALSE;
 }
@@ -915,8 +914,7 @@ icon_right_click(AwnIcon *icon, GdkEventButton *event, IndicatorApplet *iapplet)
     gtk_widget_show_all(iapplet->awn_menu);
   }
 
-  gtk_menu_popup(GTK_MENU(iapplet->awn_menu), NULL, NULL, NULL, NULL,
-                 event->button, event->time);
+  awn_icon_popup_gtk_menu (icon, GTK_MENU(iapplet->awn_menu), event->button, event->time);
 
   return FALSE;
 }

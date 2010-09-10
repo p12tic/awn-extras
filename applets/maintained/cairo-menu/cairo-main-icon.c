@@ -305,8 +305,8 @@ _button_clicked_event (CairoMainIcon *icon, GdkEventButton *event, gpointer null
   
   if (event->button == 1)
   {
-    gtk_menu_popup(GTK_MENU(priv->menu), NULL, NULL, (GtkMenuPositionFunc)_position,icon,
-                          event->button, event->time);       
+    awn_icon_popup_gtk_menu (AWN_ICON (icon), priv->menu, event->button, event->time);
+     
     if (!priv->autohide_cookie)
     {     
       priv->autohide_cookie = awn_applet_inhibit_autohide (AWN_APPLET(priv->applet),"CairoMenu" );
@@ -341,7 +341,7 @@ _button_clicked_event (CairoMainIcon *icon, GdkEventButton *event, gpointer null
     {     
       priv->autohide_cookie = awn_applet_inhibit_autohide (AWN_APPLET(priv->applet),"CairoMenu" );
     }    
-    gtk_menu_popup(GTK_MENU(priv->context_menu), NULL, NULL, NULL, NULL,event->button, event->time);
+    awn_icon_popup_gtk_menu (AWN_ICON (icon), priv->context_menu, event->button, event->time);
     g_object_set(awn_overlayable_get_effects (AWN_OVERLAYABLE(icon)), "depressed", FALSE,NULL);
     awn_utils_show_menu_images (GTK_MENU (priv->context_menu));
   }

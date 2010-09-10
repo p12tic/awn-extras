@@ -259,7 +259,7 @@ class App(awn.AppletSimple):
         menu.append(prefs_menu)
         menu.append(about_menu)
         menu.show_all()
-        menu.popup(None, None, None, event.button, event.time)
+        applet.popup_gtk_menu (menu, event.button, event.time)
 
     #When the user scrolls on the applet icon (switch viewport)
     def scroll(self, applet, event):

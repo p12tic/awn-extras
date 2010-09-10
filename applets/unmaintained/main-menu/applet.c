@@ -371,8 +371,7 @@ on_icon_clicked (GtkWidget *eb,
   }
   else if (event->button == 3)
   {
-    gtk_menu_popup(GTK_MENU(app->menu), NULL, NULL, NULL, NULL,event->button, 
-                   event->time);
+    awn_applet_popup_gtk_menu (AWN_APPLET (eb), app->menu, event->button, event->time);
   }
   return TRUE;
 }

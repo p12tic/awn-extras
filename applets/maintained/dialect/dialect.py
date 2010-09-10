@@ -536,12 +536,12 @@ class Dialect(awn.AppletSimple):
                 if event.button == 2:
                     button = self.middle
                 if button == 1:
-                    self.gtk['umenu'].popup(None, None, None, 0, event.time)
+                    self.popup_gtk_menu (self.gtk['umenu'], 0, event.time)
                     return True
                 elif button < 3:
                     self.change_group(button - 1)
         else:
-            self.cmenu.popup(None, None, None, 0, event.time)
+            self.popup_gtk_menu (self.cmenu, 0, event.time)
             return True
         return False
 

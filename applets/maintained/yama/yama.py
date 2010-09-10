@@ -173,28 +173,7 @@ class YamaApplet:
             self.session_items.append(shutdown_item)
 
     def clicked_cb(self, widget):
-        def get_position(menu):
-            magic_extra_offset = 5
-
-            icon_x, icon_y = self.applet.get_icon().window.get_origin()
-            menu_width, menu_height = self.menu.size_request()
-            orientation = self.applet.get_pos_type()
-
-            if orientation == gtk.POS_BOTTOM:
-                icon_y = icon_y - menu_height + self.applet.get_size()
-            elif orientation == gtk.POS_TOP:
-                icon_y = icon_y + self.applet.get_size() + self.applet.get_offset() + magic_extra_offset
-            elif orientation == gtk.POS_RIGHT:
-                icon_x = icon_x - menu_width + self.applet.get_size()
-            elif orientation == gtk.POS_LEFT:
-                icon_x = icon_x + self.applet.get_size() + self.applet.get_offset() + magic_extra_offset
-
-            # Make sure the menu fits on the screen completely
-            icon_x = min(icon_x, self.menu.get_screen().get_width() - menu_width)
-            icon_y = min(icon_y, self.menu.get_screen().get_height() - menu_height)
-
-            return (icon_x, icon_y, False)
-        self.menu.popup(None, None, get_position, 0, 0)
+        self.applet.popup_gtk_menu (self.menu, 0, gtk.get_current_event_time())
 
     def setup_context_menu(self):
         """Add "Edit Menus" to the context menu.

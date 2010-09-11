@@ -25,37 +25,38 @@ pygtk.require("2.0")
 import gtk
 
 import awn
-from awn.extras import awnlib, __version__
+from awn.extras import _, awnlib, __version__
 
 import dbus
 import pango
 
-applet_name = "Quit-Log Out"
-applet_description = "An applet to lock your screen, log out of your session, or shut down the system"
+applet_name = _("Quit-Log Out")
+applet_description = _("An applet to lock your screen, log out of your session, or shut down the system")
 
 # Themed logo of the applet, shown in the GTK About dialog
 applet_logo = "application-exit"
 
-left_click_actions = ["Show Docklet", "Lock Screen", "Log Out", "Shut Down"]
+left_click_actions = [_("Show Docklet"), _("Lock Screen"), _("Log Out"), _("Shut Down")]
 
 user_name = commands.getoutput("/usr/bin/whoami")
-log_out_label = "Log Out %s..." % user_name
+# Translators: %s is a username
+log_out_label = _("Log Out %s...") % user_name
 
 docklet_actions_label_icon = {
-"Lock Screen": ("Lock Screen", "system-lock-screen"),
-"Log Out":     (log_out_label, "system-log-out"),
-"Shut Down":   ("Shut Down...", "system-shutdown")
+_("Lock Screen"): (_("Lock Screen"), "system-lock-screen"),
+_("Log Out"):     (log_out_label, "system-log-out"),
+_("Shut Down"):   (_("Shut Down..."), "system-shutdown")
 }
 
 actions_label_icon = {
-"Show Docklet": ("Show Docklet", "application-exit")
+_("Show Docklet"): (_("Show Docklet"), "application-exit")
 }
 actions_label_icon.update(docklet_actions_label_icon)
 
 action_args = {
-"--lockscreen": "Lock Screen",
-"--logout": "Log Out",
-"--shutdown": "Shut Down"
+"--lockscreen": _("Lock Screen"),
+"--logout": _("Log Out"),
+"--shutdown": _("Shut Down")
 }
 
 action = sys.argv[1] if sys.argv[1] in action_args.keys() else None
@@ -85,8 +86,8 @@ class QuitLogOutApplet:
         else:
             self.log_out_cb = self.other_log_out
 
-            left_click_actions.remove("Shut Down")
-            del docklet_actions_label_icon["Shut Down"]
+            left_click_actions.remove(_("Shut Down"))
+            del docklet_actions_label_icon[_("Shut Down")]
 
         if "org.gnome.ScreenSaver" in services:
             ss_proxy = session_bus.get_object("org.gnome.ScreenSaver", "/")
@@ -100,7 +101,7 @@ class QuitLogOutApplet:
         if action is None:
             self.setup_context_menu()
         else:
-            left_click_actions.remove("Show Docklet")
+            left_click_actions.remove(_("Show Docklet"))
             applet.settings["left-click-action"] = action_args[action]
 
         # Initialize tooltip and icon
@@ -110,7 +111,7 @@ class QuitLogOutApplet:
 
     def clicked_cb(self, widget):
         action = self.applet.settings["left-click-action"]
-        if action == "Show Docklet":
+        if action == _("Show Docklet"):
             self.show_docklet()
         else:
             self.execute_action(action)
@@ -227,9 +228,9 @@ class QuitLogOutApplet:
 
     def load_settings(self):
         if self.applet.settings["left-click-action"] not in left_click_actions:
-            self.applet.settings["left-click-action"] = "Show Docklet"
+            self.applet.settings["left-click-action"] = _("Show Docklet")
 
-        assert self.log_out_cb == self.gnome_log_out or "Shut Down" not in left_click_actions
+        assert self.log_out_cb == self.gnome_log_out or _("Shut Down") not in left_click_actions
 
     def setup_dialog_settings(self, vbox):
         hbox = gtk.HBox(spacing=12)
@@ -243,7 +244,7 @@ class QuitLogOutApplet:
         combobox.set_active(left_click_actions.index(self.applet.settings["left-click-action"]))
         combobox.connect("changed", self.action_changed_cb)
 
-        label = gtk.Label("Left click _action:")
+        label = gtk.Label(_("Left click _action:"))
         label.set_use_underline(True)
         label.set_mnemonic_widget(combobox)
 
@@ -259,13 +260,13 @@ class QuitLogOutApplet:
         docklet.destroy()
 
     def execute_action(self, action):
-        assert action != "Show Docklet"
+        assert action != _("Show Docklet")
 
-        if action == "Lock Screen":
+        if action == _("Lock Screen"):
             self.lock_screen_cb()
-        elif action == "Log Out":
+        elif action == _("Log Out"):
             self.log_out_cb()
-        elif action == "Shut Down":
+        elif action == _("Shut Down"):
             assert self.log_out_cb == self.gnome_log_out
 
             self.gnome_shut_down()

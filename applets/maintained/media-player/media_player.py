@@ -25,6 +25,7 @@ import gobject
 
 import awn
 from desktopagnostic import config
+from awn.extras import _
 
 
 class MediaPlayerApplet(awn.AppletSimple):
@@ -46,7 +47,7 @@ class MediaPlayerApplet(awn.AppletSimple):
     # recent_items = gobject.property(type=gobject.TYPE_BOXED,
     #                                 nick='Recent Items')
 
-    APPLET_NAME = "Media Player Applet"
+    APPLET_NAME = _("Media Player Applet")
 
     def __init__(self, uid, panel_id):
         """Creating the applets core"""
@@ -74,7 +75,7 @@ class MediaPlayerApplet(awn.AppletSimple):
             self.recent_items_menu.append(menu_item)
         self.recent_items_menu.show_all()
         # Popup menu
-        self.recent = gtk.MenuItem("Recent items")
+        self.recent = gtk.MenuItem(_("Recent items"))
         self.recent.set_submenu(self.recent_items_menu)
         self.prefs = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
         self.prefs.connect("activate", self.show_prefs)
@@ -402,7 +403,7 @@ class MediaPlayerApplet(awn.AppletSimple):
         def prefs_closed(closeButton, tuple):
             win = tuple[0]
             if self.sinkChanged:
-                dialog = gtk.MessageDialog(win, buttons=gtk.BUTTONS_OK, message_format="Please restart the applet to apply changes to sinks.")
+                dialog = gtk.MessageDialog(win, buttons=gtk.BUTTONS_OK, message_format=_("Please restart the applet to apply changes to sinks."))
                 dialog.run()
                 dialog.destroy()
                 self.video_sink = tuple[1].get_text()
@@ -419,10 +420,10 @@ class MediaPlayerApplet(awn.AppletSimple):
         awn_icon = self.get_icon()
         about.set_logo(awn_icon.get_icon_at_size(48))
         about.set_icon(awn_icon.get_icon_at_size(64))
-        about.set_name("Media Player Applet")
+        about.set_name(_("Media Player Applet"))
         about.set_copyright("Copyright (c) 2008-2009 Michal Hruby <michal.mhr at gmail.com>")
         about.set_authors(["Michal Hruby <michal.mhr at gmail.com>"])
-        about.set_comments("Plays any media files you drop on the applet.")
+        about.set_comments(_("Plays any media files you drop on the applet."))
         about.set_license("This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.")
         about.set_wrap_license(True)
         about.set_documenters(["Michal Hruby <michal.mhr at gmail.com>"])

@@ -10,6 +10,7 @@ VALA_FILES = \
 AM_VALAFLAGS = \
 	--pkg desktop-agnostic-ui \
 	--pkg x11 \
+	--pkg libintl \
 	$(srcdir)/egg-tray.vapi \
 	$(NULL)
 

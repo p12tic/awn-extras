@@ -27,7 +27,7 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 
-from awn.extras import awnlib, __version__
+from awn.extras import _, awnlib, __version__
 from desktopagnostic import fdo, vfs
 
 try:
@@ -42,8 +42,8 @@ import glib
 import gmenu
 from xdg import BaseDirectory
 
-applet_name = "YAMA"
-applet_description = "Main menu with places and recent documents"
+applet_name = _("YAMA")
+applet_description = _("Main menu with places and recent documents")
 
 # Applet's themed icon, also shown in the GTK About dialog
 applet_logo = "start-here"
@@ -145,7 +145,7 @@ class YamaApplet:
             menu.append(separator)
 
         if can_lock_screen:
-            lock_item = self.append_menu_item(menu, "Lock Screen", "system-lock-screen", "Protect your computer from unauthorized use")
+            lock_item = self.append_menu_item(menu, _("Lock Screen"), "system-lock-screen", _("Protect your computer from unauthorized use"))
             def lock_screen_cb(widget):
                 try:
                     ss_proxy = self.session_bus.get_object("org.gnome.ScreenSaver", "/")
@@ -162,11 +162,12 @@ class YamaApplet:
             sm_if = dbus.Interface(sm_proxy, "org.gnome.SessionManager")
 
             user_name = commands.getoutput("whoami")
-            logout_item = self.append_menu_item(menu, "Log Out %s..." % user_name, "system-log-out", "Log out %s of this session to log in as a different user" % user_name)
+            # Translators: %s is a user name.
+            logout_item = self.append_menu_item(menu, _("Log Out %s...") % user_name, "system-log-out", _("Log out %s of this session to log in as a different user") % user_name)
             logout_item.connect("activate", lambda w: sm_if.Logout(0))
             self.session_items.append(logout_item)
 
-            shutdown_item = self.append_menu_item(menu, "Shut Down...", "system-shutdown", "Shut down the system")
+            shutdown_item = self.append_menu_item(menu, _("Shut Down..."), "system-shutdown", _("Shut down the system"))
             shutdown_item.connect("activate", lambda w: sm_if.Shutdown())
             self.session_items.append(shutdown_item)
 
@@ -201,7 +202,7 @@ class YamaApplet:
         menu = self.applet.dialog.menu
         menu_index = len(menu) - 1
 
-        edit_menus_item = gtk.MenuItem("_Edit Menus")
+        edit_menus_item = gtk.MenuItem(_("_Edit Menus"))
         edit_menus_item.connect("activate", self.show_menu_editor_cb)
         menu.insert(edit_menus_item, menu_index)
 
@@ -257,16 +258,16 @@ class YamaApplet:
             print "File at URI not found (%s)" % uri
 
     def create_places_submenu(self, parent_menu):
-        item = self.append_menu_item(parent_menu, "Places", "folder", None)
+        item = self.append_menu_item(parent_menu, _("Places"), "folder", None)
 
         menu = gtk.Menu()
         item.set_submenu(menu)
 
         user_path = os.path.expanduser("~/")
 
-        home_item = self.append_menu_item(menu, "Home Folder", "user-home", "Open your personal folder")
+        home_item = self.append_menu_item(menu, _("Home Folder"), "user-home", _("Open your personal folder"))
         home_item.connect("activate", self.open_folder_cb, "file://%s" % user_path)
-        desktop_item = self.append_menu_item(menu, "Desktop", "user-desktop", "Open the contents of your desktop in a folder")
+        desktop_item = self.append_menu_item(menu, _("Desktop"), "user-desktop", _("Open the contents of your desktop in a folder"))
         desktop_item.connect("activate", self.open_folder_cb, "file://%s" % os.path.join(user_path, "Desktop"))
 
         """ Bookmarks """
@@ -317,7 +318,7 @@ class YamaApplet:
 
         ncs_exists = os.path.exists(commands.getoutput("which nautilus-connect-server"))
         if ncs_exists:
-            connect_item = self.append_menu_item(menu, "Connect to Server...", "applications-internet", "Connect to a remote computer or shared disk")
+            connect_item = self.append_menu_item(menu, _("Connect to Server..."), "applications-internet", _("Connect to a remote computer or shared disk"))
             connect_item.connect("activate", lambda w: subprocess.Popen("nautilus-connect-server"))
         added |= ncs_exists
 
@@ -333,7 +334,7 @@ class YamaApplet:
         recent_manager = gtk.recent_manager_get_default()
 
         chooser_menu = gtk.RecentChooserMenu(recent_manager)
-        recent_item = self.append_menu_item(menu, "Recent Documents", "document-open-recent", None)
+        recent_item = self.append_menu_item(menu, _("Recent Documents"), "document-open-recent", None)
         recent_item.set_submenu(chooser_menu)
 
         def set_sensitivity_recent_menu(widget=None):
@@ -347,7 +348,7 @@ class YamaApplet:
 
         chooser_menu.append(gtk.SeparatorMenuItem())
 
-        item = self.append_menu_item(chooser_menu, "Clear Recent Documents", "gtk-clear", "Clear all items from the recent documents list")
+        item = self.append_menu_item(chooser_menu, _("Clear Recent Documents"), "gtk-clear", _("Clear all items from the recent documents list"))
         clear_dialog = self.ClearRecentDocumentsDialog(self.applet, recent_manager.purge_items)
         def purge_items_cb(widget):
             clear_dialog.show_all()
@@ -386,7 +387,7 @@ class YamaApplet:
                         display_uri = uri
                     display_uri = unquote(display_uri)
 
-                    item = self.create_menu_item(name, icon, "Open '%s'" % display_uri)
+                    item = self.create_menu_item(name, icon, _("Open '%s'") % display_uri)
                     self.places_menu.insert(item, index)
                     item.connect("activate", self.open_folder_cb, uri)
                     index += 1
@@ -428,7 +429,7 @@ class YamaApplet:
                 tooltip = name
             else:
                 icon_name = self.get_icon_name(volume.get_icon())
-                tooltip = "Mount %s" % name
+                tooltip = _("Mount %s") % name
 
             item = self.create_menu_item(name, icon_name, tooltip)
             self.places_menu.insert(item, index)
@@ -538,7 +539,7 @@ class YamaApplet:
             if file is not None and file.exists():
                 entry = fdo.DesktopEntry.for_file(file)
 
-                item = self.append_menu_item(menu, entry.get_name(), entry.get_icon(), entry.get_string("Comment"))
+                item = self.append_menu_item(menu, entry.get_localestring("Name"), entry.get_icon(), entry.get_localestring("Comment"))
                 item.connect("activate", self.launch_app, file.props.path)
                 return True
         return False
@@ -574,17 +575,17 @@ class YamaApplet:
     class ClearRecentDocumentsDialog(awnlib.Dialogs.BaseDialog, gtk.MessageDialog):
 
         def __init__(self, parent, clear_cb):
-            gtk.MessageDialog.__init__(self, type=gtk.MESSAGE_WARNING, message_format="Clear the Recent Documents list?", buttons=gtk.BUTTONS_CANCEL)
+            gtk.MessageDialog.__init__(self, type=gtk.MESSAGE_WARNING, message_format=_("Clear the Recent Documents list?"), buttons=gtk.BUTTONS_CANCEL)
             awnlib.Dialogs.BaseDialog.__init__(self, parent)
 
             self.set_skip_taskbar_hint(False)
 
-            self.set_title("Clear Recent Documents")
-            self.format_secondary_markup("Clearing the Recent Documents list will clear the following:\n\
+            self.set_title(_("Clear Recent Documents"))
+            self.format_secondary_markup(_("Clearing the Recent Documents list will clear the following:\n\
 * All items from the Places > Recent Documents menu item.\n\
-* All items from the recent documents list in all applications.")
+* All items from the recent documents list in all applications."))
 
-            clear_button = gtk.Button("C_lear")
+            clear_button = gtk.Button(stock=gtk.STOCK_CLEAR)
             clear_button.set_image(gtk.image_new_from_stock(gtk.STOCK_CLEAR, gtk.ICON_SIZE_MENU))
             def clear_and_hide(widget):
                 self.response(gtk.RESPONSE_CANCEL)
@@ -595,7 +596,7 @@ class YamaApplet:
     class UnableToMountErrorDialog(awnlib.Dialogs.BaseDialog, gtk.MessageDialog):
 
         def __init__(self, parent, volume_name, error):
-            gtk.MessageDialog.__init__(self, type=gtk.MESSAGE_ERROR, message_format="Unable to mount %s" % volume_name, buttons=gtk.BUTTONS_OK)
+            gtk.MessageDialog.__init__(self, type=gtk.MESSAGE_ERROR, message_format=_("Unable to mount %s") % volume_name, buttons=gtk.BUTTONS_OK)
             awnlib.Dialogs.BaseDialog.__init__(self, parent)
 
             self.set_skip_taskbar_hint(True)

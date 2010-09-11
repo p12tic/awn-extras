@@ -45,7 +45,7 @@ from sensorvalues.voltvalue import VoltValue
 from sensorvalues import units
 from sensoricon import SensorIcon
 
-applet_name = "Hardware Sensors"
+applet_name = _("Hardware Sensors")
 short_name = "hardware-sensors"
 applet_description = _("Applet to show the hardware sensors readouts")
 
@@ -58,7 +58,7 @@ ui_file = os.path.join(os.path.dirname(__file__), "hardware-sensors.ui")
 
 single_font_sizes = [11, 17, 22]
 double_font_sizes = [12, 16, 20]
-font_size_names = ["Small", "Medium", "Large"]
+font_size_names = [_("Small"), _("Medium"), _("Large")]
 
 class SensorsApplet:
     """

@@ -630,15 +630,16 @@ public bool workaround_gpm_bug ()
 public Applet?
 awn_applet_factory_initp (string canonical_name, string uid, int panel_id)
 {
+  Gettext.bindtextdomain (Build.GETTEXT_PACKAGE, Build.LOCALEDIR);
+  Gettext.textdomain (Build.GETTEXT_PACKAGE);
+
   if (EggTray.Manager.check_running (Gdk.Screen.get_default ()))
   {
-    string msg = "There is already another notification area running" +
-                 " on this screen!";
+    string msg = Gettext._ ("There is already another notification area running on this screen!");
     MessageDialog d = new MessageDialog (null, DialogFlags.MODAL, 
                                          MessageType.ERROR, ButtonsType.CLOSE,
                                          "%s", msg);
-    d.format_secondary_text ("Please remove the existing notification area" +
-                             " and then restart the applet.");
+    d.format_secondary_text (Gettext._ ("Please remove the existing notification area and then restart the applet."));
     d.run ();
 
     error ("%s", msg);

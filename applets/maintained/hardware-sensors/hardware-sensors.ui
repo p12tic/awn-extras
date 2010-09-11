@@ -402,7 +402,6 @@
                     <property name="homogeneous">True</property>
                     <child>
                       <object class="GtkButton" id="button_add">
-                        <property name="width_request">94</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
@@ -441,7 +440,6 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="button_remove">
-                        <property name="width_request">94</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>

@@ -564,7 +564,10 @@ class WeatherApplet:
         return str(int(round(converted_value)))
 
     def get_temperature_unit(self):
-        return temperature_units[self.applet.settings["temperature-unit"]][0]
+    	if temperature_units[self.applet.settings["temperature-unit"]] == _("Celsius"):
+    	    return "C"
+    	else:
+    	    return "F"
 
     def get_icon_name(self, hint, theme):
         if hint == "twc":
@@ -578,7 +581,7 @@ class WeatherApplet:
             return "weather-few-clouds"
         elif hint in (26, ):
             return "weather-overcast"
-        elif hint in (5, 6, 7, 8, 9, 10, 11, 12, 45):
+        elif hint in (5, 6, 7, 8, 9, 10, 11, 12, 39, 45):
             # Special conditional for the extreme weather in moonbeam's Ottawa
             if theme == "moonbeam" and hint in (5, 6, 7):
                 return "weather-snow-and-rain"
@@ -589,7 +592,7 @@ class WeatherApplet:
             return "weather-snow"
         elif hint in (19, 20, 21, 22):
             return "weather-fog"
-        elif hint in (4, 35, 37, 38, 39, 47):
+        elif hint in (4, 35, 37, 38, 47):
             return "weather-storm"
         elif hint in (0, 1, 2, 3):
             return "weather-severe-alert"

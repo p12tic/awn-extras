@@ -1,11 +1,10 @@
 #!/usr/bin/python
-# -*- coding: iso-8859-15 -*-
-#
 # Copyright (c) 2008:
 #   Mike (mosburger) Desjardins <desjardinsmike@gmail.com>
 #   Mike Rooney (launchpad.net/~michael) <mrooney@gmail.com>
-#
-# This is a weather applet for Avant Window Navigator.
+#     Please do not email the above person for support. The 
+#     email address is only there for license/copyright purposes.
+# Copyright (c) 2010 Gabor Karsay <gabor.karsay@gmx.at>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -18,73 +17,152 @@
 # Lesser General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public
-# License along with this library; if not, write to the
-# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# Boston, MA 02111-1307, USA.
+# License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+
+
+# This is needed for i18n support.
 #
+# intltool extracts the strings and makes them translatable. It should cover
+# all possible strings that are delivered by weather.com. If you find missing
+# strings, please insert them in alphabetical order.
+#
+# The program is not intended to be executed, however, it provides a small
+# test routine in case it's run from command line. 
 
-# mrooney: I am maintaining this file for now but it doesn't seem to be needed.
-#   the XML feed gives us a description already so the mapping below isn't necessary,
-#   and the gettext wrapping can be done in weather.py.
 
-conditions = {
-    "0": _("Tornado"),
-    "1": _("Tropical Storm"),
-    "2": _("Hurricane"),
-    "3": _("Severe Thunderstorms"),
-    "4": _("Thunderstorms"),
-    "5": _("Mixed Rain and Snow"),
-    "6": _("Mixed Rain and Sleet"),
-    "7": _("Mixed Precipitation"),
-    "8": _("Freezing Drizzle"),
-    "9": _("Drizzle"),
-    "10": _("Freezing Rain"),
-    "11": _("Showers"),
-    "12": _("Showers"),
-    "13": _("Snow Flurries"),
-    "14": _("Light Snow Showers"),
-    "15": _("Blowing Snow"),
-    "16": _("Snow"),
-    "17": _("Hail"),
-    "18": _("Sleet"),
-    "19": _("Dust"),
-    "20": _("Fog"),
-    "21": _("Haze"),
-    "22": _("Smoke"),
-    "23": _("Blustery"), 
-    "24": _("Windy"),
-    "25": _("Cold"),
-    "26": _("Cloudy"),
-    "27": _("Mostly Cloudy"),
-    "28": _("Mostly Cloudy"),
-    "29": _("Partly Cloudy"),
-    "30": _("Partly Cloudy"),
-    "31": _("Clear"),
-    "32": _("Clear"),
-    "33": _("Fair"),
-    "34": _("Fair"),
-    "35": _("Mixed Rain and Hail"),
-    "36": _("Hot"),
-    "37": _("Isolated Thunderstorms"),
-    "38": _("Scattered Thunderstorms"),
-    "39": _("Scattered Thunderstorms"),
-    "40": _("Scattered Showers"),
-    "41": _("Heavy Snow"),
-    "42": _("Scattered Snow Showers"),
-    "43": _("Heavy Snow"),
-    "44": _("Partly Cloudy"),
-    "45": _("Thunder Showers"),
-    "46": _("Snow Showers"),
-    "47": _("Isolated Thunderstorms"),
-    "na": _("N/A")
-}
-    
-days = {
-    "Monday": _("Monday"),
-    "Tuesday": _("Tuesday"),
-    "Wednesday": _("Wednesday"),
-    "Thursday": _("Thursday"),
-    "Friday": _("Friday"),
-    "Saturday": _("Saturday"),
-    "Sunday": _("Sunday")
-}
+from awn.extras import _
+
+def N_(message): return message
+
+conditions = [
+    N_("Blowing Snow"),
+    N_("Blustery"), 
+    N_("Clear"),
+    N_("Cloudy"),
+    N_("Cold"),
+    N_("Drizzle"),
+    N_("Dust"),
+    N_("Fair"),
+    N_("Fog"),
+    N_("Freezing Drizzle"),
+    N_("Freezing Rain"),
+    N_("Hail"),
+    N_("Haze"),
+    N_("Heavy Snow"),
+    N_("Hot"),
+    N_("Hurricane"),
+    N_("Isolated Thunderstorms"),
+    N_("Light Rain Shower"),
+    N_("Light Rain with Thunder"),
+    N_("Light Snow Showers"),
+    N_("Mixed Precipitation"),
+    N_("Mixed Rain and Hail"),
+    N_("Mixed Rain and Sleet"),
+    N_("Mixed Rain and Snow"),
+    N_("Mostly Cloudy"),
+    N_("N/A"),
+    N_("Partly Cloudy"),
+    N_("Scattered Showers"),
+    N_("Scattered Snow Showers"),
+    N_("Scattered Thunderstorms"),
+    N_("Severe Thunderstorms"),
+    N_("Showers"),
+    N_("Sleet"),
+    N_("Smoke"),
+    N_("Snow"),
+    N_("Snow Flurries"),
+    N_("Snow Showers"),
+    N_("Thunder Showers"),
+    N_("Thunderstorms"),
+    N_("Tornado"),
+    N_("Tropical Storm"),
+    N_("Windy"),
+]
+
+forecast = [
+    # Please keep translation short, approx. 12 characters
+    N_("AM Clouds / PM Sun"),
+    # Please keep translation short, approx. 12 characters
+    N_("AM Drizzle / Wind"),
+    # Please keep translation short, approx. 12 characters
+    N_("AM Fog / PM Sun"),
+    # Please keep translation short, approx. 12 characters
+    N_("AM Light Rain"),
+    # Please keep translation short, approx. 12 characters
+    N_("AM Rain / Wind"),
+    # Please keep translation short, approx. 12 characters
+    N_("AM Showers"), 
+    # Please keep translation short, approx. 12 characters
+    # T-Showers = Thunder Showers
+    N_("AM T-Showers"),
+    # Please keep translation short, approx. 12 characters
+    # T-Storms = Thunderstorms
+    N_("AM T-Storms"),
+    # Please keep translation short, approx. 12 characters
+    N_("Few Showers"), 
+    # Please keep translation short, approx. 12 characters
+    N_("Heavy Rain"), 
+    # Please keep translation short, approx. 12 characters
+    # T-Storms = Thunderstorms
+    N_("Isolated T-Storms"),
+    # Please keep translation short, approx. 12 characters
+    N_("Light Rain"),
+    # Please keep translation short, approx. 12 characters
+    N_("Mostly Sunny"),
+    # Please keep translation short, approx. 12 characters
+    N_("Partly Cloudy / Wind"),
+    # Please keep translation short, approx. 12 characters
+    N_("PM Light Rain"), 
+    # Please keep translation short, approx. 12 characters
+    N_("PM Showers"), 
+    # Please keep translation short, approx. 12 characters
+    # T-Showers = Thunder Showers
+    N_("PM T-Showers"),
+    # Please keep translation short, approx. 12 characters
+    # T-Storms = Thunderstorms
+    N_("PM T-Storms"),
+    # Please keep translation short, approx. 12 characters
+    N_("Rain"),
+    # Please keep translation short, approx. 12 characters
+    N_("Rain / Wind"),
+    # Please keep translation short, approx. 12 characters
+    N_("Rain / Thunder"),
+    # Please keep translation short, approx. 12 characters
+    N_("Scattered Showers / Wind"),
+    # Please keep translation short, approx. 12 characters
+    # T-Storms = Thunderstorms
+    N_("Scattered T-Storms"),
+    # Please keep translation short, approx. 12 characters
+    N_("Sunny"),
+    # Please keep translation short, approx. 12 characters
+    N_("Sunny / Wind"),
+    # Please keep translation short, approx. 12 characters
+    # T-Showers = Thunder Showers
+    N_("T-Showers"),
+]
+
+days = [
+    N_("Monday"),
+    N_("Tuesday"),
+    N_("Wednesday"),
+    N_("Thursday"),
+    N_("Friday"),
+    N_("Saturday"),
+    N_("Sunday"),
+]
+
+
+# Test routine
+
+print "Translation status for weekdays (C : your locale)"
+for a in days:
+    print "%s : %s" % (a, _(a))
+
+print "\nTranslation status for weather conditions (C : your locale)"
+for a in conditions:
+    print "%s : %s" % (a, _(a))
+
+print "\nTranslation status for forecast (C : your locale)"
+for a in forecast:
+    print "%s : %s" % (a, _(a))
+

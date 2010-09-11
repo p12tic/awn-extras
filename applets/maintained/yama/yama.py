@@ -53,8 +53,6 @@ menu_editor_apps = ("alacarte", "gmenu-simple-editor")
 # Describes the pattern used to try to decode URLs
 url_pattern = re.compile("^[a-z]+://(?:[^@]+@)?([^/]+)/(.*)$")
 
-user_dir_pattern = re.compile("^XDG_([A-Z]+)_DIR=\"(.+)\"$")
-
 # Delay in seconds before starting rebuilding the menu
 menu_rebuild_delay = 2
 
@@ -362,17 +360,6 @@ class YamaApplet:
             item.destroy()
         self.bookmarks_items = []
 
-        # Prepare dictionary with paths mapped to their xdg folder icon name
-        user_dirs = {}
-        user_dirs_file = os.path.expanduser("~/.config/user-dirs.dirs")
-        if os.path.exists(user_dirs_file):
-            with open(user_dirs_file) as f:
-                for i in f:
-                    match = user_dir_pattern.match(i)
-                    if match is not None:
-                        path = "file://" + match.group(2).replace("$HOME", os.environ["HOME"])
-                        user_dirs[path] = "folder-" + match.group(1).lower()
-
         index = 2
         bookmarks_file = os.path.expanduser("~/.gtk-bookmarks")
         if os.path.isfile(bookmarks_file):
@@ -390,10 +377,9 @@ class YamaApplet:
                     if uri.startswith("file://"):
                         if not vfs.File.for_uri(uri).exists():
                             continue
-                        if uri in user_dirs:
-                            icon = self.get_first_existing_icon([user_dirs[uri], "folder"])
-                        else:
-                            icon = "folder"
+                        file = gio.File(uri)
+                        info = file.query_info(gio.FILE_ATTRIBUTE_STANDARD_ICON, gio.FILE_QUERY_INFO_NONE)
+                        icon = self.get_icon_name(info.get_attribute_object(gio.FILE_ATTRIBUTE_STANDARD_ICON))
                         display_uri = uri[7:]
                     else:
                         icon = "folder-remote"

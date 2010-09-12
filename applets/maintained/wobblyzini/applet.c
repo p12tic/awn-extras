@@ -39,8 +39,7 @@ _button_clicked_event (GtkWidget      *widget,
       menu = awn_applet_create_default_menu (applet);
     }
     gtk_menu_set_screen (GTK_MENU (menu), NULL);
-    gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
-                    event->button, event->time);
+    awn_applet_popup_gtk_menu (applet, menu, event->button, event->time);
   }
   return TRUE;
 }

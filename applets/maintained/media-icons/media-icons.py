@@ -95,7 +95,7 @@ class App (awn.AppletSimple):
 
     def menu_popup(self, widget, event):
         self.popup_menu.show_all()
-        self.popup_menu.popup(None, None, None, event.button, event.time)
+        self.popup_gtk_menu (self.popup_menu, event.button, event.time)
 
     def what_app(self):
         self.player_name = mediaplayers.get_app_name()

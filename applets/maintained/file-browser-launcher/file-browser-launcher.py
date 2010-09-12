@@ -1086,7 +1086,7 @@ class App(awn.Applet):
     menu.append(about)
 
     menu.show_all()
-    menu.popup(None, None, None, event.button, event.time)
+    icon.popup_gtk_menu (menu, event.button, event.time)
 
   def docklet_menu_eject(self, menu, num):
     self.unmount(num)
@@ -1266,7 +1266,7 @@ class App(awn.Applet):
     self.menu.append(prefs)
     self.menu.append(about)
     self.menu.show_all()
-    self.menu.popup(None, None, None, event.button, event.time)
+    self.popup_gtk_menu (self.menu, event.button, event.time)
 
   #Show the preferences window
   def open_prefs(self, widget):

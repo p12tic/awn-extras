@@ -267,52 +267,6 @@ _remove_icon (GtkMenuItem * item, CairoAuxIcon * icon)
   cairo_menu_applet_remove_icon (AWN_CAIRO_MENU_APPLET(priv->applet),AWN_THEMED_ICON(icon));
 }
 
-static void 
-_position(GtkMenu *menu, gint *x, gint *y, gboolean *push_in,CairoAuxIcon * icon)
-{
-  GtkRequisition requisition;
-  gint applet_x, applet_y;
-  CairoAuxIconPrivate * priv = GET_PRIVATE (icon);
-  gint screen_height;
-  gint screen_width;
-  GdkScreen * def_screen = gdk_screen_get_default ();
-  
-  screen_height = gdk_screen_get_height (def_screen);
-  screen_width = gdk_screen_get_width (def_screen);
-  gtk_widget_size_request (GTK_WIDGET(menu),&requisition);
-  gdk_window_get_origin(GTK_WIDGET(icon)->window, &applet_x, &applet_y);
-  switch (awn_applet_get_pos_type (priv->applet))
-  {
-    case GTK_POS_BOTTOM:
-      *x=applet_x;
-      *y=applet_y - requisition.height + awn_applet_get_size (priv->applet);
-      break;
-    case GTK_POS_TOP:
-      *x=applet_x;
-      *y=applet_y  + awn_applet_get_size (priv->applet) + awn_applet_get_offset (priv->applet);
-      break;
-    case GTK_POS_LEFT:
-      *x=applet_x + awn_applet_get_size (priv->applet) + awn_applet_get_offset (priv->applet);
-      *y=applet_y;
-      break;
-    case GTK_POS_RIGHT:
-      *x=applet_x - requisition.width + awn_applet_get_size (priv->applet);
-      *y=applet_y;
-      break;
-  }
-  if (*x + requisition.width > screen_width)
-  {
-    *x = screen_width - requisition.width;
-  }
-  if (*y + requisition.height > screen_height)
-  {
-    *y = screen_height - requisition.height;
-  }
-//  *push_in = TRUE;  doesn't quite do what I want.
-  
-}
-
-
 static gboolean 
 _button_clicked_event (CairoAuxIcon *icon, GdkEventButton *event, gpointer null)
 {
@@ -322,8 +276,8 @@ _button_clicked_event (CairoAuxIcon *icon, GdkEventButton *event, gpointer null)
   
   if (event->button == 1)
   {
-    gtk_menu_popup(GTK_MENU(priv->menu), NULL, NULL, (GtkMenuPositionFunc)_position,icon,
-                          event->button, event->time);   
+    awn_icon_popup_gtk_menu (AWN_ICON (icon), priv->menu, event->button, event->time);
+
     if (!priv->autohide_cookie)
     {     
       priv->autohide_cookie = awn_applet_inhibit_autohide (AWN_APPLET(priv->applet),"CairoMenu" );
@@ -369,7 +323,7 @@ _button_clicked_event (CairoAuxIcon *icon, GdkEventButton *event, gpointer null)
     {     
       priv->autohide_cookie = awn_applet_inhibit_autohide (AWN_APPLET(priv->applet),"CairoMenu" );
     }        
-    gtk_menu_popup(GTK_MENU(priv->context_menu), NULL, NULL, NULL, NULL,event_button->button, event_button->time);
+    awn_icon_popup_gtk_menu (AWN_ICON (icon), priv->context_menu, event->button, event->time);
     g_object_set(awn_overlayable_get_effects (AWN_OVERLAYABLE(icon)), "depressed", FALSE,NULL);    
   }
   else

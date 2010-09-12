@@ -224,7 +224,7 @@ class Dialogs:
 
         if dialog == "menu":
             self.__register["menu"].show_all()
-            self.__register["menu"].popup(None, None, None, event.button, event.time)
+            self.__parent.popup_gtk_menu(self.__register["menu"], event.button, event.time)
         elif dialog == "about":
             self.__register["about"].show()
             self.__register["about"].deiconify()

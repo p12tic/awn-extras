@@ -328,6 +328,7 @@ applets/maintained/cairo-menu/Makefile
 applets/maintained/cairo-menu/cairo-menu.desktop.in
 applets/maintained/calendar/Makefile
 applets/maintained/comics/Makefile
+applets/maintained/common-folder/Makefile
 applets/maintained/cpufreq/Makefile
 applets/maintained/dialect/Makefile
 applets/maintained/digital-clock/Makefile

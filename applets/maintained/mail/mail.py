@@ -715,7 +715,7 @@ to log out and try again."))
                     raise RuntimeError(_("Could not log in: ") + str(message))
 
                 else:
-                    if not self.key.attrs.has_key("username"):
+                    if not key.attrs.has_key("username"):
                         raise RuntimeError(_("Could not log in: No username"))
                     self.server.user(key.attrs["username"])
                     try:

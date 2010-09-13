@@ -53,6 +53,7 @@ class CommonFolderApplet:
         self.applet = applet
 
         self.__rebuild_lock = Lock()
+        self.__monitors = []
 
         self.icon_theme = gtk.icon_theme_get_default()
 
@@ -60,15 +61,24 @@ class CommonFolderApplet:
         self.__bookmarks_monitor = gio.File(bookmarks_file).monitor_file()  # keep a reference to avoid getting it garbage collected
         def bookmarks_changed_cb(monitor, file, other_file, event):
             if event == gio.FILE_MONITOR_EVENT_CHANGES_DONE_HINT:
-                with self.__rebuild_lock:
-                    self.add_folders_and_bookmarks()
+                self.rebuild_icons()
         self.__bookmarks_monitor.connect("changed", bookmarks_changed_cb)
 
-        with self.__rebuild_lock:
-            self.add_folders_and_bookmarks()
+        self.rebuild_icons()
+
+    def rebuild_icons(self):
+        def rebuild_cb():
+            with self.__rebuild_lock:
+                self.add_folders_and_bookmarks()
+        glib.idle_add(rebuild_cb)
 
     def add_folders_and_bookmarks(self):
         self.applet.icons.destroy_all()
+
+        # Destroy all current local bookmark monitors
+        for monitor in self.__monitors:
+            monitor.cancel()
+        self.__monitors = []
 
         self.add_folder_icon(_("Home Folder"), "user-home", "file://%s" % user_path)
         self.add_folder_icon(_("Desktop"), "user-desktop", "file://%s" % os.path.join(user_path, "Desktop"))
@@ -86,7 +96,11 @@ class CommonFolderApplet:
                     uri, name = (url_name[0], url_name[1])
 
                     if uri.startswith("file://"):
-                        if not vfs.File.for_uri(uri).exists():
+                        file = vfs.File.for_uri(uri)
+                        monitor = file.monitor()
+                        self.__monitors.append(monitor)
+                        monitor.connect("changed", self.file_changed_cb)
+                        if not file.exists():
                             continue
                         file = gio.File(uri)
                         info = file.query_info(gio.FILE_ATTRIBUTE_STANDARD_ICON, gio.FILE_QUERY_INFO_NONE)
@@ -119,6 +133,10 @@ class CommonFolderApplet:
             return filter(self.icon_theme.has_icon, icon.get_names())[0]
         elif isinstance(icon, gio.FileIcon):
             return icon.get_file().get_path()
+
+    def file_changed_cb(self, monitor, file, other_file, event):
+        if event in (vfs.FILE_MONITOR_EVENT_DELETED, vfs.FILE_MONITOR_EVENT_CREATED):
+            self.rebuild_icons()
 
 
 if __name__ == "__main__":

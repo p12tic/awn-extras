@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-16 23:27+0200\n"
-"PO-Revision-Date: 2010-08-24 20:19+0000\n"
+"POT-Creation-Date: 2010-09-09 21:43+0200\n"
+"PO-Revision-Date: 2010-09-13 20:28+0000\n"
 "Last-Translator: Asier Sarasua Garmendia <Unknown>\n"
 "Language-Team: Basque <eu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-08-25 03:48+0000\n"
+"X-Launchpad-Export-Date: 2010-09-14 04:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -55,12 +55,12 @@ msgstr "Kanpoko terminaleko aplikazio lehenetsia."
 msgid "Disabled"
 msgstr "Desgaitua"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:410
+#: ../applets/maintained/awnterm/awn-terminal.vala:412
 #: ../applets/maintained/calendar/calendarprefs.py:75
 msgid "Preferences"
 msgstr "Hobespenak"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:425
+#: ../applets/maintained/awnterm/awn-terminal.vala:427
 #: ../applets/maintained/file-browser-launcher/prefs.py:162
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:16
 #, c-format
@@ -68,39 +68,39 @@ msgid "Behavior"
 msgstr "Portaera"
 
 #. focus out behavior checkbox
-#: ../applets/maintained/awnterm/awn-terminal.vala:437
+#: ../applets/maintained/awnterm/awn-terminal.vala:439
 msgid "Hide when focus is lost"
 msgstr "Ezkutatu fokua galtzean"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:456
+#: ../applets/maintained/awnterm/awn-terminal.vala:458
 #: ../applets/maintained/file-browser-launcher/prefs.py:259
 #: ../applets/maintained/file-browser-launcher/prefs.py:334
 msgid "Action"
 msgstr "Ekintza"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:476
+#: ../applets/maintained/awnterm/awn-terminal.vala:478
 msgid "Shortcut"
 msgstr "Lasterbidea"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:482
+#: ../applets/maintained/awnterm/awn-terminal.vala:484
 msgid "Activate"
 msgstr "Aktibatu"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:491
+#: ../applets/maintained/awnterm/awn-terminal.vala:493
 #, c-format
 msgid "Background image"
 msgstr "Atzeko planoko irudia"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:503
+#: ../applets/maintained/awnterm/awn-terminal.vala:505
 msgid "Select a file"
 msgstr "Hautatu fitxategia"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:545
+#: ../applets/maintained/awnterm/awn-terminal.vala:547
 #, c-format
 msgid "Terminal opacity"
 msgstr "Terminalaren opakotasuna"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:572
+#: ../applets/maintained/awnterm/awn-terminal.vala:574
 #, c-format
 msgid "External Terminal"
 msgstr "Kanpoko terminala"
@@ -224,6 +224,7 @@ msgid "Device"
 msgstr "Gailua"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:763
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:412
 msgid "Please select a valid device"
 msgstr "Hautatu baliozko gailua"
 
@@ -370,6 +371,47 @@ msgstr "Deskarga"
 #, python-format
 msgid "%s %s Color"
 msgstr "%s %s Kolorea"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:411
+msgid "No Device"
+msgstr "Gailurik ez"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:533
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:543
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:573
+msgid "Options/Info"
+msgstr "Aukerak/Info"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:535
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:538
+msgid "Back to Graph"
+msgstr "Itzuli grafikora"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:539
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:542
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:563
+msgid "Interfaces"
+msgstr "Interfazeak"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:568
+msgid "Change Unit"
+msgstr "Aldaketa-unitatea"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:612
+msgid "Status"
+msgstr "Egoera"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:612
+msgid "IP Address"
+msgstr "IP helbidea"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:612
+msgid "Subnet Mask"
+msgstr "Azpisare-maskara"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:692
+msgid "Wireless graph type"
+msgstr "Haririk gabeko grafiko-mota"
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:1
 msgid "HAL UDI of battery."
@@ -583,6 +625,7 @@ msgstr "Beaufort"
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
 #: ../applets/maintained/weather/weather.py:59
 #: ../applets/maintained/weather/weather.py:562
+#: ../applets/maintained/weather/weather.py:567
 msgid "Celsius"
 msgstr "Celsius"
 
@@ -675,6 +718,34 @@ msgstr "Kokapenak"
 msgid "Edit"
 msgstr "Editatu"
 
+#. FIXME priv->display_name should be _("Places")
+#. awn_icon_set_tooltip_text (AWN_ICON(object),priv->display_name);
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:197
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1003
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1017
+#: ../applets/maintained/file-browser-launcher/prefs.py:249
+#: ../applets/maintained/places/places.desktop.in.in.h:2
+#: ../applets/maintained/yama/yama.py:261
+msgid "Places"
+msgstr "Lekuak"
+
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:351
+msgid "Remove Icon"
+msgstr "Kendu ikonoa"
+
+#: ../applets/maintained/cairo-menu/cairo-main-icon.c:161
+#: ../applets/unmaintained/main-menu/applet.c:453
+msgid "Main Menu"
+msgstr "Menu nagusia"
+
+#: ../applets/maintained/cairo-menu/cairo-menu.desktop.in.in.h:1
+msgid "A Main Menu."
+msgstr "Menu nagusi bat."
+
+#: ../applets/maintained/cairo-menu/cairo-menu.desktop.in.in.h:2
+msgid "Cairo Main Menu"
+msgstr "Cairo menu nagusia"
+
 #. hope that gnome-session-save exists; needed for GNOME 2.22, at least.
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:107
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:111
@@ -686,6 +757,10 @@ msgstr "Amaitu saioa"
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:123
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:128
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:1
+#: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:46
+#: ../applets/maintained/quit/quit.py:57
+#: ../applets/maintained/quit/quit.py:265
+#: ../applets/maintained/yama/yama.py:150
 msgid "Lock Screen"
 msgstr "Blokeatu pantaila"
 
@@ -705,74 +780,87 @@ msgstr "Hibernatu"
 msgid "Shutdown"
 msgstr "Itzali"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:193
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:195
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:381
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:610
 #: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Computer"
 msgstr "Ordenagailua"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:194
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:196
 msgid "Home"
 msgstr "Etxea"
 
 #. Check if this is the Desktop directory
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:195
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:197
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:568
 #: ../applets/maintained/places/applet.c:344
+#: ../applets/maintained/yama/yama.py:270
 msgid "Desktop"
 msgstr "Mahaigaina"
 
-#. 
-#. TODO: check the trash and set to stock_trash_empty if trash is empty
-#. 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:199
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:203
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:205
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:635
 #: ../applets/maintained/file-browser-launcher/prefs.py:236
 msgid "Trash"
 msgstr "Zakarrontzia"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:200
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:207
 msgid "File System"
 msgstr "Fitxategi-sistema"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:321
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:336
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:613
 msgid "Network"
 msgstr "Sarea"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:322
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:337
 msgid "Connect to Server"
 msgstr "Konektatu zerbitzarira"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:953
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:967
-#: ../applets/maintained/file-browser-launcher/prefs.py:249
-#: ../applets/maintained/places/places.desktop.in.in.h:2
-msgid "Places"
-msgstr "Lekuak"
-
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:991
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1005
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1040
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1055
+#: ../applets/maintained/yama/yama.py:337
 msgid "Recent Documents"
 msgstr "Azken dokumentuak"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1036
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1047
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1086
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1097
 msgid "Session"
 msgstr "Saioa"
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1063
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1113
 msgid "Search\\u2026"
 msgstr "Bilatu\\u2026"
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1080
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1130
 msgid "Launch\\u2026"
 msgstr "Abiarazi\\u2026"
 
-#: ../applets/maintained/cairo-menu/misc.c:344
+#: ../applets/maintained/cairo-menu/misc.c:310
+#: ../applets/maintained/yama/yama.py:590
+msgid "Clear the Recent Documents list?"
+msgstr "Garbitu azken dokumentuen zerrenda?"
+
+#. Translators: This is taken from gnome-panel, when deleting the Recent Documents List.
+#. * Please use the same translation.
+#: ../applets/maintained/cairo-menu/misc.c:314
+msgid ""
+"If you clear the Recent Documents list, you clear the following:\n"
+"• All items from the Places → Recent Documents menu item.\n"
+"• All items from the recent documents list in all applications."
+msgstr ""
+"Azken dokumentuen zerrenda garbitzen baduzu, hurrengoa ezabatuko da:\n"
+" • 'Lekuak → Azken dokumentuak' menuko elementu guztiak.\n"
+" • Aplikazio guztietako azken dokumentuen zerrendako elementu guztiak."
+
+#: ../applets/maintained/cairo-menu/misc.c:326
+#: ../applets/maintained/cairo-menu/misc.c:420
+#: ../applets/maintained/yama/yama.py:351
+#: ../applets/maintained/yama/yama.py:595
 msgid "Clear Recent Documents"
 msgstr "Garbitu azken dokumentuak"
 
@@ -916,10 +1004,14 @@ msgstr "Egutegiaren URLa"
 
 #. default title/tooltip to show on startup.
 #: ../applets/maintained/calendar/clockcal.py:51
-#: ../applets/maintained/calendar/clockcal.py:491
+#: ../applets/maintained/calendar/clockcal.py:490
 #: ../applets/maintained/digital-clock/digital-clock.vala:119
 msgid "Calendar"
 msgstr "Egutegia"
+
+#: ../applets/maintained/calendar/clockcal.py:110
+msgid "Forget Password"
+msgstr "Ahaztu pasahitza"
 
 #: ../applets/maintained/calendar/clockcal.py:218
 msgid ""
@@ -931,17 +1023,25 @@ msgstr ""
 "pasahitza ezabatzea aukeratzen baduzu, egutegian sartzeko kredentzialak "
 "eskatuko zaizkizu berriro."
 
-#: ../applets/maintained/calendar/clockcal.py:497
+#: ../applets/maintained/calendar/clockcal.py:246
+msgid "Avant Calendar Applet"
+msgstr "Avant egutegi-appleta"
+
+#: ../applets/maintained/calendar/clockcal.py:248
+msgid "A Calendar Applet for the Avant Window Navigator. Images by Deleket."
+msgstr "Avant Window Navigator-entzako egutegi-appleta. Irudiak: Deleket."
+
+#: ../applets/maintained/calendar/clockcal.py:496
 msgid "Open in "
 msgstr "Ireki hemen: "
 
-#: ../applets/maintained/calendar/clockcal.py:501
+#: ../applets/maintained/calendar/clockcal.py:500
 #: ../applets/maintained/weather/forecast.py:171
 msgid "Today"
 msgstr "Gaur"
 
 #. print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
-#: ../applets/maintained/calendar/clockcal.py:549
+#: ../applets/maintained/calendar/clockcal.py:548
 msgid "Unable to read calendar data from external source."
 msgstr "Ezin izan dira egutegiaren datuak irakurri kanpoko iturburutik."
 
@@ -2507,6 +2607,7 @@ msgid "A launcher for your file manager"
 msgstr "Abiarazlea zure fitxategi-arakatzailerako"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:385
+#: ../applets/maintained/yama/yama.py:268
 msgid "Home Folder"
 msgstr "Karpeta nagusia"
 
@@ -2516,6 +2617,7 @@ msgid "Filesystem"
 msgstr "Fitxategi-sistema"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:518
+#: ../applets/maintained/yama/yama.py:321
 msgid "Connect to Server..."
 msgstr "Zerbitzarira konektatzen..."
 
@@ -2817,12 +2919,28 @@ msgid "Applet to show the hw sensors readouts"
 msgstr "Hardware-sentsoreen emaitzak erakusteko appleta"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:2
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:48
 msgid "Hardware Sensors"
 msgstr "Hardware-sentsoreak"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:50
 msgid "Applet to show the hardware sensors readouts"
 msgstr "Hardware-sentsoreen emaitzak erakusteko appleta"
+
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:61
+#: ../applets/maintained/weather/weather.ui.h:13
+msgid "Small"
+msgstr "Txikia"
+
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:61
+#: ../applets/maintained/weather/weather.ui.h:11
+msgid "Medium"
+msgstr "Ertaina"
+
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:61
+#: ../applets/maintained/weather/weather.ui.h:9
+msgid "Large"
+msgstr "Handia"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:84
 msgid "Warning from Hardware Sensors: No sensors found"
@@ -2944,6 +3062,130 @@ msgstr "Volt"
 msgid "rpm"
 msgstr "rpm"
 
+#: ../applets/maintained/indicator-applet/applet.c:89
+#: ../applets/maintained/indicator-applet/applet.c:182
+#: ../applets/maintained/indicator-applet/applet.c:784
+#: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.h:2
+#: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.in.h:2
+msgid "Indicator Applet"
+msgstr "Adierazle appleta"
+
+#: ../applets/maintained/indicator-applet/applet.c:92
+#: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.h:1
+#: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.in.h:1
+msgid "An applet to hold all of the system indicators"
+msgstr "Sistema-adierazle guztiak erakusten dituen appleta"
+
+#: ../applets/maintained/indicator-applet/applet.c:170
+msgid "Indicator Applet Preferences"
+msgstr "Adierazle-appletaren hobespenak"
+
+#: ../applets/maintained/indicator-applet/applet.c:177
+msgid "Enabled Entries"
+msgstr "Gaitu sarrerak"
+
+#: ../applets/maintained/indicator-applet/applet.c:184
+msgid "Indicator Applet Session (Quit)"
+msgstr "Adierazle-appletaren saioa (Irten)"
+
+#: ../applets/maintained/indicator-applet/applet.c:186
+msgid "Me Menu"
+msgstr "Me menua"
+
+#: ../applets/maintained/indicator-applet/applet.c:188
+msgid "Messaging Menu"
+msgstr "Mezu-menua"
+
+#: ../applets/maintained/indicator-applet/applet.c:190
+msgid "Network Menu"
+msgstr "Sare-menua"
+
+#: ../applets/maintained/indicator-applet/applet.c:192
+msgid "Sound Control Menu"
+msgstr "Soinuaren kontrol-menua"
+
+#: ../applets/maintained/indicator-applet/applet.c:194
+msgid "Other Menus"
+msgstr "Beste menu batzuk"
+
+#: ../applets/maintained/indicator-applet/applet.c:204
+msgid "Options"
+msgstr "Aukerak"
+
+#: ../applets/maintained/indicator-applet/applet.c:212
+msgid "Number of rows:"
+msgstr "Errenkada-kopurua:"
+
+#: ../applets/maintained/indicator-applet/applet.c:216
+msgid "Number of columns:"
+msgstr "Zutabe-kopurua:"
+
+#: ../applets/maintained/indicator-applet/applet.c:228
+msgid "Enable Applet Icon mode"
+msgstr "Gaitu applet-ikonoaren modua"
+
+#: ../applets/maintained/indicator-applet/applet.c:764
+msgid "Me menu"
+msgstr "Me menua"
+
+#: ../applets/maintained/indicator-applet/applet.c:768
+msgid "Messaging menu"
+msgstr "Mezu-menua"
+
+#: ../applets/maintained/indicator-applet/applet.c:772
+msgid "Network menu"
+msgstr "Sare-menua"
+
+#: ../applets/maintained/indicator-applet/applet.c:776
+msgid "Indicator Applet Session"
+msgstr "Adierazle-appletaren saioa"
+
+#: ../applets/maintained/indicator-applet/applet.c:780
+msgid "Sound Menu"
+msgstr "Soinu-menua"
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:1
+msgid "If true, show any other menus"
+msgstr "Egia bada, erakutsi beste menuak"
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:2
+msgid "If true, show the Me menu (chat, microblogging, etc)"
+msgstr "Egia bada, erakutsi Me menua (txata, mikroblogina, etab.)"
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:3
+msgid "If true, show the Messaging icon"
+msgstr "Egia bada, erakutsi mezu-ikonoa"
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:4
+msgid "If true, show the Network menu"
+msgstr "Egia bada, erakutsi sare-menua"
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:5
+msgid "If true, show the Sound control menu"
+msgstr "Egia bada, erakutsi soinuaren kontrol-menua"
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:6
+msgid "If true, show the indicator applet icons"
+msgstr "Egia bada, erakutsi adierazle-appletaren ikonoak"
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:7
+msgid ""
+"If true, show the indicator applet session icon (lock screen, switch users, "
+"etc)"
+msgstr ""
+"Egia bada, erakutsi adierazle-appletaren saio-ikonoa (pantaila blokeatu, "
+"erabiltzailez aldatu, etab.)"
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:8
+msgid "If true, use an Awn applet icon instead"
+msgstr "Egia bada, erakutsi Awn-ren applet-ikono bat ordezko gisa"
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:9
+msgid "The number of rows (top and bottom edge) or columns (side edges)"
+msgstr ""
+"Errenkada-kopurua (goiko eta beheko ertzak) edo zutabe-kopurua (alboko "
+"ertzak)"
+
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:1
 msgid "Display any network errors"
 msgstr "Erakutsi sareko edozein errore"
@@ -3030,6 +3272,9 @@ msgid "Refresh"
 msgstr "Freskatu"
 
 #: ../applets/maintained/mail/mail.py:334
+#: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:47
+#: ../applets/maintained/quit/quit.py:58
+#: ../applets/maintained/quit/quit.py:267
 msgid "Log Out"
 msgstr "Amaitu saioa"
 
@@ -3188,13 +3433,32 @@ msgstr "Kontrolatu zure musika-erreproduzigailua"
 msgid "Media Control"
 msgstr "Medioen kontrola"
 
-#: ../applets/maintained/media-control/media_control.py:611
+#: ../applets/maintained/media-control/media_control.py:51
+#: ../applets/maintained/media-control/media_control.py:653
+msgid "Media Control Applet"
+msgstr "Multimedia-kontrolagailuaren appleta"
+
+#. Used in this sentence: Title by Artist from Album
+#: ../applets/maintained/media-control/media_control.py:509
+msgid "by"
+msgstr "egilea:"
+
+#. Used in this sentence: Title by Artist from Album
+#: ../applets/maintained/media-control/media_control.py:512
+msgid "from"
+msgstr "hemendik:"
+
+#: ../applets/maintained/media-control/media_control.py:613
 msgid "Title - Artist"
 msgstr "Izenburua - Artista"
 
-#: ../applets/maintained/media-control/media_control.py:611
+#: ../applets/maintained/media-control/media_control.py:613
 msgid "Artist - Title"
 msgstr "Artista - Izenburua"
+
+#: ../applets/maintained/media-control/media_control.py:656
+msgid "Controls your favourite music player."
+msgstr "Zure musika-erreproduzigailu gogokoena kontolatzen du"
 
 #: ../applets/maintained/media-control/media-control.ui.h:2
 msgid "Close docklet when mouse leaves it"
@@ -3298,6 +3562,28 @@ msgstr "Medioen erreproduzigailua"
 msgid "Plays any media files you drop on the applet"
 msgstr "Appletean jaregiten den edozein medio erreproduzitzen du"
 
+#. PyGObject doesn't have BOXED support implemented
+#. recent_items = gobject.property(type=gobject.TYPE_BOXED,
+#. nick='Recent Items')
+#: ../applets/maintained/media-player/media_player.py:50
+#: ../applets/maintained/media-player/media_player.py:423
+msgid "Media Player Applet"
+msgstr "Media-erreproduzigailuaren appleta"
+
+#. Popup menu
+#: ../applets/maintained/media-player/media_player.py:78
+msgid "Recent items"
+msgstr "Popup menua"
+
+#: ../applets/maintained/media-player/media_player.py:406
+msgid "Please restart the applet to apply changes to sinks."
+msgstr "Berrabiarazi appleta aldaketak isurbideei aplikatzeko"
+
+#: ../applets/maintained/media-player/media_player.py:426
+msgid "Plays any media files you drop on the applet."
+msgstr ""
+"Appletean jaregiten den edozein multimedia-fitxategi erreproduzitzen du."
+
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:1
 msgid "<b>GStreamer properties</b>"
 msgstr "<b>GStreamer propietateak</b>"
@@ -3335,10 +3621,12 @@ msgid "List of mountpoints that should remain hidden in the UI."
 msgstr "EI-an ezkutuan mantenduko diren muntatze-puntuen zerrenda."
 
 #: ../applets/maintained/mount/mount.desktop.in.h:1
+#: ../applets/maintained/mount/mount.py:31
 msgid "An applet to (un)mount devices"
 msgstr "Gailuak (des)muntatzeko appleta"
 
 #: ../applets/maintained/mount/mount.desktop.in.h:2
+#: ../applets/maintained/mount/mount.py:30
 msgid "Mount Applet"
 msgstr "Muntatze-appleta"
 
@@ -3442,6 +3730,15 @@ msgstr "Jakinarazpen-area (systray)"
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:2
 msgid "Notification Area"
 msgstr "Jakinarazpen-area"
+
+#: ../applets/maintained/notification-area/notification-area.vala:638
+msgid "There is already another notification area running on this screen!"
+msgstr "Beste jakinarazpen-area bat dago abian pantaila honetan!"
+
+#: ../applets/maintained/notification-area/notification-area.vala:642
+msgid ""
+"Please remove the existing notification area and then restart the applet."
+msgstr "Kendu abian dagoen jakinarazpen-area eta berrabiarazi appleta."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:1
 msgid "Background colour in the form (Hex) rrggbbaa"
@@ -3556,6 +3853,7 @@ msgstr ""
 "Awn-ren gaiaren kolore-balio konfiguratuak erabiliko diren ala ez xxxx-rako."
 
 #: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.in.h:1
+#: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.h:1
 msgid ""
 "A replacement for the standard notification daemon and notify-osd. This will "
 "disable existing notification daemons while the applet is active."
@@ -3565,6 +3863,7 @@ msgstr ""
 "dagoenean."
 
 #: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.in.h:2
+#: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.h:2
 msgid "Notification Daemon"
 msgstr "Jakinarazpen-deabrua"
 
@@ -3720,6 +4019,7 @@ msgid "Quit-Log Out applet"
 msgstr "Irten-Saioa amaitu appleta"
 
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:2
+#: ../applets/maintained/yama/yama.py:150
 msgid "Protect your computer from unauthorized use"
 msgstr "Babestu zure ordenagailua baimentik gabeko erabileratik"
 
@@ -3732,12 +4032,65 @@ msgid "Log out of this session to log in as a different user"
 msgstr "Amaitu saio hau beste erabiltzaile batekin saioa hasteko"
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:1
+#: ../applets/maintained/quit/quit.py:48
+#: ../applets/maintained/yama/yama.py:172
 msgid "Shut Down..."
 msgstr "Itzali..."
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:2
+#: ../applets/maintained/yama/yama.py:172
 msgid "Shut down the system"
 msgstr "Itzali sistema"
+
+#: ../applets/maintained/quit/quit.py:33
+msgid "Quit-Log Out"
+msgstr "Irten-Saioa amaitu"
+
+#: ../applets/maintained/quit/quit.py:34
+msgid ""
+"An applet to lock your screen, log out of your session, or shut down the "
+"system"
+msgstr ""
+"Pantaila blokeatzeko, saiotik irteteko edo sistema itzaltzeko appleta"
+
+#: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:52
+#: ../applets/maintained/quit/quit.py:104
+#: ../applets/maintained/quit/quit.py:114
+#: ../applets/maintained/quit/quit.py:231
+#: ../applets/maintained/quit/quit.py:263
+msgid "Show Docklet"
+msgstr "Erakutsi docklet-a"
+
+#: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:48
+#: ../applets/maintained/quit/quit.py:59 ../applets/maintained/quit/quit.py:89
+#: ../applets/maintained/quit/quit.py:90
+#: ../applets/maintained/quit/quit.py:233
+#: ../applets/maintained/quit/quit.py:269
+msgid "Shut Down"
+msgstr "Itzali"
+
+#. Translators: %s is a username
+#. Translators: %s is a user name.
+#: ../applets/maintained/quit/quit.py:43
+#: ../applets/maintained/yama/yama.py:168
+#, python-format
+msgid "Log Out %s..."
+msgstr "Amaitu %s(r)en saioa..."
+
+#: ../applets/maintained/quit/quit.py:247
+msgid "Left click _action:"
+msgstr "Ezkerreko klikaren _ekintza:"
+
+#: ../applets/maintained/related/related.desktop.in.h:1
+#: ../applets/maintained/related/related.desktop.in.in.h:1
+msgid "Applet displaying related items by talking to Zeitgeist"
+msgstr ""
+"Erlazionatutako elementuak erakusten dituen appleta Zeitgeist-en oinarrituta"
+
+#: ../applets/maintained/related/related.desktop.in.h:2
+#: ../applets/maintained/related/related.desktop.in.in.h:2
+msgid "Related applet"
+msgstr "Erlazionatutako elementuen appleta"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:1
 msgid " The color (RGBA) applet border."
@@ -4010,6 +4363,22 @@ msgstr "_Errenkadak:"
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:43
 msgid "_Thumbnailing:"
 msgstr "_Miniaturak:"
+
+#: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:1
+msgid "A prettier desktop switcher"
+msgstr "Mahaigain-aldatzaile politagoa"
+
+#: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:2
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2439
+msgid "Shiny Switcher"
+msgstr "Aldatzaile distiratsua"
+
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:642
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:736
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1946
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2013
+msgid "Applet Preferences"
+msgstr "Appletaren hobespenak"
 
 #: ../applets/maintained/showdesktop/applet.vala:40
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:2
@@ -4296,6 +4665,61 @@ msgstr "Ikonoen zerrenda"
 msgid "Render background."
 msgstr "Errendatu atzeko planoa."
 
+#. Translators: %2.0lf is a number, %% is a percent sign, do not change them
+#: ../applets/maintained/sysmon/cpuicon.c:161
+#: ../applets/maintained/sysmon/cpuicon.c:204
+#, c-format
+msgid "CPU: %2.0lf%%"
+msgstr "PUZ: %% %2.0lf"
+
+#: ../applets/maintained/sysmon/cpuicon.c:353
+#: ../applets/maintained/sysmon/cpu-dialog.c:256
+msgid "CPU"
+msgstr "PUZ"
+
+#: ../applets/maintained/sysmon/cpuicon.c:580
+msgid "Graph Type"
+msgstr "Grafiko-mota"
+
+#. Translators: refers to a graph type
+#: ../applets/maintained/sysmon/cpuicon.c:587
+msgid "Area"
+msgstr "Azalera"
+
+#: ../applets/maintained/sysmon/cpuicon.c:590
+msgid "Circle"
+msgstr "Zirkulua"
+
+#: ../applets/maintained/sysmon/cpuicon.c:593
+msgid "Bars"
+msgstr "Barrak"
+
+#: ../applets/maintained/sysmon/cpuicon.c:596
+msgid "Default"
+msgstr "Lehenetsia"
+
+#. item = gtk_menu_item_new_with_label ("Add Icon");
+#. gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
+#. submenu = gtk_menu_new ();
+#. gtk_menu_item_set_submenu (GTK_MENU_ITEM(item),submenu);
+#. item = gtk_menu_item_new_with_label ("CPU");
+#. gtk_menu_shell_append(GTK_MENU_SHELL(submenu), item);
+#. 
+#. item = gtk_menu_item_new_with_label ("Remove Icon");
+#. gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
+#. 
+#: ../applets/maintained/sysmon/cpuicon.c:610
+msgid "Render Background"
+msgstr "Errendatu atzeko planoa"
+
+#: ../applets/maintained/sysmon/cpu-dialog.c:240
+msgid "PID"
+msgstr "PIDa"
+
+#: ../applets/maintained/sysmon/cpu-dialog.c:248
+msgid "Process Name"
+msgstr "Prozesu-izena"
+
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:1
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:2
 msgid "Manage system activity"
@@ -4575,75 +4999,75 @@ msgid "Manage a simple To-Do list"
 msgstr "Kudeatu egitekoen zerrenda sinplea"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:2
-#: ../applets/maintained/to-do/to-do.py:68
-#: ../applets/maintained/to-do/to-do.py:217
-#: ../applets/maintained/to-do/to-do.py:269
-#: ../applets/maintained/to-do/to-do.py:907
+#: ../applets/maintained/to-do/to-do.py:69
+#: ../applets/maintained/to-do/to-do.py:218
+#: ../applets/maintained/to-do/to-do.py:270
+#: ../applets/maintained/to-do/to-do.py:908
 msgid "To-Do List"
 msgstr "Egitekoen zerrenda"
 
-#: ../applets/maintained/to-do/to-do.py:220
+#: ../applets/maintained/to-do/to-do.py:221
 msgid "A simple To-Do List"
 msgstr "Egitekoen zerrenda sinplea"
 
-#: ../applets/maintained/to-do/to-do.py:299
+#: ../applets/maintained/to-do/to-do.py:300
 msgid "Remove item"
 msgstr "Kendu elementua"
 
-#: ../applets/maintained/to-do/to-do.py:381
+#: ../applets/maintained/to-do/to-do.py:382
 msgid "Remove category"
 msgstr "Kendu kategoria"
 
-#: ../applets/maintained/to-do/to-do.py:405
+#: ../applets/maintained/to-do/to-do.py:406
 msgid "View/Edit details"
 msgstr "Ikusi/editatu xehetasunak"
 
 #. Make the RadioButtons for each category
 #. First category: No category! (Uncategorized)
-#: ../applets/maintained/to-do/to-do.py:525
+#: ../applets/maintained/to-do/to-do.py:526
 msgid "_Uncategorized"
 msgstr "Kategoriarik _gabea"
 
 #. First RadioButton - ( )Category
-#: ../applets/maintained/to-do/to-do.py:549
+#: ../applets/maintained/to-do/to-do.py:550
 msgid "_Category"
 msgstr "_Kategoria"
 
 #. Second RadioButton - (-)To-Do item
 #. TODO: better text than "To-Do item"?
-#: ../applets/maintained/to-do/to-do.py:556
+#: ../applets/maintained/to-do/to-do.py:557
 msgid "_To-Do item"
 msgstr "_Egitekoen zerrenda"
 
 #. Label: Priority:
-#: ../applets/maintained/to-do/to-do.py:641
+#: ../applets/maintained/to-do/to-do.py:642
 msgid "Priority: "
 msgstr "Lehentasuna: "
 
 #. Neutral, Low, Medium, and High priority RadioButtons
-#: ../applets/maintained/to-do/to-do.py:644
+#: ../applets/maintained/to-do/to-do.py:645
 msgid "_Neutral"
 msgstr "_Neutrala"
 
-#: ../applets/maintained/to-do/to-do.py:646
+#: ../applets/maintained/to-do/to-do.py:647
 msgid "_Low"
 msgstr "_Baxua"
 
-#: ../applets/maintained/to-do/to-do.py:648
+#: ../applets/maintained/to-do/to-do.py:649
 msgid "_Medium"
 msgstr "_Ertaina"
 
-#: ../applets/maintained/to-do/to-do.py:650
+#: ../applets/maintained/to-do/to-do.py:651
 msgid "_High"
 msgstr "_Altua"
 
 #. Label: Progress(%):
-#: ../applets/maintained/to-do/to-do.py:678
+#: ../applets/maintained/to-do/to-do.py:679
 msgid "Progress(%): "
 msgstr "Aurrerapena(%): "
 
 #. Make Label
-#: ../applets/maintained/to-do/to-do.py:1130
+#: ../applets/maintained/to-do/to-do.py:1131
 #, python-format
 msgid ""
 "Are you sure you want to remove the category \"%s?\"\n"
@@ -4653,13 +5077,13 @@ msgstr ""
 "Bere elementu guztiak kenduko dira."
 
 #. Make CheckButton
-#: ../applets/maintained/to-do/to-do.py:1134
-#: ../applets/maintained/to-do/to-do.py:1170
+#: ../applets/maintained/to-do/to-do.py:1135
+#: ../applets/maintained/to-do/to-do.py:1171
 msgid "Don't show this again."
 msgstr "Ez erakutsi berriro."
 
 #. Make Label
-#: ../applets/maintained/to-do/to-do.py:1167
+#: ../applets/maintained/to-do/to-do.py:1168
 msgid "Are you sure you want to remove this item?"
 msgstr "Seguru zaude elementu hau kendu nahi duzula?"
 
@@ -4669,8 +5093,8 @@ msgstr "Seguru zaude elementu hau kendu nahi duzula?"
 #. Reset the tooltip
 #. Translators: %d is a number, %% is a percent sign, please don't change them,
 #. but you may add a space character between them, e.g. in German: %d %% erledigt
-#: ../applets/maintained/to-do/to-do.py:1359
-#: ../applets/maintained/to-do/to-do.py:1370
+#: ../applets/maintained/to-do/to-do.py:1360
+#: ../applets/maintained/to-do/to-do.py:1371
 #, python-format
 msgid "%d%% done"
 msgstr "%d%% egina"
@@ -4850,6 +5274,339 @@ msgstr "DESKRIBAPENA"
 msgid "Weather data provided by weather.com"
 msgstr "weather.com-ek eskainitako eguraldi-datuak"
 
+#: ../applets/maintained/weather/weathertext.py:38
+msgid "Blowing Snow"
+msgstr "Elur-bisutsa"
+
+#: ../applets/maintained/weather/weathertext.py:39
+msgid "Blustery"
+msgstr "Ekaitzak"
+
+#: ../applets/maintained/weather/weathertext.py:40
+msgid "Clear"
+msgstr "Garbi"
+
+#: ../applets/maintained/weather/weathertext.py:41
+msgid "Cloudy"
+msgstr "Hodeitsu"
+
+#: ../applets/maintained/weather/weathertext.py:42
+msgid "Cold"
+msgstr "Hotz"
+
+#: ../applets/maintained/weather/weathertext.py:43
+msgid "Drizzle"
+msgstr "Zirimiria"
+
+#: ../applets/maintained/weather/weathertext.py:44
+msgid "Dust"
+msgstr "Hautsa"
+
+#: ../applets/maintained/weather/weathertext.py:45
+msgid "Fair"
+msgstr "Ona"
+
+#: ../applets/maintained/weather/weathertext.py:46
+msgid "Fog"
+msgstr "Lainoa"
+
+#: ../applets/maintained/weather/weathertext.py:47
+msgid "Freezing Drizzle"
+msgstr "Zirimiri izoztua"
+
+#: ../applets/maintained/weather/weathertext.py:48
+msgid "Freezing Rain"
+msgstr "Euri izoztua"
+
+#: ../applets/maintained/weather/weathertext.py:49
+msgid "Hail"
+msgstr "Kazkabarra"
+
+#: ../applets/maintained/weather/weathertext.py:50
+msgid "Haze"
+msgstr "Lanbroa"
+
+#: ../applets/maintained/weather/weathertext.py:51
+msgid "Heavy Snow"
+msgstr "Elur asko"
+
+#: ../applets/maintained/weather/weathertext.py:52
+msgid "Hot"
+msgstr "Beroa"
+
+#: ../applets/maintained/weather/weathertext.py:53
+msgid "Hurricane"
+msgstr "Haize-erauntsia"
+
+#: ../applets/maintained/weather/weathertext.py:54
+msgid "Isolated Thunderstorms"
+msgstr "Ekaitz isolatuak"
+
+#: ../applets/maintained/weather/weathertext.py:55
+msgid "Light Rain Shower"
+msgstr "Euri-zaparrada arinak"
+
+#: ../applets/maintained/weather/weathertext.py:56
+msgid "Light Rain with Thunder"
+msgstr "Euri arina trumoiarekin"
+
+#: ../applets/maintained/weather/weathertext.py:57
+msgid "Light Snow Showers"
+msgstr "Elur-zaparrada arinak"
+
+#: ../applets/maintained/weather/weathertext.py:58
+msgid "Mixed Precipitation"
+msgstr "Prezipitazio nahasiak"
+
+#: ../applets/maintained/weather/weathertext.py:59
+msgid "Mixed Rain and Hail"
+msgstr "Euri eta kazkabar nahasia"
+
+#: ../applets/maintained/weather/weathertext.py:60
+msgid "Mixed Rain and Sleet"
+msgstr "Euri eta elurbusti nahasia"
+
+#: ../applets/maintained/weather/weathertext.py:61
+msgid "Mixed Rain and Snow"
+msgstr "Euri eta elur nahasia"
+
+#: ../applets/maintained/weather/weathertext.py:62
+msgid "Mostly Cloudy"
+msgstr "Oso hodeitsu"
+
+#: ../applets/maintained/weather/weathertext.py:63
+msgid "N/A"
+msgstr "E/E"
+
+#: ../applets/maintained/weather/weathertext.py:64
+msgid "Partly Cloudy"
+msgstr "Pixka bat hodeitsu"
+
+#: ../applets/maintained/weather/weathertext.py:65
+msgid "Scattered Showers"
+msgstr "Zaparrada sakabanatuak"
+
+#: ../applets/maintained/weather/weathertext.py:66
+msgid "Scattered Snow Showers"
+msgstr "Elur-zaparra sakabanatuak"
+
+#: ../applets/maintained/weather/weathertext.py:67
+msgid "Scattered Thunderstorms"
+msgstr "Ekaitz sakabanatuak"
+
+#: ../applets/maintained/weather/weathertext.py:68
+msgid "Severe Thunderstorms"
+msgstr "Ekaitz larriak"
+
+#: ../applets/maintained/weather/weathertext.py:69
+msgid "Showers"
+msgstr "Zaparradak"
+
+#: ../applets/maintained/weather/weathertext.py:70
+msgid "Sleet"
+msgstr "Elurbustia"
+
+#: ../applets/maintained/weather/weathertext.py:71
+msgid "Smoke"
+msgstr "Lainoa"
+
+#: ../applets/maintained/weather/weathertext.py:72
+msgid "Snow"
+msgstr "Elurra"
+
+#: ../applets/maintained/weather/weathertext.py:73
+msgid "Snow Flurries"
+msgstr "Elur-boladak"
+
+#: ../applets/maintained/weather/weathertext.py:74
+msgid "Snow Showers"
+msgstr "Elur-zaparradak"
+
+#: ../applets/maintained/weather/weathertext.py:75
+msgid "Thunder Showers"
+msgstr "Ekaitz-zaparradak"
+
+#: ../applets/maintained/weather/weathertext.py:76
+msgid "Thunderstorms"
+msgstr "Trumoi-ekaitzak"
+
+#: ../applets/maintained/weather/weathertext.py:77
+msgid "Tornado"
+msgstr "Tornadoa"
+
+#: ../applets/maintained/weather/weathertext.py:78
+msgid "Tropical Storm"
+msgstr "Ekaitz tropikala"
+
+#: ../applets/maintained/weather/weathertext.py:79
+msgid "Windy"
+msgstr "Haizetsu"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:84
+msgid "AM Clouds / PM Sun"
+msgstr "Hodeiak goizean / eguzkia arratsean"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:86
+msgid "AM Drizzle / Wind"
+msgstr "Zirimiria goizean / haizea"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:88
+msgid "AM Fog / PM Sun"
+msgstr "Lainoa goizean / eguzkia arratsean"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:90
+msgid "AM Light Rain"
+msgstr "Euri arina goizean"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:92
+msgid "AM Rain / Wind"
+msgstr "Euria goizean / haizea"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:94
+msgid "AM Showers"
+msgstr "Zaparradak goizean"
+
+#. Please keep translation short, approx. 12 characters
+#. T-Showers = Thunder Showers
+#: ../applets/maintained/weather/weathertext.py:97
+msgid "AM T-Showers"
+msgstr "Ekaitz-zaparradak goizean"
+
+#. Please keep translation short, approx. 12 characters
+#. T-Storms = Thunderstorms
+#: ../applets/maintained/weather/weathertext.py:100
+msgid "AM T-Storms"
+msgstr "Ekaitzak goizean"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:102
+msgid "Few Showers"
+msgstr "Zaparrada gutxi"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:104
+msgid "Heavy Rain"
+msgstr "Euri asko"
+
+#. Please keep translation short, approx. 12 characters
+#. T-Storms = Thunderstorms
+#: ../applets/maintained/weather/weathertext.py:107
+msgid "Isolated T-Storms"
+msgstr "Ekaitz isolatuak"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:109
+msgid "Light Rain"
+msgstr "Euri arina"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:111
+msgid "Mostly Sunny"
+msgstr "Nahiko eguzkitsu"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:113
+msgid "Partly Cloudy / Wind"
+msgstr "Hodeitsu samar / haizea"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:115
+msgid "PM Light Rain"
+msgstr "Euri arina arratsean"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:117
+msgid "PM Showers"
+msgstr "Zaparradak arratsean"
+
+#. Please keep translation short, approx. 12 characters
+#. T-Showers = Thunder Showers
+#: ../applets/maintained/weather/weathertext.py:120
+msgid "PM T-Showers"
+msgstr "Ekaitz-zaparradak arratsean"
+
+#. Please keep translation short, approx. 12 characters
+#. T-Storms = Thunderstorms
+#: ../applets/maintained/weather/weathertext.py:123
+msgid "PM T-Storms"
+msgstr "Ekaitzak arratsean"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:125
+msgid "Rain"
+msgstr "Euria"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:127
+msgid "Rain / Wind"
+msgstr "Euria / haizea"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:129
+msgid "Rain / Thunder"
+msgstr "Euria / trumoia"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:131
+msgid "Scattered Showers / Wind"
+msgstr "Zaparrada isolatuak / haizea"
+
+#. Please keep translation short, approx. 12 characters
+#. T-Storms = Thunderstorms
+#: ../applets/maintained/weather/weathertext.py:134
+msgid "Scattered T-Storms"
+msgstr "Ekaitz sakabanatuak"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:136
+msgid "Sunny"
+msgstr "Eguzkitsu"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:138
+msgid "Sunny / Wind"
+msgstr "Eguzkitsu / haizea"
+
+#. Please keep translation short, approx. 12 characters
+#. T-Showers = Thunder Showers
+#: ../applets/maintained/weather/weathertext.py:141
+msgid "T-Showers"
+msgstr "Ekaitz-zaparradak"
+
+#: ../applets/maintained/weather/weathertext.py:145
+msgid "Monday"
+msgstr "Astelehena"
+
+#: ../applets/maintained/weather/weathertext.py:146
+msgid "Tuesday"
+msgstr "Asteartea"
+
+#: ../applets/maintained/weather/weathertext.py:147
+msgid "Wednesday"
+msgstr "Asteazkena"
+
+#: ../applets/maintained/weather/weathertext.py:148
+msgid "Thursday"
+msgstr "Osteguna"
+
+#: ../applets/maintained/weather/weathertext.py:149
+msgid "Friday"
+msgstr "Ostirala"
+
+#: ../applets/maintained/weather/weathertext.py:150
+msgid "Saturday"
+msgstr "Larunbata"
+
+#: ../applets/maintained/weather/weathertext.py:151
+msgid "Sunday"
+msgstr "Igandea"
+
 #: ../applets/maintained/weather/weather.desktop.in.h:1
 msgid "Display the local weather"
 msgstr "Erakutsi tokiko eguraldia"
@@ -4921,25 +5678,13 @@ msgstr ""
 msgid "If enabled, the temperature will be displayed in the icon"
 msgstr "Gaituta badago, tenperatura ikonoan erakutsiko da"
 
-#: ../applets/maintained/weather/weather.ui.h:9
-msgid "Large"
-msgstr "Handia"
-
 #: ../applets/maintained/weather/weather.ui.h:10
 msgid "Maximum _map width:"
 msgstr "Maparen _zabalera maximoa:"
 
-#: ../applets/maintained/weather/weather.ui.h:11
-msgid "Medium"
-msgstr "Ertaina"
-
 #: ../applets/maintained/weather/weather.ui.h:12
 msgid "Show temperature in _icon"
 msgstr "Erakutsi tenperatura _ikonoan"
-
-#: ../applets/maintained/weather/weather.ui.h:13
-msgid "Small"
-msgstr "Txikia"
 
 #: ../applets/maintained/weather/weather.ui.h:14
 msgid "Temperature _unit:"
@@ -5019,12 +5764,67 @@ msgid "Wobbly Zini"
 msgstr "Wobbly Zini"
 
 #: ../applets/maintained/yama/yama.desktop.in.h:1
+#: ../applets/maintained/yama/yama.py:46
 msgid "Main menu with places and recent documents"
 msgstr "Menu nagusia lekuekin eta azken dokumentuekin"
 
 #: ../applets/maintained/yama/yama.desktop.in.h:2
 msgid "Yet Another Menu Applet"
 msgstr "Beste menu-applet bat"
+
+#: ../applets/maintained/yama/yama.py:45
+msgid "YAMA"
+msgstr "YAMA"
+
+#: ../applets/maintained/yama/yama.py:168
+#, python-format
+msgid "Log out %s of this session to log in as a different user"
+msgstr "Atera %s saiotik beste erabiltzaile-izen batekin sartzeko"
+
+#: ../applets/maintained/yama/yama.py:205
+msgid "_Edit Menus"
+msgstr "_Editatu menuak"
+
+#: ../applets/maintained/yama/yama.py:268
+msgid "Open your personal folder"
+msgstr "Ireki karpeta pertsonala"
+
+#: ../applets/maintained/yama/yama.py:270
+msgid "Open the contents of your desktop in a folder"
+msgstr "Ireki mahaigaineko edukia karpeta batean"
+
+#: ../applets/maintained/yama/yama.py:321
+msgid "Connect to a remote computer or shared disk"
+msgstr "Konektatu urruneko ordenagailura edo partekatutako diskora"
+
+#: ../applets/maintained/yama/yama.py:351
+msgid "Clear all items from the recent documents list"
+msgstr "Garbitu azken dokumentuen zerrendako elementu guztiak"
+
+#: ../applets/maintained/yama/yama.py:402
+#, python-format
+msgid "Open '%s'"
+msgstr "Ireki '%s'"
+
+#: ../applets/maintained/yama/yama.py:444
+#, python-format
+msgid "Mount %s"
+msgstr "Muntatu %s"
+
+#: ../applets/maintained/yama/yama.py:596
+msgid ""
+"Clearing the Recent Documents list will clear the following:\n"
+"* All items from the Places > Recent Documents menu item.\n"
+"* All items from the recent documents list in all applications."
+msgstr ""
+"Azken dokumentuen zerrenda garbitzean hurrengoa ezabatuko da:\n"
+"* Lekuak > Azken dokumentuak menuko elementu guztiak.\n"
+"* Aplikazio guztietako azken dokumentuen ataleko elementu guztiak."
+
+#: ../applets/maintained/yama/yama.py:611
+#, python-format
+msgid "Unable to mount %s"
+msgstr "Ezin da %s muntatu"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:1
 msgid "Awn System Monitor"
@@ -5065,10 +5865,6 @@ msgstr "Awn-ren menu nagusia"
 msgid "Displays a list of all your applications"
 msgstr "Zure aplikazio guztien zerrenda erakusten du"
 
-#: ../applets/unmaintained/main-menu/applet.c:453
-msgid "Main Menu"
-msgstr "Menu nagusia"
-
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:1
 msgid "A main menu for Awn"
 msgstr "Awn-rentzako menu nagusia"
@@ -5084,166 +5880,6 @@ msgstr "Entzun Pandora Internet Radio"
 #: ../applets/unmaintained/pandora/pandora.desktop.in.h:2
 msgid "Pandora Radio"
 msgstr "Pandora Radio"
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:1
-msgid ""
-"Backend type for this applet (0 - file, 1 - folder, 2 - plugger, 3 - "
-"trasher, 4 - recent files)."
-msgstr ""
-"Applet honentzako motorra (0-fitxategia, 1-karpeta, 2-entxufea, 3-"
-"zakarrontzia, 4-azken fitxategiak)."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:2
-msgid "Close dialog on focusout."
-msgstr "Itxi koadroa fokoa galtzean."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:3
-msgid "Display number of items in the stack."
-msgstr "Erakutsi pilako elementu-kopurua."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:4
-msgid "File operation to use."
-msgstr "Erabiliko den fitxategi-eragiketa."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:5
-msgid "Hoverbox background color 1."
-msgstr "Nabarmentze-kutxaren atzeko planoaren kolorea 1."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:6
-msgid "Hoverbox background color 2."
-msgstr "Nabarmentze-kutxaren atzeko planoaren kolorea 2."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:7
-msgid "Hoverbox border color."
-msgstr "Nabarmentze-kutxaren ertzaren kolorea."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:8
-msgid "Icon to use for empty stack."
-msgstr "Pila hutserako erabilitako ikonoa."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:9
-msgid "Icon to use for full stack."
-msgstr "Pila beterako erabilitako ikonoa."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:10
-msgid "Label background color."
-msgstr "Etiketaren atzeko planoaren kolorea."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:11
-msgid "Label border color."
-msgstr "Etiketaren ertzaren kolorea."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:12
-msgid "Label hover background color."
-msgstr "Etiketaren nabarmentzerako atzeko planoaren kolorea."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:13
-msgid "Label hover border color."
-msgstr "Etiketaren nabarmentzerako ertzaren kolorea."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:14
-msgid "Label length."
-msgstr "Etiketaren luzera."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:15
-msgid "Label text color."
-msgstr "Etiketaren testuaren kolorea."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:16
-msgid "Label text hover color."
-msgstr "Etiketaren testuaren nabarmentze-kolorea."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:17
-msgid "Layout direction."
-msgstr "Diseinuaren norabidea."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:18
-msgid "Layout interval."
-msgstr "Diseinuaren tartea."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:19
-msgid "Layout radius."
-msgstr "Diseinuaren erradioa."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:20
-msgid "Number of columns to use."
-msgstr "Erabiliko den zutabe-kopurua."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:21
-msgid "Number of rows to use."
-msgstr "Erabiliko den errenkada-kopurua."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:22
-msgid "Size of the icons inside stack."
-msgstr "Pilaren barruko ikonoen tamaina."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:23
-msgid "Sort direction of the items."
-msgstr "Ordenatu elementuen norabidea."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:24
-msgid "Sort folders before files."
-msgstr "Ordenatu karpetak fitxategiak baino lehen."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:25
-msgid "Sort method to use (1 - sort by name, 2 - sort by date)."
-msgstr ""
-"Erabilitako ordenatze-metodoa (1 - ordenatu izenaren bidez, 2 - ordenatu "
-"dataren bidez)."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:26
-msgid "Stack tooltip description."
-msgstr "Pilaren argibide-deskribapena."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:27
-msgid "Stacks backend file/directory."
-msgstr "Pilen fitxategi/direktorio motorra."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:28
-msgid "Tooltip background color 1."
-msgstr "Argibideen atzeko planoaren kolorea 1."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:29
-msgid "Tooltip background color 2."
-msgstr "Argibideen atzeko planoaren kolorea 2."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:30
-msgid "Tooltip border color."
-msgstr "Argibideen ertzaren kolorea."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:31
-msgid "Tooltip font name."
-msgstr "Argibideen letra-tipoaren izena."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:32
-msgid "Tooltip text color."
-msgstr "Argibideen testuaren kolorea."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:33
-msgid "Type of UI used for the stack."
-msgstr "Pilarako erabilitako EI mota."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:34
-msgid "Use Awn's tooltip font."
-msgstr "Erabili Awn-ren argibideen letra-tipoa."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:35
-msgid "Whether hoverbox contains label."
-msgstr "Nabarmentze-kutxak etiketa duen ala ez."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:36
-msgid "Whether to browse stack contents."
-msgstr "Pilaren edukiak arakatuko diren ala ez."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:37
-msgid ""
-"Whether to combine icons of the files inside the stacks with its icon."
-msgstr ""
-"Pilen barruko fitxategien ikonoak bere ikonoarekin konbinatuko diren ala ez."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:38
-msgid "Whether tooltips are enabled."
-msgstr "Argibideak gaituta dauden ala ez."
 
 #: ../shared/python/awnlib.py:110
 #, python-format

@@ -954,7 +954,9 @@ class Keyring:
             except gnomekeyring.CancelledError:
                 return False
             gnomekeyring.item_delete_sync(None, tmp)
-            if not info.get_is_locked():
+
+            info = gnomekeyring.get_info_sync(None)
+            if info.get_is_locked():
                 return False
         return True
 

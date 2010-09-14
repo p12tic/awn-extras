@@ -1,3 +1,0 @@
-This binary is for 32 bit systems and can be installed to "/usr/lib/banshee-1/Extensions/"
-
-for 64bit systems you can follow the INSTALL file's intructions to build the binary

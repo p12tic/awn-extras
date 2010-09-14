@@ -931,6 +931,32 @@ class Keyring:
         k = self.Key()
         k.token = token
         return k
+        
+    def unlock(self):
+        """Unlock keyring.
+        
+        @return: True if keyring is unlocked, False if locked.
+        
+        """
+        
+        info = gnomekeyring.get_info_sync(None)
+        if info.get_is_locked():
+            # The straight way would be:
+            # gnomekeyring.unlock_sync(None, None)
+            # But this results in a type error, see
+            # https://bugs.launchpad.net/ubuntu/+source/gnome-python-desktop/+bug/432882
+            # We set a dummy key instead and delete it immediately,
+            # this triggers a user dialog to unlock the keyring.
+            try:
+                tmp = gnomekeyring.item_create_sync(None, \
+                      gnomekeyring.ITEM_GENERIC_SECRET, "awn-extras dummy", \
+                      {"dummy_attr":"none"}, "dummy_pwd", True)
+            except gnomekeyring.CancelledError:
+                return False
+            gnomekeyring.item_delete_sync(None, tmp)
+            if not info.get_is_locked():
+                return False
+        return True
 
     class Key(object):
 
@@ -966,8 +992,11 @@ class Keyring:
             else:  # Generic included
                 type = gnomekeyring.ITEM_GENERIC_SECRET
 
-            self.token = gnomekeyring.item_create_sync(None, type, name, \
-                attrs, pwd, True)
+            try:
+                self.token = gnomekeyring.item_create_sync(None, type, name, \
+                    attrs, pwd, True)
+            except gnomekeyring.CancelledError:
+                self.token = 0
 
         def delete(self):
             """Delete the current key. Will also reset the token. Note that

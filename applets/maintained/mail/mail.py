@@ -106,6 +106,9 @@ class MailApplet:
             return self.login(True)
 
         key = self.awn.keyring.from_token(token)
+        
+        if not self.awn.keyring.unlock():
+            return self.login(True)
 
         self.perform_login(key)
 
@@ -116,9 +119,8 @@ class MailApplet:
         self.awn.settings["login-token"] = 0
 
     def perform_login(self, key):
-#        if key.token == 0:
-#            self.__dialog.login_form(True, "Both username and password must be specified.")
-#            return
+        if key.token == 0:
+            return
 
         try:
             self.mail = self.back(key)  # Login

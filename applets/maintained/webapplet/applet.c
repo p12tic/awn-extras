@@ -473,8 +473,7 @@ _button_clicked_event (GtkWidget      *widget,
                                                  NULL);
       gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
     }
-    gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
-                    event->button, event->time);
+    awn_applet_popup_gtk_menu (webapplet->applet, menu, event->button, event->time);
   }
   return TRUE;
 }

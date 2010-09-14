@@ -620,7 +620,6 @@ awn_CPUicon_show_context_menu(AwnCPUicon *self)
   
   gtk_widget_show_all (priv->context_menu);
   awn_utils_show_menu_images (GTK_MENU(priv->context_menu));
-  gtk_menu_popup(GTK_MENU(priv->context_menu), NULL, NULL, NULL, NULL, 0, gtk_get_current_event_time() );  
-  
+  awn_applet_popup_gtk_menu (applet, priv->context_menu, 0, gtk_get_current_event_time());
 }
 

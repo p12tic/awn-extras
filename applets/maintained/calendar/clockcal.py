@@ -265,8 +265,7 @@ class Calendar(awn.AppletSimple):
             self.dialog.hide()
         else:
             if event.button == 3: # right click
-                self.popup_menu.popup(None, None, None, event.button,
-                                      event.time)
+                self.get_icon().popup_gtk_menu(self.popup_menu, event.button, event.time)
             else:
                 self.build_calendar_dialog()
                 self.dialog.show_all()

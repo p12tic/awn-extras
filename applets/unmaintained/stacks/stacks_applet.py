@@ -185,7 +185,7 @@ class StacksApplet (awn.AppletSimple):
             pref_item.connect_object("activate",self.applet_menu_pref_cb,self)
             about_item.connect_object("activate",self.applet_menu_about_cb,self)
             popup_menu.show_all()
-            popup_menu.popup(None, None, None, event.button, event.time)
+            self.popup_gtk_menu (popup_menu, event.button, event.time)
         elif event.button == 2:
             # middle click
             self.backend.open()

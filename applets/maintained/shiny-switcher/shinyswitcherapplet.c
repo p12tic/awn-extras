@@ -661,8 +661,7 @@ _button_workspace(GtkWidget *widget, GdkEventButton *event, Workplace_info * ws)
 
     if (menu)
     {
-      gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL,
-                     event->button, event->time);
+      awn_applet_popup_gtk_menu (AWN_APPLET(shinyswitcher), menu, event->button, event->time);
     }
   }
   return FALSE;

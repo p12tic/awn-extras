@@ -352,7 +352,7 @@ class MediaControlApplet (awn.AppletSimple):
                 self.dialog.show_all()
 
     def menu_popup(self, widget, event):
-        self.popup_menu.popup(None, None, None, event.button, event.time)
+        self.popup_gtk_menu (self.popup_menu, event.button, event.time)
 
     def wheel_turn (self, widget, event):
         if event.direction == gtk.gdk.SCROLL_UP:

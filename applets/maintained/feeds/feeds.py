@@ -1056,7 +1056,7 @@ class App(awn.AppletSimple):
                 self.menu.append(item)
 
         self.menu.show_all()
-        self.menu.popup(None, None, None, event.button, event.time)
+        self.popup_gtk_menu (self.menu, event.button, event.time)
 
     def toggle_show_only_new(self, item):
         self.client.set_value(GROUP_DEFAULT, "show_only_new", item.get_active())

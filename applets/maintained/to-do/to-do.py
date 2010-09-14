@@ -201,7 +201,7 @@ class App(awn.AppletSimple):
         menu.append(prefs_menu)
         menu.append(about_menu)
         menu.show_all()
-        menu.popup(None, None, None, event.button, event.time)
+        self.popup_gtk_menu (menu, event.button, event.time)
 
     #Show the preferences menu
     def show_prefs(self, *args):

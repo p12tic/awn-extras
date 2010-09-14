@@ -226,7 +226,7 @@ class ComicApplet(awn.AppletSimple):
     def on_button3_pressed(self, event):
         menu = self.make_menu()
         if menu:
-            menu.popup(None, None, None, event.button, event.time)
+            self.popup_gtk_menu (menu, event.button, event.time)
 
     def on_button_press(self, widget, event):
         if event.button == 1:

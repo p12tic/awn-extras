@@ -370,7 +370,7 @@ class RelatedApplet : AppletSimple
     button.set_tooltip_text (f.is_native () ? f.get_path () : f.get_uri ());
     var desktop_file = this.current_desktop_file_path;
     button.clicked.connect (() => {
-      var context = new AppLaunchContext ();
+      var context = new Gdk.AppLaunchContext ();
       if (desktop_file == null)
       {
         AppInfo.launch_default_for_uri (f.get_uri (), context);

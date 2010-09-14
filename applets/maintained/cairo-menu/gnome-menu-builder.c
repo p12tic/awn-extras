@@ -26,6 +26,7 @@
 #include <glib/gi18n.h>
 #include <libdesktop-agnostic/fdo.h>
 #include <gio/gio.h>
+#include <stdarg.h>
 
 #include <libawn/libawn.h>
 #include "cairo-menu.h"
@@ -66,14 +67,19 @@ get_image_from_gicon (GIcon * gicon)
 static gboolean
 add_special_item (GtkWidget * menu,
                   const gchar * name, 
-                  const gchar * icon_name,
                   const gchar * binary,
-                  const gchar * args)
+                  const gchar * args,
+                  ...)
 {
   GtkWidget * item;
   gchar *exec;
   GtkWidget * image;
   gchar * bin_path;
+  va_list ap;
+  gchar * icon_name;
+  int i;
+
+  va_start(ap, args);
 
   bin_path = g_find_program_in_path (binary);
   if (!bin_path)
@@ -85,7 +91,13 @@ add_special_item (GtkWidget * menu,
     g_free (bin_path);
   }
   item = cairo_menu_item_new_with_label (name);
-  image = get_gtk_image (icon_name);  
+  do
+  {
+    icon_name = va_arg(ap, gchar *);
+    image = get_gtk_image (icon_name);
+  } while (!image && icon_name);
+  va_end(ap);
+
   if (image)
   {
     gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
@@ -104,50 +116,50 @@ _fill_session_menu (GtkWidget * menu)
 
   if (have_gnome_session_manager)
   {
-    add_special_item (menu,_("Logout"),"gnome-logout","gnome-session-save","--logout-dialog --gui");
+    add_special_item (menu,_("Logout"),"gnome-session-save","--logout-dialog --gui","gnome-logout",NULL);
   }
   else if (dbus_service_exists ("org.xfce.SessionManager") )
   {
-    add_special_item (menu,_("Logout"),"gnome-logout","xfce4-session-logout","");
+    add_special_item (menu,_("Logout"),"xfce4-session-logout","","gnome-logout",NULL);
   }
   else
   {
     /* hope that gnome-session-save exists; needed for GNOME 2.22, at least. */
-    add_special_item (menu, _("Logout"), "gnome-logout", "gnome-session-save",
-                      "--kill --gui");
+    add_special_item (menu, _("Logout"), "gnome-session-save",
+                      "--kill --gui", "gnome-logout",NULL);
   }
   if (dbus_service_exists ("org.gnome.ScreenSaver"))
   {
-    if (!add_special_item (menu,_("Lock Screen"),"gnome-lockscreen","gnome-screensaver-command","--lock"))
+    if (!add_special_item (menu,_("Lock Screen"),"gnome-screensaver-command","--lock","gnome-lockscreen",NULL))
     {
-      add_special_item (menu,_("Lock Screen"),"gnome-lockscreen","dbus-send","--session --dest=org.gnome.ScreenSaver --type=method_call --print-reply --reply-timeout=2000 /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock");
+      add_special_item (menu,_("Lock Screen"),"dbus-send","--session --dest=org.gnome.ScreenSaver --type=method_call --print-reply --reply-timeout=2000 /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock","gnome-lockscreen",NULL);
     }
   }
   else
   {
-    add_special_item (menu,_("Lock Screen"),"system-lock-screen","xscreensaver-command","-lock");
+    add_special_item (menu,_("Lock Screen"),"xscreensaver-command","-lock","system-lock-screen",NULL);
   }
   if (dbus_service_exists ("org.freedesktop.PowerManagement"))
   {
-    if (!add_special_item (menu,_("Suspend"),"gnome-session-suspend","gnome-power-cmd","suspend"))
+    if (!add_special_item (menu,_("Suspend"),"gnome-power-cmd","suspend","gnome-session-suspend",NULL))
     {
-      add_special_item (menu,_("Suspend"),"gnome-session-suspend","dbus-send","--session --dest=org.freedesktop.PowerManagement --type=method_call --print-reply --reply-timeout=2000 /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Suspend");
+      add_special_item (menu,_("Suspend"),"dbus-send","--session --dest=org.freedesktop.PowerManagement --type=method_call --print-reply --reply-timeout=2000 /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Suspend","gnome-session-suspend",NULL);
     }
     
-    if (!add_special_item (menu,_("Hibernate"),"gnome-session-hibernate","gnome-power-cmd","hibernate"))
+    if (!add_special_item (menu,_("Hibernate"),"gnome-power-cmd","hibernate","gnome-session-hibernate",NULL))
     {
-      add_special_item (menu,_("Hibernate"),"gnome-session-hibernate","dbus-send","--session --dest=org.freedesktop.PowerManagement --type=method_call --print-reply --reply-timeout=2000 /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Hibernate");
+      add_special_item (menu,_("Hibernate"),"dbus-send","--session --dest=org.freedesktop.PowerManagement --type=method_call --print-reply --reply-timeout=2000 /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Hibernate","gnome-session-hibernate",NULL);
     }
 
   }
   else if (dbus_service_exists ("org.gnome.PowerManagement"))
   {
-    if (!add_special_item (menu,_("Suspend"),"gnome-session-suspend","gnome-power-cmd","suspend"))
+    if (!add_special_item (menu,_("Suspend"),"gnome-power-cmd","suspend","gnome-session-suspend",NULL))
     {
 
     }
       
-    if (!add_special_item (menu,_("Hibernate"),"gnome-session-hibernate","gnome-power-cmd","hibernate"))
+    if (!add_special_item (menu,_("Hibernate"),"gnome-power-cmd","hibernate","gnome-session-hibernate",NULL))
     {
 
     }
@@ -155,7 +167,7 @@ _fill_session_menu (GtkWidget * menu)
   
   if (have_gnome_session_manager)
   {
-    add_special_item (menu,_("Shutdown"),"gnome-logout","gnome-session-save","--shutdown-dialog --gui");  
+    add_special_item (menu,_("Shutdown"),"gnome-session-save","--shutdown-dialog --gui","gnome-shutdown","gnome-logout",NULL);  
   }
   gtk_widget_show_all (menu);
   return FALSE;
@@ -192,19 +204,19 @@ _get_places_menu (GtkWidget * menu)
 
   gtk_container_foreach (GTK_CONTAINER (menu),(GtkCallback)_remove_menu_item,menu);
 
-  add_special_item (menu,_("Computer"),"computer","nautilus","computer:///");
-  add_special_item (menu,_("Home"),"stock_home",XDG_OPEN,homedir);
-  add_special_item (menu,_("Desktop"),"desktop",XDG_OPEN,desktop_dir?desktop_dir:homedir);
+  add_special_item (menu,_("Computer"),"nautilus","computer:///","computer",NULL);
+  add_special_item (menu,_("Home"),XDG_OPEN,homedir,"folder-home","stock_home",NULL);
+  add_special_item (menu,_("Desktop"),XDG_OPEN,desktop_dir?desktop_dir:homedir,"desktop",NULL);
   
   if (trash_handler)
     trash_file_count = desktop_agnostic_vfs_trash_get_file_count (trash_handler);
 
   if (trash_file_count == 0)
-    add_special_item (menu,_("Trash"), "user-trash","nautilus","trash:///");
+    add_special_item (menu,_("Trash"),"nautilus","trash:///","user-trash",NULL);
   else
-    add_special_item (menu,_("Trash"),"stock_trash_full","nautilus","trash:///");
+    add_special_item (menu,_("Trash"),"nautilus","trash:///","stock_trash_full",NULL);
 
-  add_special_item (menu,_("File System"),"system",XDG_OPEN,"/");
+  add_special_item (menu,_("File System"),XDG_OPEN,"/","system",NULL);
     
   if (!vol_monitor)
   {
@@ -333,8 +345,8 @@ _get_places_menu (GtkWidget * menu)
   g_list_foreach (mounts,(GFunc)g_object_unref,NULL);
   g_list_free (mounts);
 
-  add_special_item (menu,_("Network"),"network","nautilus","network:/");
-  add_special_item (menu,_("Connect to Server"),"stock_connect","nautilus-connect-server","");
+  add_special_item (menu,_("Network"),"nautilus","network:/","network",NULL);
+  add_special_item (menu,_("Connect to Server"),"nautilus-connect-server","","stock_connect",NULL);
   item = gtk_separator_menu_item_new ();
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
 

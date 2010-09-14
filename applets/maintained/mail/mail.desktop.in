@@ -6,5 +6,5 @@ _Name=Mail Applet
 _Comment=Check Your Email from AWN
 Exec=awn-applet -p %k
 X-AWN-AppletExec=mail/mail.py
-Icon=mail/icons/read
+Icon=mail/icons/mail-read
 X-AWN-AppletCategory=Network,Email

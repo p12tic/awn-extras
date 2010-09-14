@@ -715,7 +715,7 @@ to log out and try again."))
                     raise RuntimeError(_("Could not log in: ") + str(message))
 
                 else:
-                    if not self.key.attrs.has_key("username"):
+                    if not key.attrs.has_key("username"):
                         raise RuntimeError(_("Could not log in: No username"))
                     self.server.user(key.attrs["username"])
                     try:
@@ -797,7 +797,7 @@ to log out and try again."))
                 if key.attrs["usessl"]:
                     self.server = imaplib.IMAP4_SSL(*args)
                 else:
-                    self.server = imaplib.IMAP(*args)
+                    self.server = imaplib.IMAP4(*args)
 
                 try:
                     self.server.login(key.attrs["username"], key.password)
@@ -825,7 +825,7 @@ to log out and try again."))
                         if s is not None:
                             self.subjects.append(s[1][9:].replace("\r\n", "\n").replace("\n", "")) # Don't ask
                 else:
-                    mboxs = [re.search("(\W*) (\W*) (.*)", i).groups()[2][1:-1] for i in self.server.list()[1]]
+                    mboxs = [re.search("(\W*) (\W*) (.*)", i).groups()[2] for i in self.server.list()[1]]
                     mboxs = [i for i in mboxs if i not in ("Sent", "Trash") and i[:6] != "[Gmail]"]
 
                     emails = []

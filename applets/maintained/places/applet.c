@@ -1206,8 +1206,8 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
       awn_utils_show_menu_images (menu);
     }
-    
-    gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, event_button->button, event_button->time);
+
+    awn_applet_popup_gtk_menu (AWN_APPLET(places->applet), menu, event_button->button, event_button->time);
   }
 
   return TRUE;

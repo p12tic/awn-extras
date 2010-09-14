@@ -327,7 +327,7 @@ class DropperApplet(awn.AppletSimple):
         return True
 
     def menu_popup(self, widget, event):
-        self.popup_menu.popup(None, None, None, event.button, event.time)
+        self.popup_gtk_menu (self.popup_menu, event.button, event.time)
 
     def applet_drag_motion_cb(self, widget, context, x, y, time):
         self.get_effects().start(awn.EFFECT_LAUNCHING)

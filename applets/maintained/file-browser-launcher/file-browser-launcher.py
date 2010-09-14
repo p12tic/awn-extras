@@ -518,6 +518,22 @@ class App(awn.Applet):
       self.place('applications-internet', _("Connect to Server..."),
         'exec://nautilus-connect-server')
 
+  def try_to_get_custom_icon_for_path(self, path):
+    if not gio:
+        return "folder"
+
+    gfile = gio.File(path)
+    ginfo = gfile.query_info(",".join(["metadata::custom-icon", gio.FILE_ATTRIBUTE_STANDARD_ICON]), gio.FILE_QUERY_INFO_NONE)
+
+    std_icon_uri = ginfo.get_attribute_object(gio.FILE_ATTRIBUTE_STANDARD_ICON)
+    custom_icon_uri = ginfo.get_attribute_string("metadata::custom-icon")
+
+    if custom_icon_uri is not None:
+        cu_ico = gio.File(custom_icon_uri).get_path()
+        if cu_ico is not "":
+            return cu_ico
+    return std_icon_uri.get_names()
+
   #Go through the list of bookmarks and add them to the list IF it's not in the mount list
   def do_bookmarks(self):
     if self.show_bookmarks == 2:
@@ -561,50 +577,9 @@ class App(awn.Applet):
                 while path2[-1] == '/':
                   path2 = path2[:-1]
 
-                if path2.split('/')[:-1] == os.environ['HOME'].split('/'):
-                  dir = path2.split('/')[-1]
+                self.place(self.try_to_get_custom_icon_for_path(path), name, path)
 
-                  #Check if this is the Desktop directory
-                  if dir == gettext.dgettext('xdg-user-dirs', 'Desktop'):
-                    self.place('desktop', name, path)
-
-                  #Documents
-                  elif dir == gettext.dgettext('xdg-user-dirs', 'Documents'):
-                    self.place(('folder-documents', 'folder'), name, path)
-
-                  #Downloads
-                  elif dir == gettext.dgettext('xdg-user-dirs', 'Downloads'):
-                    self.place(('folder-downloads', 'folder'), name, path)
-
-                  #Music
-                  elif dir == gettext.dgettext('xdg-user-dirs', 'Music'):
-                    self.place(('folder-music', 'folder'), name, path)
-
-                  #Pictures
-                  elif dir == gettext.dgettext('xdg-user-dirs', 'Pictures'):
-                    self.place(('folder-pictures', 'folder'), name, path)
-
-                  #Public
-                  elif dir == gettext.dgettext('xdg-user-dirs', 'Public'):
-                    self.place(('folder-publicshare', 'folder'), name, path)
-
-                  #Templates
-                  elif dir == gettext.dgettext('xdg-user-dirs', 'Templates'):
-                    self.place(('folder-templates', 'folder'), name, path)
-
-                  #Videos
-                  elif dir == gettext.dgettext('xdg-user-dirs', 'Videos'):
-                    self.place(('folder-videos', 'folder'), name, path)
-
-                  #Other
-                  else:
-                    self.place('folder', name, path)
-
-                #It's not
-                else:
-                  self.place('folder', name, path)
-
-          #computer://, trash://, network fs, etc.
+          # computer://, trash://, network fs, etc.
           else:
             if type == 'computer':
               self.place('computer', name, path, _("Computer"))
@@ -797,7 +772,7 @@ class App(awn.Applet):
       if not self.icons[size].has_key(name):
         if name[0] == '/':
           try:
-            icon = gtk.gdk.pixbuf_new_from_file_at_size(size, size)
+            icon = gtk.gdk.pixbuf_new_from_file_at_size(name, size, size)
             worked = True
             break
           except:
@@ -1111,7 +1086,7 @@ class App(awn.Applet):
     menu.append(about)
 
     menu.show_all()
-    menu.popup(None, None, None, event.button, event.time)
+    icon.popup_gtk_menu (menu, event.button, event.time)
 
   def docklet_menu_eject(self, menu, num):
     self.unmount(num)
@@ -1291,7 +1266,7 @@ class App(awn.Applet):
     self.menu.append(prefs)
     self.menu.append(about)
     self.menu.show_all()
-    self.menu.popup(None, None, None, event.button, event.time)
+    self.popup_gtk_menu (self.menu, event.button, event.time)
 
   #Show the preferences window
   def open_prefs(self, widget):

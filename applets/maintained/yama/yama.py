@@ -53,8 +53,6 @@ menu_editor_apps = ("alacarte", "gmenu-simple-editor")
 # Describes the pattern used to try to decode URLs
 url_pattern = re.compile("^[a-z]+://(?:[^@]+@)?([^/]+)/(.*)$")
 
-user_dir_pattern = re.compile("^XDG_([A-Z]+)_DIR=\"(.+)\"$")
-
 # Delay in seconds before starting rebuilding the menu
 menu_rebuild_delay = 2
 
@@ -174,26 +172,7 @@ class YamaApplet:
             self.session_items.append(shutdown_item)
 
     def clicked_cb(self, widget):
-        def get_position(menu):
-            icon_x, icon_y = self.applet.get_icon().window.get_origin()
-
-            menu_size = self.menu.size_request()
-            # Make sure the bottom of the menu doesn't get below the bottom of the screen
-            icon_y = min(icon_y, self.menu.get_screen().get_height() - menu_size[1])
-
-            padding = 6
-            orientation = self.applet.get_pos_type()
-            if orientation == gtk.POS_BOTTOM:
-                icon_y = self.menu.get_screen().get_height() - self.applet.get_size() - self.applet.props.offset - menu_size[1] - padding
-            elif orientation == gtk.POS_TOP:
-                icon_y = self.applet.get_size() + self.applet.props.offset + padding
-            elif orientation == gtk.POS_RIGHT:
-                icon_x = self.menu.get_screen().get_width() - self.applet.get_size() - self.applet.props.offset - menu_size[0] - padding
-            elif orientation == gtk.POS_LEFT:
-                icon_x = self.applet.get_size() + self.applet.props.offset + padding
-
-            return (icon_x, icon_y, False)
-        self.menu.popup(None, None, get_position, 0, 0)
+        self.applet.popup_gtk_menu (self.menu, 0, gtk.get_current_event_time())
 
     def setup_context_menu(self):
         """Add "Edit Menus" to the context menu.
@@ -249,7 +228,7 @@ class YamaApplet:
     def open_uri(self, uri):
         file = vfs.File.for_uri(uri)
 
-        if file is not None and file.exists():
+        if file is not None and (not uri.startswith("file://") or file.exists()):
             try:
                 file.launch()
             except glib.GError, e:
@@ -361,17 +340,6 @@ class YamaApplet:
             item.destroy()
         self.bookmarks_items = []
 
-        # Prepare dictionary with paths mapped to their xdg folder icon name
-        user_dirs = {}
-        user_dirs_file = os.path.expanduser("~/.config/user-dirs.dirs")
-        if os.path.exists(user_dirs_file):
-            with open(user_dirs_file) as f:
-                for i in f:
-                    match = user_dir_pattern.match(i)
-                    if match is not None:
-                        path = "file://" + match.group(2).replace("$HOME", os.environ["HOME"])
-                        user_dirs[path] = "folder-" + match.group(1).lower()
-
         index = 2
         bookmarks_file = os.path.expanduser("~/.gtk-bookmarks")
         if os.path.isfile(bookmarks_file):
@@ -389,10 +357,9 @@ class YamaApplet:
                     if uri.startswith("file://"):
                         if not vfs.File.for_uri(uri).exists():
                             continue
-                        if uri in user_dirs:
-                            icon = self.get_first_existing_icon([user_dirs[uri], "folder"])
-                        else:
-                            icon = "folder"
+                        file = gio.File(uri)
+                        info = file.query_info(gio.FILE_ATTRIBUTE_STANDARD_ICON, gio.FILE_QUERY_INFO_NONE)
+                        icon = self.get_icon_name(info.get_attribute_object(gio.FILE_ATTRIBUTE_STANDARD_ICON))
                         display_uri = uri[7:]
                     else:
                         icon = "folder-remote"

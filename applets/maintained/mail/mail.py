@@ -83,7 +83,7 @@ class MailApplet:
         """
         Login. Try to login from saved key, if this does not exist or
         force is True, show login dialog
-        
+
         """
         self.awn.theme.icon("login")
 
@@ -107,6 +107,9 @@ class MailApplet:
 
         key = self.awn.keyring.from_token(token)
 
+        if not self.awn.keyring.unlock():
+            return self.login(True)
+
         self.perform_login(key)
 
     def logout(self):
@@ -116,9 +119,8 @@ class MailApplet:
         self.awn.settings["login-token"] = 0
 
     def perform_login(self, key):
-#        if key.token == 0:
-#            self.__dialog.login_form(True, "Both username and password must be specified.")
-#            return
+        if key.token == 0:
+            return
 
         try:
             self.mail = self.back(key)  # Login
@@ -210,11 +212,11 @@ class MailApplet:
 
         """
         states = {
-            "error" : "error",
-            "login" : "login",
-            "read"  : "mail-read",
-            "unread": "mail-unread"
-        }
+            "error": "error",
+            "login": "login",
+            "read": "mail-read",
+            "unread": "mail-unread"}
+
         self.awn.theme.set_states(states)
         theme = self.awn.settings["theme"] if self.awn.settings["theme"] != system_theme_name else None
         self.awn.theme.theme(theme)
@@ -280,7 +282,7 @@ class MainDialog:
     def email_list(self):
         """
         Creates a dialog with mail subjects and 3-4 buttons
-        
+
         """
         self.__remove_current()
         self.__current_type = "email_list"
@@ -301,7 +303,7 @@ class MainDialog:
 
             # This'll be the "show web interface" button
             b = gtk.Button()
-            b.set_relief(gtk.RELIEF_NONE) # Found it; that's a relief
+            b.set_relief(gtk.RELIEF_NONE)  # Found it; that's a relief
             b.set_image(gtk.image_new_from_stock(gtk.STOCK_NETWORK,
                                                  gtk.ICON_SIZE_BUTTON))
             b.set_tooltip_text(_("Open Web Mail"))
@@ -405,7 +407,7 @@ class MainDialog:
     def login_form(self, error=False, message=_("Wrong username or password")):
         """
         Creates a dialog the login form
-        
+
         """
         self.__remove_current()
         self.__current_type = "login_form"
@@ -473,6 +475,7 @@ class MainDialog:
                                                gtk.ICON_SIZE_BUTTON)
         submit_button = gtk.Button(label=_("Log In"), use_underline=False)
         submit_button.set_image(image_login)
+
         def onsubmit(widget):
             self.__parent.perform_login(
                                 t["callback"](t["widgets"], self.__parent.awn))
@@ -506,7 +509,7 @@ class Backends:
 
         def update(self):
 
-            if not self.key.attrs.has_key("username"):
+            if not "username" in self.key.attrs:
                 raise RuntimeError(_("Could not log in: No username"))
                 return
 
@@ -528,8 +531,8 @@ to log out and try again."))
                 self.subjects.append(i.title)
 
         def __cleanGmailSubject(self, n):
-            n = re.sub(r"^[^>]*\\>", "", n) # "sadf\>fdas" -> "fdas"
-            n = re.sub(r"\\[^>]*\\>$", "", n) # "asdf\afdsasdf\>" -> "asdf"
+            n = re.sub(r"^[^>]*\\>", "", n)  # "sadf\>fdas" -> "fdas"
+            n = re.sub(r"\\[^>]*\\>$", "", n)  # "asdf\afdsasdf\>" -> "asdf"
             n = n.replace("&quot;", "\"")
             n = n.replace("&amp;", "&")
             n = n.replace("&nbsp;", "")
@@ -543,7 +546,7 @@ to log out and try again."))
         def __cleanMsg(self, n):
             n = re.sub("\n\s*\n", "\n", n)
             n = re.sub("&[#x(0x)]?\w*;", " ", n)
-            n = re.sub("\<[^\<\>]*?\>", "", n) # "<h>asdf<a></h>" -> "asdf"
+            n = re.sub("\<[^\<\>]*?\>", "", n)  # "<h>asdf<a></h>" -> "asdf"
 
             f = False
             h = []
@@ -569,8 +572,8 @@ to log out and try again."))
 
         def update(self):
 
-            if not self.key.attrs.has_key("username") or \
-               not self.key.attrs.has_key("domain"):
+            if not "username" in self.key.attrs or \
+               not "domain" in self.key.attrs:
                 raise RuntimeError(_("Could not log in: No username or domain"))
                 return
 
@@ -593,8 +596,8 @@ to log out and try again."))
                 self.subjects.append(i.title)
 
         def __cleanGmailSubject(self, n):
-            n = re.sub(r"^[^>]*\\>", "", n) # "sadf\>fdas" -> "fdas"
-            n = re.sub(r"\\[^>]*\\>$", "", n) # "asdf\afdsasdf\>" -> "asdf"
+            n = re.sub(r"^[^>]*\\>", "", n)  # "sadf\>fdas" -> "fdas"
+            n = re.sub(r"\\[^>]*\\>$", "", n)  # "asdf\afdsasdf\>" -> "asdf"
             n = n.replace("&quot;", "\"")
             n = n.replace("&amp;", "&")
             n = n.replace("&nbsp;", "")
@@ -608,7 +611,7 @@ to log out and try again."))
         def __cleanMsg(self, n):
             n = re.sub("\n\s*\n", "\n", n)
             n = re.sub("&[#x(0x)]?\w*;", " ", n)
-            n = re.sub("\<[^\<\>]*?\>", "", n) # "<h>asdf<a></h>" -> "asdf"
+            n = re.sub("\<[^\<\>]*?\>", "", n)  # "<h>asdf<a></h>" -> "asdf"
 
             f = False
             h = []
@@ -653,6 +656,7 @@ to log out and try again."))
     except:
         pass
     else:
+
         class UnixSpool:
 
             title = _("Unix Spool")
@@ -699,6 +703,7 @@ to log out and try again."))
     except:
         pass
     else:
+
         class POP:
 
             title = "POP"
@@ -715,7 +720,7 @@ to log out and try again."))
                     raise RuntimeError(_("Could not log in: ") + str(message))
 
                 else:
-                    if not key.attrs.has_key("username"):
+                    if not "username" in key.attrs:
                         raise RuntimeError(_("Could not log in: No username"))
                     self.server.user(key.attrs["username"])
                     try:
@@ -787,6 +792,7 @@ to log out and try again."))
     except:
         pass
     else:
+
         class IMAP:
 
             title = "IMAP"
@@ -823,7 +829,7 @@ to log out and try again."))
                         s = self.server.fetch(i, '(BODY[HEADER.FIELDS (SUBJECT)])')[1][0]
 
                         if s is not None:
-                            self.subjects.append(s[1][9:].replace("\r\n", "\n").replace("\n", "")) # Don't ask
+                            self.subjects.append(s[1][9:].replace("\r\n", "\n").replace("\n", ""))  # Don't ask
                 else:
                     mboxs = [re.search("(\W*) (\W*) (.*)", i).groups()[2] for i in self.server.list()[1]]
                     mboxs = [i for i in mboxs if i not in ("Sent", "Trash") and i[:6] != "[Gmail]"]
@@ -843,7 +849,7 @@ to log out and try again."))
                             s = self.server.fetch(i, '(BODY[HEADER.FIELDS (SUBJECT)])')[1][0]
 
                             if s is not None:
-                                self.subjects.append(s[1][9:].replace("\r\n", "\n").replace("\n", "")) # Don't ask
+                                self.subjects.append(s[1][9:].replace("\r\n", "\n").replace("\n", ""))  # Don't ask
 
             @classmethod
             def drawLoginWindow(cls, *groups):

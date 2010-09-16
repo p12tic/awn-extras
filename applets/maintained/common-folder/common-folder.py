@@ -17,7 +17,6 @@ from __future__ import with_statement
 
 import os
 import re
-from threading import Lock
 from urllib import unquote
 
 import pygtk
@@ -42,6 +41,21 @@ url_pattern = re.compile("^[a-z]+://(?:[^@]+@)?([^/]+)/(.*)$")
 user_path = os.path.expanduser("~/")
 bookmarks_file = os.path.expanduser("~/.gtk-bookmarks")
 
+pyglib_ok = awnlib.is_required_version(glib.pyglib_version, (2, 18, 0))
+
+if pyglib_ok:
+    # Ordered sequence of XDG user special folders
+    user_dirs = [glib.USER_DIRECTORY_DOCUMENTS,
+                 glib.USER_DIRECTORY_MUSIC,
+                 glib.USER_DIRECTORY_PICTURES,
+                 glib.USER_DIRECTORY_VIDEOS,
+                 glib.USER_DIRECTORY_DOWNLOAD,
+                 glib.USER_DIRECTORY_PUBLIC_SHARE,
+                 glib.USER_DIRECTORY_TEMPLATES]
+    xdg_user_uris = ["file://%s" % glib.get_user_special_dir(dir) for dir in user_dirs]
+else:
+    xdg_user_uris = []
+
 
 class CommonFolderApplet:
 
@@ -52,7 +66,6 @@ class CommonFolderApplet:
     def __init__(self, applet):
         self.applet = applet
 
-        self.__rebuild_lock = Lock()
         self.__monitors = []
 
         self.icon_theme = gtk.icon_theme_get_default()
@@ -67,10 +80,7 @@ class CommonFolderApplet:
         self.rebuild_icons()
 
     def rebuild_icons(self):
-        def rebuild_cb():
-            with self.__rebuild_lock:
-                self.add_folders_and_bookmarks()
-        glib.idle_add(rebuild_cb)
+        glib.idle_add(self.add_folders_and_bookmarks)
 
     def add_folders_and_bookmarks(self):
         self.applet.icons.destroy_all()
@@ -81,34 +91,49 @@ class CommonFolderApplet:
         self.__monitors = []
 
         self.add_folder_icon(_("Home Folder"), "user-home", "file://%s" % user_path)
-        self.add_folder_icon(_("Desktop"), "user-desktop", "file://%s" % os.path.join(user_path, "Desktop"))
 
+        if pyglib_ok:
+            # Add Desktop
+            desktop_path = glib.get_user_special_dir(glib.USER_DIRECTORY_DESKTOP)
+            if desktop_path != user_path:
+                self.add_folder_icon(glib.filename_display_basename(desktop_path), "user-desktop", "file://%s" % desktop_path)
+
+        # Add XDG user special folders
+        for uri in xdg_user_uris:
+            self.add_url_name(uri)
+
+        # Add bookmarks
         if os.path.isfile(bookmarks_file):
             with open(bookmarks_file) as f:
                 for url_name in (i.rstrip().split(" ", 1) for i in f):
-                    if len(url_name) == 1:
-                        match = url_pattern.match(url_name[0])
-                        if match is not None:
-                            url_name.append("/%s on %s" % (match.group(2), match.group(1)))
-                        else:
-                            basename = glib.filename_display_basename(url_name[0])
-                            url_name.append(unquote(str(basename)))
-                    uri, name = (url_name[0], url_name[1])
+                    if url_name[0] not in xdg_user_uris:
+                        self.add_url_name(*url_name)
 
-                    if uri.startswith("file://"):
-                        file = vfs.File.for_uri(uri)
-                        monitor = file.monitor()
-                        self.__monitors.append(monitor)
-                        monitor.connect("changed", self.file_changed_cb)
-                        if not file.exists():
-                            continue
-                        file = gio.File(uri)
-                        info = file.query_info(gio.FILE_ATTRIBUTE_STANDARD_ICON, gio.FILE_QUERY_INFO_NONE)
-                        icon = self.get_icon_name(info.get_attribute_object(gio.FILE_ATTRIBUTE_STANDARD_ICON))
-                    else:
-                        icon = "folder-remote"
+    def add_url_name(self, uri, name=None):
+        if name is None:
+            match = url_pattern.match(uri)
+            if match is not None:
+                name = "/%s on %s" % (match.group(2), match.group(1))
+            else:
+                basename = glib.filename_display_basename(uri)
+                name = unquote(str(basename))
 
-                    self.add_folder_icon(name, icon, uri)
+        if uri.startswith("file://"):
+            file = vfs.File.for_uri(uri)
+            monitor = file.monitor()
+            self.__monitors.append(monitor)
+            monitor.connect("changed", self.file_changed_cb)
+
+            if not file.exists():
+                return
+
+            file = gio.File(uri)
+            info = file.query_info(gio.FILE_ATTRIBUTE_STANDARD_ICON, gio.FILE_QUERY_INFO_NONE)
+            icon = self.get_icon_name(info.get_attribute_object(gio.FILE_ATTRIBUTE_STANDARD_ICON))
+        else:
+            icon = "folder-remote"
+
+        self.add_folder_icon(name, icon, uri)
 
     def add_folder_icon(self, label, icon_name, uri):
         icon = self.applet.icons.add(icon_name, label)
@@ -135,7 +160,7 @@ class CommonFolderApplet:
             return icon.get_file().get_path()
 
     def file_changed_cb(self, monitor, file, other_file, event):
-        if event in (vfs.FILE_MONITOR_EVENT_DELETED, vfs.FILE_MONITOR_EVENT_CREATED):
+        if event in (vfs.FILE_MONITOR_EVENT_CREATED, vfs.FILE_MONITOR_EVENT_DELETED):
             self.rebuild_icons()
 
 

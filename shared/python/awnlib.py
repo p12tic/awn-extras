@@ -73,6 +73,15 @@ def add_cell_renderer_text(combobox):
     combobox.add_attribute(text, "text", 0)
 
 
+def is_required_version(version, required_version):
+    for i, j in zip(version, required_version):
+        if i > j:
+            return True
+        elif i < j:
+            return False
+    return True
+
+
 class KeyRingError:
 
     def __init__(self, str):

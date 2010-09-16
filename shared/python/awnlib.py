@@ -641,6 +641,7 @@ class Errors:
 
     def set_error_icon_and_click_to_restart(self):
         self.__parent.icon.theme("dialog-error")
+
         def crash_applet(widget=None, event=None):
             gtk.main_quit()
         self.__parent.connect("clicked", crash_applet)
@@ -667,7 +668,7 @@ class Errors:
             error_type = type(error).__name__
             error = str(error)
             if traceback is not None:
-                print "\n".join(["-"*80, traceback, "-"*80])
+                print "\n".join(["-" * 80, traceback, "-" * 80])
                 summary = "%s in %s: %s" % (error_type, self.__parent.meta["name"], error)
                 if self.__parent.meta["version"] == __version__:
                     args["message"] = "Visit Launchpad and report the bug by following these steps:\n\n" \
@@ -710,6 +711,7 @@ class Errors:
             copy_summary_button.connect("clicked", clicked_cb, summary)
 
         if callable(callback):
+
             def response_cb(widget, response):
                 if response < 0:
                     callback()
@@ -855,7 +857,7 @@ class Settings:
 
             """
             self.__config_object = None
-            
+
             type_client = type(client)
             if client is None:
                 self.__client = awn.config_get_default(awn.PANEL_ID_DEFAULT)
@@ -1005,6 +1007,33 @@ class Keyring:
         k.token = token
         return k
 
+    def unlock(self):
+        """Unlock keyring.
+
+        @return: True if keyring is unlocked, False if locked.
+
+        """
+
+        info = gnomekeyring.get_info_sync(None)
+        if not info.get_is_locked():
+            return True
+
+        # The straight way would be:
+        # gnomekeyring.unlock_sync(None, None)
+        # But this results in a type error, see launchpad bugs #432882.
+        # We set a dummy key instead and delete it immediately,
+        # this triggers a user dialog to unlock the keyring.
+        try:
+            tmp = gnomekeyring.item_create_sync(None, \
+                  gnomekeyring.ITEM_GENERIC_SECRET, "awn-extras dummy", \
+                  {"dummy_attr": "none"}, "dummy_pwd", True)
+        except gnomekeyring.CancelledError:
+            return False
+        gnomekeyring.item_delete_sync(None, tmp)
+
+        info = gnomekeyring.get_info_sync(None)
+        return not info.get_is_locked()
+
     class Key(object):
 
         def __init__(self, token=0):
@@ -1039,8 +1068,11 @@ class Keyring:
             else:  # Generic included
                 type = gnomekeyring.ITEM_GENERIC_SECRET
 
-            self.token = gnomekeyring.item_create_sync(None, type, name, \
-                attrs, pwd, True)
+            try:
+                self.token = gnomekeyring.item_create_sync(None, type, name, \
+                    attrs, pwd, True)
+            except gnomekeyring.CancelledError:
+                self.token = 0
 
         def delete(self):
             """Delete the current key. Will also reset the token. Note that
@@ -1293,7 +1325,7 @@ class Notify:
                 self.__notification.set_timeout(timeout * 1000)
 
         def show(self):
-            self.__notification.show()            
+            self.__notification.show()
 
 
 class Meta:

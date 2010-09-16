@@ -89,7 +89,7 @@ fi
 # awn-terminal
 PKG_CHECK_MODULES(VTE, [vte])
 
-# awn-system-monitor, awn-notification-daemon, filebrowser, plugger, trasher
+# awn-system-monitor, awn-notification-daemon
 if test "$with_gconf" != "no"; then
   PKG_CHECK_MODULES(GCONF, [gconf-2.0])
   gconf=gconf-2.0
@@ -103,15 +103,6 @@ INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator`
 AC_SUBST(INDICATORDIR)
 AC_SUBST(INDICATORICONSDIR)
 fi
-
-#if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then
-# filebrowser
-#PKG_CHECK_MODULES(GNOMEUI, [libgnomeui-2.0])
-# filebrowser
-#PKG_CHECK_MODULES(GNOME_DESKTOP, [gnome-desktop-2.0])
-# filebrowser, plugger, trasher
-#PKG_CHECK_MODULES(GNOME_VFS, [gnome-vfs-2.0])
-#fi
 
 if test "$with_gnome" != "no"; then
 # main-menu, cairo-menu

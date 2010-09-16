@@ -175,7 +175,7 @@ class Dialect(awn.AppletSimple):
                 self.set_layout(self.engine.get_next_group())
             else:
                 self.set_layout(self.engine.get_prev_group())
-            self.engine.stop_listen()
+            self.engine.stop_listen(XKLL_TRACK_KEYBOARD_STATE)
 
     # Load GTK widgets
     def gtk_init(self):
@@ -357,7 +357,7 @@ class Dialect(awn.AppletSimple):
     def get_layout(self, effect):
         self.engine.start_listen(XKLL_TRACK_KEYBOARD_STATE)
         layout = self.engine.get_current_state()['group']
-        self.engine.stop_listen()
+        self.engine.stop_listen(XKLL_TRACK_KEYBOARD_STATE)
         if layout != self.current:
             self.current = layout
             self.update_applet(self.layout[layout], self.variant[layout], effect)

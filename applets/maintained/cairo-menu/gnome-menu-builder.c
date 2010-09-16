@@ -277,7 +277,7 @@ _get_places_menu (GtkWidget * menu)
       continue;
     }
     
-#if GTK_CHECK_VERSION(2,20,0)
+#if GLIB_CHECK_VERSION(2,20,0)
     /* Shadowed mounts should not be displayed, see GIO reference manual */
     if (g_mount_is_shadowed (mount))
     {

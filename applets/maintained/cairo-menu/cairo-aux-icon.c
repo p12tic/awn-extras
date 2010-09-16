@@ -193,8 +193,8 @@ cairo_aux_icon_constructed (GObject *object)
                                         0);
   g_idle_add ((GSourceFunc)queue_menu_build, object);
   /* FIXME priv->display_name should be _("Places") */
-  /*awn_icon_set_tooltip_text (AWN_ICON(object),priv->display_name);*/
-  awn_icon_set_tooltip_text (AWN_ICON(object), _("Places"));
+  awn_icon_set_tooltip_text (AWN_ICON(object),priv->display_name);
+//  awn_icon_set_tooltip_text (AWN_ICON(object), _("Places"));
 }
 
 static void

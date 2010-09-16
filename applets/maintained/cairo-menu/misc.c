@@ -113,6 +113,103 @@ get_desktop_entry (gchar * desktop_file)
   return entry;
 }
 
+
+typedef struct {
+	GdkScreen       *screen;
+	GMountOperation *mount_op;
+} MountData;
+
+/*
+ * Open volume, if mounting was successful, else show error message
+ */
+static void 
+_mount_result (GObject *source_object, GAsyncResult *res, gpointer user_data)
+{
+  MountData *mount_data = user_data;
+  GError *error = NULL;
+
+  if (g_volume_mount_finish (G_VOLUME (source_object), res, &error))
+  {
+    GMount *mount;
+    GFile *root;
+    gchar *uri;
+    gchar *cmd;
+
+    mount = g_volume_get_mount (G_VOLUME (source_object));
+    root = g_mount_get_root (mount);
+    uri = g_file_get_uri (root);
+    cmd = g_strdup_printf("%s %s", XDG_OPEN, uri);
+    
+    _exec (NULL, cmd);
+	
+    g_object_unref (mount);
+    g_object_unref (root);
+    g_free (cmd);
+    g_free (uri);
+  }
+  else
+  {
+    /* Don't show error message, if a helper program has already interacted
+       with the user. */
+    if (error->code != G_IO_ERROR_FAILED_HANDLED)
+    {
+      GtkWidget *dialog;
+      gchar *name;
+      gchar *primary_text;
+    
+      name = g_volume_get_name (G_VOLUME (source_object));
+      primary_text = g_strdup_printf (_("Unable to mount %s"), name);
+    
+      dialog = gtk_message_dialog_new (NULL, /* parent */
+	                                   GTK_DIALOG_MODAL,     
+	                                   GTK_MESSAGE_ERROR,
+	                                   GTK_BUTTONS_CLOSE,
+	                                   "%s", primary_text);
+    
+      gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+                                                "%s", error->message);
+
+
+      gtk_window_set_screen (GTK_WINDOW (dialog), mount_data->screen);
+
+      gtk_widget_show_all (dialog);
+
+      g_signal_connect_swapped (G_OBJECT (dialog), "response",
+                                G_CALLBACK (gtk_widget_destroy),
+                                G_OBJECT (dialog));
+
+      g_free (name);
+      g_free (primary_text);
+    }
+    g_error_free (error);
+  }
+
+  g_object_unref (mount_data->mount_op);
+  g_slice_free (MountData, mount_data);
+}
+
+/*
+ Mount a volume.
+ Function and callback based on gnome-panel 2.30 (panel-menu-items.c)
+ Copyright (C) 2005 Vincent Untz <vincent@vuntz.net>
+ Licence: GPL v2 or later
+ */
+void
+_mount (GtkWidget *widget, GVolume *volume)
+{
+  MountData *mount_data;
+
+  mount_data = g_slice_new (MountData);
+  mount_data->screen = gtk_widget_get_screen (widget);
+  mount_data->mount_op = gtk_mount_operation_new (NULL);
+
+  gtk_mount_operation_set_screen (GTK_MOUNT_OPERATION (mount_data->mount_op),
+                                  mount_data->screen);
+
+  g_volume_mount (volume, G_MOUNT_MOUNT_NONE, mount_data->mount_op, NULL,
+                  _mount_result, mount_data);
+}
+
 void
 _launch (GtkWidget *widget,gchar * desktop_file)
 {
@@ -443,23 +540,26 @@ get_recent_menu (GtkWidget *parent)
   guint id;
   GtkRecentManager *recent = gtk_recent_manager_get_default ();
   
-  /*
-   If there are no Recent Items, make menu insensitive.
-   This, including the callback, is taken from gnome-panel 2.30 (panel-recent.c)
-   Copyright (C) 2002 James Willcox <jwillcox@gnome.org>
-   Licence: GPL v2 or later
-   */
+  if (parent)  /* else: recent is an aux icon */
+  {
+    /*
+     If there are no Recent Items, make menu insensitive.
+     This, including the callback, is taken from gnome-panel 2.30 (panel-recent.c)
+     Copyright (C) 2002 James Willcox <jwillcox@gnome.org>
+     Licence: GPL v2 or later
+     */
 
-  int size;
-  g_signal_connect_object (recent, "changed",
-                           G_CALLBACK (_recent_manager_changed),
-                           parent, 0);
+    int size;
+    g_signal_connect_object (recent, "changed",
+                             G_CALLBACK (_recent_manager_changed),
+                             parent, 0);
 
-  size = 0;
-  g_object_get (recent, "size", &size, NULL);
-  gtk_widget_set_sensitive (parent, size > 0);
+    size = 0;
+    g_object_get (recent, "size", &size, NULL);
+    gtk_widget_set_sensitive (parent, size > 0);
   
   /* end of panel-recent.c code */
+  }
 
 
   GtkWidget *menu = cairo_menu_new();

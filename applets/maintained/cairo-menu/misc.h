@@ -41,6 +41,7 @@ typedef struct
 
 DesktopAgnosticFDODesktopEntry * get_desktop_entry (gchar * desktop_file);
 
+void _mount (GtkWidget *widget, GVolume *volume);
 void _launch (GtkWidget *widget,gchar * desktop_file);
 
 static GtkWidget * clear_recent_dialog;

@@ -8,48 +8,48 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-09-09 21:43+0200\n"
-"PO-Revision-Date: 2010-09-16 01:14+0000\n"
-"Last-Translator: Douglas Santos <Unknown>\n"
+"PO-Revision-Date: 2010-09-16 22:57+0000\n"
+"Last-Translator: Matteus Sthefano Leite da Silva <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2010-09-16 04:56+0000\n"
+"X-Launchpad-Export-Date: 2010-09-17 04:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
 #: ../applets/maintained/animal-farm/animal-farm.py:30
 msgid "Animal Farm"
-msgstr ""
+msgstr "Animal Farm"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:2
 msgid "Display fortune messages"
-msgstr ""
+msgstr "Exibir mensagens de fortuna"
 
 #: ../applets/maintained/animal-farm/animal-farm.py:31
 msgid "Applet that displays fortune messages"
-msgstr ""
+msgstr "Miniaplicativo que exibe mensagens de fortuna"
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:1
 msgid "Global hotkey used to activate the terminal."
-msgstr ""
+msgstr "Tecla de atalho global usada para ativar o terminal."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:2
 msgid "Set whether the applet should hide itself when it loses focus."
-msgstr ""
+msgstr "Defina se o miniaplicativo deve esconder-se quando se perde o foco."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:3
 msgid "The applet's background image."
-msgstr ""
+msgstr "A imagem de fundo dos miniaplicativos."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:4
 msgid "The applet's opacity level."
-msgstr ""
+msgstr "O nível de opacidade dos miniaplicativos."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:5
 msgid "The default external terminal application."
-msgstr ""
+msgstr "O aplicativo padrão do terminal externo."
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:100
 msgid "Disabled"
@@ -70,7 +70,7 @@ msgstr "Comportamento"
 #. focus out behavior checkbox
 #: ../applets/maintained/awnterm/awn-terminal.vala:439
 msgid "Hide when focus is lost"
-msgstr ""
+msgstr "Ocultar quando perdido o foco"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:458
 #: ../applets/maintained/file-browser-launcher/prefs.py:259
@@ -108,49 +108,55 @@ msgstr "Terminal Externo"
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:1
 msgid "A simple popup terminal"
-msgstr ""
+msgstr "Um simples terminal popup"
 
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:2
 msgid "Terminal Applet"
-msgstr ""
+msgstr "Miniaplicativo Terminal"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:1
 msgid "Color to draw the background"
-msgstr ""
+msgstr "Cor para do plano de fundo"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:2
 msgid "Color to draw the border"
-msgstr ""
+msgstr "Cor da borda"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:3
 msgid "Display parameters for interfaces"
-msgstr ""
+msgstr "Parâmetros de exibição da interface"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:4
 msgid "Draw the applet background"
-msgstr ""
+msgstr "Desenho do plano de fundo do miniaplicativo"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:5
 msgid "Draw the applet border"
-msgstr ""
+msgstr "Desenho da borda do miniaplicativo"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:6
 msgid ""
 "If enabled this will draw a line at the bottom of the graph even if the "
 "value is 0. If unchecked, values below 1 are not drawn"
 msgstr ""
+"Se ativado este irá desenhar uma linha na parte inferior do gráfico, mesmo "
+"que o valor seja 0. Se nada for feito, os valores abaixo de 1 não são "
+"desenhados"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:7
 msgid "Minimum threshold to draw meter (dependent upon DEFAULT/unit)"
 msgstr ""
+"Limite mínimo do contador para desenhar (dependente da unidade/PADRÃO)"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:8
 msgid "The base display unit for transfer speed (0: bits, 1: bytes)"
 msgstr ""
+"A unidade de base para mostrar a velocidade de transferência (0: bits, 1: "
+"bytes)"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:9
 msgid "The interface currently selected"
-msgstr ""
+msgstr "Interface atual selecionada"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:10
 msgid "Throughput label control - 0: no label, 1: Sum, 2: Upload/Download"
@@ -167,7 +173,7 @@ msgstr ""
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:258
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:2
 msgid "Bandwidth Monitor"
-msgstr ""
+msgstr "Monitor de Largura de Banda"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:44
 msgid "Network Bandwidth monitor"
@@ -175,53 +181,53 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:320
 msgid "Scanning"
-msgstr ""
+msgstr "Digitalizando"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:321
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:400
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:4
 msgid "Devices"
-msgstr ""
+msgstr "Dispositivos"
 
 #. kilobytes per second
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:347
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:19
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:81
 msgid "KBps"
-msgstr ""
+msgstr "KBps"
 
 #. kilobits per second
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:351
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:84
 msgid "Kbps"
-msgstr ""
+msgstr "Kbps"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:413
 msgid "Please select a valid Network Device"
-msgstr ""
+msgstr "Por favor, selecione um Dispositivo de Rede válido"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:415
 #, python-format
 msgid "Total Sent: %s - Total Received: %s (All Interfaces)"
-msgstr ""
+msgstr "Toal Enviado: %s - Total Recebido: %s (Todas as Interfaces)"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:760
 msgid "No"
-msgstr ""
+msgstr "Não"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:761
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:155
 msgid "Device"
-msgstr ""
+msgstr "Dispositivo"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:763
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:412
 msgid "Please select a valid device"
-msgstr ""
+msgstr "Por favor, selecione um dispositivo válido"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:1
 msgid "A Network Bandwidth monitor for AWN"
-msgstr ""
+msgstr "Um Monitor de Largura de Banda da Rede para AWN"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:1
 #: ../applets/maintained/battery/battery.ui.h:1
@@ -234,47 +240,47 @@ msgstr ""
 #: ../applets/maintained/volume-control/volume-control.ui.h:4
 #: ../applets/maintained/weather/weather.ui.h:2
 msgid "<b>Display</b>"
-msgstr ""
+msgstr "<b>Exibir</b>"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:2
 msgid "Background Color"
-msgstr ""
+msgstr "Cor do plano de fundo"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:3
 msgid "Border Color"
-msgstr ""
+msgstr "Cor da Borda"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:5
 msgid "Display MBps/KBps (bytes) instead of Mbps/Kbps (bits)"
-msgstr ""
+msgstr "Exibir MBps/KBps (bytes) em vez de Mbps/Kbps (bits)"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:6
 msgid "Display Speed Text"
-msgstr ""
+msgstr "Exibir Velocidade do Texto"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:7
 msgid "Display the sum of upload and download"
-msgstr ""
+msgstr "Exibir a soma de upload e download"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:8
 msgid "Display upload and download text representation of speed"
-msgstr ""
+msgstr "Exibir o texto de representação da velocidade de download e upload"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:9
 msgid "Do not display the speed as text, only draw the graph"
-msgstr ""
+msgstr "Não exibir a velocidade como o texto, só desenhar o gráfico"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:10
 msgid "Draw 0 bps in graphs"
-msgstr ""
+msgstr "Mostrar 0 bps em gráficos"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:11
 msgid "Draw Background"
-msgstr ""
+msgstr "Desenhar Plano de Fundo"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:12
 msgid "Draw Border"
-msgstr ""
+msgstr "Desenhar Borda"
 
 #. Put the general tab together
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:13
@@ -288,7 +294,7 @@ msgstr "Geral"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:14
 msgid "Graph Only"
-msgstr ""
+msgstr "Somente Gráfico"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:15
 msgid ""

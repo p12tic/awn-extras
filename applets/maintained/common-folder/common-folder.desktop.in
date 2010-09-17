@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+X-AWN-Type=Applet
+X-AWN-AppletType=Python
+_Name=Common Folder Launcher
+_Comment=Launcher for common folders and bookmarks
+Exec=awn-applet -p %k
+X-AWN-AppletExec=common-folder/common-folder.py
+Icon=folder
+X-AWN-AppletCategory=Utility

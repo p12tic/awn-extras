@@ -65,6 +65,7 @@ SUBDIRS = \
 	maintained/battery \
 	maintained/cairo-clock \
 	maintained/comics \
+	maintained/common-folder \
 	maintained/cpufreq \
 	maintained/dialect \
 	maintained/digital-clock \

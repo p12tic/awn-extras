@@ -135,7 +135,7 @@ class MailApplet:
             else:
                 self.awn.dialog.toggle("main", "hide")
 
-                self.awn.notify.send(_("Mail Applet"),
+                self.awn.notification.send(_("Mail Applet"),
                     _("Logging in as %s") % key.attrs["username"],
                     self.__getIconPath("login"))
 
@@ -157,7 +157,7 @@ class MailApplet:
             self.awn.theme.icon("error")
 
             if self.awn.settings["show-network-errors"]:
-                self.awn.notify.send(_("Network error - Mail Applet"), str(e), "")
+                self.awn.notification.send(_("Network error - Mail Applet"), str(e), "")
             return
 
         diffSubjects = [i for i in self.mail.subjects if i not in oldSubjects]
@@ -166,7 +166,7 @@ class MailApplet:
             msg = strMailMessages(len(diffSubjects)) + ":\n" + \
                                                         "\n".join(diffSubjects)
 
-            self.awn.notify.send(_("New Mail - Mail Applet"), msg,
+            self.awn.notification.send(_("New Mail - Mail Applet"), msg,
                                  self.__getIconPath("mail-unread"))
 
         self.awn.tooltip.set(strMessages(len(self.mail.subjects)))

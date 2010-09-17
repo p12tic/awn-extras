@@ -88,7 +88,7 @@ ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock and restart the applet.")
             print subject + ".", message
 
             # Show massage with awn notify
-            self.applet.notify.send(subject=subject, body=message, icon=applet_logo)
+            self.applet.notification.send(subject=subject, body=message, icon=applet_logo)
             # Show "no sensors found" icon
             self.applet.icon.file(no_sensors_icon, size=applet.get_size())
             self.applet.tooltip.set(message)
@@ -606,7 +606,7 @@ ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock and restart the applet.")
     # === Event handlers === #
     def alarm_cb(self, sensor, message):
         """Show alarm message with awn notify."""
-        self.applet.notify.send(subject=None, body=message, icon=applet_logo)
+        self.applet.notification.send(subject=None, body=message, icon=applet_logo)
 
     def height_changed_cb(self):
         """Update the applet's icon to reflect the new height."""

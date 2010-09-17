@@ -488,6 +488,21 @@ _get_recent_menu (GtkWidget * menu)
         pbuf = gtk_recent_info_get_icon (iter->data,height);
         if (pbuf)
         {
+          if ( gdk_pixbuf_get_height (pbuf) != height)
+          {
+            GdkPixbuf * new_buf = gdk_pixbuf_scale_simple (pbuf,
+                                                           width,
+                                                           height,
+                                                           GDK_INTERP_BILINEAR);
+            if (new_buf)
+            {
+              g_object_unref (pbuf);
+              pbuf = new_buf;
+            }
+          }
+        }
+        if (pbuf)
+        {
           image = gtk_image_new_from_pixbuf (pbuf);
           g_object_unref (pbuf);
         }

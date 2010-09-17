@@ -74,6 +74,10 @@ def add_cell_renderer_text(combobox):
 
 
 def is_required_version(version, required_version):
+    """Return True if version is higher than or equal to
+    required_version, False otherwise.
+
+    """
     for i, j in zip(version, required_version):
         if i > j:
             return True

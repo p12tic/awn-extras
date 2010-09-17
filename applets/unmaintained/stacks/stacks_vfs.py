@@ -113,9 +113,23 @@ class GUITransfer(object):
                    fraction = float(current)/total
                    self.progress_bar.set_fraction(fraction)
 
+        def _delete_cb(src, result):
+            try:
+                en = src.enumerate_children_finish(result)
+                fi = en.next_file(None)
+                while fi != None:
+                    child = en.get_container().get_child(fi.get_name())
+                    child.trash(None)
+                    fi = en.next_file(None)
+                en.close(None)
+                self._finish()
+            except gio.Error:
+                self._finish()
+
         if actions == 0:
-            # remove the whole directory
-            print "TODO: We should delete %s" % src
+            # remove the contents of directory
+            print "We're deleting %s" % src[0]
+            src[0].enumerate_children_async("standard::name", _delete_cb, cancellable=self.cancellable)
 
         elif (actions & gtk.gdk.ACTION_MOVE):
             # why the hell isn't there gio.File.move_async() ??

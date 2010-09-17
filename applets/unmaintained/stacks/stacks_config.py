@@ -230,8 +230,7 @@ class StacksConfig(GladeWindow):
         filesel = gtk.FileChooserDialog(
                 _("Select backend destination:"),
                 None,
-                gtk.FILE_CHOOSER_ACTION_CREATE_FOLDER |
-                gtk.FILE_CHOOSER_ACTION_SAVE | gtk.FILE_CHOOSER_ACTION_OPEN,
+                gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
                 (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
                 gtk.STOCK_APPLY, gtk.RESPONSE_OK),
                 None)

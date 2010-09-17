@@ -587,14 +587,18 @@ class Icons:
 
         parent.connect_size_changed(update_size)
 
-    def add(self, icon_name, tooltip_text):
+    def add(self, icon_name, tooltip_text, context_menu=None):
         """Set an icon from the default icon theme and set the applet
-        tooltip. The resultant themed icon will be returned.
+        tooltip. Optionally provide a context menu that should be
+        displayed instead of the applet's standard context menu. The
+        resultant themed icon will be returned.
 
         @param icon_name: The name of the theme icon.
         @type icon_name: C{string}
         @param tooltip_text: The new tooltip text.
         @type tooltip_text: C{string}
+        @param context_menu: Optional context menu.
+        @type context_menu: C{gtk.Menu} or C{None}
         @return: The resultant themed icon
         @rtype: C{awn.ThemedIcon}
 
@@ -605,15 +609,38 @@ class Icons:
         icon.set_size(self.__parent.get_size())
 
         # Callback context menu
-        def popup_menu_cb(widget, event):
-            self.__parent.dialog.show_menu(widget, event)
-        icon.connect("context-menu-popup", popup_menu_cb)
+        if context_menu is None:
+            def popup_menu_cb(widget, event):
+                self.__parent.dialog.show_menu(widget, event)
+            icon.connect("context-menu-popup", popup_menu_cb)
+        else:
+            assert isinstance(context_menu, gtk.Menu)
+
+            def popup_menu_cb(widget, event, menu):
+                menu.show_all()
+                widget.popup_gtk_menu(menu, event.button, event.time)
+            icon.connect("context-menu-popup", popup_menu_cb, context_menu)
 
         icon.show_all()
         self.__icon_box.add(icon)
         return icon
 
+    def remove(self, icon):
+        """Remove the specified icon from the applet. The icon will not
+        be destroyed.
+
+        @param icon: The icon to be removed.
+        @type icon: C{awn.ThemedIcon}
+
+        """
+        assert isinstance(icon, awn.ThemedIcon)
+
+        self.__icon_box.remove(icon)
+
     def destroy_all(self):
+        """Remove and destroy all icons in the applet.
+
+        """
         for icon in self.__icon_box.get_children():
             icon.destroy()
 

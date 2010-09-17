@@ -42,6 +42,7 @@ user_path = os.path.expanduser("~/")
 bookmarks_file = os.path.expanduser("~/.gtk-bookmarks")
 
 pyglib_ok = awnlib.is_required_version(glib.pyglib_version, (2, 18, 0))
+pygio_emblemed_icon_ok = awnlib.is_required_version(gio.pygio_version, (2, 17, 0))
 
 if pyglib_ok:
     # Ordered sequence of XDG user special folders
@@ -151,7 +152,7 @@ class CommonFolderApplet:
             print "File at URI not found (%s)" % uri
 
     def get_icon_name(self, icon):
-        if gio.pygio_version >= (2, 17, 0) and isinstance(icon, gio.EmblemedIcon):
+        if pygio_emblemed_icon_ok and isinstance(icon, gio.EmblemedIcon):
             icon = icon.get_icon()
 
         if isinstance(icon, gio.ThemedIcon):

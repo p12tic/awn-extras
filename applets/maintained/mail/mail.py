@@ -526,7 +526,12 @@ to log out and try again."))
             t = []
             self.subjects = []
             for i in f.entries:
-                i.title = self.__cleanGmailSubject(i.title)
+                if "title" in i:
+                    i.title = self.__cleanGmailSubject(i.title)
+                else:
+                    i.title = _("[No Subject]")
+                if not "author" in i:
+                    i.author = _("[Unknown]")
                 t.append(MailItem(i.title, i.author))
                 self.subjects.append(i.title)
 
@@ -591,7 +596,12 @@ to log out and try again."))
             t = []
             self.subjects = []
             for i in f.entries:
-                i.title = self.__cleanGmailSubject(i.title)
+                if "title" in i:
+                    i.title = self.__cleanGmailSubject(i.title)
+                else:
+                    i.title = _("[No Subject]")
+                if not "author" in i:
+                    i.author = _("[Unknown]")
                 t.append(MailItem(i.title, i.author))
                 self.subjects.append(i.title)
 
@@ -673,7 +683,7 @@ to log out and try again."))
                     if "subject" in msg:
                         subject = msg["subject"]
                     else:
-                        subject = "[No Subject]"
+                        subject = _("[No Subject]")
 
                     self.subjects.append(subject)
 
@@ -753,7 +763,7 @@ to log out and try again."))
                     if "subject" in msg:
                         subject = msg["subject"]
                     else:
-                        subject = "[No Subject]"
+                        subject = _("[No Subject]")
 
                     self.subjects.append(subject)
 

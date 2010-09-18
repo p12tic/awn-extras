@@ -882,17 +882,17 @@ to log out and try again."))
                 allE.set_active(True)
                 vbox.add(allE)
 
-                hbox_box = gtk.HBox(False, 12)
-                vbox.add(hbox_box)
-
                 foldE, boxE = get_label_entry(_("Folder:"), *groups)
                 foldE.set_text("INBOX")
-                vbox.add(boxE)
+                alignmentE = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+                alignmentE.props.left_padding = 12
+                alignmentE.add(boxE)
+                vbox.add(alignmentE)
 
-                def on_toggle(w):
-                    boxE.set_sensitive(allE.get_active())
+                def on_toggle(widget, box):
+                    box.set_sensitive(widget.get_active())
 
-                allE.connect("toggled", on_toggle)
+                allE.connect("toggled", on_toggle, boxE)
 
                 return {"layout": vbox, "callback": cls.__submitLoginWindow,
                     "widgets": [usrE, pwdE, srvE, sslE, allE, foldE]}

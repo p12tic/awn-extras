@@ -133,8 +133,6 @@ class MailApplet:
                 self.__dialog.login_form(True)
 
             else:
-                self.awn.dialog.toggle("main", "hide")
-
                 self.awn.notification.send(_("Mail Applet"),
                     _("Logging in as %s") % key.attrs["username"],
                     self.__getIconPath("login"))

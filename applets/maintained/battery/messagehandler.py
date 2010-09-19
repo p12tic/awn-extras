@@ -53,11 +53,11 @@ class InvisibleMessageState:
             pass  # Ignore error when there's no message to close
 
     def evaluate(self):
-        if self.handler.applet.settings["warn-low-level"]:
+        if self.handler.applet.applet.settings["warn-low-level"]:
             warn = self.handler.applet.is_battery_low()
             if warn is not None and warn:
                 self.handler.set_next(VisibleWarningState)
-        if self.handler.applet.settings["notify-high-level"] and self.handler.applet.is_battery_high():
+        if self.handler.applet.applet.settings["notify-high-level"] and self.handler.applet.is_battery_high():
             self.handler.set_next(VisibleNotificationState)
 
 
@@ -78,7 +78,7 @@ class VisibleWarningState:
         self.handler.message.disconnect(self.__closed_id)
 
     def evaluate(self):
-        if self.handler.applet.settings["warn-low-level"]:
+        if self.handler.applet.applet.settings["warn-low-level"]:
             warn = self.handler.applet.is_battery_low()
             if warn is None or warn:
                 if self.handler.applet.backend.is_below_low_capacity():
@@ -131,7 +131,7 @@ class VisibleErrorState(VisibleWarningState):
         self.update_message()
 
     def evaluate(self):
-        if self.handler.applet.settings["warn-low-level"]:
+        if self.handler.applet.applet.settings["warn-low-level"]:
             warn = self.handler.applet.is_battery_low()
             if warn is None or warn:
                 self.update_message()
@@ -157,7 +157,7 @@ class VisibleNotificationState:
         self.handler.message.disconnect(self.__closed_id)
 
     def evaluate(self):
-        if self.handler.applet.settings["notify-high-level"] and self.handler.applet.is_battery_high():
+        if self.handler.applet.applet.settings["notify-high-level"] and self.handler.applet.is_battery_high():
             if not self.__closed:
                 self.__update_message()
             return

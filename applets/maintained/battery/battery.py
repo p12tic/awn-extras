@@ -98,7 +98,7 @@ class BatteryStatusApplet:
     def set_battery_missing(self):
         self.applet.tooltip.set(_("No batteries"))
 
-        icon = os.path.join(themes_dir, self.settings["theme"], "battery-missing.svg")
+        icon = os.path.join(themes_dir, self.applet.settings["theme"], "battery-missing.svg")
         self.applet.icon.file(icon, size=awnlib.Icon.APPLET_SIZE)
 
     def setup_context_menu(self):
@@ -106,44 +106,27 @@ class BatteryStatusApplet:
         prefs.add_from_file(ui_file)
         prefs.get_object("vbox-preferences").reparent(self.applet.dialog.new("preferences").vbox)
 
-        refresh_message = lambda v: self.__message_handler.evaluate()
-
-        default_values = {
-            "theme": default_theme,
-            "warn-low-level": (True, self.toggled_warn_low_level_cb, prefs.get_object("checkbutton-warn-low-level")),
-            "notify-high-level": (False, self.toggled_notify_high_level_cb, prefs.get_object("checkbutton-notify-high-level")),
-            "level-warn-low": (15, refresh_message, prefs.get_object("spinbutton-low-level")),
-            "level-notify-high": (100, refresh_message, prefs.get_object("spinbutton-high-level")),
-            "low-level-unit": low_level_units[0]
-        }
-
-        if self.backend is not None:
-            batteries = self.backend.get_batteries()
-            default_values["battery-udi"] = batteries.keys()[0]
-
-        for key, value in default_values.iteritems():
-            if not key in self.applet.settings:
-                self.applet.settings[key] = value
-        self.settings = self.applet.settings
-
-
         """ Battery """
         if self.backend is not None:
+            batteries = self.backend.get_batteries()
+
             self.combobox_battery = prefs.get_object("combobox-battery")
             awnlib.add_cell_renderer_text(self.combobox_battery)
             for model in batteries.values():
                 self.combobox_battery.append_text(model)
 
-            if self.settings["battery-udi"] not in batteries:
+            if self.applet.settings["battery-udi"] not in batteries:
                 self.applet.settings["battery-udi"] = batteries.keys()[0]
-            udi = self.settings["battery-udi"]
 
-            self.combobox_battery.set_active(batteries.values().index(batteries[udi]))
-            self.combobox_battery.connect("changed", self.combobox_battery_changed_cb)
+            battery_getter = lambda key_value: batteries[key_value]
+            battery_setter = lambda widget_value: batteries.keys()[batteries.values().index(widget_value)]
         else:
             frame = prefs.get_object("frame-battery")
             frame.hide_all()
             frame.set_no_show_all(True)
+
+            battery_getter = lambda v: v
+            battery_setter = lambda v: v
 
         """ Display """
         # Only use themes that are likely to provide all the files
@@ -159,24 +142,29 @@ class BatteryStatusApplet:
         if self.theme not in self.themes:
             self.applet.settings["theme"] = self.theme = default_theme
 
-        combobox_theme.set_active(self.themes.index(self.theme))
-        combobox_theme.connect("changed", self.combobox_theme_changed_cb)
-
         """ Notifications """
         if self.backend is not None:
             self.hbox_low_level = prefs.get_object("hbox-low-level")
-            self.hbox_low_level.set_sensitive(self.settings["warn-low-level"])
-
-            self.combobox_low_level = prefs.get_object("combobox-low-level")
-            self.combobox_low_level.set_active(low_level_units.index(self.settings["low-level-unit"]))
-            self.combobox_low_level.connect("changed", self.combobox_low_level_unit_changed_cb)
+            self.hbox_low_level.set_sensitive(self.applet.settings["warn-low-level"])
 
             self.hbox_high_level = prefs.get_object("hbox-high-level")
-            self.hbox_high_level.set_sensitive(self.settings["notify-high-level"])
+            self.hbox_high_level.set_sensitive(self.applet.settings["notify-high-level"])
         else:
             frame = prefs.get_object("frame-notifications")
             frame.hide_all()
             frame.set_no_show_all(True)
+
+        refresh_message = lambda v: self.__message_handler.evaluate()
+
+        binder = self.applet.settings.get_binder(prefs)
+        binder.bind("theme", "combobox-theme", key_callback=self.combobox_theme_changed_cb)
+        binder.bind("battery-udi", "combobox-battery", getter_transform=battery_getter, setter_transform=battery_setter, key_callback=self.combobox_battery_changed_cb)
+        binder.bind("warn-low-level", "checkbutton-warn-low-level", key_callback=self.toggled_warn_low_level_cb)
+        binder.bind("notify-high-level", "checkbutton-notify-high-level", key_callback=self.toggled_notify_high_level_cb)
+        binder.bind("level-warn-low", "spinbutton-low-level", key_callback=refresh_message)
+        binder.bind("level-notify-high", "spinbutton-high-level", key_callback=refresh_message)
+        binder.bind("low-level-unit", "combobox-low-level", key_callback=self.combobox_low_level_unit_changed_cb)
+        self.applet.settings.load_bindings(binder)
 
     def toggled_warn_low_level_cb(self, active):
         self.hbox_low_level.set_sensitive(active)
@@ -188,19 +176,14 @@ class BatteryStatusApplet:
 
         self.__message_handler.evaluate()
 
-    def combobox_low_level_unit_changed_cb(self, button):
-        self.applet.settings["low-level-unit"] = low_level_units[button.get_active()]
-
+    def combobox_low_level_unit_changed_cb(self, value):
         self.__message_handler.evaluate()
 
-    def combobox_battery_changed_cb(self, button):
+    def combobox_battery_changed_cb(self, udi):
         batteries = self.backend.get_batteries()
 
-        model = batteries.values()[button.get_active()]
         try:
-            udi = batteries.keys()[batteries.values().index(model)]
             self.backend.set_active_udi(udi)
-            self.applet.settings["battery-udi"] = udi
 
             self.check_status_cb()
         except ValueError:
@@ -209,9 +192,7 @@ class BatteryStatusApplet:
 #            udi = self.backend.get_active_udi()
 #            self.combobox_battery.set_active(batteries.values().index(batteries[udi]))
 
-    def combobox_theme_changed_cb(self, button):
-        self.applet.settings["theme"] = self.themes[button.get_active()]
-
+    def combobox_theme_changed_cb(self, value):
         if self.backend is not None:
             self.check_status_cb()
         else:
@@ -228,7 +209,7 @@ class BatteryStatusApplet:
 
         if self.backend.is_charged():
             charge_message += "\n" + "Battery charged"
-            icon = os.path.join(themes_dir, self.settings["theme"], "battery-charged.svg")
+            icon = os.path.join(themes_dir, self.applet.settings["theme"], "battery-charged.svg")
         else:
             is_charging = self.backend.is_charging()
 
@@ -246,7 +227,7 @@ class BatteryStatusApplet:
                 charge_message += "\n" + self.format_time(time, suffix=title_message_suffix)
 
             level = [key for key, value in charge_ranges.iteritems() if charge_percentage <= value[0] and charge_percentage >= value[1]][0]
-            icon = os.path.join(themes_dir, self.settings["theme"], "battery-" + actoggle + "-" + level + ".svg")
+            icon = os.path.join(themes_dir, self.applet.settings["theme"], "battery-" + actoggle + "-" + level + ".svg")
 
         self.applet.tooltip.set(" ".join([charge_message, "(" + str(charge_percentage) + "%)"]))
 
@@ -266,9 +247,9 @@ class BatteryStatusApplet:
         if not self.backend.is_discharging():
             return False
 
-        unit = self.settings["low-level-unit"]
+        unit = self.applet.settings["low-level-unit"]
 
-        if unit == "Percent" and self.backend.get_capacity_percentage() <= self.settings["level-warn-low"]:
+        if unit == "Percent" and self.backend.get_capacity_percentage() <= self.applet.settings["level-warn-low"]:
             return True
 
         time = self.backend.get_remaining_time()
@@ -277,13 +258,13 @@ class BatteryStatusApplet:
             return None
 
         hours, minutes = time
-        return unit == "Time Remaining" and hours == 0 and minutes <= self.settings["level-warn-low"]
+        return unit == "Time Remaining" and hours == 0 and minutes <= self.applet.settings["level-warn-low"]
 
     def is_battery_high(self):
         if self.backend.is_discharging():
             return False
 
-        return self.backend.get_capacity_percentage() >= self.settings["level-notify-high"]
+        return self.backend.get_capacity_percentage() >= self.applet.settings["level-notify-high"]
 
     def format_time(self, time, prefix="", suffix=""):
         hours, minutes = time
@@ -299,10 +280,7 @@ class BatteryStatusApplet:
             time.append(minutes)
 
         message = " ".join(message) % tuple(time)
-        if len(message) > 0:
-            return " ".join([prefix, message, suffix]).strip()
-        else:
-            return ""
+        return " ".join([prefix, message, suffix]).strip() if len(message) > 0 else ""
 
 
 class AbstractBackend:

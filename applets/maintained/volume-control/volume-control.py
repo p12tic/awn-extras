@@ -267,11 +267,11 @@ class VolumeControlApplet:
         self.applet.settings["track"] = track
 
     def combobox_device_changed_cb(self, value):
-        self.backend.set_device(self.applet.settings["device"])
+        self.backend.set_device(value)
         self.reload_tracks()
 
     def combobox_track_changed_cb(self, value):
-        self.backend.set_track(self.applet.settings["track"])
+        self.backend.set_track(value)
 
     def combobox_theme_changed_cb(self, value):
         self.setup_icons()

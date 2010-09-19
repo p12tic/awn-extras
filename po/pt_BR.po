@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-09-09 21:43+0200\n"
-"PO-Revision-Date: 2010-09-16 22:57+0000\n"
-"Last-Translator: Matteus Sthefano Leite da Silva <Unknown>\n"
+"PO-Revision-Date: 2010-09-18 22:03+0000\n"
+"Last-Translator: moises fernades de sousa <moises-cirilo@hotmail.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2010-09-18 04:45+0000\n"
+"X-Launchpad-Export-Date: 2010-09-19 04:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -352,7 +352,7 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:263
 msgid "Download"
-msgstr ""
+msgstr "Download"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:265
 #, python-format
@@ -386,15 +386,15 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:612
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:612
 msgid "IP Address"
-msgstr ""
+msgstr "Endereço IP"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:612
 msgid "Subnet Mask"
-msgstr ""
+msgstr "Máscara"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:692
 msgid "Wireless graph type"
@@ -412,33 +412,35 @@ msgstr ""
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:3
 msgid "If charge level reaches this threshold, a notification will be sent."
 msgstr ""
+"Se o nível de carga chegar a este limite, uma notificação será enviada."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:4
 msgid "If enabled, notify when the charge level reaches the high level."
-msgstr ""
+msgstr "Se ativado, notificar quando o nível de carga atingir um nível alto."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:5
 msgid ""
 "If enabled, warn when the charge level drops below the warning threshold."
 msgstr ""
+"Se ativado, avisar quando o nível de carga cair abaixo do limite de alerta."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:6
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:3
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:8
 msgid "The name of the theme of the icon."
-msgstr ""
+msgstr "O nome do tema do ícone."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:7
 msgid "Unit of low level threshold (Percent or Time Remaining)."
-msgstr ""
+msgstr "Unidade de limite baixo nível (Percentual ou o Tempo Restante)."
 
 #: ../applets/maintained/battery/battery.desktop.in.h:1
 msgid "Battery"
-msgstr ""
+msgstr "Bateria"
 
 #: ../applets/maintained/battery/battery.desktop.in.h:2
 msgid "Display battery state"
-msgstr ""
+msgstr "Exibir estado da bateria"
 
 #: ../applets/maintained/battery/battery.py:37
 msgid "Battery Status"
@@ -446,39 +448,42 @@ msgstr ""
 
 #: ../applets/maintained/battery/battery.py:38
 msgid "An applet which displays battery information"
-msgstr ""
+msgstr "Um miniaplicativo que exibe informações da bateria"
 
 #: ../applets/maintained/battery/battery.py:99
 msgid "No batteries"
-msgstr ""
+msgstr "Nenhuma bateria"
 
 #: ../applets/maintained/battery/battery.ui.h:2
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:5
 #: ../applets/maintained/weather/weather.ui.h:3
 msgid "<b>General Options</b>"
-msgstr ""
+msgstr "<b>Opções gerais</b>"
 
 #: ../applets/maintained/battery/battery.ui.h:3
 msgid "<b>Notifications</b>"
-msgstr ""
+msgstr "<b>Notificações</b>"
 
 #: ../applets/maintained/battery/battery.ui.h:4
 msgid ""
 "If enabled, shows a notification when the charge level reaches a certain "
 "percentage"
 msgstr ""
+"Se ativado, mostra uma notificação quando o nível de carga atinge uma "
+"determinada percentagem"
 
 #: ../applets/maintained/battery/battery.ui.h:5
 msgid "If enabled, shows a notification when the charge levels drops too low"
 msgstr ""
+"Se ativado, mostra uma notificação quando a taxa cai níveis muito baixos"
 
 #: ../applets/maintained/battery/battery.ui.h:6
 msgid "Percent"
-msgstr ""
+msgstr "Por cento"
 
 #: ../applets/maintained/battery/battery.ui.h:7
 msgid "Time Remaining"
-msgstr ""
+msgstr "Tempo Restante"
 
 #: ../applets/maintained/battery/battery.ui.h:8
 msgid "_Battery:"
@@ -494,7 +499,7 @@ msgstr ""
 #: ../applets/maintained/volume-control/volume-control.ui.h:8
 #: ../applets/maintained/weather/weather.ui.h:18
 msgid "_Theme:"
-msgstr ""
+msgstr "_Tema:"
 
 #: ../applets/maintained/battery/battery.ui.h:11
 msgid "_Warn when charge level drops to:"
@@ -503,15 +508,19 @@ msgstr ""
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:1
 msgid "A custom time format (strftime()), used if not empty."
 msgstr ""
+"Um formato de tempo personalizado (strftime ()), usado se não está vazio."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:2
 msgid ""
 "If enabled, besides hours and minutes, the seconds will be visible too."
 msgstr ""
+"Se ativado, além de horas e minutos, os segundos serão visíveis também."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:3
 msgid "If enabled, displays the weather as an overlay on top of the clock."
 msgstr ""
+"Se ativado, mostra o tempo como uma sobreposição na parte superior do "
+"relógio."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:4
 msgid "If enabled, the date will be shown in the title."
@@ -2367,7 +2376,7 @@ msgstr ""
 #: ../applets/maintained/garbage/applet.vala:57
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:2
 msgid "Garbage"
-msgstr ""
+msgstr "Lixeira"
 
 #. set the title as well
 #. $display_name: $count item(s)

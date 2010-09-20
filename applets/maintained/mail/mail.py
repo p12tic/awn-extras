@@ -720,35 +720,49 @@ to log out and try again."))
             title = "POP"
 
             def __init__(self, key):
+                self.key = key
+
+            def update(self):
+                # POP is not designed for being logged in continously.
+                # We log in, fetch mails and quit on every update.
+
+                # Log in
                 try:
-                    if key.attrs["usessl"]:
-                        self.server = poplib.POP3_SSL(key.attrs["url"])
+                    if self.key.attrs["usessl"]:
+                        self.server = poplib.POP3_SSL(self.key.attrs["url"])
                     else:
-                        self.server = poplib.POP3(key.attrs["url"])
+                        self.server = poplib.POP3(self.key.attrs["url"])
                 except socket.gaierror, message:
                     raise RuntimeError(_("Could not log in: ") + str(message))
                 except socket.error, message:
                     raise RuntimeError(_("Could not log in: ") + str(message))
 
                 else:
-                    if not "username" in key.attrs:
+                    if not "username" in self.key.attrs:
                         raise RuntimeError(_("Could not log in: No username"))
-                    self.server.user(key.attrs["username"])
+                    self.server.user(self.key.attrs["username"])
                     try:
-                        self.server.pass_(key.password)
+                        self.server.pass_(self.key.password)
                     except poplib.error_proto:
                         raise RuntimeError(_("Could not log in: Username or password incorrect"))
 
-            def update(self):
-                messagesInfo = self.server.list()[1][-20:]
-                # Server messages? Too bad
+                # Fetch mails
+                try:
+                    messagesInfo = self.server.list()[1][-20:]
+                except poplib.error_proto, err:
+                    raise RuntimeError("POP protocol error: %s" % err)
 
                 emails = []
                 for msg in messagesInfo:
                     msgNum = int(msg.split(" ")[0])
                     msgSize = int(msg.split(" ")[1])
                     if msgSize < 10000:
-                        message = self.server.retr(msgNum)[1]
+                        try:
+                            message = self.server.retr(msgNum)[1]
+                        except poplib.error_proto, err:
+                            # Probably not so serious errors
+                            print("Mail Applet: POP protocol error: %s" % err)
+                            continue
                         message = "\n".join(message)
                         emails.append(message)
 
@@ -767,6 +781,13 @@ to log out and try again."))
                         subject = _("[No Subject]")
 
                     self.subjects.append(subject)
+
+                # Quit
+                try:
+                    self.server.quit()
+                except poplib.error_proto, err:
+                    # Probably not so serious errors
+                    print("Mail Applet: POP protocol error: %s" % err)
 
             @classmethod
             def drawLoginWindow(cls, *groups):

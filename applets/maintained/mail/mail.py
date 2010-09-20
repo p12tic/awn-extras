@@ -110,7 +110,7 @@ class MailApplet:
         if not self.awn.keyring.unlock():
             return self.login(True)
 
-        self.perform_login(key)
+        self.perform_login(key, startup=True)
 
     def logout(self):
         if hasattr(self, "timer"):
@@ -118,7 +118,7 @@ class MailApplet:
         self.awn.theme.icon("login")
         self.awn.settings["login-token"] = 0
 
-    def perform_login(self, key):
+    def perform_login(self, key, startup=False):
         if key.token == 0:
             return
 
@@ -144,7 +144,10 @@ class MailApplet:
 
                 self.timer = self.awn.timing.register(self.refresh,
                                                      self.awn.settings["timeout"] * 60)
-                self.refresh(show=False)
+                if startup and self.awn.settings["hide"]:
+                    self.awn.timing.delay(self.refresh, 0.1)  # init must finish first
+                else:
+                    self.refresh(show=False)
 
     def refresh(self, show=True):
         oldSubjects = self.mail.subjects

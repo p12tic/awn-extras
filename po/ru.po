@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras-applets 0.2.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-09-09 21:43+0200\n"
-"PO-Revision-Date: 2010-09-18 22:51+0000\n"
+"PO-Revision-Date: 2010-09-19 19:15+0000\n"
 "Last-Translator: diablo <Unknown>\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-09-19 04:44+0000\n"
+"X-Launchpad-Export-Date: 2010-09-20 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -129,11 +129,11 @@ msgstr "Показать параметры интерфейсов"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:4
 msgid "Draw the applet background"
-msgstr ""
+msgstr "Отображать фон апплета"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:5
 msgid "Draw the applet border"
-msgstr "Рисовать границу апплета"
+msgstr "Отображать границу апплета"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:6
 msgid ""
@@ -146,18 +146,24 @@ msgstr ""
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:7
 msgid "Minimum threshold to draw meter (dependent upon DEFAULT/unit)"
 msgstr ""
+"Минимальный порог отображения показаний счетчика (зависит от величины "
+"используемой по умолчанию)"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:8
 msgid "The base display unit for transfer speed (0: bits, 1: bytes)"
 msgstr ""
+"Базовая величина используемая для отображения скорости передачи данных (0: "
+"биты, 1: байты)"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:9
 msgid "The interface currently selected"
-msgstr ""
+msgstr "Текущий выбранный интерфейс"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:10
 msgid "Throughput label control - 0: no label, 1: Sum, 2: Upload/Download"
 msgstr ""
+"Настройка меток потоков (0: без метки, 1: Общий поток, 2: "
+"Загрузка/Скачивание)"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:11
 msgid ""
@@ -165,16 +171,19 @@ msgid ""
 "chart with colored bars, bar: Bar chart, fan: Waving chart with density, "
 "fan_bar: Waving Bar chart with density"
 msgstr ""
+"Тип графика используемого для беспроводных устройств - Диаграмма с "
+"областями, Диаграмма с областями с цветными полосками, Гистограмма, Линейная "
+"диаграмма с плотностью, Гистограмма с плотностью"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:40
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:258
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:2
 msgid "Bandwidth Monitor"
-msgstr "Монитор использования сети"
+msgstr "Монитор сети"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:44
 msgid "Network Bandwidth monitor"
-msgstr "Монитор использования сети"
+msgstr "Монитор пропускной способности сети"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:320
 msgid "Scanning"
@@ -201,7 +210,7 @@ msgstr "Кбит/с"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:413
 msgid "Please select a valid Network Device"
-msgstr "Пожалуйста, выберите правильное сетевое устройство"
+msgstr "Пожалуйста, выберите активное сетевое устройство"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:415
 #, python-format
@@ -220,7 +229,7 @@ msgstr "Устройство"
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:763
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:412
 msgid "Please select a valid device"
-msgstr "Пожалуйста, выберите правильное устройство"
+msgstr "Пожалуйста, выберите активное устройство"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:1
 msgid "A Network Bandwidth monitor for AWN"
@@ -331,34 +340,35 @@ msgid ""
 "amounts of traffic. e.g.: Setting to 32.0 KBps will cause the graph to only "
 "draw if throughput exceeds 32.0 KBps"
 msgstr ""
-"Установить минимальный порог масштабирования для того чтобы не показывать "
-"незначительные количества трафика. Например: Если установить в 32.0 КБайт/с, "
-"то на графике будут отображаться только значения большие 32.0 КБайт/с."
+"Устанавливает минимальный порог для масштабирования, чтобы не показать "
+"большие пики для небольшого количества трафика. Например, если установить в "
+"32.0 КБайт/с, то на графике будут отображаться только значения большие 32.0 "
+"КБайт/с."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:22
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:160
 msgid "Sum"
-msgstr "Сумма"
+msgstr "Общий траффик"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:166
 msgid "Multi"
-msgstr ""
+msgstr "Мультиинтерфейс"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:174
 msgid "Upload Color"
-msgstr "Цвет исходящего"
+msgstr "Цвет исходящего траффика"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:185
 msgid "Download Color"
-msgstr "Цвет входящего"
+msgstr "Цвет входящего траффика"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:261
 msgid "Upload"
-msgstr "Исходящий"
+msgstr "Исходящий траффик"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:263
 msgid "Download"
-msgstr "Входящий"
+msgstr "Входящий траффик"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:265
 #, python-format
@@ -367,24 +377,24 @@ msgstr "%s %s Цвет"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:411
 msgid "No Device"
-msgstr ""
+msgstr "Нет устройства"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:533
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:543
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:573
 msgid "Options/Info"
-msgstr ""
+msgstr "Настройки/Инфо"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:535
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:538
 msgid "Back to Graph"
-msgstr ""
+msgstr "Вернуться к графику"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:539
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:542
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:563
 msgid "Interfaces"
-msgstr ""
+msgstr "Интерфейсы"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:568
 msgid "Change Unit"
@@ -392,23 +402,23 @@ msgstr "Изменить единицы измерения"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:612
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:612
 msgid "IP Address"
-msgstr ""
+msgstr "IP-адрес"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:612
 msgid "Subnet Mask"
-msgstr ""
+msgstr "Маска подсети"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:692
 msgid "Wireless graph type"
-msgstr ""
+msgstr "Тип графика беспроводной сети"
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:1
 msgid "HAL UDI of battery."
-msgstr ""
+msgstr "Уникальный идентификатор батареи"
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:2
 msgid ""
@@ -439,7 +449,7 @@ msgstr ""
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:3
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:8
 msgid "The name of the theme of the icon."
-msgstr ""
+msgstr "Название темы индикатора."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:7
 msgid "Unit of low level threshold (Percent or Time Remaining)."
@@ -456,21 +466,21 @@ msgstr "Показывать состояние батареи"
 
 #: ../applets/maintained/battery/battery.py:37
 msgid "Battery Status"
-msgstr ""
+msgstr "Состояние батареи"
 
 #: ../applets/maintained/battery/battery.py:38
 msgid "An applet which displays battery information"
-msgstr ""
+msgstr "Апплет отображающий информацию о батарее"
 
 #: ../applets/maintained/battery/battery.py:99
 msgid "No batteries"
-msgstr ""
+msgstr "Батареи отсутствуют"
 
 #: ../applets/maintained/battery/battery.ui.h:2
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:5
 #: ../applets/maintained/weather/weather.ui.h:3
 msgid "<b>General Options</b>"
-msgstr "<b>Основные настройки</b>"
+msgstr "<b>Общие параметры</b>"
 
 #: ../applets/maintained/battery/battery.ui.h:3
 msgid "<b>Notifications</b>"
@@ -481,14 +491,14 @@ msgid ""
 "If enabled, shows a notification when the charge level reaches a certain "
 "percentage"
 msgstr ""
-"Если включено, показывать уведомление когда уровень заряда достигнет "
-"указанного количества процентов."
+"Если включено, выдает уведомление, когда уровень заряда достигает "
+"определенного процента."
 
 #: ../applets/maintained/battery/battery.ui.h:5
 msgid "If enabled, shows a notification when the charge levels drops too low"
 msgstr ""
-"Если включено, будет показано предупреждение при достижении слишком низкого "
-"уровня заряда"
+"Если включено, выдает уведомление при достижении слишком низкого уровня "
+"заряда"
 
 #: ../applets/maintained/battery/battery.ui.h:6
 msgid "Percent"
@@ -520,7 +530,7 @@ msgstr "_Предупреждать при падении уровня заря�
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:1
 msgid "A custom time format (strftime()), used if not empty."
-msgstr "Пользовательский формат (strftime()), используется если не пустой."
+msgstr "Если не пусто, то используется пользовательский формат (strftime())."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:2
 msgid ""
@@ -553,7 +563,7 @@ msgstr ""
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:8
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:10
 msgid "Temperature unit (0: Celsius, 1: Fahrenheit, 2: Kelvin)."
-msgstr ""
+msgstr "Градусы (0: Цельсия, 1: Фаренгейта, 2: Кельвина)"
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:9
 msgid "The name of the theme of the analog clock."
@@ -562,6 +572,7 @@ msgstr "Название темы аналоговых часов."
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:10
 msgid "Wind speed unit (0: m/s, 1: km/h, 2: mph, 3: knots, 4: Beaufort)."
 msgstr ""
+"Единицы скорости ветра (0: м/с, 1: км/ч, 2: мили/ч, 3: узлы, 4: баллы)"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:1
 #: ../applets/maintained/cairo-clock/cairo-clock.py:29
@@ -581,6 +592,8 @@ msgid ""
 "Applet that displays an analog clock and supports additional clocks for "
 "different locations"
 msgstr ""
+"Апплет показывает аналоговые часы и поддерживает дополнительные часы для "
+"разных мест"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:1
 #: ../applets/maintained/weather/weather.ui.h:1
@@ -589,15 +602,15 @@ msgstr " "
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:2
 msgid "12 _hour format"
-msgstr "12 _часовой формат"
+msgstr "12-_часовой формат"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:3
 msgid "24 h_our format"
-msgstr "24 ч_асовой формат"
+msgstr "24-ч_асовой формат"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:4
 msgid "<b>Clock Display</b>"
-msgstr ""
+msgstr "<b>Дисплей часов</b>"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:6
 msgid "<b>Title Options</b>"
@@ -605,7 +618,7 @@ msgstr "<b>Параметры подсказки</b>"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:7
 msgid "Beaufort"
-msgstr ""
+msgstr "Баллы"
 
 #. Unit long strings
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:8
@@ -614,7 +627,7 @@ msgstr ""
 #: ../applets/maintained/weather/weather.py:562
 #: ../applets/maintained/weather/weather.py:567
 msgid "Celsius"
-msgstr ""
+msgstr "по Цельсию"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:9
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
@@ -651,11 +664,11 @@ msgstr "Если включено, время будет показано в 24-
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:16
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "Kelvin"
-msgstr "Кельвин"
+msgstr "по Кельвину"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:17
 msgid "Location Name:"
-msgstr "Имя расположения:"
+msgstr "Название местности:"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:18
 msgid "Show _seconds"
@@ -699,11 +712,11 @@ msgstr "миль/ч"
 
 #: ../applets/maintained/cairo-clock/locations.py:142
 msgid "Locations"
-msgstr ""
+msgstr "Местоположения"
 
 #: ../applets/maintained/cairo-clock/locations.py:145
 msgid "Edit"
-msgstr ""
+msgstr "Правка"
 
 #. FIXME priv->display_name should be _("Places")
 #. awn_icon_set_tooltip_text (AWN_ICON(object),priv->display_name);
@@ -714,31 +727,31 @@ msgstr ""
 #: ../applets/maintained/places/places.desktop.in.in.h:2
 #: ../applets/maintained/yama/yama.py:261
 msgid "Places"
-msgstr "Места"
+msgstr "Переход"
 
 #: ../applets/maintained/cairo-menu/cairo-aux-icon.c:351
 msgid "Remove Icon"
-msgstr ""
+msgstr "Удалить значок"
 
 #: ../applets/maintained/cairo-menu/cairo-main-icon.c:161
 #: ../applets/unmaintained/main-menu/applet.c:453
 msgid "Main Menu"
-msgstr ""
+msgstr "Главное меню"
 
 #: ../applets/maintained/cairo-menu/cairo-menu.desktop.in.in.h:1
 msgid "A Main Menu."
-msgstr ""
+msgstr "Главное меню."
 
 #: ../applets/maintained/cairo-menu/cairo-menu.desktop.in.in.h:2
 msgid "Cairo Main Menu"
-msgstr ""
+msgstr "Cairo Main Menu"
 
 #. hope that gnome-session-save exists; needed for GNOME 2.22, at least.
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:107
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:111
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:116
 msgid "Logout"
-msgstr "Завершение сеанса"
+msgstr "Выйти из системы"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:121
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:123
@@ -776,7 +789,7 @@ msgstr "Компьютер"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:196
 msgid "Home"
-msgstr "Домой"
+msgstr "Домашний каталог"
 
 #. Check if this is the Desktop directory
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:197
@@ -804,7 +817,7 @@ msgstr "Сеть"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:337
 msgid "Connect to Server"
-msgstr "Подключиться к серверу"
+msgstr "Соединиться с сервером"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1040
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1055
@@ -830,7 +843,7 @@ msgstr "Запуск\\u2026"
 #: ../applets/maintained/cairo-menu/misc.c:310
 #: ../applets/maintained/yama/yama.py:590
 msgid "Clear the Recent Documents list?"
-msgstr ""
+msgstr "Очистить список недавно использовавашихся документов?"
 
 #. Translators: This is taken from gnome-panel, when deleting the Recent Documents List.
 #. * Please use the same translation.
@@ -840,13 +853,17 @@ msgid ""
 "• All items from the Places → Recent Documents menu item.\n"
 "• All items from the recent documents list in all applications."
 msgstr ""
+"При очистке списка недавно использовавшихся документов будут очищены:\n"
+"• Все элементы меню Переход → Недавние документы.\n"
+"• Все элементы из списка недавно использовавшихся документов во всех "
+"приложениях."
 
 #: ../applets/maintained/cairo-menu/misc.c:326
 #: ../applets/maintained/cairo-menu/misc.c:420
 #: ../applets/maintained/yama/yama.py:351
 #: ../applets/maintained/yama/yama.py:595
 msgid "Clear Recent Documents"
-msgstr "Очистить список недавно открытых документов"
+msgstr "Очистить список недавно использовавшихся документов"
 
 #: ../applets/maintained/calendar/awn-applet-calendar.schema-ini.in.h:1
 msgid "X"
@@ -858,7 +875,7 @@ msgstr "Апплет Часы/Календарь"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:2
 msgid "Watch appointments on your dock"
-msgstr ""
+msgstr "Просмотр своих встреч и задач из панели"
 
 #: ../applets/maintained/calendar/calendarlogin.py:43
 msgid "Login to "
@@ -887,36 +904,38 @@ msgid ""
 "password can be stolen and decrypted if your computer's security is "
 "breached.  Are you still sure you want to save your password?"
 msgstr ""
-"Вы выбрали сохранить ваш пароль. Однако, пароль будет сохранён в "
-"зашифрованном виде"
+"Вы выбрали сохранить пароль. Хотя пароль будет храниться в зашифрованном "
+"виде, всегда есть вероятность, что пароль может быть украден и расшифрован, "
+"если безопасность вашего компьютера нарушена. Вы все еще уверены, что хотите "
+"сохранить пароль?"
 
 #: ../applets/maintained/calendar/calendarprefs.py:46
 msgid "Classic LCD"
-msgstr "Классический ЖКД"
+msgstr "Классический ЖК-дисплей"
 
 #: ../applets/maintained/calendar/calendarprefs.py:47
 msgid "Indy Glow LCD"
-msgstr "Светящийся инди ЖКД"
+msgstr "Светящийся инди ЖК-дисплей"
 
 #: ../applets/maintained/calendar/calendarprefs.py:48
 msgid "Backlit Amber LCD"
-msgstr "Подсвеченный янтарный ЖКД"
+msgstr "Подсвеченный янтарный ЖК-дисплей"
 
 #: ../applets/maintained/calendar/calendarprefs.py:49
 msgid "Backlit Green LCD"
-msgstr "Подсвеченный зелёный ЖКД"
+msgstr "Подсвеченный зелёный ЖК-дисплей"
 
 #: ../applets/maintained/calendar/calendarprefs.py:50
 msgid "Green LED"
-msgstr "Зелёный светодиод"
+msgstr "Зелёный LED-дисплей"
 
 #: ../applets/maintained/calendar/calendarprefs.py:51
 msgid "Red LED"
-msgstr "Красный светодиод"
+msgstr "Красный LED-дисплей"
 
 #: ../applets/maintained/calendar/calendarprefs.py:52
 msgid "Blue LED"
-msgstr "Синий светодиод"
+msgstr "Синий LED-дисплей"
 
 #: ../applets/maintained/calendar/calendarprefs.py:53
 msgid "Plain White"
@@ -966,11 +985,11 @@ msgstr "Нет"
 
 #: ../applets/maintained/calendar/calendarprefs.py:122
 msgid "Evolution"
-msgstr "Evolution"
+msgstr "Почтовый клиент Evolution"
 
 #: ../applets/maintained/calendar/calendarprefs.py:123
 msgid "Google Calendar"
-msgstr "Календарь Google"
+msgstr "Google Календарь"
 
 #: ../applets/maintained/calendar/calendarprefs.py:124
 msgid "Outlook Web Access"
@@ -993,7 +1012,7 @@ msgstr "Календарь"
 
 #: ../applets/maintained/calendar/clockcal.py:110
 msgid "Forget Password"
-msgstr ""
+msgstr "Забыть пароль"
 
 #: ../applets/maintained/calendar/clockcal.py:218
 msgid ""
@@ -1001,17 +1020,17 @@ msgid ""
 "you choose to clear your password, you will be prompted again for your "
 "calendar login credentials."
 msgstr ""
-"Вы хотите стереть пароль к вашему календарю из аплета календаря? Если "
-"выберите стереть, то будете заново спрошены об учётных данных для вашего "
+"Вы хотите стереть пароль к Вашему календарю из апплета календаря? Если Вы "
+"решили очистить пароль, Вам будет предложено снова ввести учетные данные "
 "календаря."
 
 #: ../applets/maintained/calendar/clockcal.py:246
 msgid "Avant Calendar Applet"
-msgstr ""
+msgstr "Апплет календаря Avant"
 
 #: ../applets/maintained/calendar/clockcal.py:248
 msgid "A Calendar Applet for the Avant Window Navigator. Images by Deleket."
-msgstr ""
+msgstr "Апплет календаря для Avant Window Navigator. Реализация от Deleket."
 
 #: ../applets/maintained/calendar/clockcal.py:496
 msgid "Open in "
@@ -1025,16 +1044,16 @@ msgstr "Сегодня"
 #. print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
 #: ../applets/maintained/calendar/clockcal.py:548
 msgid "Unable to read calendar data from external source."
-msgstr "Невозможно получить календарные данные из удалённого источника."
+msgstr "Невозможно прочитать данные календаря из удаленного источника."
 
 #: ../applets/maintained/calendar/googlecal.py:90
 msgid "No appointments."
-msgstr "Нет назначений."
+msgstr "Нет запланированных событий."
 
 #: ../applets/maintained/calendar/icscal.py:73
 #: ../applets/maintained/calendar/owacal.py:95
 msgid "No appointments"
-msgstr "Нет назначений."
+msgstr "Нет запланированных событий"
 
 #: ../applets/maintained/comics/awn-applet-comics.schema-ini.in.h:1
 msgid "The user agent to send when retrieving comics."
@@ -1048,8 +1067,7 @@ msgstr "Не удалось загрузить %s. Чтобы попробовт
 #: ../applets/maintained/comics/comics_add.py:63
 msgid "The URL is not a valid comic feed. Press \"next\" to try again"
 msgstr ""
-"Этот URL не является действительной лентой комиксов. Чтобы попробовть ещё, "
-"нажмите \"далее\""
+"Этот URL не является лентой комиксов. Чтобы попробовть ещё, нажмите \"далее\""
 
 #: ../applets/maintained/comics/comics_add.py:140
 #, python-format
@@ -1120,7 +1138,7 @@ msgstr "Управление комиксами"
 #: ../applets/maintained/comics/main.py:192
 #, python-format
 msgid "There is a new strip of %s!"
-msgstr "Вот новая плоса %s!"
+msgstr "Новый комикс %s!"
 
 #: ../applets/maintained/comics/comics_view.py:164
 msgid "%A %d %B"
@@ -1217,18 +1235,22 @@ msgid ""
 "Frequency scaling is not\n"
 "available for the selected CPU."
 msgstr ""
+"<span size=\"large\"><b>Изменение частоты не доступно</b></span>\n"
+"\n"
+"Изменение частоты не доступно\n"
+"для выбранного процессора."
 
 #: ../applets/maintained/cpufreq/cpufreq.py:261
 msgid "GHz"
-msgstr ""
+msgstr "ГГц"
 
 #: ../applets/maintained/cpufreq/cpufreq.py:264
 msgid "MHz"
-msgstr ""
+msgstr "МГц"
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:1
 msgid "<b>Monitored CPU</b>"
-msgstr "<b>Наблюдаемые CPU</b>"
+msgstr "<b>Отслеживаемые процессоры</b>"
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:2
 msgid "_Processor:"
@@ -1240,44 +1262,48 @@ msgstr "Может изменять вид с помощью колеса мыш
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:2
 msgid "Flag opacity (min: 0.0, max: 0.9)."
-msgstr ""
+msgstr "Непрозрачность флажка (min: 0.0, max: 0.9)."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:3
 msgid "Flag size compared to icon (min: 0.1, max: 0.9)."
-msgstr ""
+msgstr "Размер флажка по сравнению со значком (min: 0.1, max: 0.9)."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:4
 msgid ""
 "Keyboard toggle to change selected layout (see prefs dialog for values)."
 msgstr ""
+"Переключатель раскладок клавиатуры (см. окно настроек для изменения "
+"параметров)"
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:5
 msgid "Left click action (0: previous, 1: menu, 2: next, 3: none)."
 msgstr ""
+"Действие для левой кнопки мыши (0: назад, 1: меню, 2: далее, 3: нет)."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:6
 msgid "Middle click action (0: previous, 1: menu, 2: next, 3: none)."
 msgstr ""
+"Действие для средней кнопки мыши (0: назад, 1: меню, 2: далее, 3: нет)."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:7
 msgid "Overlay selected layout flag on icon."
-msgstr ""
+msgstr "Наложение флажка выбранной раскладки на значок."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:8
 msgid "User selected layouts."
-msgstr ""
+msgstr "Пользовательские раскладки."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:9
 msgid "User selected variants."
-msgstr ""
+msgstr "Пользовательские варианты раскладки."
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:1
 msgid " Dialect Applet"
-msgstr ""
+msgstr " Dialect Applet"
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:2
 msgid "Change your keyboard input layout from Awn."
-msgstr ""
+msgstr "Меняйте Ваши раскладки клавиатуры из Awn."
 
 #: ../applets/maintained/dialect/dialect.ui.h:1
 msgid ""
@@ -1301,6 +1327,26 @@ msgid ""
 "applet are from the xfce4-xkb-plugin-0.5.3.3 panel applet, licensed under "
 "the 2-clause BSD license. See the About dialog for licensing details.\n"
 msgstr ""
+"\n"
+"DIALECT APPLET V 09.12.09\n"
+"\n"
+"(C) 2009, Лаклан Тернер (Денем 2010)\n"
+"\n"
+"Этот апплет позволяет Вам изменять раскладку клавиатуры одним нажатием "
+"мыши.\n"
+"Вы можете выбрать любой из доступных языков ввода в Вашей системе, или из "
+"списка наиболее часто используемые Вами.\n"
+"\n"
+"См. настройки действий мыши и списка раскладок для настройки дополнительных "
+"параметров.\n"
+"\n"
+"Апплет зависит от модуля Python xklavier (доступен "
+"http://download.sugarlabs.org/sources/external/python-xklavier/python-"
+"xklavier-0.1.tar.gz).\n"
+"\n"
+"Этот апплет лицензирован под GPL2. Значки флажков, распространяемые с этим "
+"апплетом из панели апплетов xfce4-xkb-plugin-0.5.3.3, под лицензией BSD "
+"ред.2. См. \"О программе\" чтобы узнать подробнее о лицензировании.\n"
 
 #: ../applets/maintained/dialect/dialect.ui.h:15
 msgid ""
@@ -1324,6 +1370,30 @@ msgid ""
 "\tIf selected, scrolling up or down with your mouse wheel will select\n"
 "\tthe next or previous layout in your user list.\n"
 msgstr ""
+"\n"
+"Щелчок левой кнопкой мыши:\n"
+"\n"
+"\tСледующая раскладка\t\tвыбор следующей раскладки из пользовательского "
+"списка.\n"
+"\tПредыдущая раскладка\tвыбор предыдущей раскладки из пользовательского "
+"списка.\n"
+"\tМеню\t\t\tвыбор раскладки из меню пользовательского списка.\n"
+"\tНет\t\t\tкнопка не будет иметь никаких действий.\n"
+"\n"
+"Щелчок средней кнопкой мыши:\n"
+"\n"
+"\tСледующая раскладка\t\tвыбор следующей раскладки из пользовательского "
+"списка.\n"
+"\tПредыдущая раскладка\tвыбор предыдущей раскладки из пользовательского "
+"списка.\n"
+"\tМеню\t\t\tвыбор раскладки из меню пользовательского списка.\n"
+"\tНет\t\t\tкнопка не будет иметь никаких действий.\n"
+"\n"
+"Выбор раскладки при помощи колеса прокрутки:\n"
+"\n"
+"\tЕсли выбрано, прокрутка вверх или вниз с помощью колеса прокрутки мыши "
+"выберет\n"
+"\tследующую или предыдущую раскладку в пользовательском списке.\n"
 
 #: ../applets/maintained/dialect/dialect.ui.h:35
 msgid ""
@@ -1342,6 +1412,20 @@ msgid ""
 "\n"
 "\tRanging from 0.0 (flag is not visible) to 0.9 (flag is almost opaque).\n"
 msgstr ""
+"\n"
+"Наложить флажок раскладки на значок апплета:\n"
+"\n"
+"\tЕсли выбрано, флажок выбранной раскладки будет наложен на значок апплета.\n"
+"\n"
+"Масштаб флажка:\n"
+"\n"
+"\tРазмер флажка по отношению к значку апплета.\n"
+"\tДопустимые значения от 0.1 до 0.9\n"
+"\n"
+"Непрозрачность флажка:\n"
+"\n"
+"\tВыбор диапазона от 0.0 (флажок не виден) до 0.9 (флажок почти "
+"непрозрачен).\n"
 
 #: ../applets/maintained/dialect/dialect.ui.h:49
 msgid ""

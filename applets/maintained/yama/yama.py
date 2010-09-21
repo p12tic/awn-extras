@@ -56,6 +56,9 @@ url_pattern = re.compile("^[a-z]+://(?:[^@]+@)?([^/]+)/(.*)$")
 # Delay in seconds before starting rebuilding the menu
 menu_rebuild_delay = 2
 
+gtk_show_image_ok = awnlib.is_required_version(gtk.gtk_version, (2, 16, 0))
+pygio_emblemed_icon_ok = awnlib.is_required_version(gio.pygio_version, (2, 17, 0))
+
 
 class YamaApplet:
 
@@ -381,7 +384,7 @@ class YamaApplet:
             self.places_menu.show_all()
 
     def get_icon_name(self, icon):
-        if gio.pygio_version >= (2, 17, 0) and isinstance(icon, gio.EmblemedIcon):
+        if pygio_emblemed_icon_ok and isinstance(icon, gio.EmblemedIcon):
             icon = icon.get_icon()
 
         if isinstance(icon, gio.ThemedIcon):
@@ -453,7 +456,7 @@ class YamaApplet:
 
     def create_menu_item(self, label, icon_name, comment):
         item = gtk.ImageMenuItem(label)
-        if gtk.gtk_version >= (2, 16, 0):
+        if gtk_show_image_ok:
             item.props.always_show_image = True
         icon_pixbuf = self.get_pixbuf_icon(icon_name)
         item.set_image(gtk.image_new_from_pixbuf(icon_pixbuf))

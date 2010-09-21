@@ -446,7 +446,7 @@ awn_applet_factory_initp (const gchar *name, const gchar *uid, gint panel_id)
                     G_CALLBACK (on_icon_clicked), (gpointer)app);
   
   awn_applet_simple_set_icon_name( AWN_APPLET_SIMPLE(app->applet),
-                                    "gnome-main-menu")  ;
+                                    "start-here")  ;
 
   awn_applet_simple_set_tooltip_text(AWN_APPLET_SIMPLE(app->applet),
                                      _("Main Menu"));

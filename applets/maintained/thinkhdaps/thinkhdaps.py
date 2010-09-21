@@ -46,12 +46,7 @@ applet_logo = os.path.join(os.path.dirname(__file__), "images/thinkhdaps-logo.sv
 
 def compare_linux_version(wanted_version):
     version = map(int, platform.release().split("-")[0].split("."))
-    for i,j in zip(version, wanted_version):
-        if i > j:
-            return True
-        elif i < j:
-            return False
-    return True
+    return awnlib.is_required_version(version, wanted_version)
 
 
 version_at_least_2_6_27 = compare_linux_version([2, 6, 27])

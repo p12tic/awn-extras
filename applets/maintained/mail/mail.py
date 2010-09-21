@@ -110,7 +110,7 @@ class MailApplet:
         if not self.awn.keyring.unlock():
             return self.login(True)
 
-        self.perform_login(key)
+        self.perform_login(key, startup=True)
 
     def logout(self):
         if hasattr(self, "timer"):
@@ -118,7 +118,7 @@ class MailApplet:
         self.awn.theme.icon("login")
         self.awn.settings["login-token"] = 0
 
-    def perform_login(self, key):
+    def perform_login(self, key, startup=False):
         if key.token == 0:
             return
 
@@ -133,9 +133,7 @@ class MailApplet:
                 self.__dialog.login_form(True)
 
             else:
-                self.awn.dialog.toggle("main", "hide")
-
-                self.awn.notify.send(_("Mail Applet"),
+                self.awn.notification.send(_("Mail Applet"),
                     _("Logging in as %s") % key.attrs["username"],
                     self.__getIconPath("login"))
 
@@ -146,7 +144,10 @@ class MailApplet:
 
                 self.timer = self.awn.timing.register(self.refresh,
                                                      self.awn.settings["timeout"] * 60)
-                self.refresh(show=False)
+                if startup and self.awn.settings["hide"]:
+                    self.awn.timing.delay(self.refresh, 0.1)  # init must finish first
+                else:
+                    self.refresh(show=False)
 
     def refresh(self, show=True):
         oldSubjects = self.mail.subjects
@@ -157,7 +158,7 @@ class MailApplet:
             self.awn.theme.icon("error")
 
             if self.awn.settings["show-network-errors"]:
-                self.awn.notify.send(_("Network error - Mail Applet"), str(e), "")
+                self.awn.notification.send(_("Network error - Mail Applet"), str(e), "")
             return
 
         diffSubjects = [i for i in self.mail.subjects if i not in oldSubjects]
@@ -166,7 +167,7 @@ class MailApplet:
             msg = strMailMessages(len(diffSubjects)) + ":\n" + \
                                                         "\n".join(diffSubjects)
 
-            self.awn.notify.send(_("New Mail - Mail Applet"), msg,
+            self.awn.notification.send(_("New Mail - Mail Applet"), msg,
                                  self.__getIconPath("mail-unread"))
 
         self.awn.tooltip.set(strMessages(len(self.mail.subjects)))
@@ -526,7 +527,12 @@ to log out and try again."))
             t = []
             self.subjects = []
             for i in f.entries:
-                i.title = self.__cleanGmailSubject(i.title)
+                if "title" in i:
+                    i.title = self.__cleanGmailSubject(i.title)
+                else:
+                    i.title = _("[No Subject]")
+                if not "author" in i:
+                    i.author = _("[Unknown]")
                 t.append(MailItem(i.title, i.author))
                 self.subjects.append(i.title)
 
@@ -591,7 +597,12 @@ to log out and try again."))
             t = []
             self.subjects = []
             for i in f.entries:
-                i.title = self.__cleanGmailSubject(i.title)
+                if "title" in i:
+                    i.title = self.__cleanGmailSubject(i.title)
+                else:
+                    i.title = _("[No Subject]")
+                if not "author" in i:
+                    i.author = _("[Unknown]")
                 t.append(MailItem(i.title, i.author))
                 self.subjects.append(i.title)
 
@@ -673,7 +684,7 @@ to log out and try again."))
                     if "subject" in msg:
                         subject = msg["subject"]
                     else:
-                        subject = "[No Subject]"
+                        subject = _("[No Subject]")
 
                     self.subjects.append(subject)
 
@@ -709,35 +720,49 @@ to log out and try again."))
             title = "POP"
 
             def __init__(self, key):
+                self.key = key
+
+            def update(self):
+                # POP is not designed for being logged in continously.
+                # We log in, fetch mails and quit on every update.
+
+                # Log in
                 try:
-                    if key.attrs["usessl"]:
-                        self.server = poplib.POP3_SSL(key.attrs["url"])
+                    if self.key.attrs["usessl"]:
+                        self.server = poplib.POP3_SSL(self.key.attrs["url"])
                     else:
-                        self.server = poplib.POP3(key.attrs["url"])
+                        self.server = poplib.POP3(self.key.attrs["url"])
                 except socket.gaierror, message:
                     raise RuntimeError(_("Could not log in: ") + str(message))
                 except socket.error, message:
                     raise RuntimeError(_("Could not log in: ") + str(message))
 
                 else:
-                    if not "username" in key.attrs:
+                    if not "username" in self.key.attrs:
                         raise RuntimeError(_("Could not log in: No username"))
-                    self.server.user(key.attrs["username"])
+                    self.server.user(self.key.attrs["username"])
                     try:
-                        self.server.pass_(key.password)
+                        self.server.pass_(self.key.password)
                     except poplib.error_proto:
                         raise RuntimeError(_("Could not log in: Username or password incorrect"))
 
-            def update(self):
-                messagesInfo = self.server.list()[1][-20:]
-                # Server messages? Too bad
+                # Fetch mails
+                try:
+                    messagesInfo = self.server.list()[1][-20:]
+                except poplib.error_proto, err:
+                    raise RuntimeError("POP protocol error: %s" % err)
 
                 emails = []
                 for msg in messagesInfo:
                     msgNum = int(msg.split(" ")[0])
                     msgSize = int(msg.split(" ")[1])
                     if msgSize < 10000:
-                        message = self.server.retr(msgNum)[1]
+                        try:
+                            message = self.server.retr(msgNum)[1]
+                        except poplib.error_proto, err:
+                            # Probably not so serious errors
+                            print("Mail Applet: POP protocol error: %s" % err)
+                            continue
                         message = "\n".join(message)
                         emails.append(message)
 
@@ -753,9 +778,16 @@ to log out and try again."))
                     if "subject" in msg:
                         subject = msg["subject"]
                     else:
-                        subject = "[No Subject]"
+                        subject = _("[No Subject]")
 
                     self.subjects.append(subject)
+
+                # Quit
+                try:
+                    self.server.quit()
+                except poplib.error_proto, err:
+                    # Probably not so serious errors
+                    print("Mail Applet: POP protocol error: %s" % err)
 
             @classmethod
             def drawLoginWindow(cls, *groups):
@@ -872,17 +904,17 @@ to log out and try again."))
                 allE.set_active(True)
                 vbox.add(allE)
 
-                hbox_box = gtk.HBox(False, 12)
-                vbox.add(hbox_box)
-
                 foldE, boxE = get_label_entry(_("Folder:"), *groups)
                 foldE.set_text("INBOX")
-                vbox.add(boxE)
+                alignmentE = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
+                alignmentE.props.left_padding = 12
+                alignmentE.add(boxE)
+                vbox.add(alignmentE)
 
-                def on_toggle(w):
-                    boxE.set_sensitive(allE.get_active())
+                def on_toggle(widget, box):
+                    box.set_sensitive(widget.get_active())
 
-                allE.connect("toggled", on_toggle)
+                allE.connect("toggled", on_toggle, boxE)
 
                 return {"layout": vbox, "callback": cls.__submitLoginWindow,
                     "widgets": [usrE, pwdE, srvE, sslE, allE, foldE]}

@@ -67,6 +67,9 @@ mixer_names = ("pulsemixer", "oss4mixer", "alsamixer")
 no_mixer_message = _("Install one or more of the following GStreamer elements: %s.")
 no_devices_message = _("Could not find any devices.")
 
+gtk_add_mark_ok = awnlib.is_required_version(gtk.gtk_version, (2, 16, 0)) \
+    and awnlib.is_required_version(gtk.pygtk_version, (2, 15, 0))
+
 
 class BackendError(Exception):
     pass
@@ -116,7 +119,7 @@ class VolumeControlApplet:
         self.volume_scale = prefs.get_object("hscale-volume")
         self.volume_scale.props.can_focus = False
 
-        if gtk.gtk_version >= (2, 16, 0) and gtk.pygtk_version >= (2, 15, 0):
+        if gtk_add_mark_ok:
             self.volume_scale.add_mark(100, gtk.POS_BOTTOM, "<small>%s</small>" % "100%")
 
         self.volume_label = prefs.get_object("label-volume")
@@ -264,11 +267,11 @@ class VolumeControlApplet:
         self.applet.settings["track"] = track
 
     def combobox_device_changed_cb(self, value):
-        self.backend.set_device(self.applet.settings["device"])
+        self.backend.set_device(value)
         self.reload_tracks()
 
     def combobox_track_changed_cb(self, value):
-        self.backend.set_track(self.applet.settings["track"])
+        self.backend.set_track(value)
 
     def combobox_theme_changed_cb(self, value):
         self.setup_icons()

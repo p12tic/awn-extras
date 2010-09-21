@@ -202,7 +202,7 @@ class WeatherApplet:
         self.reset_weather_data()
 
         self.network_handler = self.NetworkHandler()
-        self.notification = applet.notify.create_notification(_("Network error in Weather"), network_error_message, "dialog-warning", 20)
+        self.notification = applet.notification.create(_("Network error in Weather"), network_error_message, "dialog-warning", 20)
 
         self.setup_context_menu()
 

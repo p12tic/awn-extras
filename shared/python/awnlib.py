@@ -73,6 +73,19 @@ def add_cell_renderer_text(combobox):
     combobox.add_attribute(text, "text", 0)
 
 
+def is_required_version(version, required_version):
+    """Return True if version is higher than or equal to
+    required_version, False otherwise.
+
+    """
+    for i, j in zip(version, required_version):
+        if i > j:
+            return True
+        elif i < j:
+            return False
+    return True
+
+
 class KeyRingError:
 
     def __init__(self, str):
@@ -85,6 +98,8 @@ class KeyRingError:
 class Dialogs:
 
     __special_dialogs = ("menu", "about", "preferences")
+
+    __gtk_show_image_ok = is_required_version(gtk.gtk_version, (2, 16, 0))
 
     def __init__(self, parent):
         """Create an instance of Dialogs. Creates a context menu,
@@ -108,12 +123,13 @@ class Dialogs:
             about_dialog = self.new("about")
 
             about_item = gtk.ImageMenuItem(_("_About %s") % self.__parent.meta["name"])
-            if gtk.gtk_version >= (2, 16, 0):
+            if self.__gtk_show_image_ok:
                 about_item.props.always_show_image = True
             about_item.set_image(gtk.image_new_from_stock(gtk.STOCK_ABOUT, gtk.ICON_SIZE_MENU))
             self.menu.append(about_item)
             about_item.connect("activate", lambda w: self.toggle("about"))
 
+    def connect_signals(self, parent):
         def popup_menu_cb(widget, event):
             self.toggle("menu", once=True, event=event)
         parent.connect("context-menu-popup", popup_menu_cb)
@@ -149,7 +165,7 @@ class Dialogs:
                 position = position - 1
 
             prefs_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
-            if gtk.gtk_version >= (2, 16, 0):
+            if self.__gtk_show_image_ok:
                 prefs_item.props.always_show_image = True
             self.menu.insert(prefs_item, position)
             prefs_item.connect("activate", lambda w: self.toggle(
@@ -223,8 +239,7 @@ class Dialogs:
         assert dialog in self.__register, "Dialog '%s' must be registered" % dialog
 
         if dialog == "menu":
-            self.__register["menu"].show_all()
-            self.__parent.popup_gtk_menu(self.__register["menu"], event.button, event.time)
+            self.show_menu(self.__parent, event)
         elif dialog == "about":
             self.__register["about"].show()
             self.__register["about"].deiconify()
@@ -252,6 +267,10 @@ class Dialogs:
                 self.__current = dialog
                 if dialog == "preferences":
                     self.__register[dialog].deiconify()
+
+    def show_menu(self, parent, event):
+        self.__register["menu"].show_all()
+        parent.popup_gtk_menu(self.__register["menu"], event.button, event.time)
 
     def hide(self):
         """Hide the currently visible dialog.
@@ -283,8 +302,16 @@ class Dialogs:
                 self.update_logo_icon()
                 parent.connect_size_changed(self.update_logo_icon)
             elif "theme" in parent.meta:
-                self.update_theme_icon()
-                parent.connect_size_changed(self.update_theme_icon)
+                if parent.meta.has_option("multiple-icons"):
+                    self._logo_icon = awn.ThemedIcon()
+                    self._logo_icon.set_info_simple(parent.meta["short"], \
+                        parent.get_uid(), parent.meta["theme"])
+
+                    self.update_theme_icons()
+                    parent.connect_size_changed(self.update_theme_icons)
+                else:
+                    self.update_theme_icon()
+                    parent.connect_size_changed(self.update_theme_icon)
 
             # Connect some signals to be able to hide the window
             self.connect("response", self.response_event)
@@ -310,6 +337,13 @@ class Dialogs:
 
             """
             self.set_icon(self.__parent.get_icon() \
+                .get_icon_at_size(self.__parent.get_size()))
+
+        def update_theme_icons(self):
+            """Updates the logo to be of the same height as the panel.
+
+            """
+            self.set_icon(self._logo_icon \
                 .get_icon_at_size(self.__parent.get_size()))
 
     class AboutDialog(BaseDialog, gtk.AboutDialog):
@@ -345,7 +379,10 @@ class Dialogs:
             elif "theme" in parent.meta:
                 # It is assumed that the C{awn.Icons}
                 # object has been set via set_awn_icon() in C{Icon}
-                self.set_logo(parent.get_icon().get_icon_at_size(48))
+                if parent.meta.has_option("multiple-icons"):
+                    self.set_logo(self._logo_icon.get_icon_at_size(48))
+                else:
+                    self.set_logo(parent.get_icon().get_icon_at_size(48))
 
     class PreferencesDialog(BaseDialog, gtk.Dialog):
 
@@ -407,7 +444,7 @@ class Tooltip:
     def set(self, text):
         """Set the applet tooltip.
 
-        @param text: The new tooltip text. Defaults to "".
+        @param text: The new tooltip text.
         @type text: C{string}
 
         """
@@ -435,7 +472,6 @@ class Icon:
 
         # Set the themed icon to set the C{awn.Icons} object
         if "theme" in parent.meta:
-            # TODO does not handle multiple icons yet
             self.theme(parent.meta["theme"])
 
     def file(self, file, set=True, size=None):
@@ -530,6 +566,85 @@ class Theme:
 
     def theme(self, theme):
         self.__parent.get_icon().override_gtk_theme(theme)
+
+
+class Icons:
+
+    def __init__(self, parent):
+        """Create a new Icons object.
+
+        @param parent: The parent applet of the icons instance.
+        @type parent: L{Applet}
+
+        """
+        self.__parent = parent
+
+        self.__icon_box = awn.IconBox(parent)
+        parent.add(self.__icon_box)
+
+        def update_size():
+            size = self.__parent.get_size()
+            for icon in self.__icon_box.get_children():
+                icon.set_size(size)
+
+        parent.connect_size_changed(update_size)
+
+    def add(self, icon_name, tooltip_text, context_menu=None):
+        """Set an icon from the default icon theme and set the applet
+        tooltip. Optionally provide a context menu that should be
+        displayed instead of the applet's standard context menu. The
+        resultant themed icon will be returned.
+
+        @param icon_name: The name of the theme icon.
+        @type icon_name: C{string}
+        @param tooltip_text: The new tooltip text.
+        @type tooltip_text: C{string}
+        @param context_menu: Optional context menu.
+        @type context_menu: C{gtk.Menu} or C{None}
+        @return: The resultant themed icon
+        @rtype: C{awn.ThemedIcon}
+
+        """
+        icon = awn.ThemedIcon()
+        icon.set_info_simple(self.__parent.meta["short"], self.__parent.get_uid(), icon_name)
+        icon.set_tooltip_text(tooltip_text)
+        icon.set_size(self.__parent.get_size())
+
+        # Callback context menu
+        if context_menu is None:
+            def popup_menu_cb(widget, event):
+                self.__parent.dialog.show_menu(widget, event)
+            icon.connect("context-menu-popup", popup_menu_cb)
+        else:
+            assert isinstance(context_menu, gtk.Menu)
+
+            def popup_menu_cb(widget, event, menu):
+                menu.show_all()
+                widget.popup_gtk_menu(menu, event.button, event.time)
+            icon.connect("context-menu-popup", popup_menu_cb, context_menu)
+
+        icon.show_all()
+        self.__icon_box.add(icon)
+        return icon
+
+    def remove(self, icon):
+        """Remove the specified icon from the applet. The icon will not
+        be destroyed.
+
+        @param icon: The icon to be removed.
+        @type icon: C{awn.ThemedIcon}
+
+        """
+        assert isinstance(icon, awn.ThemedIcon)
+
+        self.__icon_box.remove(icon)
+
+    def destroy_all(self):
+        """Remove and destroy all icons in the applet.
+
+        """
+        for icon in self.__icon_box.get_children():
+            icon.destroy()
 
 
 class Errors:
@@ -694,7 +809,7 @@ class Settings:
 
         """
         type_parent = type(parent)
-        if type_parent in (Applet, config.Client):
+        if type_parent in (AppletSimple, AppletMultiple, config.Client):
             self.__folder = config.GROUP_DEFAULT
         elif type_parent is str:
             self.__folder = parent
@@ -788,7 +903,7 @@ class Settings:
             type_client = type(client)
             if client is None:
                 self.__client = awn.config_get_default(awn.PANEL_ID_DEFAULT)
-            elif type_client is Applet:
+            elif type_client is AppletSimple or type_client is AppletMultiple:
                 self.__client = awn.config_get_default_for_applet(client)
 
                 def applet_deleted_cb(applet):
@@ -1220,7 +1335,7 @@ class Notify:
         notification = self.Notification(self.__parent, *args, **kwargs)
         notification.show()
 
-    def create_notification(self, *args, **kwargs):
+    def create(self, *args, **kwargs):
         """Return a notification that can be shown via show().
 
         @param subject: The subject of your message. If blank, "Message from
@@ -1310,56 +1425,87 @@ class Meta:
         return key in self.__info
 
 
-class Applet(awn.AppletSimple, object):
+def _getmodule(module):
+    """Return a getter that lazy-loads a module, represented by a
+    single instantiated class.
 
-    def __init__(self, uid, panel_id, meta={}, options=[]):
+    @param module: The class of the module to initialize and get
+    @type module: C{class}
+
+    """
+    instance = {}
+
+    def getter(self):
+        key = (self, module)
+        if key not in instance:
+            instance[key] = module(self)
+        return instance[key]
+    return property(getter)
+
+
+class Applet(object):
+
+    def __init__(self, meta, options):
         """Create a new instance of the Applet object.
 
-        @param uid: The unique identifier of the applet
-        @type uid: C{string}
-        @param orient: The orientation of the applet. 0 means that the AWN bar
-            is on the bottom of the screen.
-        @type orient: C{int}
-        @param height: The height of the applet.
-        @type height: C{int}
         @param meta: The meta information to be passed to the Meta constructor
         @type meta: C{dict}
 
         """
-        awn.AppletSimple.__init__(self, meta["short"], uid, panel_id)
-
         # Create all required child-objects, others will be lazy-loaded
         self.meta = Meta(self, meta, options)
-        self.icon = Icon(self)
-        self.tooltip = Tooltip(self)
-        self.dialog = Dialogs(self)
 
     def connect_size_changed(self, callback):
         self.connect("size-changed", lambda w, e: callback())
 
-    def __getmodule(module):
-        """Return a getter that lazy-loads a module, represented by a
-        single instantiated class.
+    settings = _getmodule(Settings)
+    timing = _getmodule(Timing)
+    keyring = _getmodule(Keyring)
+    notification = _getmodule(Notify)
 
-        @param module: The class of the module to initialize and get
-        @type module: C{class}
+
+class AppletSimple(awn.AppletSimple, Applet):
+
+    def __init__(self, uid, panel_id, meta={}, options=[]):
+        """Create a new instance of the AppletSimple object.
+
+        @param uid: The unique identifier of the applet
+        @type uid: C{string}
+        @param panel_id: Identifier of the panel in which the applet resides.
+        @type panel_id: C{int}
 
         """
-        instance = {}
+        awn.AppletSimple.__init__(self, meta["short"], uid, panel_id)
+        Applet.__init__(self, meta, options)
 
-        def getter(self):
-            key = (self, module)
-            if key not in instance:
-                instance[key] = module(self)
-            return instance[key]
-        return property(getter)
+        # Create all required child-objects, others will be lazy-loaded
+        self.icon = Icon(self)
+        self.tooltip = Tooltip(self)
+        self.dialog = Dialogs(self)
 
-    settings = __getmodule(Settings)
-    theme = __getmodule(Theme)
-    timing = __getmodule(Timing)
-    errors = __getmodule(Errors)
-    keyring = __getmodule(Keyring)
-    notify = __getmodule(Notify)
+        self.dialog.connect_signals(self)
+
+    theme = _getmodule(Theme)
+    errors = _getmodule(Errors)
+
+
+class AppletMultiple(awn.Applet, Applet):
+
+    def __init__(self, uid, panel_id, meta={}, options=[]):
+        """Create a new instance of the AppletMultiple object.
+
+        @param uid: The unique identifier of the applet
+        @type uid: C{string}
+        @param panel_id: Identifier of the panel in which the applet resides.
+        @type panel_id: C{int}
+
+        """
+        awn.Applet.__init__(self, meta["short"], uid, panel_id)
+        Applet.__init__(self, meta, options)
+
+        # Create all required child-objects, others will be lazy-loaded
+        self.icons = Icons(self)
+        self.dialog = Dialogs(self)
 
 
 def init_start(applet_class, meta={}, options=[]):
@@ -1385,15 +1531,22 @@ def init_start(applet_class, meta={}, options=[]):
     gobject.threads_init()
 
     awn.init(sys.argv[1:])
-    applet = Applet(awn.uid, awn.panel_id, meta, options)
+    if "multiple-icons" in options:
+        applet = AppletMultiple(awn.uid, awn.panel_id, meta, options)
+    else:
+        applet = AppletSimple(awn.uid, awn.panel_id, meta, options)
 
     try:
         applet_class(applet)
     except Exception, e:
-        applet.errors.set_error_icon_and_click_to_restart()
-        import traceback
-        traceback = traceback.format_exception(type(e), e, sys.exc_traceback)
-        applet.errors.general(e, traceback=traceback, callback=gtk.main_quit)
+        # TODO don't know what to do for multiple-icons applets
+        if "multiple-icons" not in options:
+            applet.errors.set_error_icon_and_click_to_restart()
+            import traceback
+            traceback = traceback.format_exception(type(e), e, sys.exc_traceback)
+            applet.errors.general(e, traceback=traceback, callback=gtk.main_quit)
+        else:
+            raise
 
     awn.embed_applet(applet)
     gtk.main()

@@ -34,6 +34,12 @@
 #include "misc.h"
 #include "cairo-menu-applet.h"
 
+/* This sets the maximum number of volumes to show inline in Places.
+   If there are more items, they are shown in a submenu.
+   Maybe we should also apply this to bookmarks.
+   TODO Read this number from config. */
+#define MAX_ITEMS_OR_SUBMENU 7
+
 GMenuTree *  main_menu_tree = NULL;
 GMenuTree *  settings_menu_tree = NULL;    
 
@@ -253,33 +259,45 @@ _get_places_menu (GtkWidget * menu)
                       G_CALLBACK (_get_places_menu), menu);
   g_signal_connect_swapped(trash_handler, "file-count-changed", G_CALLBACK(_get_places_menu), menu);
 
-    /*process mount etc*/
-  GList *drives = g_volume_monitor_get_connected_drives(vol_monitor);
+  /* Process mounts and volumes */
+  GList *volumes = g_volume_monitor_get_volumes (vol_monitor);
   GList *mounts = g_volume_monitor_get_mounts (vol_monitor);
   GList * iter;
+  GVolume * volume = NULL;
 
-/*  if (volumes)
-  {
-    g_message("Number of volumes: %d", g_list_length(volumes));
-    g_list_foreach(volumes, (GFunc)_fillin_connected, menu);
-  }*/
-/*
-     this iterating through mounts then drives may change.
-     May go to using mounts and volumes.
-     */
   for (iter = mounts; iter ; iter = g_list_next (iter))
   {
     GMount *mount = iter->data;
+
+    /* Volumes (mounted or not) are added later, don't show twice */
+    volume = g_mount_get_volume (mount);
+    if (volume)
+    {
+      g_object_unref (volume);
+      continue;
+    }
+    
+#if GLIB_CHECK_VERSION(2,20,0)
+    /* Shadowed mounts should not be displayed, see GIO reference manual */
+    if (g_mount_is_shadowed (mount))
+    {
+      continue;
+    }
+#endif
+
     gchar * name = g_mount_get_name (mount);
     GIcon * gicon = g_mount_get_icon (mount);
     GFile * file = g_mount_get_root (mount);
     gchar * uri = g_file_get_uri (file);
+
     item = cairo_menu_item_new_with_label (name);    
+#if GTK_CHECK_VERSION(2,14,0)
+    image = gtk_image_new_from_gicon (gicon, GTK_ICON_SIZE_MENU);
+#else
     image = get_image_from_gicon (gicon);
-    if (image)
-    {
-      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
-    }    
+#endif
+    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
+
     gtk_menu_shell_append (GTK_MENU_SHELL(menu),item);
 
     exec = g_strdup_printf("%s %s", XDG_OPEN, uri);
@@ -292,58 +310,59 @@ _get_places_menu (GtkWidget * menu)
     g_object_unref (gicon);
   }
 
-  if (drives)
+  g_list_foreach (mounts,(GFunc)g_object_unref,NULL);
+  g_list_free (mounts);
+ 
+  if (volumes)
   {
     item = gtk_separator_menu_item_new ();
     gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
   }
-    
-  for (iter = drives; iter ; iter = g_list_next (iter))
+
+  /* Get Volumes */
+
+  GtkWidget *volumes_menu;
+  
+  volumes_menu = ((g_list_length (volumes) <= MAX_ITEMS_OR_SUBMENU)) ?
+                 menu :
+                 cairo_menu_new();
+
+  for (iter = volumes; iter ; iter = g_list_next (iter))
   {
-    GDrive * drive = iter->data;
-    if (g_drive_has_volumes (drive))
-    {
-      GList * drive_volumes = g_drive_get_volumes (drive);
-      GList * vol_iter = NULL;
-      for (vol_iter =drive_volumes;vol_iter;vol_iter=g_list_next(vol_iter))
-      {
-        GVolume * volume = vol_iter->data;
-        GIcon * gicon = g_volume_get_icon (volume);
-        gchar * name = g_volume_get_name (volume);
-        
-        item = cairo_menu_item_new_with_label (name);
-        image = get_image_from_gicon (gicon);
-        if (image)
-        {
-          gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
-        }            
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
-        g_free (name);
-      }
-      g_list_foreach (drive_volumes,(GFunc)g_object_unref,NULL);
-      g_list_free (drive_volumes);
-    }
-    else
-    {
-      gboolean mounted = FALSE;
-      gchar * name = g_drive_get_name (drive);
-      GIcon * gicon = g_drive_get_icon (drive);
-      
-      item = cairo_menu_item_new_with_label (name);
-      image = get_image_from_gicon (gicon);
-      if (image)
-      {
-        gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
-      }          
-      gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
-      g_free (name);      
-    }
-  }
+    GIcon * gicon = g_volume_get_icon (iter->data);
+    gchar * name = g_volume_get_name (iter->data);
     
-  g_list_foreach (drives,(GFunc)g_object_unref,NULL);
-  g_list_free (drives);
-  g_list_foreach (mounts,(GFunc)g_object_unref,NULL);
-  g_list_free (mounts);
+    item = cairo_menu_item_new_with_label (name);
+#if GTK_CHECK_VERSION(2,14,0)
+    image = gtk_image_new_from_gicon (gicon, GTK_ICON_SIZE_MENU);
+#else
+    image = get_image_from_gicon (gicon);
+#endif
+    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
+
+    gtk_menu_shell_append(GTK_MENU_SHELL(volumes_menu),item);
+
+    /* the callback opens unmounted as well as mounted volumes */
+    g_signal_connect_data (G_OBJECT(item), "activate",
+                           G_CALLBACK(_mount), g_object_ref (iter->data),
+                           (GClosureNotify) g_object_unref, 0);
+
+    g_free (name);
+    g_object_unref (gicon);
+  }
+  
+  if (g_list_length (volumes) > MAX_ITEMS_OR_SUBMENU)
+  {
+    item = cairo_menu_item_new_with_label (_("Removable Media"));
+    image = get_gtk_image ("gnome-dev-removable");
+    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item),image);
+
+    gtk_menu_item_set_submenu (GTK_MENU_ITEM(item),volumes_menu);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
+  }
+
+  g_list_foreach (volumes,(GFunc)g_object_unref,NULL);
+  g_list_free (volumes);
 
   add_special_item (menu,_("Network"),"nautilus","network:/","network",NULL);
   add_special_item (menu,_("Connect to Server"),"nautilus-connect-server","","stock_connect",NULL);
@@ -351,7 +370,7 @@ _get_places_menu (GtkWidget * menu)
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
 
     
-  /* bookmarks    */
+  /* Bookmarks */
   GSList *bookmarks;
   GSList *node;
 
@@ -862,7 +881,7 @@ submenu_build (MenuInstance * instance)
   else if (g_strcmp0(instance->submenu_name,":::RECENT")==0)
   {
     g_assert (!instance->menu);    
-    menu = get_recent_menu (instance->recent);
+    menu = get_recent_menu (NULL);
   }
   else if (g_strcmp0(instance->submenu_name,":::SESSION")==0)
   {

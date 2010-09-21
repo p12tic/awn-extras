@@ -136,6 +136,7 @@ Description: A collection of applets for avant-window-navigator
   * battery: This applet displays your computers current power status.
   * cairo-clock: Displays an analog clock.
   * comics: View your favourite comics on your desktop.
+  * common-folder: Display common folders.
   * cpufreq: Monitors and controls the CPU frequency. 
   * DesktopManager: Manages the desktop Wallpaper.
   * feeds: A Python feed viewer.

@@ -43,6 +43,11 @@ usr/share/avant-window-navigator/applets/comics.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-comics.schema-ini
 usr/share/avant-window-navigator/applets/comics/comics.sh
 #
+# Common-folder
+#
+usr/share/avant-window-navigator/applets/common-folder/
+usr/share/avant-window-navigator/applets/common-folder.desktop
+#
 # CPU Freq
 #
 etc/gconf/schemas/awn-applet-cpufreq.schemas

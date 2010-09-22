@@ -46,7 +46,6 @@ default_theme = "gpm"
 ui_file = os.path.join(os.path.dirname(__file__), "battery.ui")
 
 charge_ranges = {"100": (100, 86), "080": (85, 66), "060": (65, 46), "040": (45, 26), "020": (25, 7), "000": (6, 0)}
-low_level_units = ["Percent", "Time Remaining"]
 
 warning_percentage = 5.0
 
@@ -117,6 +116,9 @@ class BatteryStatusApplet:
 
             if self.applet.settings["battery-udi"] not in batteries:
                 self.applet.settings["battery-udi"] = batteries.keys()[0]
+
+            if len(self.applet.settings["low-level-unit"]) == 0:
+                self.applet.settings["low-level-unit"] = _("Percent")
 
             battery_getter = lambda key_value: batteries[key_value]
             battery_setter = lambda widget_value: batteries.keys()[batteries.values().index(widget_value)]
@@ -204,11 +206,11 @@ class BatteryStatusApplet:
             return
 
         charge_percentage = self.backend.get_capacity_percentage()
-        power_type = "AC" if self.backend.is_on_ac_power() else "battery"
-        charge_message = "Computer running on %s power" % power_type
+        power_type = _("AC") if self.backend.is_on_ac_power() else _("battery")
+        charge_message = _("Computer running on %s power") % power_type
 
         if self.backend.is_charged():
-            charge_message += "\n" + "Battery charged"
+            charge_message += "\n" + _("Battery charged")
             icon = os.path.join(themes_dir, self.applet.settings["theme"], "battery-charged.svg")
         else:
             is_charging = self.backend.is_charging()
@@ -216,11 +218,11 @@ class BatteryStatusApplet:
             if is_charging:
                 actoggle = "charging"
                 time = self.backend.get_charge_time()
-                title_message_suffix = "until charged"
+                title_message_suffix = _("until charged")
             else:
                 actoggle = "discharging"
                 time = self.backend.get_remaining_time()
-                title_message_suffix = "remaining"
+                title_message_suffix = _("remaining")
 
             # May be None because charge rate is not always known (when switching between charging and discharging)
             if time is not None:
@@ -249,7 +251,7 @@ class BatteryStatusApplet:
 
         unit = self.applet.settings["low-level-unit"]
 
-        if unit == "Percent" and self.backend.get_capacity_percentage() <= self.applet.settings["level-warn-low"]:
+        if unit == _("Percent") and self.backend.get_capacity_percentage() <= self.applet.settings["level-warn-low"]:
             return True
 
         time = self.backend.get_remaining_time()
@@ -258,7 +260,7 @@ class BatteryStatusApplet:
             return None
 
         hours, minutes = time
-        return unit == "Time Remaining" and hours == 0 and minutes <= self.applet.settings["level-warn-low"]
+        return unit == _("Time Remaining") and hours == 0 and minutes <= self.applet.settings["level-warn-low"]
 
     def is_battery_high(self):
         if self.backend.is_discharging():
@@ -266,21 +268,27 @@ class BatteryStatusApplet:
 
         return self.backend.get_capacity_percentage() >= self.applet.settings["level-notify-high"]
 
-    def format_time(self, time, prefix="", suffix=""):
+    def format_time(self, time, suffix=""):
         hours, minutes = time
 
         message = []
         time = []
 
         if hours > 0:
-            message.append("%d hour" + ["", "s"][hours > 1])
+            if hours > 1:
+                message.append(_("%d hours"))
+            else:
+                message.append(_("%d hour"))
             time.append(hours)
         if minutes > 0:
-            message.append("%d minute" + ["", "s"][minutes > 1])
+            if minutes > 1:
+                message.append(_("%d minutes"))
+            else:
+                message.append(_("%d minute"))
             time.append(minutes)
 
         message = " ".join(message) % tuple(time)
-        return " ".join([prefix, message, suffix]).strip() if len(message) > 0 else ""
+        return " ".join([message, suffix]).strip() if len(message) > 0 else ""
 
 
 class AbstractBackend:

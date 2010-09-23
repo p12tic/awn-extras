@@ -291,7 +291,7 @@ class BatteryStatusApplet:
         return " ".join([message, suffix]).strip() if len(message) > 0 else ""
 
 
-class AbstractBackend:
+class AbstractBackend(object):
 
     """Abstract backend that provides general implementations of some common methods.
 

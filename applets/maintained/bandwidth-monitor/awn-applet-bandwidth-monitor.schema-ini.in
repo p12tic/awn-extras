@@ -1,44 +1,107 @@
+[DEFAULT]
+single_instance = false
+
 [DEFAULT/unit]
 type = integer
 default = 0
 _description=The base display unit for transfer speed (0: bits, 1: bytes)
+
 [DEFAULT/interface]
 type = string
 default = 
 _description=The interface currently selected
+
 [DEFAULT/draw_threshold]
 type = float
 default = 0.0
 _description=Minimum threshold to draw meter (dependent upon DEFAULT/unit)
+
 [DEFAULT/device_display_parameters]
 type = list-string
 default = ;
 _description=Display parameters for interfaces
+
 [DEFAULT/background]
 type = boolean
 default = true
 _description=Draw the applet background
+
 [DEFAULT/background_color]
 type = string
 default = #000000|0.5
 _description=Color to draw the background
+
 [DEFAULT/border]
 type = boolean
 default = false
 _description=Draw the applet border
+
 [DEFAULT/border_color]
 type = string
 default = #000000|1.0
 _description=Color to draw the border
+
 [DEFAULT/label_control]
 type = integer
 default = 2
 _description=Throughput label control - 0: no label, 1: Sum, 2: Upload/Download
+
+[DEFAULT/display_graph]
+type = boolean
+default = true
+_description=Enbables or disables drawing the applet graph - if disabled only the speed text will be displayed in the applet
+
 [DEFAULT/graph_zero]
 type = integer
 default = 0
 _description=If enabled this will draw a line at the bottom of the graph even if the value is 0. If unchecked, values below 1 are not drawn
+
 [DEFAULT/wireless_signal_graph_type]
 type = list-string
 default = ;
 _description=Type of graph to use for wireless devices - area: Area chart, area_bar: Area chart with colored bars, bar: Bar chart, fan: Waving chart with density, fan_bar: Waving Bar chart with density
+
+[DEFAULT/applet_font_size]
+type = integer
+default = 0
+_description=Desired applet font size
+
+[DEFAULT/applet_width]
+type = float
+default = 2.0
+_description=Sets the width of the applet icon
+
+[DEFAULT/applet_size_override]
+type = integer
+default = 0
+_description=Adds or removes 5px to the value of the AWN setting "Size of Icons"
+
+[DEFAULT/disable_reflection]
+type = integer
+default = 0
+_description=Enables/Disables dock reflection for this applet 0: Use awn setting, 1: Show reflection in horizontal docks only, 2: show reflection in vertical docks, 3: Disable reflection for all dock orientations
+
+[DEFAULT/applet_offset]
+type = integer
+default = 0
+_description=Sets the offset of the applet from the edge of the dock
+
+[DEFAULT/applet_traffic_scale]
+type = integer
+default = 0
+_description=Sets the default scale of the applet traffic graph - the scale is the amount of linear data to display at one time
+
+[DEFAULT/applet_signal_scale]
+type = integer
+default = 0
+_description=Sets the default scale of the applet wireless signal graph - the scale is the amount of linear data to display at one time
+
+[DEFAULT/dialog_traffic_scale]
+type = integer
+default = 0
+_description=Sets the default scale of the popup-dialog traffic graph - the scale is the amount of linear data to display at one time
+
+[DEFAULT/dialog_signal_scale]
+type = integer
+default = 0
+_description=Sets the default scale of the popup-dialog wireless signal graph - the scale is the amount of linear data to display at one time

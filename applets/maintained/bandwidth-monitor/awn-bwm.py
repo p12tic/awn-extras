@@ -136,6 +136,10 @@ class Netstat:
         self.ifaces['Multi Interface']['tx_bytes'] = 0
         multi_rx_history = 0.0
         multi_tx_history = 0.0
+        #TODO: Change this variable name - it is not an offset,
+        #   that is a poor name. this variable controls the size
+        #   of the list that contains the throughput data
+        offset = 800 #self.parent.meter_scale
         if netlist:
             for device in netlist:
                 device_lines = gtop.netload(device).dict()
@@ -210,7 +214,6 @@ class Netstat:
                 self.ifaces[iface]['rxtx_sum'] = rxtx_sum
                 self.ifaces[iface]['status'] = device_lines['if_flags']
                 self.ifaces[iface]['collection_time'] = time()
-                offset = self.parent.meter_scale
                 if iface in wireless_devices:
                     ''' this is a wireless card '''
                     self.ifaces[iface]['signal'] = \
@@ -263,10 +266,11 @@ class AppletBandwidthMonitor:
         self.max_tx_lbl_x = 0
         self.max_rx_lbl_x = 0
 
-        height = self.applet.get_size() * 1.5
+        height = self.applet.get_size()
+        
         if height != icon.get_height():
-            icon = icon.scale_simple(int(height), \
-                int(height / 1.5), gtk.gdk.INTERP_BILINEAR)
+            icon = icon.scale_simple(1, \
+                1, gtk.gdk.INTERP_BILINEAR)
             self.applet.set_icon_pixbuf(icon)
         self.interface_dialog = interfaces_dialog.InterfaceDeatil(self)
         defaults = {'unit': 8,
@@ -278,8 +282,17 @@ class AppletBandwidthMonitor:
             'border': False,
             'border_color': '#000000|1.0',
             'label_control': 2,
+            'display_graph': True,
             'graph_zero': 0,
-            'wireless_signal_graph_type': []}
+            'wireless_signal_graph_type': [],
+            'applet_font_size': 0,
+            'applet_width': 3.0,
+            'applet_size_override': 0,
+            'applet_offset': 0,
+            'applet_traffic_scale': 12,
+            'applet_signal_scale': 5,
+            'dialog_traffic_scale': 12,
+            'dialog_signal_scale': 5}
         for key, value in defaults.items():
             if not key in self.applet.settings:
                 self.applet.settings[key] = value
@@ -291,6 +304,12 @@ class AppletBandwidthMonitor:
         self.border = self.applet.settings['border']
         self.border_color = self.applet.settings['border_color']
         self.graph_zero = self.applet.settings['graph_zero']
+        self.display_graph = self.applet.settings['display_graph']
+        self.size_override = self.applet.settings['applet_size_override']
+        self.original_size = self.applet.props.size
+        self.original_applet_offset = self.applet.props.offset
+        self.applet.props.offset = self.original_applet_offset + \
+            self.applet.settings['applet_offset']
         if not self.unit:
             self.change_unit(defaults['unit'])
         if self.applet.settings['draw_threshold'] == 0.0:
@@ -301,24 +320,14 @@ class AppletBandwidthMonitor:
         self.prefs = bwmprefs.Preferences(self.applet, self)
         self.netstats = Netstat(self, self.unit)
         applet.tooltip.connect_becomes_visible(self.enter_notify)
-        self.upload_ot = awn.OverlayText()
-        self.download_ot = awn.OverlayText()
         self.sum_ot = awn.OverlayText()
-        self.upload_ot.props.gravity = gtk.gdk.GRAVITY_NORTH
-        self.download_ot.props.gravity = gtk.gdk.GRAVITY_SOUTH
-        self.sum_ot.props.gravity = gtk.gdk.GRAVITY_NORTH
-        applet.add_overlay(self.upload_ot)
-        applet.add_overlay(self.download_ot)
+        self.sum_ot.props.gravity = gtk.gdk.GRAVITY_CENTER
         applet.add_overlay(self.sum_ot)
-        self.default_font_size = self.upload_ot.props.font_sizing
-        self.upload_ot.props.y_override = 4
-        self.download_ot.props.y_override = 18
-        self.sum_ot.props.y_override = 11
-        self.upload_ot.props.apply_effects = True
-        self.download_ot.props.apply_effects = True
+        if self.applet.settings['applet_font_size']:
+            self.default_font_size = self.applet.settings['applet_font_size']
         self.sum_ot.props.apply_effects = True
-        self.upload_ot.props.text = _('Scanning')
-        self.download_ot.props.text = _('Devices')
+        self.sum_ot.props.text = _('Scanning')
+        self.sum_ot.props.text += "\n " + _('Devices')
         self.setup_context_menu()
         self.prefs.setup()
         self.interface_dialog.setup_interface_dialogs()
@@ -352,7 +361,6 @@ class AppletBandwidthMonitor:
                 scaleThresholdSBtn.set_value(
                     self.applet.settings['draw_threshold'] * 8)
         self.applet.settings['unit'] = self.unit
-        active = True if self.unit == 1 else False
 
     def generate_iface_submenu(self):
         if hasattr(self, 'iface_submenu'):
@@ -397,7 +405,7 @@ class AppletBandwidthMonitor:
 
         iface_submenu = self.generate_iface_submenu()
         self.iface_submenu = iface_submenu
-        map_item = gtk.MenuItem(_("Devices"))
+        map_item = gtk.MenuItem(_("Interfaces"))
         map_item.set_submenu(iface_submenu)
         menu.insert(map_item, menu_index + 1)
         menu.insert(gtk.SeparatorMenuItem(), menu_index + 2)
@@ -432,7 +440,12 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
     def draw_background(self, ct, x, y, w, h, radius):
         awn.cairo_rounded_rect(ct, x, y, w, h, radius, awn.ROUND_ALL)
 
-    def draw_wireless(self, ct, width, height, iface):
+    def draw_wireless(self, ct, width, height, iface, scale,
+          graph_source='applet'):
+        try:
+            force = ((width / (width/scale))) - scale
+        except:
+            force = 0
         graph_type = "bar"
         prefs = self.applet.settings['wireless_signal_graph_type']
         for wdev in prefs:
@@ -444,27 +457,31 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
         x_pos = 0
         _ss_hist = [1]
         _total_hist = [1]
+        scale += force
+        inverse_scale = int(scale) * -1
+        inverse_scale += -2
         if iface in self.netstats.ifaces \
         and 'ss_history' in self.netstats.ifaces[iface] \
         and len(self.netstats.ifaces[iface]['ss_history']):
-            _ss_hist = self.netstats.ifaces[iface]['ss_history']
+            _ss_hist = self.netstats.ifaces[iface]['ss_history'][inverse_scale : ]
             _total_hist.extend(_ss_hist)
             _total_hist.sort()
             max_ss = _total_hist[-1]
-            for value in self.netstats.ifaces[iface]['ss_history']:
+            ct.move_to(0, 0)
+            for value in self.netstats.ifaces[iface]['ss_history'][inverse_scale : ]:
                 if int(value) == 0:
                     value = 200
                 else:
                     value = abs(int(value)) * 80 / 100
                 x_pos_end = (x_pos - width) + 2 if self.border \
                 and x_pos > width else 0
-                if height > 150:
+                if graph_source != 'applet':
                     placement = value + 30
                     opacity = 0.10
                 else:
-                    placement = value - height / 3 - 10
-                    opacity = 0.50 if self.background else 0.18
-                    graph_type = 'area_bar'
+                    placement = value - height / 3 - 4
+                    opacity = 0.40 if self.background else 0.18
+                    #opacity = 0.10
                 if value <= 40:
                     ct.set_source_rgba(0, 1, 0, opacity)
                 elif value <= 60:
@@ -473,35 +490,31 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                     ct.set_source_rgba(1, 0.647058823529, 0, opacity)
                 else:
                     ct.set_source_rgba(1, 0, 0, opacity)
-                if graph_type == 'bar':
-                    ct.line_to((x_pos - 1) - x_pos_end, placement)
-                    ct.line_to((x_pos - 1) - x_pos_end, height)
-                else:
-                    ct.line_to(x_pos - x_pos_end, placement)
-                    ct.line_to(x_pos - x_pos_end, height)
 
+                ct.line_to(x_pos - x_pos_end, placement)
+                ct.line_to(x_pos - x_pos_end, height + 1)
                 if graph_type == 'area_bar':
                     # The bar chart is really an area graph, but with colored bars
-                    ct.line_to(x_pos - width / (self.meter_scale - 1), height)
-                    ct.move_to(x_pos, placement)
+                    ct.line_to((x_pos - width / scale), height)
+                    ct.move_to((x_pos - width / scale), placement)
                     ct.close_path()
                     ct.fill()
                     later = True
                 if graph_type == 'bar':
-                    ct.line_to((x_pos - width / (self.meter_scale - 1)) + 1, height)
+                    ct.line_to((x_pos - width / (scale - 1)) + 1, height)
                     ct.move_to(x_pos, placement)
                     ct.close_path()
                     ct.fill()
                     later = False
                     ct.move_to(x_pos + 1, placement)
-                    x_pos += (width / (self.meter_scale - 1))
+                    x_pos += (width / (scale - 1))
                 elif graph_type == 'fan':
                     # The fan chart is like a fan
                     ct.line_to(0, height)
                     ct.move_to(x_pos, placement)
                     ct.close_path()
                     ct.fill()
-                    x_pos += width / (self.meter_scale - 1)
+                    x_pos += width / (scale - 1)
                     ct.move_to(x_pos, placement)
                     later = False
                 elif graph_type == 'fan_bar':
@@ -517,14 +530,21 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                     later = True
                 if later:
                     ct.move_to(x_pos, placement)
-                    x_pos += width / (self.meter_scale - 1)
+                    x_pos += (width / scale)
             ct.close_path()
             ct.fill()
 
     def draw_meter(self, ct, width, height, iface, multi=False, line_width=2,
-        ratio=None, scale=1, border=None):
+            ratio=None, scale=4, border=None, graph_source='applet'):
+        try:
+            force = ((width / (width/scale))) - scale
+        except:
+            force = 0
+        scale += force
         border = self.border if not border else border
         ratio = self.ratio if not ratio else ratio
+        inverse_scale = int(scale) * -1
+        inverse_scale += -1
         ct.set_line_width(line_width)
         ''' Create temporary lists to store the values of the transmit
             and receive history, which will be then placed into the
@@ -536,20 +556,20 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
         if not multi:
             if iface in self.netstats.ifaces \
             and len(self.netstats.ifaces[iface]['rx_history']):
-                _rx_hist = self.netstats.ifaces[iface]['rx_history']
+                _rx_hist = self.netstats.ifaces[iface]['rx_history'][inverse_scale : ]
             if iface in self.netstats.ifaces \
             and len(self.netstats.ifaces[iface]['tx_history']):
-                _tx_hist = self.netstats.ifaces[iface]['tx_history']
+                _tx_hist = self.netstats.ifaces[iface]['tx_history'][inverse_scale : ]
             _total_hist.extend(_rx_hist)
             _total_hist.extend(_tx_hist)
         else:
             for device in self.netstats.ifaces:
                 if self.netstats.ifaces[device]['multi_include']:
                     _total_hist.extend(
-                        self.netstats.ifaces[device]['rx_history'])
+                        self.netstats.ifaces[device]['rx_history'][inverse_scale : ])
                 if self.netstats.ifaces[iface]['multi_include']:
                     _total_hist.extend(
-                        self.netstats.ifaces[device]['tx_history'])
+                        self.netstats.ifaces[device]['tx_history'][inverse_scale : ])
         _total_hist.sort()
         ''' ratio variable controls the minimum threshold for data -
             i.e. 32000 would not draw graphs for data transfers below
@@ -568,22 +588,26 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                 color.blue / 65535.0, 1.0)
         else:
             ct.set_source_rgba(0.1, 0.1, 0.1, 0.5)
-        # Set the initial position to 0
-        x_pos = 2 if border else 0
+        # Set the initial position
+        x_pos = 2 if border else 1
         # If a transmit history exists, draw it
         if iface in self.netstats.ifaces \
         and len(self.netstats.ifaces[iface]['tx_history']):
             _temp_hist = []
-            _temp_hist.extend(self.netstats.ifaces[iface]['tx_history'])
+            _temp_hist.extend(self.netstats.ifaces[iface]['tx_history'][inverse_scale : ])
             _temp_hist.sort()
             max_tx = _temp_hist[-1]
-            for value in self.netstats.ifaces[iface]['tx_history']:
+            for value in self.netstats.ifaces[iface]['tx_history'][inverse_scale : ]:
                 x_pos_end = (x_pos - width) + 2 if border \
                 and x_pos > width else 0
-                placement = self.chart_coords(value, ratio, height, border)
+                placement = self.chart_coords(value,
+                    ratio,
+                    height,
+                    border,
+                    graph_source)
                 ct.line_to(x_pos - x_pos_end, placement)
                 x_offset, y_offset = 0, 0
-                if width > 200:
+                if graph_source == 'dialog':
                     old_x, old_y = ct.get_current_point()
                     if value == max_tx and max_tx > 1 and not old_x == 0:
                         old_rgba = ct.get_source().get_rgba()
@@ -591,7 +615,11 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                         ct.stroke()
                         ct.set_line_width(1)
                         ct.set_source_rgba(1, 1, 1)
-                        max_placement = self.chart_coords(max_tx, ratio, height, border)
+                        max_placement = self.chart_coords(max_tx,
+                            ratio,
+                            height,
+                            border,
+                            graph_source)
                         self.max_tx_lbl_x = x_pos - x_pos_end - 60
                         if x_pos - x_pos_end - 60 < 1:
                             x_offset = 0 - (x_pos - x_pos_end - 60) + 5
@@ -607,9 +635,9 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                         ct.stroke()
                         ct.set_line_width(line_width)
                         ct.move_to(old_x, old_y)
-                    x_offset = 1
+                    x_offset = 0
                 ct.move_to(x_pos, placement)
-                x_pos += width / (self.meter_scale - x_offset)
+                x_pos += width / (scale - x_offset)
             ct.close_path()
             ct.stroke()
         # Change the color of the download line to configured/default
@@ -621,22 +649,28 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                 color.blue / 65535.0, 1.0)
         else:
             ct.set_source_rgba(0.1, 0.1, 0.1, 0.5)
-        # Reset the position to 0
-        x_pos = 2 if border else 0
+        # Reset the position
+        x_pos = 2 if border else 1
         # If a receive history exists, draw it
         if iface in self.netstats.ifaces \
         and len(self.netstats.ifaces[iface]['rx_history']):
             _temp_hist = []
-            _temp_hist.extend(self.netstats.ifaces[iface]['rx_history'])
+            _temp_hist.extend(self.netstats.ifaces[iface]['rx_history'][inverse_scale : ])
             _temp_hist.sort()
             max_rx = _temp_hist[-1]
-            for value in self.netstats.ifaces[iface]['rx_history']:
+            for value in self.netstats.ifaces[iface]['rx_history'][inverse_scale : ]:
                 x_pos_end = (x_pos - width) + 2 if border \
                 and x_pos > width else 0
-                placement = self.chart_coords(value, ratio, height, border)
+                placement = self.chart_coords(value,
+                    ratio,
+                    height,
+                    border,
+                    graph_source)
+                if placement < height - 2:
+                    placement -= 2
                 ct.line_to(x_pos - x_pos_end, placement)
                 x_offset, y_offset = 0, 0
-                if width > 200:
+                if graph_source == 'dialog':
                     old_x, old_y = ct.get_current_point()
                     if value == max_rx and max_rx > 1 and not old_x == 0:
                         old_rgba = ct.get_source().get_rgba()
@@ -644,62 +678,99 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                         ct.stroke()
                         ct.set_line_width(1)
                         ct.set_source_rgba(1, 1, 1)
-                        max_placement = self.chart_coords(max_rx, ratio, height, border)
-                        rx_lbl_x, rx_lbl_y = x_pos - x_pos_end - 60, max_placement - 22
+                        max_placement = self.chart_coords(max_rx,
+                            ratio,
+                            height,
+                            border,
+                            graph_source)
+                        rx_lbl_x = x_pos - x_pos_end - 60
+                        rx_lbl_y = max_placement - 22
                         if rx_lbl_x - self.max_tx_lbl_x < 15 and rx_lbl_x - \
                             self.max_tx_lbl_x > -15:
                             if rx_lbl_y - self.chart_coords(max_tx, ratio,
-                                height, border) < 20 and rx_lbl_y - \
-                                self.chart_coords(max_tx, ratio, height, border) > -20:
+                                  height, border, graph_source) < 20 \
+                                  and rx_lbl_y - self.chart_coords(max_tx,
+                                    ratio,
+                                    height,
+                                    border) > -20:
                                 y_offset = 25
                         if x_pos - x_pos_end - 60 < 1:
                             x_offset = 0 - (x_pos - x_pos_end - 60) + 5
-                        ct.move_to(x_pos - x_pos_end - 60 + x_offset, max_placement - 22 - y_offset)
-                        ct.show_text(self.readable_speed_ps(max_rx * self.unit, self.unit))
+                        ct.move_to(x_pos - x_pos_end - 60 + x_offset,
+                            max_placement - 22 - y_offset)
+                        ct.show_text(self.readable_speed_ps(max_rx * self.unit,
+                            self.unit))
                         ct.fill()
-                        ct.set_source_rgba(old_rgba[0], old_rgba[1], old_rgba[2])
-                        ct.move_to(x_pos - x_pos_end - 60 + x_offset, max_placement - 19 - y_offset)
-                        ct.line_to(x_pos - x_pos_end - 5 + x_offset, max_placement - 19 - y_offset)
-                        ct.move_to(x_pos - x_pos_end - 5 + x_offset, max_placement - 19 - y_offset)
+                        ct.set_source_rgba(old_rgba[0],
+                            old_rgba[1],
+                            old_rgba[2])
+                        ct.move_to(x_pos - x_pos_end - 60 + x_offset,
+                            max_placement - 19 - y_offset)
+                        ct.line_to(x_pos - x_pos_end - 5 + x_offset,
+                            max_placement - 19 - y_offset)
+                        ct.move_to(x_pos - x_pos_end - 5 + x_offset,
+                            max_placement - 19 - y_offset)
                         ct.line_to(x_pos - x_pos_end, max_placement)
                         ct.close_path()
                         ct.stroke()
                         ct.set_line_width(line_width)
                         ct.move_to(old_x, old_y)
-                    x_offset = 1
+                    x_offset = 0
                 ct.move_to(x_pos, placement)
-                x_pos += width / (self.meter_scale - x_offset)
+                x_pos += width / (scale - x_offset)
             ct.close_path()
             ct.stroke()
 
-    def chart_coords(self, value, ratio=1, height=None, border=None):
+    def chart_coords(self, value, ratio=1, height=None, border=None,
+            graph_source='applet'):
         height = self.applet.get_size() if not height else height
         ratio = 1 if ratio < 1 else int(ratio)
         pos = height / 58.0
-        bottom = 2.0 if border else 0
+        bottom = -1 if border else -1
+        bottom = 0 + self.border if not self.graph_zero else bottom
+        graph_zero = -0.5 if graph_source == 'dialog' else self.graph_zero
         return (height - pos \
-            * (value / ratio)) + self.graph_zero - bottom
+            * (value / ratio)) + graph_zero - bottom
 
     def repaint(self):
         orientation = self.applet.get_pos_type()
         applet_size = self.applet.get_size()
+        width = applet_size * self.applet.settings['applet_width']
+        if self.size_override:
+            self.applet.props.size = self.applet.props.size + self.size_override
+            self.size_override = None
         if orientation in (gtk.POS_LEFT, gtk.POS_RIGHT):
-            width = applet_size
-            self.meter_scale = 20
-            self.upload_ot.props.font_sizing = 9
-            self.download_ot.props.font_sizing = 9
-            self.sum_ot.props.font_sizing = 9
+            self.applet.get_effects().set_property('reflection_visible', False)
+            cs = cairo.ImageSurface(cairo.FORMAT_ARGB32, applet_size + 2,
+                int(width + 1))
         else:
-            width = applet_size * 1.5
-            self.upload_ot.props.font_sizing = self.default_font_size
-            self.download_ot.props.font_sizing = self.default_font_size
+            cs = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(width) + 1,
+                applet_size + 1)            
+
+        if self.applet.settings['applet_font_size']:
+            self.default_font_size = self.applet.settings['applet_font_size']
+        else:
+            self.default_font_size = self.sum_ot.props.font_sizing
             self.sum_ot.props.font_sizing = self.default_font_size
-        cs = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(width),
-            applet_size)
+        self.sum_ot.props.font_sizing = self.default_font_size
         ct = cairo.Context(cs)
+        if orientation in (gtk.POS_LEFT, gtk.POS_RIGHT):
+            if orientation == gtk.POS_RIGHT:
+                rotate_matrix = cairo.Matrix(1, 0, 0, 1, 1, width + 1.5)
+                cairo.Matrix.rotate(rotate_matrix, 4.71)
+            else:
+                rotate_matrix = cairo.Matrix(1, 0, 0, 1, applet_size + 1.5, 0)
+                cairo.Matrix.rotate(rotate_matrix, -4.71)
+            ct.transform(rotate_matrix)
+        if self.applet.settings['applet_traffic_scale']:
+            scale = int(self.applet.settings['applet_traffic_scale'] \
+              * self.applet.settings['applet_width'])
+        else:
+            scale = int(12 * self.applet.settings['applet_width'])
+        inverse_scale = scale * -1
         ct.set_source_surface(cs)
         ct.set_line_width(2)
-        if self.background:
+        if self.background and self.display_graph:
             bgColor, alpha = \
                 self.applet.settings['background_color'].split('|')
             bgColor = gtk.gdk.color_parse(bgColor)
@@ -707,61 +778,66 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                 bgColor.green / 65535.0,
                 bgColor.blue / 65535.0,
                 float(alpha))
-            self.draw_background(ct, 0, 0, width, applet_size, 4)
+            self.draw_background(ct, 0, 0, width + 1, applet_size + 1, 4)
             ct.fill()
-        if self.iface == 'Multi Interface':
+        if self.iface == 'Multi Interface' and self.display_graph:
             tmp_history = [1]
             for iface in self.netstats.ifaces:
                 if self.netstats.ifaces[iface]['multi_include']:
                     tmp_history.extend(
-                        self.netstats.ifaces[iface]['rx_history'])
+                        self.netstats.ifaces[iface]['rx_history'][inverse_scale : ])
                     tmp_history.extend(
-                        self.netstats.ifaces[iface]['tx_history'])
+                        self.netstats.ifaces[iface]['tx_history'][inverse_scale : ])
             tmp_history.sort()
             max_val = tmp_history[-1]
             self.ratio = max_val / 28 if max_val > self.ratio else 1
             for iface in self.netstats.ifaces:
                 if self.netstats.ifaces[iface]['multi_include']:
                     self.draw_meter(ct, width, applet_size,
-                        iface, True)
+                        iface, True, scale=scale)
         else:
-            if self.iface and self.iface in self.netstats.ifaces:
+            if self.iface and self.iface in self.netstats.ifaces and self.display_graph:
                 if 'signal' in self.netstats.ifaces[self.iface]:
-                    if self.background:
-                        self.draw_wireless(ct, width, applet_size, self.iface)
-                self.draw_meter(ct, width, applet_size, self.iface)
+                    if self.applet.settings['applet_signal_scale']:
+                        wscale = int(self.applet.settings['applet_signal_scale'] * self.applet.settings['applet_width'])
+                    else:
+                        wscale = int(5 * self.applet.settings['applet_width'])
+                    self.draw_wireless(ct, 
+                        width,
+                        applet_size,
+                        self.iface,
+                        scale=wscale,
+                        graph_source='applet')
+                self.draw_meter(ct,
+                    width,
+                    applet_size,
+                    self.iface,
+                    scale=scale,
+                    graph_source='applet')
         if self.iface in self.netstats.ifaces:
             if self.label_control:
                 if self.label_control == 2:
-                    self.sum_ot.props.text = ''
-                    self.download_ot.props.text = \
+                    self.sum_ot.props.text = \
+                        self.readable_speed_ps(
+                            self.netstats.ifaces[self.iface]['tx_bytes'],
+                            self.unit) + '\n' + \
                         self.readable_speed_ps(
                             self.netstats.ifaces[self.iface]['rx_bytes'],
                             self.unit)
-                    self.upload_ot.props.text = \
-                        self.readable_speed_ps(
-                            self.netstats.ifaces[self.iface]['tx_bytes'],
-                            self.unit)
                 else:
-                    self.upload_ot.props.text = ''
-                    self.download_ot.props.text = ''
                     self.sum_ot.props.text = \
                         self.readable_speed_ps(
                             self.netstats.ifaces[self.iface]['rx_bytes'] \
                             + self.netstats.ifaces[self.iface]['tx_bytes'],
                             self.unit)
             else:
-                    self.upload_ot.props.text = ''
-                    self.download_ot.props.text = ''
                     self.sum_ot.props.text = ''
             self.title_text = self.readable_speed_ps(
                 self.netstats.ifaces[self.iface]['tx_bytes'], self.unit)
         else:
-            self.upload_ot.props.text = _('No')
-            self.download_ot.props.text = _('Device')
-            self.sum_ot.props.text = ''
+            self.sum_ot.props.text = _('No Device')
             self.title_text = _('Please select a valid device')
-        if self.border:
+        if self.border and self.display_graph:
             line_width = 2
             ct.set_line_width(line_width)
             borderColor, alpha = \
@@ -774,18 +850,21 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
             self.draw_background(ct,
                 line_width / 2,
                 line_width / 2,
-                width - line_width / 2,
-               applet_size - line_width / 2, 4)
+                width - (line_width / 2),
+               applet_size - (line_width / 2) + 0.5, 4)
             ct.stroke()
         self.applet.set_icon_context(ct)
         if self.applet.dialog.is_visible('main'):
             self.interface_dialog.do_current()
-        if self.applet.dialog.is_visible('main') or hasattr(self.applet.dialog.menu.window, 'is_visible') and self.applet.dialog.menu.window.is_visible():
+        if self.applet.dialog.is_visible('main') \
+          or hasattr(self.applet.dialog.menu.window, 'is_visible') \
+          and self.applet.dialog.menu.window.is_visible():
             for iface in self.netstats.ifaces:
                 if not 'in_list' in self.netstats.ifaces[iface] \
-                or self.netstats.regenerate == True:
+                  or self.netstats.regenerate == True:
                     self.netstats.regenerate = False
-                    if hasattr(self.applet.dialog.menu.window, 'is_visible') and self.applet.dialog.menu.window.is_visible():
+                    if hasattr(self.applet.dialog.menu.window, 'is_visible') \
+                      and self.applet.dialog.menu.window.is_visible():
                         self.generate_iface_submenu()
                     self.interface_dialog.interfaceListArea.rebuild()
                     self.interface_dialog.interfaceListArea.refresh()

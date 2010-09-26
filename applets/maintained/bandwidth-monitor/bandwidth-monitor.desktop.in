@@ -8,4 +8,5 @@ _Comment=A Network Bandwidth monitor for AWN
 X-AWN-AppletExec=bandwidth-monitor/awn-bwm.py
 Exec=awn-applet -p %k
 Icon=bandwidth-monitor/images/icon
-X-AWN-AppletCategory=Utility
+X-AWN-AppletCategory=System,Network,Monitor
+

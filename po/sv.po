@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-09 21:43+0200\n"
-"PO-Revision-Date: 2010-09-12 16:36+0000\n"
+"POT-Creation-Date: 2010-09-25 11:18+0200\n"
+"PO-Revision-Date: 2010-09-25 18:14+0000\n"
 "Last-Translator: David Bengtsson <Unknown>\n"
 "Language-Team: Launchpad Swedish Translators <lp-l10n-"
 "sv@lists.launchpad.net>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-09-13 04:57+0000\n"
+"X-Launchpad-Export-Date: 2010-09-26 04:39+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Language: Swedish\n"
 
@@ -31,7 +31,7 @@ msgstr "Visa framtidsmeddelanden"
 
 #: ../applets/maintained/animal-farm/animal-farm.py:31
 msgid "Applet that displays fortune messages"
-msgstr "Panelprogram som visar framtidsmeddelanden"
+msgstr "Miniprogram som visar framtidsmeddelanden"
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:1
 msgid "Global hotkey used to activate the terminal."
@@ -39,15 +39,15 @@ msgstr "Global snabbtangent för att aktivera terminalen."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:2
 msgid "Set whether the applet should hide itself when it loses focus."
-msgstr "Ställ in huruvida panelprogrammet ska döljas när det förlorar fokus."
+msgstr "Ställ in huruvida miniprogrammet ska döljas när det förlorar fokus."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:3
 msgid "The applet's background image."
-msgstr "Panelprogrammets bakgrundsbild."
+msgstr "Miniprogrammets bakgrundsbild."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:4
 msgid "The applet's opacity level."
-msgstr "Panelprogrammets opacitetsnivå."
+msgstr "Miniprogrammets opacitetsnivå."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:5
 msgid "The default external terminal application."
@@ -114,7 +114,7 @@ msgstr "En enkel popup-terminal"
 
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:2
 msgid "Terminal Applet"
-msgstr "Terminalpanelprogram"
+msgstr "Terminal"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:1
 msgid "Color to draw the background"
@@ -130,11 +130,11 @@ msgstr "Visa parametrar för gränssnitt."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:4
 msgid "Draw the applet background"
-msgstr "Visa panelprogrammets bakgrund."
+msgstr "Visa miniprogrammets bakgrund."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:5
 msgid "Draw the applet border"
-msgstr "Visa panelprogrammets ram."
+msgstr "Visa miniprogrammets ram."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:6
 msgid ""
@@ -313,7 +313,7 @@ msgid ""
 "If this is checked the applet background will use the selected color. If "
 "unchecked, background will be transparent"
 msgstr ""
-"Om aktiverat, kommer panelprogrammets bakgrund att använda den valda färgen. "
+"Om aktiverat, kommer miniprogrammets bakgrund att använda den valda färgen. "
 "Om inaktiverat, kommer bakgrunden att vara genomskinlig."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:17
@@ -321,7 +321,7 @@ msgid ""
 "If this is checked the applet border will use the selected color. If "
 "unchecked, border will be transparent"
 msgstr ""
-"Om aktiverat, kommer panelprogrammets ram att använda den valda färgen. Om "
+"Om aktiverat, kommer miniprogrammets ram att använda den valda färgen. Om "
 "inaktiverat, kommer ramen att vara genomskinlig."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:18
@@ -464,11 +464,67 @@ msgstr "Batteristatus"
 
 #: ../applets/maintained/battery/battery.py:38
 msgid "An applet which displays battery information"
-msgstr "Ett panelprogram som visar batteriinformation"
+msgstr "Ett miniprogram som visar batteri-information"
 
-#: ../applets/maintained/battery/battery.py:99
+#: ../applets/maintained/battery/battery.py:98
 msgid "No batteries"
 msgstr "Inga batterier"
+
+#: ../applets/maintained/battery/battery.py:121
+#: ../applets/maintained/battery/battery.py:254
+#: ../applets/maintained/battery/battery.ui.h:6
+msgid "Percent"
+msgstr "Procent"
+
+#: ../applets/maintained/battery/battery.py:209
+msgid "AC"
+msgstr ""
+
+#: ../applets/maintained/battery/battery.py:209
+msgid "battery"
+msgstr ""
+
+#: ../applets/maintained/battery/battery.py:210
+#, python-format
+msgid "Computer running on %s power"
+msgstr ""
+
+#: ../applets/maintained/battery/battery.py:213
+msgid "Battery charged"
+msgstr ""
+
+#: ../applets/maintained/battery/battery.py:221
+msgid "until charged"
+msgstr ""
+
+#: ../applets/maintained/battery/battery.py:225
+msgid "remaining"
+msgstr ""
+
+#: ../applets/maintained/battery/battery.py:263
+#: ../applets/maintained/battery/battery.ui.h:7
+msgid "Time Remaining"
+msgstr "Återstående tid"
+
+#: ../applets/maintained/battery/battery.py:279
+#, python-format
+msgid "%d hours"
+msgstr ""
+
+#: ../applets/maintained/battery/battery.py:281
+#, python-format
+msgid "%d hour"
+msgstr ""
+
+#: ../applets/maintained/battery/battery.py:285
+#, python-format
+msgid "%d minutes"
+msgstr ""
+
+#: ../applets/maintained/battery/battery.py:287
+#, python-format
+msgid "%d minute"
+msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:2
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:5
@@ -491,14 +547,6 @@ msgstr ""
 msgid "If enabled, shows a notification when the charge levels drops too low"
 msgstr ""
 "Om aktiverat, visas en notifiering när laddningsnivån sjunker för lågt."
-
-#: ../applets/maintained/battery/battery.ui.h:6
-msgid "Percent"
-msgstr "Procent"
-
-#: ../applets/maintained/battery/battery.ui.h:7
-msgid "Time Remaining"
-msgstr "Återstående tid"
 
 #: ../applets/maintained/battery/battery.ui.h:8
 msgid "_Battery:"
@@ -582,7 +630,7 @@ msgid ""
 "Applet that displays an analog clock and supports additional clocks for "
 "different locations"
 msgstr ""
-"Panelprogram som visar en analog klocka som stöder ytterligare klockor för "
+"Miniprogram som visar en analog klocka som stöder ytterligare klockor för "
 "olika platser"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:1
@@ -708,23 +756,12 @@ msgstr "Platser"
 msgid "Edit"
 msgstr "Redigera"
 
-#. FIXME priv->display_name should be _("Places")
-#. awn_icon_set_tooltip_text (AWN_ICON(object),priv->display_name);
-#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:197
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1003
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1017
-#: ../applets/maintained/file-browser-launcher/prefs.py:249
-#: ../applets/maintained/places/places.desktop.in.in.h:2
-#: ../applets/maintained/yama/yama.py:261
-msgid "Places"
-msgstr "Platser"
-
-#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:351
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:305
 msgid "Remove Icon"
 msgstr "Ta bort ikon"
 
 #: ../applets/maintained/cairo-menu/cairo-main-icon.c:161
-#: ../applets/unmaintained/main-menu/applet.c:453
+#: ../applets/unmaintained/main-menu/applet.c:452
 msgid "Main Menu"
 msgstr "Huvudmeny"
 
@@ -737,107 +774,123 @@ msgid "Cairo Main Menu"
 msgstr "Cairo-huvudmeny"
 
 #. hope that gnome-session-save exists; needed for GNOME 2.22, at least.
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:107
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:111
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:116
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:125
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:129
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:134
 msgid "Logout"
 msgstr "Logga ut"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:121
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:123
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:128
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:139
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:141
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:146
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:1
 #: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:46
 #: ../applets/maintained/quit/quit.py:57
 #: ../applets/maintained/quit/quit.py:265
-#: ../applets/maintained/yama/yama.py:150
+#: ../applets/maintained/yama/yama.py:153
 msgid "Lock Screen"
 msgstr "Lås skärmen"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:132
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:134
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:145
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:150
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:152
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:163
 msgid "Suspend"
 msgstr "Vänteläge"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:137
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:139
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:150
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:155
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:157
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:168
 msgid "Hibernate"
 msgstr "Viloläge"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:158
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:176
 msgid "Shutdown"
 msgstr "Stäng av"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:195
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:213
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:381
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:610
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:585
 #: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Computer"
 msgstr "Dator"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:196
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:214
 msgid "Home"
 msgstr "Hemmapp"
 
-#. Check if this is the Desktop directory
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:197
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:568
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:215
 #: ../applets/maintained/places/applet.c:344
-#: ../applets/maintained/yama/yama.py:270
+#: ../applets/maintained/yama/yama.py:255
 msgid "Desktop"
 msgstr "Skrivbord"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:203
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:205
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:635
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:221
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:223
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:610
 #: ../applets/maintained/file-browser-launcher/prefs.py:236
 msgid "Trash"
 msgstr "Papperskorg"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:207
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:225
 msgid "File System"
 msgstr "Filsystem"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:336
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:613
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:356
+msgid "Removable Media"
+msgstr ""
+
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:367
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
 msgid "Network"
 msgstr "Nätverk"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:337
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:368
 msgid "Connect to Server"
 msgstr "Anslut till server"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1040
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1055
-#: ../applets/maintained/yama/yama.py:337
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1034
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1048
+#: ../applets/maintained/file-browser-launcher/prefs.py:249
+#: ../applets/maintained/places/places.desktop.in.in.h:2
+#: ../applets/maintained/yama/yama.py:246
+msgid "Places"
+msgstr "Platser"
+
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1071
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1086
+#: ../applets/maintained/yama/yama.py:322
 msgid "Recent Documents"
 msgstr "Senaste dokument"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1086
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1097
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1117
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1128
 msgid "Session"
 msgstr "Session"
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1113
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1144
 msgid "Search\\u2026"
 msgstr "Sök\\u2026"
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1130
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1161
 msgid "Launch\\u2026"
 msgstr "Starta\\u2026"
 
-#: ../applets/maintained/cairo-menu/misc.c:310
-#: ../applets/maintained/yama/yama.py:590
+#: ../applets/maintained/cairo-menu/misc.c:161
+#: ../applets/maintained/yama/yama.py:584
+#, c-format, python-format
+msgid "Unable to mount %s"
+msgstr ""
+
+#: ../applets/maintained/cairo-menu/misc.c:407
+#: ../applets/maintained/yama/yama.py:563
 msgid "Clear the Recent Documents list?"
 msgstr "Töm listan över senaste dokument?"
 
 #. Translators: This is taken from gnome-panel, when deleting the Recent Documents List.
 #. * Please use the same translation.
-#: ../applets/maintained/cairo-menu/misc.c:314
+#: ../applets/maintained/cairo-menu/misc.c:411
 msgid ""
 "If you clear the Recent Documents list, you clear the following:\n"
 "• All items from the Places → Recent Documents menu item.\n"
@@ -847,10 +900,10 @@ msgstr ""
 "• Alla objekt från menyobjektet Platser → Senaste dokument.\n"
 "• Alla objekt från listan över senaste dokument i alla program."
 
-#: ../applets/maintained/cairo-menu/misc.c:326
-#: ../applets/maintained/cairo-menu/misc.c:420
-#: ../applets/maintained/yama/yama.py:351
-#: ../applets/maintained/yama/yama.py:595
+#: ../applets/maintained/cairo-menu/misc.c:423
+#: ../applets/maintained/cairo-menu/misc.c:532
+#: ../applets/maintained/yama/yama.py:336
+#: ../applets/maintained/yama/yama.py:568
 msgid "Clear Recent Documents"
 msgstr "Töm senaste dokument"
 
@@ -860,7 +913,7 @@ msgstr "X"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:1
 msgid "Clock/Calendar Applet"
-msgstr "Klock/kalender-panelprogram"
+msgstr "Klocka/kalender"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:2
 msgid "Watch appointments on your dock"
@@ -994,7 +1047,7 @@ msgstr "Webbadress för kalender"
 
 #. default title/tooltip to show on startup.
 #: ../applets/maintained/calendar/clockcal.py:51
-#: ../applets/maintained/calendar/clockcal.py:490
+#: ../applets/maintained/calendar/clockcal.py:494
 #: ../applets/maintained/digital-clock/digital-clock.vala:119
 msgid "Calendar"
 msgstr "Kalender"
@@ -1009,30 +1062,39 @@ msgid ""
 "you choose to clear your password, you will be prompted again for your "
 "calendar login credentials."
 msgstr ""
-"Vill du ta bort dina kalenderlösenord ifrån kalenderpanelprogrammet? Om du "
-"väljer att rensa dina lösenord, kommer du att bli tillfrågad igen efter dina "
-"inloggningsuppgifter."
+"Vill du ta bort dina kalenderlösenord ifrån kalenderprogrammet? Om du väljer "
+"att rensa dina lösenord, kommer du att bli tillfrågad efter dina "
+"inloggningsuppgifter igen."
 
 #: ../applets/maintained/calendar/clockcal.py:246
 msgid "Avant Calendar Applet"
-msgstr "Kalenderpanelprogram för Awn"
+msgstr "Awn-kalender"
 
 #: ../applets/maintained/calendar/clockcal.py:248
 msgid "A Calendar Applet for the Avant Window Navigator. Images by Deleket."
 msgstr ""
-"Ett kalenderpanelprogram för Avant Window Navigator. Bilder av Deleket."
+"Ett miniprogram med kalender för Avant Window Navigator. Bilder av Deleket"
 
-#: ../applets/maintained/calendar/clockcal.py:496
+#. Translators: This is a date/time format string. You can check the
+#. output in terminal with 'date +"%x %X"'. In most cases you don't have
+#. to change it. See 'date --help' for other formats, that might be more
+#. common in your locale.
+#: ../applets/maintained/calendar/clockcal.py:293
+#, no-python-format
+msgid "%x %X"
+msgstr ""
+
+#: ../applets/maintained/calendar/clockcal.py:500
 msgid "Open in "
 msgstr "Öppna i "
 
-#: ../applets/maintained/calendar/clockcal.py:500
+#: ../applets/maintained/calendar/clockcal.py:504
 #: ../applets/maintained/weather/forecast.py:171
 msgid "Today"
 msgstr "Idag"
 
 #. print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
-#: ../applets/maintained/calendar/clockcal.py:548
+#: ../applets/maintained/calendar/clockcal.py:552
 msgid "Unable to read calendar data from external source."
 msgstr "Det gick inte att läsa kalenderdata från extern källa."
 
@@ -1214,8 +1276,7 @@ msgstr "Index för processor."
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:1
 #: ../applets/maintained/cpufreq/cpufreq.py:40
 msgid "An applet to monitor and control the CPU frequency"
-msgstr ""
-"Ett panelprogram för att övervaka och kontrollera processorfrekvensen"
+msgstr "Ett miniprogram för att övervaka och kontrollera processorfrekvensen"
 
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:2
 #: ../applets/maintained/cpufreq/cpufreq.py:39
@@ -1291,7 +1352,7 @@ msgstr "Användarvalda varianter."
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:1
 msgid " Dialect Applet"
-msgstr " Dialektpanelprogram"
+msgstr " Dialekt"
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:2
 msgid "Change your keyboard input layout from Awn."
@@ -1320,24 +1381,24 @@ msgid ""
 "the 2-clause BSD license. See the About dialog for licensing details.\n"
 msgstr ""
 "\n"
-"DIALEKTPANELPROGRAM v 09.12.09\n"
+"MINIPROGRAMMET DIALEKT v 09.12.09\n"
 "\n"
 "(C) 2009, Lachlan Turner (Denham 2010)\n"
 "\n"
-"Detta panelprogram tillåter dig att ändra inmatningsspråk för ditt "
-"tangentbord genom endast ett klick med musen.\n"
+"Detta miniprogram tillåter dig att ändra språk för din tangentbordsinmatning "
+"genom endast ett klick med musen.\n"
 "Du kan välja vilket tillgängligt inmatningsspråk som helst som finns på ditt "
 "system, eller från en lista över de du mest använder.\n"
 "\n"
 "Se flikarna för musåtgärder och layoutlistor för konfigureringsalternativ.\n"
 "\n"
-"Panelprogrammet beror på Pythonmodulen xklavier (tillgänglig från "
+"Miniprogrammet beror på Python-modulen xklavier (tillgänglig från "
 "http://download.sugarlabs.org/sources/external/python-xklavier/python-"
 "xklavier-0.1.tar.gz).\n"
 "\n"
-"Detta panelprogram är licensierat under GPL2. Flaggikonerna som distribueras "
-"med detta panelprogram kommer från panelprogrammet xfce4-xkb-plugin-0.5.3.3, "
-"licenserat under BSD-licensens andra klausul. Se om-dialogrutan för "
+"Detta miniprogram är licensierat under GPL2. Flaggikonerna som distribueras "
+"med miniprogrammet kommer från panelprogrammet xfce4-xkb-plugin-0.5.3.3, "
+"licenserat under BSD-licensens andra klausul. Se Om-dialogrutan för "
 "licensdetaljer.\n"
 
 #: ../applets/maintained/dialect/dialect.ui.h:15
@@ -1400,14 +1461,14 @@ msgid ""
 "\tRanging from 0.0 (flag is not visible) to 0.9 (flag is almost opaque).\n"
 msgstr ""
 "\n"
-"Överlappa layoutflagga ovanpå panelprogrammets ikon:\n"
+"Överlappa layoutflagga ovanpå miniprogrammets ikon:\n"
 "\n"
-"\tOm valt, kommer flaggan för vald layout att överlappa panelprogrammets "
+"\tOm valt, kommer flaggan för vald layout att överlappa miniprogrammets "
 "ikon.\n"
 "\n"
 "Flaggskala:\n"
 "\n"
-"\tStorleken på flaggan i förhållande till panelprogrammets ikon.\n"
+"\tStorleken på flaggan i förhållande till miniprogrammets ikon.\n"
 "\tMöjliga värdens omfång är 0.1 till 0.9.\n"
 "\n"
 "Flaggopacitet:\n"
@@ -1458,7 +1519,7 @@ msgstr "(C) 2009, Lachlan Turner (Denham 2010)."
 
 #: ../applets/maintained/dialect/dialect.ui.h:66
 msgid "About Dialect Applet"
-msgstr "Om Dialektpanelprogram"
+msgstr "Om Dialekt"
 
 #: ../applets/maintained/dialect/dialect.ui.h:67
 msgid "Allow scroll wheel to change layout"
@@ -1470,11 +1531,11 @@ msgstr "Ändra din tangentbordslayout från Awn."
 
 #: ../applets/maintained/dialect/dialect.ui.h:69
 msgid "Dialect Applet Help"
-msgstr "Hjälp med Dialektpanelprogram"
+msgstr "Hjälp för Dialekt"
 
 #: ../applets/maintained/dialect/dialect.ui.h:70
 msgid "Dialect Applet Preferences"
-msgstr "Inställningar för Dialektpanelprogram"
+msgstr "Inställningar för Dialekt"
 
 #: ../applets/maintained/dialect/dialect.ui.h:71
 msgid "Flag Opacity"
@@ -1520,7 +1581,7 @@ msgstr "Nästa layout"
 
 #: ../applets/maintained/dialect/dialect.ui.h:83
 msgid "Overlay layout flag on applet icon"
-msgstr "Överlappa layoutflagga ovanpå panelprogrammets ikon"
+msgstr "Överlappa layoutflagga ovanpå miniprogrammets ikon"
 
 #: ../applets/maintained/dialect/dialect.ui.h:84
 msgid "Previous Layout"
@@ -2293,7 +2354,7 @@ msgstr "Namnlös"
 #: ../applets/maintained/feeds/feeds.py:493
 #: ../applets/maintained/feeds/feeds.py:1109
 msgid "Feeds Applet"
-msgstr "Flödespanelprogram"
+msgstr "Flöden"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
 #: ../applets/maintained/feeds/feeds.py:1114
@@ -2329,8 +2390,8 @@ msgstr ""
 #, python-format
 msgid "%s New Item - Feeds Applet"
 msgid_plural "%s New Items - Feeds Applet"
-msgstr[0] "%s nytt objekt - Flödespanelprogram"
-msgstr[1] "%s nya objekt - Flödespanelprogram"
+msgstr[0] "%s nytt objekt - Miniprogrammet Flöden"
+msgstr[1] "%s nya objekt - Miniprogrammet Flöden"
 
 #. +Add Feed button
 #: ../applets/maintained/feeds/feeds.py:532
@@ -2378,7 +2439,7 @@ msgstr[1] "Vill du lägga till %d flöden?"
 
 #: ../applets/maintained/feeds/prefs.py:59
 msgid "Feeds Applet Preferences"
-msgstr "Inställningar för Flödespanelprogram"
+msgstr "Inställningar för Flöden"
 
 #: ../applets/maintained/feeds/prefs.py:69
 msgid "Feeds"
@@ -2453,7 +2514,7 @@ msgid "Source:"
 msgstr "Källa:"
 
 #: ../applets/maintained/feeds/prefs.py:374
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:616
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:151
 msgid "Search"
 msgstr "Sök"
@@ -2487,19 +2548,19 @@ msgstr "Webbadress:"
 
 #. Username: label and entry
 #: ../applets/maintained/feeds/prefs.py:493
-#: ../applets/maintained/mail/mail.py:381
-#: ../applets/maintained/mail/mail.py:629
-#: ../applets/maintained/mail/mail.py:759
-#: ../applets/maintained/mail/mail.py:852
+#: ../applets/maintained/mail/mail.py:384
+#: ../applets/maintained/mail/mail.py:643
+#: ../applets/maintained/mail/mail.py:796
+#: ../applets/maintained/mail/mail.py:890
 msgid "Username:"
 msgstr "Användarnamn:"
 
 #. Password: label and entry
 #: ../applets/maintained/feeds/prefs.py:507
-#: ../applets/maintained/mail/mail.py:385
-#: ../applets/maintained/mail/mail.py:632
-#: ../applets/maintained/mail/mail.py:762
-#: ../applets/maintained/mail/mail.py:855
+#: ../applets/maintained/mail/mail.py:388
+#: ../applets/maintained/mail/mail.py:646
+#: ../applets/maintained/mail/mail.py:799
+#: ../applets/maintained/mail/mail.py:893
 msgid "Password:"
 msgstr "Lösenord:"
 
@@ -2610,7 +2671,7 @@ msgid "A launcher for your file manager"
 msgstr "En uppstartare för din filhanterare"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:385
-#: ../applets/maintained/yama/yama.py:268
+#: ../applets/maintained/yama/yama.py:253
 msgid "Home Folder"
 msgstr "Hemmapp"
 
@@ -2620,86 +2681,50 @@ msgid "Filesystem"
 msgstr "Filsystem"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:518
-#: ../applets/maintained/yama/yama.py:321
+#: ../applets/maintained/yama/yama.py:306
 msgid "Connect to Server..."
 msgstr "Anslut till server..."
 
-#. Documents
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:572
-msgid "Documents"
-msgstr "Dokument"
-
-#. Downloads
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:576
-msgid "Downloads"
-msgstr "Hämtningar"
-
-#. Music
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:580
-msgid "Music"
-msgstr "Musik"
-
-#. Pictures
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:584
-#: ../applets/maintained/slickswitcher/prefs.py:347
-msgid "Pictures"
-msgstr "Bilder"
-
-#. Public
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
-msgid "Public"
-msgstr "Publikt"
-
-#. Templates
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:592
-msgid "Templates"
-msgstr "Mallar"
-
-#. Videos
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:596
-msgid "Videos"
-msgstr "Video"
-
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:619
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:594
 msgid "CD/DVD Burner"
 msgstr "Cd/dvd-brännare"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:622
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:597
 msgid "Fonts"
 msgstr "Typsnitt"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:626
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:601
 #: ../applets/maintained/file-browser-launcher/prefs.py:295
 #: ../applets/maintained/file-browser-launcher/prefs.py:370
 msgid "Folder"
 msgstr "Mapp"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:632
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:607
 #, python-format
 msgid "Trash (%d)"
 msgstr "Papperskorg (%d)"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:742
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:717
 msgid "DVD Drive"
 msgstr "Dvd-enhet"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:746
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:721
 msgid "CD Drive"
 msgstr "Cd-enhet"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1089
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1064
 msgid "Eject"
 msgstr "Mata ut"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1097
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1072
 msgid "Empty Trash"
 msgstr "Töm papperskorg"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1120
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1095
 msgid "Confirm deletion"
 msgstr "Bekräfta radering"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1128
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1103
 msgid ""
 "<big><b>Are you sure you want to delete\n"
 "every item from the trash?</b></big>"
@@ -2707,7 +2732,7 @@ msgstr ""
 "<big><b>Är du säker på att du vill radera\n"
 "alla objekt från papperskorgen?</b></big>"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1130
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1105
 msgid "This action cannot be undone."
 msgstr "Den här åtgärden kan inte ångras."
 
@@ -2842,10 +2867,11 @@ msgstr "Visa antal objekt i papperskorgen ovanpå ikonen."
 
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:1
 msgid "A lightweight, cross-desktop trash applet"
-msgstr "Ett lättviktigt och skrivbordsoberoende papperskorgspanelprogram"
+msgstr ""
+"Ett resurssnålt och skrivbordsoberoende miniprogram för papperskorgen"
 
 #. This is a window title, %s is an applet's name.
-#: ../applets/maintained/garbage/prefs.vala:32 ../shared/python/awnlib.py:367
+#: ../applets/maintained/garbage/prefs.vala:32 ../shared/python/awnlib.py:404
 #, c-format, python-format
 msgid "%s Preferences"
 msgstr "Inställningar för %s"
@@ -2861,7 +2887,7 @@ msgstr "Visa objektantalet ovanpå ikonen"
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:1
 msgid "Applet theme."
-msgstr "Tema för panelprogrammet."
+msgstr "Tema för miniprogrammet."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:2
 msgid "For each sensor, whether to show it in main dialog or not."
@@ -2915,11 +2941,11 @@ msgstr "Huruvida alarm ska gå igång vid lågvärdesgräns eller inte."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:15
 msgid "Whether to show a sensor in applet icon or not."
-msgstr "Huruvida en sensor ska visas i panelprogrammet eller inte."
+msgstr "Huruvida en sensor ska visas i miniprogrammet eller inte."
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:1
 msgid "Applet to show the hw sensors readouts"
-msgstr "Panelprogram för att visa avläsning av hårdvarusensorer"
+msgstr "Miniprogram för att visa avläsning av hårdvarusensorer"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:2
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:48
@@ -2928,7 +2954,7 @@ msgstr "Hårdvarusensorer"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:50
 msgid "Applet to show the hardware sensors readouts"
-msgstr "Panelprogram för att visa avläsning av hårdvarusensorer"
+msgstr "Miniprogram för att visa avläsning av hårdvarusensorer"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:61
 #: ../applets/maintained/weather/weather.ui.h:13
@@ -2955,7 +2981,7 @@ msgid ""
 "and restart the applet."
 msgstr ""
 "Installera en eller flera av ACPI, HDDTemp, LM-sensors, nvidia-settings "
-"eller nvclock och starta om panelprogrammet."
+"eller nvclock och starta om miniprogrammet."
 
 #. == Dialog == #
 #. Create main applet dialog showing selected sensors.
@@ -3071,17 +3097,17 @@ msgstr "rpm"
 #: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.h:2
 #: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.in.h:2
 msgid "Indicator Applet"
-msgstr "Indikatorpanelprogram"
+msgstr "Indikatorer"
 
 #: ../applets/maintained/indicator-applet/applet.c:92
 #: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.h:1
 #: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.in.h:1
 msgid "An applet to hold all of the system indicators"
-msgstr ""
+msgstr "Ett miniprogram som innehar alla systemindikatorer"
 
 #: ../applets/maintained/indicator-applet/applet.c:170
 msgid "Indicator Applet Preferences"
-msgstr "Inställningar för Indikatorpanelprogram"
+msgstr "Inställningar för Indikatorer"
 
 #: ../applets/maintained/indicator-applet/applet.c:177
 msgid "Enabled Entries"
@@ -3141,7 +3167,7 @@ msgstr ""
 
 #: ../applets/maintained/indicator-applet/applet.c:776
 msgid "Indicator Applet Session"
-msgstr "Session för indikatorpanelprogram"
+msgstr "Indikatorsession"
 
 #: ../applets/maintained/indicator-applet/applet.c:780
 msgid "Sound Menu"
@@ -3219,9 +3245,9 @@ msgstr "Kontrollera din e-post från Awn"
 
 #: ../applets/maintained/mail/mail.desktop.in.h:2
 #: ../applets/maintained/mail/mail.py:136
-#: ../applets/maintained/mail/mail.py:904
+#: ../applets/maintained/mail/mail.py:942
 msgid "Mail Applet"
-msgstr "E-postpanelprogram"
+msgstr "E-post"
 
 #: ../applets/maintained/mail/mail.py:39
 #, python-format
@@ -3239,76 +3265,76 @@ msgstr[1] "%d olästa meddelanden"
 
 #: ../applets/maintained/mail/mail.py:76
 msgid "Mail Applet (Click to Log In)"
-msgstr "E-postpanelprogram (klicka för att logga in)"
+msgstr "E-post (klicka för att logga in)"
 
 #: ../applets/maintained/mail/mail.py:137
 #, python-format
 msgid "Logging in as %s"
 msgstr "Loggar in som %s"
 
-#: ../applets/maintained/mail/mail.py:158
+#: ../applets/maintained/mail/mail.py:161
 msgid "Network error - Mail Applet"
-msgstr "Nätverksfel - E-postpanelprogram"
+msgstr "Nätverksfel - Miniprogrammet E-post"
 
-#: ../applets/maintained/mail/mail.py:167
+#: ../applets/maintained/mail/mail.py:170
 msgid "New Mail - Mail Applet"
-msgstr "Ny e-post - E-postpanelprogram"
+msgstr "Ny e-post - Miniprogrammet E-post"
 
-#: ../applets/maintained/mail/mail.py:271
+#: ../applets/maintained/mail/mail.py:274
 msgid "Mail"
 msgstr "E-post"
 
-#: ../applets/maintained/mail/mail.py:307
+#: ../applets/maintained/mail/mail.py:310
 msgid "Open Web Mail"
 msgstr "Öppna webbaserad e-post"
 
-#: ../applets/maintained/mail/mail.py:316
+#: ../applets/maintained/mail/mail.py:319
 msgid "Open Desktop Client"
 msgstr "Öppna skrivbordsklient"
 
-#: ../applets/maintained/mail/mail.py:325
+#: ../applets/maintained/mail/mail.py:328
 msgid "Refresh"
 msgstr "Uppdatera"
 
-#: ../applets/maintained/mail/mail.py:334
+#: ../applets/maintained/mail/mail.py:337
 #: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:47
 #: ../applets/maintained/quit/quit.py:58
 #: ../applets/maintained/quit/quit.py:267
 msgid "Log Out"
 msgstr "Logga ut"
 
-#: ../applets/maintained/mail/mail.py:364
+#: ../applets/maintained/mail/mail.py:367
 msgid "No unread messages"
 msgstr "Inga olästa meddelanden"
 
-#: ../applets/maintained/mail/mail.py:366
+#: ../applets/maintained/mail/mail.py:369
 msgid "No new messages"
 msgstr "Inga nya meddelanden"
 
-#: ../applets/maintained/mail/mail.py:405
+#: ../applets/maintained/mail/mail.py:408
 msgid "Wrong username or password"
 msgstr "Fel användarnamn eller lösenord"
 
-#: ../applets/maintained/mail/mail.py:413
-#: ../applets/maintained/mail/mail.py:474
+#: ../applets/maintained/mail/mail.py:416
+#: ../applets/maintained/mail/mail.py:477
 msgid "Log In"
 msgstr "Logga in"
 
-#: ../applets/maintained/mail/mail.py:450
+#: ../applets/maintained/mail/mail.py:453
 msgid "Type:"
 msgstr "Typ:"
 
-#: ../applets/maintained/mail/mail.py:455
+#: ../applets/maintained/mail/mail.py:458
 msgid "Backend"
 msgstr "Bakände"
 
-#: ../applets/maintained/mail/mail.py:510
-#: ../applets/maintained/mail/mail.py:719
+#: ../applets/maintained/mail/mail.py:514
+#: ../applets/maintained/mail/mail.py:742
 msgid "Could not log in: No username"
 msgstr "Det gick inte att logga in: inget användarnamn"
 
-#: ../applets/maintained/mail/mail.py:518
-#: ../applets/maintained/mail/mail.py:583
+#: ../applets/maintained/mail/mail.py:522
+#: ../applets/maintained/mail/mail.py:592
 msgid ""
 "There seem to be problems with our connection to your account. Your best bet "
 "is probably to log out and try again."
@@ -3316,69 +3342,78 @@ msgstr ""
 "Det verkar vara problem med vår anslutning till ditt konto. Det bästa är nog "
 "att logga ut och försöka igen."
 
-#: ../applets/maintained/mail/mail.py:540
-#: ../applets/maintained/mail/mail.py:605
+#: ../applets/maintained/mail/mail.py:533
+#: ../applets/maintained/mail/mail.py:549
+#: ../applets/maintained/mail/mail.py:603
+#: ../applets/maintained/mail/mail.py:619
+#: ../applets/maintained/mail/mail.py:687
+#: ../applets/maintained/mail/mail.py:781
 msgid "[No Subject]"
 msgstr "[Inget ämne]"
 
-#: ../applets/maintained/mail/mail.py:562
+#: ../applets/maintained/mail/mail.py:535
+#: ../applets/maintained/mail/mail.py:605
+msgid "[Unknown]"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:571
 msgid "Google Apps"
 msgstr "Google Apps"
 
-#: ../applets/maintained/mail/mail.py:574
+#: ../applets/maintained/mail/mail.py:583
 msgid "Could not log in: No username or domain"
 msgstr "Det gick inte att logga in: inget användarnamn eller domän"
 
-#: ../applets/maintained/mail/mail.py:636
+#: ../applets/maintained/mail/mail.py:650
 msgid "Domain:"
 msgstr "Domän:"
 
-#: ../applets/maintained/mail/mail.py:658
+#: ../applets/maintained/mail/mail.py:673
 msgid "Unix Spool"
 msgstr "Unix spool"
 
-#: ../applets/maintained/mail/mail.py:680
+#: ../applets/maintained/mail/mail.py:695
 msgid "Spool Path:"
 msgstr "Sökväg till spool:"
 
-#: ../applets/maintained/mail/mail.py:713
-#: ../applets/maintained/mail/mail.py:715
+#: ../applets/maintained/mail/mail.py:736
+#: ../applets/maintained/mail/mail.py:738
 msgid "Could not log in: "
 msgstr "Det gick inte att logga in: "
 
-#: ../applets/maintained/mail/mail.py:724
+#: ../applets/maintained/mail/mail.py:747
 msgid "Could not log in: Username or password incorrect"
 msgstr "Det gick inte att logga in: användarnamn eller lösenord är felaktigt"
 
-#: ../applets/maintained/mail/mail.py:766
-#: ../applets/maintained/mail/mail.py:859
+#: ../applets/maintained/mail/mail.py:803
+#: ../applets/maintained/mail/mail.py:897
 msgid "Server:"
 msgstr "Server:"
 
-#: ../applets/maintained/mail/mail.py:769
-#: ../applets/maintained/mail/mail.py:862
+#: ../applets/maintained/mail/mail.py:806
+#: ../applets/maintained/mail/mail.py:900
 msgid "Use SSL encryption"
 msgstr "Använd SSL-kryptering"
 
-#: ../applets/maintained/mail/mail.py:805
+#: ../applets/maintained/mail/mail.py:843
 msgid "Could not log in"
 msgstr "Det gick inte att logga in"
 
-#: ../applets/maintained/mail/mail.py:811
+#: ../applets/maintained/mail/mail.py:849
 msgid "Folder does not exst"
 msgstr "Mappen finns inte"
 
-#: ../applets/maintained/mail/mail.py:865
+#: ../applets/maintained/mail/mail.py:903
 msgid "Get messages from only one folder"
 msgstr "Hämta meddelanden från endast en mapp"
 
-#: ../applets/maintained/mail/mail.py:872
+#: ../applets/maintained/mail/mail.py:907
 msgid "Folder:"
 msgstr "Mapp:"
 
-#: ../applets/maintained/mail/mail.py:907
+#: ../applets/maintained/mail/mail.py:945
 msgid "An applet to check one's email"
-msgstr "Ett panelprogram för att kontrollera sin e-post"
+msgstr "Ett miniprogram för att kontrollera sin e-post"
 
 #: ../applets/maintained/mail/mail.ui.h:2
 msgid "<b>Mail</b>"
@@ -3398,7 +3433,7 @@ msgstr "_E-postklient:"
 
 #: ../applets/maintained/mail/mail.ui.h:7
 msgid "_Hide applet if no new messages"
-msgstr "_Dölj panelprogrammet om inga nya meddelanden finns"
+msgstr "_Dölj miniprogrammet om inga nya meddelanden finns"
 
 #: ../applets/maintained/mail/mail.ui.h:9
 msgid "minutes"
@@ -3415,8 +3450,7 @@ msgstr "Visa omslagsbild om tillgänglig."
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:3
 msgid "Display docklet instead of standard applet dialog."
 msgstr ""
-"Visa docklet istället för den standardiserade dialogrutan för "
-"panelprogrammet."
+"Visa docklet istället för den standardiserade dialogrutan för miniprogrammet."
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:4
 msgid "Size of the album art."
@@ -3496,7 +3530,7 @@ msgstr "bildpunkter"
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:68
 msgid "A media-control applet (Next Track)"
-msgstr "Ett panelprogram för mediastyrning (nästa spår)"
+msgstr "Ett miniprogram för mediastyrning (nästa spår)"
 
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:74
@@ -3506,7 +3540,7 @@ msgstr "Mediaikon för nästa spår"
 #: ../applets/maintained/media-icons/media-icon-previous.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:69
 msgid "A media-control applet (Previous Track)"
-msgstr "Ett panelprogram för mediastyrning (föregående spår)"
+msgstr "Ett miniprogram för mediastyrning (föregående spår)"
 
 #: ../applets/maintained/media-icons/media-icon-previous.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:75
@@ -3516,7 +3550,7 @@ msgstr "Mediaikon för föregående spår"
 #: ../applets/maintained/media-icons/media-icons.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:70
 msgid "A media-control applet (Play/Pause)"
-msgstr "Ett panelprogram för mediastyrning (spela upp/gör paus)"
+msgstr "Ett miniprogram för mediastyrning (spela upp/gör paus)"
 
 #: ../applets/maintained/media-icons/media-icons.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:76
@@ -3561,7 +3595,7 @@ msgstr "Mediaspelare"
 
 #: ../applets/maintained/media-player/media-player.desktop.in.h:2
 msgid "Plays any media files you drop on the applet"
-msgstr "Spelar upp vilken mediafil som helst du släpper på panelprogrammet"
+msgstr "Spelar upp vilken mediafil som helst du släpper på miniprogrammet"
 
 #. PyGObject doesn't have BOXED support implemented
 #. recent_items = gobject.property(type=gobject.TYPE_BOXED,
@@ -3582,7 +3616,7 @@ msgstr ""
 
 #: ../applets/maintained/media-player/media_player.py:426
 msgid "Plays any media files you drop on the applet."
-msgstr ""
+msgstr "Spelar upp vilken mediafil som helst du släpper på miniprogrammet."
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:1
 msgid "<b>GStreamer properties</b>"
@@ -3624,12 +3658,12 @@ msgstr ""
 #: ../applets/maintained/mount/mount.desktop.in.h:1
 #: ../applets/maintained/mount/mount.py:31
 msgid "An applet to (un)mount devices"
-msgstr "Ett panelprogram för att (av)montera enheter"
+msgstr "Ett miniprogram för att (av)montera enheter"
 
 #: ../applets/maintained/mount/mount.desktop.in.h:2
 #: ../applets/maintained/mount/mount.py:30
 msgid "Mount Applet"
-msgstr "Monteringspanelprogram"
+msgstr "Montering"
 
 #: ../applets/maintained/mount/mount.ui.h:2
 #, no-c-format
@@ -3658,11 +3692,11 @@ msgid ""
 "panel) of the tray icons in the applet."
 msgstr ""
 "Maximalt antal rader (eller kolumner beroende på orienteringen av panelen) "
-"av notifieringsikoner i panelprogrammet."
+"av notifieringsikoner i miniprogrammet."
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:3
 msgid "Size of the icons (in percent of applet size)."
-msgstr "Storlek på ikonerna, i procent av panelprogrammets storlek."
+msgstr "Storlek på ikonerna, i procent av miniprogrammets storlek."
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:4
 msgid "The background color of the notification-area."
@@ -3859,8 +3893,8 @@ msgid ""
 "disable existing notification daemons while the applet is active."
 msgstr ""
 "En ersättare till den standardiserade notifieringsdemonen och notify-osd. "
-"Den här kommer att inaktivera de befintliga notifieringsdemonerna medan "
-"panelprogrammet är aktivt."
+"Detta kommer att inaktivera de befintliga notifieringsdemonerna medan "
+"miniprogrammet är aktivt."
 
 #: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.in.h:2
 #: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.h:2
@@ -3886,7 +3920,7 @@ msgstr "Storleken på texten i menyn, i bildpunkter."
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:29
 msgid "The icon theme name of the applet's icon.);"
-msgstr "Namnet på ikontemat för panelprogrammets ikon."
+msgstr "Namnet på ikontemat för miniprogrammets ikon."
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:27
 msgid "The file manager that shows the contents of the places.);"
@@ -3957,16 +3991,16 @@ msgid ""
 "Determines whether to use the current Gtk+ theme's colour/font settings, or "
 "the applet-specific style settings.);"
 msgstr ""
-"Bestämmer huruvida det nuvarande Gtk-temats inställningar för färg/typsnitt "
-"eller specifika stilinställningar för panelprogrammet ska användas."
+"Bestämmer huruvida det nuvarande GTK-temats inställningar för färg/typsnitt "
+"eller specifika stilinställningar för miniprogrammet ska användas."
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:3
 msgid ""
 "Determines whether to use the current Gtk+ theme's color/font settings, or "
 "the applet-specific style settings.);"
 msgstr ""
-"Bestämmer huruvida det nuvarande Gtk-temats inställningar för färg/typsnitt "
-"eller specifika stilinställningar för panelprogrammet ska användas."
+"Bestämmer huruvida det nuvarande GTK-temats inställningar för färg/typsnitt "
+"eller specifika stilinställningar för miniprogrammet ska användas."
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:1
 msgid ""
@@ -3986,11 +4020,11 @@ msgstr "Öppna dina mappbokmärken"
 
 #: ../applets/maintained/python-test/python-test.desktop.in.h:1
 msgid "A simple applet to test python support"
-msgstr "Ett enkel panelprogram för att testa Python-stöd"
+msgstr "Ett enkelt miniprogram för att testa Python-stöd"
 
 #: ../applets/maintained/python-test/python-test.desktop.in.h:2
 msgid "Test Python Applet"
-msgstr "Testa Python-panelprogram"
+msgstr "Testa Python"
 
 #: ../applets/maintained/quit/awn-applet-quit.schema-ini.in.h:1
 msgid "Action to perform when left clicking on the icon."
@@ -4006,14 +4040,14 @@ msgstr "Kommando att köra om org.gnome.SessionManager inte är tillgänglig."
 
 #: ../applets/maintained/quit/quit.desktop.in.h:1
 msgid "An applet to exit or log out of your session"
-msgstr "Ett panelprogram för att stänga av eller logga ut från din session"
+msgstr "Ett miniprogram för att stänga av eller logga ut från din session"
 
 #: ../applets/maintained/quit/quit.desktop.in.h:2
 msgid "Quit-Log Out applet"
-msgstr "Stäng av/logga ut-panelprogram"
+msgstr "Stäng av/logga ut"
 
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:2
-#: ../applets/maintained/yama/yama.py:150
+#: ../applets/maintained/yama/yama.py:153
 msgid "Protect your computer from unauthorized use"
 msgstr "Skydda din dator ifrån obehörigt användande"
 
@@ -4027,12 +4061,12 @@ msgstr "Logga ut från denna session för att logga in som en annan användare"
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:1
 #: ../applets/maintained/quit/quit.py:48
-#: ../applets/maintained/yama/yama.py:172
+#: ../applets/maintained/yama/yama.py:175
 msgid "Shut Down..."
 msgstr "Stäng av..."
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:2
-#: ../applets/maintained/yama/yama.py:172
+#: ../applets/maintained/yama/yama.py:175
 msgid "Shut down the system"
 msgstr "Stäng av systemet"
 
@@ -4045,6 +4079,8 @@ msgid ""
 "An applet to lock your screen, log out of your session, or shut down the "
 "system"
 msgstr ""
+"Ett miniprogram för att låsa din skärm, logga ut från din session eller "
+"stänga av systemet"
 
 #: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:52
 #: ../applets/maintained/quit/quit.py:104
@@ -4065,7 +4101,7 @@ msgstr "Stäng av"
 #. Translators: %s is a username
 #. Translators: %s is a user name.
 #: ../applets/maintained/quit/quit.py:43
-#: ../applets/maintained/yama/yama.py:168
+#: ../applets/maintained/yama/yama.py:171
 #, python-format
 msgid "Log Out %s..."
 msgstr "Logga ut %s..."
@@ -4078,15 +4114,16 @@ msgstr ""
 #: ../applets/maintained/related/related.desktop.in.in.h:1
 msgid "Applet displaying related items by talking to Zeitgeist"
 msgstr ""
+"Miniprogram som visar relaterade objekt genom att prata med Zeitgeist"
 
 #: ../applets/maintained/related/related.desktop.in.h:2
 #: ../applets/maintained/related/related.desktop.in.in.h:2
 msgid "Related applet"
-msgstr ""
+msgstr "Relaterat"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:1
 msgid " The color (RGBA) applet border."
-msgstr " Färgen (RGBA) för panelprogrammets ram."
+msgstr " Färgen (RGBA) för miniprogrammets ram."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:2
 msgid " The color of the desktop (RGBA) if grab_wallpaper is FALSE."
@@ -4116,7 +4153,7 @@ msgstr "Alfakanalsvärde att applicera till bakrund för inaktiv arbetsyta."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:8
 msgid "Applet border width.  0 indicates no border."
-msgstr "Rambredden för panelprogrammet. 0 indikerar ingen ram."
+msgstr "Rambredden för miniprogrammet. 0 indikerar ingen ram."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:9
 msgid ""
@@ -4161,12 +4198,11 @@ msgstr ""
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:14
 msgid "Scales the applet size relative to the maximum icon size"
 msgstr ""
-"Skalar panelprogrammets storlek i förhållande till den maximala "
-"ikonstorleken."
+"Skalar miniprogrammets storlek i förhållande till den maximala ikonstorleken."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:15
 msgid "The colour (RGBA) of the applet border."
-msgstr "Färgen (RGBA) för panelprogrammets ram."
+msgstr "Färgen (RGBA) för miniprogrammets ram."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:16
 msgid "The colour of the desktop (RGBA) if grab_wallpaper is FALSE."
@@ -4350,7 +4386,7 @@ msgstr "Använd s_krivbordsbakgrund"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:41
 msgid "_Applet size:"
-msgstr "Stolek på _panelprogrammet:"
+msgstr "_Miniprogrammets storlek:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:42
 msgid "_Rows:"
@@ -4365,16 +4401,16 @@ msgid "A prettier desktop switcher"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:2
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2439
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2438
 msgid "Shiny Switcher"
 msgstr "Glänsande växlare"
 
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:642
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:736
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1946
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2013
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:735
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1945
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2012
 msgid "Applet Preferences"
-msgstr "Inställningar för panelprogram"
+msgstr "Inställningar för miniprogrammet"
 
 #: ../applets/maintained/showdesktop/applet.vala:40
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:2
@@ -4613,6 +4649,10 @@ msgstr "Fil:"
 msgid "Choose a Background Image"
 msgstr "Välj en bakgrundsbild"
 
+#: ../applets/maintained/slickswitcher/prefs.py:347
+msgid "Pictures"
+msgstr "Bilder"
+
 #: ../applets/maintained/slickswitcher/prefs.py:367
 #: ../applets/maintained/to-do/prefs.py:445
 msgid "Background"
@@ -4727,7 +4767,7 @@ msgstr "Systemövervakare"
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:1
 #: ../applets/maintained/thinkhdaps/thinkhdaps.py:35
 msgid "Applet that shows the shock protection status of your disks"
-msgstr "Panelprogram som visar stötskyddsstatus för dina hårddiskar"
+msgstr "Miniprogram som visar stötskyddsstatus för dina hårddiskar"
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:2
 #: ../applets/maintained/thinkhdaps/thinkhdaps.py:34
@@ -4744,7 +4784,7 @@ msgstr "%s skyddas mot stötar"
 msgid "%s not protected from shocks"
 msgstr "%s skyddas inte mot stötar"
 
-#: ../applets/maintained/thinkhdaps/thinkhdaps.py:158
+#: ../applets/maintained/thinkhdaps/thinkhdaps.py:153
 msgid "No hard disk found"
 msgstr "Ingen hårddisk hittades"
 
@@ -5100,7 +5140,7 @@ msgstr "Styr Tomboy med hjälp av D-Bus"
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:2
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:30
 msgid "Tomboy Applet"
-msgstr "Tomboy-panelprogram"
+msgstr "Tomboy"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:108
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:130
@@ -5134,11 +5174,11 @@ msgstr "Visa taggad anteckning"
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:1
 msgid "A simple applet to test vala support"
-msgstr "Ett enkelt panelprogram för att testa Valastöd"
+msgstr "Ett enkelt miniprogram för att testa Vala-stöd"
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:2
 msgid "Test Vala Applet"
-msgstr "Testa Vala-panelprogram"
+msgstr "Testa Vala"
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:1
 msgid "Name of the device."
@@ -5159,7 +5199,7 @@ msgstr "Volymkontroll"
 
 #: ../applets/maintained/volume-control/volume-control.py:44
 msgid "Applet to control your computer's volume"
-msgstr "Panelprogram för att styra din dators volym"
+msgstr "Miniprogram för att styra din dators volym"
 
 #: ../applets/maintained/volume-control/volume-control.py:49
 #: ../applets/maintained/weather/weather.py:62
@@ -5175,15 +5215,15 @@ msgstr "Installera en eller flera av de följande GStreamer-elementen: %s"
 msgid "Could not find any devices."
 msgstr "Det gick inte att hitta några enheter."
 
-#: ../applets/maintained/volume-control/volume-control.py:181
+#: ../applets/maintained/volume-control/volume-control.py:184
 msgid "_Open Volume Control"
 msgstr "_Öppna volymkontrollen"
 
-#: ../applets/maintained/volume-control/volume-control.py:376
+#: ../applets/maintained/volume-control/volume-control.py:379
 msgid "No mixer found"
 msgstr "Ingen mixer hittades"
 
-#: ../applets/maintained/volume-control/volume-control.py:382
+#: ../applets/maintained/volume-control/volume-control.py:385
 msgid "No devices found"
 msgstr "Inga enheter hittades"
 
@@ -5606,7 +5646,7 @@ msgstr "Visa det lokala vädret"
 
 #: ../applets/maintained/weather/weather.desktop.in.h:2
 msgid "Weather Applet"
-msgstr "Väderpanelprogram"
+msgstr "Väder"
 
 #: ../applets/maintained/weather/weather.py:41
 msgid "Weather"
@@ -5614,7 +5654,7 @@ msgstr "Väder"
 
 #: ../applets/maintained/weather/weather.py:42
 msgid "Applet to display current weather and forecast"
-msgstr "Panelprogram för att visa aktuella väderprognoser"
+msgstr "Miniprogram för att visa aktuella väderprognoser"
 
 #: ../applets/maintained/weather/weather.py:71
 msgid ""
@@ -5707,7 +5747,7 @@ msgstr "Ställ in som ny _startsida"
 #: ../applets/maintained/webapplet/applet.c:399
 #: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:2
 msgid "Web Applet"
-msgstr "Webbpanelprogram"
+msgstr "Webb"
 
 #. vim: set et ts=2 sts=2 sw=2 :
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:1
@@ -5715,7 +5755,7 @@ msgid ""
 "Flag that enables usage of the \"Open Location\" dialog in the applet."
 msgstr ""
 "Flagga som aktiverar användning av \"öppna plats\"-dialogrutan i "
-"panelprogrammet."
+"miniprogrammet."
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:2
 msgid "HTML engine to use."
@@ -5762,57 +5802,52 @@ msgstr "Huvudmeny med platser och senaste dokument"
 
 #: ../applets/maintained/yama/yama.desktop.in.h:2
 msgid "Yet Another Menu Applet"
-msgstr "Ytterligare ett menypanelprogram"
+msgstr "Ytterligare en meny"
 
 #: ../applets/maintained/yama/yama.py:45
 msgid "YAMA"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:168
+#: ../applets/maintained/yama/yama.py:171
 #, python-format
 msgid "Log out %s of this session to log in as a different user"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:205
+#: ../applets/maintained/yama/yama.py:189
 msgid "_Edit Menus"
 msgstr "_Redigera menyer"
 
-#: ../applets/maintained/yama/yama.py:268
+#: ../applets/maintained/yama/yama.py:253
 msgid "Open your personal folder"
 msgstr "Öppna din personliga mapp"
 
-#: ../applets/maintained/yama/yama.py:270
+#: ../applets/maintained/yama/yama.py:255
 msgid "Open the contents of your desktop in a folder"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:321
+#: ../applets/maintained/yama/yama.py:306
 msgid "Connect to a remote computer or shared disk"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:351
+#: ../applets/maintained/yama/yama.py:336
 msgid "Clear all items from the recent documents list"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:402
+#: ../applets/maintained/yama/yama.py:375
 #, python-format
 msgid "Open '%s'"
 msgstr "Öppna \"%s\""
 
-#: ../applets/maintained/yama/yama.py:444
+#: ../applets/maintained/yama/yama.py:417
 #, python-format
 msgid "Mount %s"
 msgstr "Montera %s"
 
-#: ../applets/maintained/yama/yama.py:596
+#: ../applets/maintained/yama/yama.py:569
 msgid ""
 "Clearing the Recent Documents list will clear the following:\n"
 "* All items from the Places > Recent Documents menu item.\n"
 "* All items from the recent documents list in all applications."
-msgstr ""
-
-#: ../applets/maintained/yama/yama.py:611
-#, python-format
-msgid "Unable to mount %s"
 msgstr ""
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:1
@@ -5829,7 +5864,7 @@ msgstr "Aktivera för att visa gradientöverlappningen i diagrammet."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:3
 msgid "The color used in the applet border."
-msgstr "Färgen som används i panelprogrammets ram."
+msgstr "Färgen som används i miniprogrammets ram."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:4
 msgid "The color used in the graph lines."
@@ -5842,14 +5877,14 @@ msgstr ""
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:6
 msgid "The pixel width of the applet border."
-msgstr "Bildpunktsbredden på panelprogrammets ram."
+msgstr "Bildpunktsbredden på miniprogrammets ram."
 
-#: ../applets/unmaintained/main-menu/applet.c:394
+#: ../applets/unmaintained/main-menu/applet.c:393
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:2
 msgid "Awn Main Menu"
 msgstr "Huvudmeny för Awn"
 
-#: ../applets/unmaintained/main-menu/applet.c:395
+#: ../applets/unmaintained/main-menu/applet.c:394
 msgid "Displays a list of all your applications"
 msgstr "Visar en lista över alla dina program"
 
@@ -5869,7 +5904,7 @@ msgstr "Lyssna till Pandora internerradio"
 msgid "Pandora Radio"
 msgstr "Pandora radio"
 
-#: ../shared/python/awnlib.py:110
+#: ../shared/python/awnlib.py:125
 #, python-format
 msgid "_About %s"
 msgstr "_Om %s"

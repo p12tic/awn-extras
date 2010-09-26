@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-09 21:43+0200\n"
-"PO-Revision-Date: 2010-09-24 08:40+0000\n"
-"Last-Translator: Jens Maucher <Unknown>\n"
+"POT-Creation-Date: 2010-09-25 11:18+0200\n"
+"PO-Revision-Date: 2010-09-25 22:55+0000\n"
+"Last-Translator: Gabor Karsay <Unknown>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-09-25 04:36+0000\n"
+"X-Launchpad-Export-Date: 2010-09-26 04:39+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -476,9 +476,65 @@ msgstr "Akku-Status"
 msgid "An applet which displays battery information"
 msgstr "Ein Applet zum Anzeigen von Informationen über den Akku"
 
-#: ../applets/maintained/battery/battery.py:99
+#: ../applets/maintained/battery/battery.py:98
 msgid "No batteries"
 msgstr "Kein Akku"
+
+#: ../applets/maintained/battery/battery.py:121
+#: ../applets/maintained/battery/battery.py:254
+#: ../applets/maintained/battery/battery.ui.h:6
+msgid "Percent"
+msgstr "Prozent"
+
+#: ../applets/maintained/battery/battery.py:209
+msgid "AC"
+msgstr ""
+
+#: ../applets/maintained/battery/battery.py:209
+msgid "battery"
+msgstr ""
+
+#: ../applets/maintained/battery/battery.py:210
+#, python-format
+msgid "Computer running on %s power"
+msgstr ""
+
+#: ../applets/maintained/battery/battery.py:213
+msgid "Battery charged"
+msgstr ""
+
+#: ../applets/maintained/battery/battery.py:221
+msgid "until charged"
+msgstr ""
+
+#: ../applets/maintained/battery/battery.py:225
+msgid "remaining"
+msgstr ""
+
+#: ../applets/maintained/battery/battery.py:263
+#: ../applets/maintained/battery/battery.ui.h:7
+msgid "Time Remaining"
+msgstr "Verbleibende Zeit"
+
+#: ../applets/maintained/battery/battery.py:279
+#, python-format
+msgid "%d hours"
+msgstr "%d Stunden"
+
+#: ../applets/maintained/battery/battery.py:281
+#, python-format
+msgid "%d hour"
+msgstr "%d Stunde"
+
+#: ../applets/maintained/battery/battery.py:285
+#, python-format
+msgid "%d minutes"
+msgstr "%d Minuten"
+
+#: ../applets/maintained/battery/battery.py:287
+#, python-format
+msgid "%d minute"
+msgstr "%d Minute"
 
 #: ../applets/maintained/battery/battery.ui.h:2
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:5
@@ -503,14 +559,6 @@ msgid "If enabled, shows a notification when the charge levels drops too low"
 msgstr ""
 "Wenn aktiviert, wird eine Benachrichtigung gezeigt, dass Ladezustand "
 "kritisch wird."
-
-#: ../applets/maintained/battery/battery.ui.h:6
-msgid "Percent"
-msgstr "Prozent"
-
-#: ../applets/maintained/battery/battery.ui.h:7
-msgid "Time Remaining"
-msgstr "Verbleibende Zeit"
 
 #: ../applets/maintained/battery/battery.ui.h:8
 msgid "_Battery:"
@@ -729,23 +777,12 @@ msgstr "Orte"
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#. FIXME priv->display_name should be _("Places")
-#. awn_icon_set_tooltip_text (AWN_ICON(object),priv->display_name);
-#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:197
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1003
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1017
-#: ../applets/maintained/file-browser-launcher/prefs.py:249
-#: ../applets/maintained/places/places.desktop.in.in.h:2
-#: ../applets/maintained/yama/yama.py:261
-msgid "Places"
-msgstr "Orte"
-
-#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:351
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:305
 msgid "Remove Icon"
 msgstr "Symbol entfernen"
 
 #: ../applets/maintained/cairo-menu/cairo-main-icon.c:161
-#: ../applets/unmaintained/main-menu/applet.c:453
+#: ../applets/unmaintained/main-menu/applet.c:452
 msgid "Main Menu"
 msgstr "Hauptmenü"
 
@@ -758,107 +795,123 @@ msgid "Cairo Main Menu"
 msgstr "Cairo-Hauptmenü"
 
 #. hope that gnome-session-save exists; needed for GNOME 2.22, at least.
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:107
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:111
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:116
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:125
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:129
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:134
 msgid "Logout"
 msgstr "Abmelden"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:121
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:123
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:128
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:139
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:141
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:146
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:1
 #: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:46
 #: ../applets/maintained/quit/quit.py:57
 #: ../applets/maintained/quit/quit.py:265
-#: ../applets/maintained/yama/yama.py:150
+#: ../applets/maintained/yama/yama.py:153
 msgid "Lock Screen"
 msgstr "Bildschirm sperren"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:132
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:134
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:145
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:150
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:152
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:163
 msgid "Suspend"
 msgstr "Bereitschaft"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:137
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:139
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:150
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:155
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:157
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:168
 msgid "Hibernate"
 msgstr "Ruhezustand"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:158
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:176
 msgid "Shutdown"
 msgstr "Ausschalten"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:195
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:213
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:381
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:610
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:585
 #: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Computer"
 msgstr "Rechner"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:196
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:214
 msgid "Home"
 msgstr "Persönlicher Ordner"
 
-#. Check if this is the Desktop directory
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:197
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:568
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:215
 #: ../applets/maintained/places/applet.c:344
-#: ../applets/maintained/yama/yama.py:270
+#: ../applets/maintained/yama/yama.py:255
 msgid "Desktop"
 msgstr "Arbeitsfläche"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:203
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:205
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:635
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:221
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:223
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:610
 #: ../applets/maintained/file-browser-launcher/prefs.py:236
 msgid "Trash"
 msgstr "Mülleimer"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:207
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:225
 msgid "File System"
 msgstr "Dateisystem"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:336
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:613
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:356
+msgid "Removable Media"
+msgstr ""
+
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:367
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
 msgid "Network"
 msgstr "Netzwerk"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:337
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:368
 msgid "Connect to Server"
 msgstr "Verbindung zu Server"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1040
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1055
-#: ../applets/maintained/yama/yama.py:337
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1034
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1048
+#: ../applets/maintained/file-browser-launcher/prefs.py:249
+#: ../applets/maintained/places/places.desktop.in.in.h:2
+#: ../applets/maintained/yama/yama.py:246
+msgid "Places"
+msgstr "Orte"
+
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1071
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1086
+#: ../applets/maintained/yama/yama.py:322
 msgid "Recent Documents"
 msgstr "Zuletzt geöffnete Dokumente"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1086
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1097
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1117
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1128
 msgid "Session"
 msgstr "Sitzung"
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1113
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1144
 msgid "Search\\u2026"
 msgstr "Suche\\u2026"
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1130
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1161
 msgid "Launch\\u2026"
 msgstr "Ausführen \\u2026"
 
-#: ../applets/maintained/cairo-menu/misc.c:310
-#: ../applets/maintained/yama/yama.py:590
+#: ../applets/maintained/cairo-menu/misc.c:161
+#: ../applets/maintained/yama/yama.py:584
+#, c-format, python-format
+msgid "Unable to mount %s"
+msgstr "Könnte %s nicht einhängen"
+
+#: ../applets/maintained/cairo-menu/misc.c:407
+#: ../applets/maintained/yama/yama.py:563
 msgid "Clear the Recent Documents list?"
 msgstr "Liste der zuletzt geöffneten Dokumente löschen?"
 
 #. Translators: This is taken from gnome-panel, when deleting the Recent Documents List.
 #. * Please use the same translation.
-#: ../applets/maintained/cairo-menu/misc.c:314
+#: ../applets/maintained/cairo-menu/misc.c:411
 msgid ""
 "If you clear the Recent Documents list, you clear the following:\n"
 "• All items from the Places → Recent Documents menu item.\n"
@@ -868,10 +921,10 @@ msgstr ""
 "• Alle Einträge im Menü Orte → Zuletzt geöffnete Dokumente.\n"
 "• Die Liste der zuletzt geöffneten Dokumente in allen Anwendungen."
 
-#: ../applets/maintained/cairo-menu/misc.c:326
-#: ../applets/maintained/cairo-menu/misc.c:420
-#: ../applets/maintained/yama/yama.py:351
-#: ../applets/maintained/yama/yama.py:595
+#: ../applets/maintained/cairo-menu/misc.c:423
+#: ../applets/maintained/cairo-menu/misc.c:532
+#: ../applets/maintained/yama/yama.py:336
+#: ../applets/maintained/yama/yama.py:568
 msgid "Clear Recent Documents"
 msgstr "Liste der zuletzt geöffneten Dokumente löschen"
 
@@ -1015,7 +1068,7 @@ msgstr "Kalender URL"
 
 #. default title/tooltip to show on startup.
 #: ../applets/maintained/calendar/clockcal.py:51
-#: ../applets/maintained/calendar/clockcal.py:490
+#: ../applets/maintained/calendar/clockcal.py:494
 #: ../applets/maintained/digital-clock/digital-clock.vala:119
 msgid "Calendar"
 msgstr "Kalender"
@@ -1043,17 +1096,26 @@ msgid "A Calendar Applet for the Avant Window Navigator. Images by Deleket."
 msgstr ""
 "Ein Kalender-Applet für den Avant Window Navigator. Bilder von Deleket."
 
-#: ../applets/maintained/calendar/clockcal.py:496
+#. Translators: This is a date/time format string. You can check the
+#. output in terminal with 'date +"%x %X"'. In most cases you don't have
+#. to change it. See 'date --help' for other formats, that might be more
+#. common in your locale.
+#: ../applets/maintained/calendar/clockcal.py:293
+#, no-python-format
+msgid "%x %X"
+msgstr ""
+
+#: ../applets/maintained/calendar/clockcal.py:500
 msgid "Open in "
 msgstr "Öffnen in "
 
-#: ../applets/maintained/calendar/clockcal.py:500
+#: ../applets/maintained/calendar/clockcal.py:504
 #: ../applets/maintained/weather/forecast.py:171
 msgid "Today"
 msgstr "Heute"
 
 #. print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
-#: ../applets/maintained/calendar/clockcal.py:548
+#: ../applets/maintained/calendar/clockcal.py:552
 msgid "Unable to read calendar data from external source."
 msgstr "Lesen der Kalenderdaten von der externen Quelle nicht möglich."
 
@@ -2462,7 +2524,7 @@ msgid "Source:"
 msgstr "Quelle:"
 
 #: ../applets/maintained/feeds/prefs.py:374
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:616
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:151
 msgid "Search"
 msgstr "Suchen"
@@ -2497,19 +2559,19 @@ msgstr "Adresse (URL):"
 
 #. Username: label and entry
 #: ../applets/maintained/feeds/prefs.py:493
-#: ../applets/maintained/mail/mail.py:381
-#: ../applets/maintained/mail/mail.py:629
-#: ../applets/maintained/mail/mail.py:759
-#: ../applets/maintained/mail/mail.py:852
+#: ../applets/maintained/mail/mail.py:384
+#: ../applets/maintained/mail/mail.py:643
+#: ../applets/maintained/mail/mail.py:796
+#: ../applets/maintained/mail/mail.py:890
 msgid "Username:"
 msgstr "Benutzername:"
 
 #. Password: label and entry
 #: ../applets/maintained/feeds/prefs.py:507
-#: ../applets/maintained/mail/mail.py:385
-#: ../applets/maintained/mail/mail.py:632
-#: ../applets/maintained/mail/mail.py:762
-#: ../applets/maintained/mail/mail.py:855
+#: ../applets/maintained/mail/mail.py:388
+#: ../applets/maintained/mail/mail.py:646
+#: ../applets/maintained/mail/mail.py:799
+#: ../applets/maintained/mail/mail.py:893
 msgid "Password:"
 msgstr "Kennwort:"
 
@@ -2621,7 +2683,7 @@ msgid "A launcher for your file manager"
 msgstr "Ein Starter für Ihren Dateimanager"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:385
-#: ../applets/maintained/yama/yama.py:268
+#: ../applets/maintained/yama/yama.py:253
 msgid "Home Folder"
 msgstr "Persönlicher Ordner"
 
@@ -2631,86 +2693,50 @@ msgid "Filesystem"
 msgstr "Dateisystem"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:518
-#: ../applets/maintained/yama/yama.py:321
+#: ../applets/maintained/yama/yama.py:306
 msgid "Connect to Server..."
 msgstr "Verbindung zu Server …"
 
-#. Documents
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:572
-msgid "Documents"
-msgstr "Dokumente"
-
-#. Downloads
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:576
-msgid "Downloads"
-msgstr "Downloads"
-
-#. Music
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:580
-msgid "Music"
-msgstr "Musik"
-
-#. Pictures
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:584
-#: ../applets/maintained/slickswitcher/prefs.py:347
-msgid "Pictures"
-msgstr "Bilder"
-
-#. Public
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
-msgid "Public"
-msgstr "Öffentlich"
-
-#. Templates
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:592
-msgid "Templates"
-msgstr "Vorlagen"
-
-#. Videos
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:596
-msgid "Videos"
-msgstr "Videos"
-
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:619
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:594
 msgid "CD/DVD Burner"
 msgstr "CD/DVD-Brenner"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:622
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:597
 msgid "Fonts"
 msgstr "Schriften"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:626
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:601
 #: ../applets/maintained/file-browser-launcher/prefs.py:295
 #: ../applets/maintained/file-browser-launcher/prefs.py:370
 msgid "Folder"
 msgstr "Ordner"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:632
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:607
 #, python-format
 msgid "Trash (%d)"
 msgstr "Mülleimer (%d)"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:742
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:717
 msgid "DVD Drive"
 msgstr "DVD-Laufwerk"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:746
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:721
 msgid "CD Drive"
 msgstr "CD-Laufwerk"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1089
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1064
 msgid "Eject"
 msgstr "Auswerfen"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1097
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1072
 msgid "Empty Trash"
 msgstr "Mülleimer leeren"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1120
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1095
 msgid "Confirm deletion"
 msgstr "Löschen bestätigen"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1128
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1103
 msgid ""
 "<big><b>Are you sure you want to delete\n"
 "every item from the trash?</b></big>"
@@ -2718,7 +2744,7 @@ msgstr ""
 "<big><b>Sind Sie sicher, dass Sie alle Objekt\n"
 "im Müll löschen wollen?</b></big>"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1130
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1105
 msgid "This action cannot be undone."
 msgstr "Diese Aktion kann nicht rückgängig gemacht werden."
 
@@ -2856,7 +2882,7 @@ msgid "A lightweight, cross-desktop trash applet"
 msgstr "Ein leichtgewichtiges, Desktop-übergreifendes Mülleimerapplet"
 
 #. This is a window title, %s is an applet's name.
-#: ../applets/maintained/garbage/prefs.vala:32 ../shared/python/awnlib.py:367
+#: ../applets/maintained/garbage/prefs.vala:32 ../shared/python/awnlib.py:404
 #, c-format, python-format
 msgid "%s Preferences"
 msgstr "%s-Einstellungen"
@@ -3233,7 +3259,7 @@ msgstr "Behalten Sie Ihre Mails mit AWN im Blick"
 
 #: ../applets/maintained/mail/mail.desktop.in.h:2
 #: ../applets/maintained/mail/mail.py:136
-#: ../applets/maintained/mail/mail.py:904
+#: ../applets/maintained/mail/mail.py:942
 msgid "Mail Applet"
 msgstr "Mail-Applet"
 
@@ -3260,69 +3286,69 @@ msgstr "Mail-Applet (Klicken zum Anmelden)"
 msgid "Logging in as %s"
 msgstr "Anmelden als %s"
 
-#: ../applets/maintained/mail/mail.py:158
+#: ../applets/maintained/mail/mail.py:161
 msgid "Network error - Mail Applet"
 msgstr "Netzwerkfehler – Mail-Applet"
 
-#: ../applets/maintained/mail/mail.py:167
+#: ../applets/maintained/mail/mail.py:170
 msgid "New Mail - Mail Applet"
 msgstr "Neue Nachrichten - Mail-Applet"
 
-#: ../applets/maintained/mail/mail.py:271
+#: ../applets/maintained/mail/mail.py:274
 msgid "Mail"
 msgstr "E-Mail"
 
-#: ../applets/maintained/mail/mail.py:307
+#: ../applets/maintained/mail/mail.py:310
 msgid "Open Web Mail"
 msgstr "Webmail öffnen"
 
-#: ../applets/maintained/mail/mail.py:316
+#: ../applets/maintained/mail/mail.py:319
 msgid "Open Desktop Client"
 msgstr "Desktop-Mailprogramm öffnen"
 
-#: ../applets/maintained/mail/mail.py:325
+#: ../applets/maintained/mail/mail.py:328
 msgid "Refresh"
 msgstr "Aktualisieren"
 
-#: ../applets/maintained/mail/mail.py:334
+#: ../applets/maintained/mail/mail.py:337
 #: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:47
 #: ../applets/maintained/quit/quit.py:58
 #: ../applets/maintained/quit/quit.py:267
 msgid "Log Out"
 msgstr "Abmelden"
 
-#: ../applets/maintained/mail/mail.py:364
+#: ../applets/maintained/mail/mail.py:367
 msgid "No unread messages"
 msgstr "Keine ungelesenen Nachrichten"
 
-#: ../applets/maintained/mail/mail.py:366
+#: ../applets/maintained/mail/mail.py:369
 msgid "No new messages"
 msgstr "Keine neuen Nachrichten"
 
-#: ../applets/maintained/mail/mail.py:405
+#: ../applets/maintained/mail/mail.py:408
 msgid "Wrong username or password"
 msgstr "Benutzername oder Passwort falsch"
 
-#: ../applets/maintained/mail/mail.py:413
-#: ../applets/maintained/mail/mail.py:474
+#: ../applets/maintained/mail/mail.py:416
+#: ../applets/maintained/mail/mail.py:477
 msgid "Log In"
 msgstr "Anmelden"
 
-#: ../applets/maintained/mail/mail.py:450
+#: ../applets/maintained/mail/mail.py:453
 msgid "Type:"
 msgstr "Typ:"
 
-#: ../applets/maintained/mail/mail.py:455
+#: ../applets/maintained/mail/mail.py:458
 msgid "Backend"
 msgstr "Backend"
 
-#: ../applets/maintained/mail/mail.py:510
-#: ../applets/maintained/mail/mail.py:719
+#: ../applets/maintained/mail/mail.py:514
+#: ../applets/maintained/mail/mail.py:742
 msgid "Could not log in: No username"
 msgstr "Anmeldefehler: kein Benutzername"
 
-#: ../applets/maintained/mail/mail.py:518
-#: ../applets/maintained/mail/mail.py:583
+#: ../applets/maintained/mail/mail.py:522
+#: ../applets/maintained/mail/mail.py:592
 msgid ""
 "There seem to be problems with our connection to your account. Your best bet "
 "is probably to log out and try again."
@@ -3330,67 +3356,76 @@ msgstr ""
 "Es scheinen Probleme mit der Verbindung zu Ihrem Konto aufgetreten zu sein. "
 "Am besten melden Sie sich ab und versuchen es dann erneut."
 
-#: ../applets/maintained/mail/mail.py:540
-#: ../applets/maintained/mail/mail.py:605
+#: ../applets/maintained/mail/mail.py:533
+#: ../applets/maintained/mail/mail.py:549
+#: ../applets/maintained/mail/mail.py:603
+#: ../applets/maintained/mail/mail.py:619
+#: ../applets/maintained/mail/mail.py:687
+#: ../applets/maintained/mail/mail.py:781
 msgid "[No Subject]"
 msgstr "Ohne Betreff"
 
-#: ../applets/maintained/mail/mail.py:562
+#: ../applets/maintained/mail/mail.py:535
+#: ../applets/maintained/mail/mail.py:605
+msgid "[Unknown]"
+msgstr "[Unbekannt]"
+
+#: ../applets/maintained/mail/mail.py:571
 msgid "Google Apps"
 msgstr "Google Apps"
 
-#: ../applets/maintained/mail/mail.py:574
+#: ../applets/maintained/mail/mail.py:583
 msgid "Could not log in: No username or domain"
 msgstr "Anmeldefehler: Benutzername oder Domäne nicht angegeben"
 
-#: ../applets/maintained/mail/mail.py:636
+#: ../applets/maintained/mail/mail.py:650
 msgid "Domain:"
 msgstr "Domain:"
 
-#: ../applets/maintained/mail/mail.py:658
+#: ../applets/maintained/mail/mail.py:673
 msgid "Unix Spool"
 msgstr "Unix Spool"
 
-#: ../applets/maintained/mail/mail.py:680
+#: ../applets/maintained/mail/mail.py:695
 msgid "Spool Path:"
 msgstr "Spool-Pfad:"
 
-#: ../applets/maintained/mail/mail.py:713
-#: ../applets/maintained/mail/mail.py:715
+#: ../applets/maintained/mail/mail.py:736
+#: ../applets/maintained/mail/mail.py:738
 msgid "Could not log in: "
 msgstr "Anmeldefehler: "
 
-#: ../applets/maintained/mail/mail.py:724
+#: ../applets/maintained/mail/mail.py:747
 msgid "Could not log in: Username or password incorrect"
 msgstr "Anmeldefehler: Benutzername oder Passwort falsch"
 
-#: ../applets/maintained/mail/mail.py:766
-#: ../applets/maintained/mail/mail.py:859
+#: ../applets/maintained/mail/mail.py:803
+#: ../applets/maintained/mail/mail.py:897
 msgid "Server:"
 msgstr "Server:"
 
-#: ../applets/maintained/mail/mail.py:769
-#: ../applets/maintained/mail/mail.py:862
+#: ../applets/maintained/mail/mail.py:806
+#: ../applets/maintained/mail/mail.py:900
 msgid "Use SSL encryption"
 msgstr "SSL-Verschlüsselung verwenden"
 
-#: ../applets/maintained/mail/mail.py:805
+#: ../applets/maintained/mail/mail.py:843
 msgid "Could not log in"
 msgstr "Anmeldung nicht möglich"
 
-#: ../applets/maintained/mail/mail.py:811
+#: ../applets/maintained/mail/mail.py:849
 msgid "Folder does not exst"
 msgstr "Ordner existiert nicht"
 
-#: ../applets/maintained/mail/mail.py:865
+#: ../applets/maintained/mail/mail.py:903
 msgid "Get messages from only one folder"
 msgstr "Nachrichten nur von einem einzigen Ordner empfangen"
 
-#: ../applets/maintained/mail/mail.py:872
+#: ../applets/maintained/mail/mail.py:907
 msgid "Folder:"
 msgstr "Ordner:"
 
-#: ../applets/maintained/mail/mail.py:907
+#: ../applets/maintained/mail/mail.py:945
 msgid "An applet to check one's email"
 msgstr "Ein Applet zum Abrufen Ihrer E-Mails"
 
@@ -4046,7 +4081,7 @@ msgid "Quit-Log Out applet"
 msgstr "Applet zum Ausschalten/Abmelden"
 
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:2
-#: ../applets/maintained/yama/yama.py:150
+#: ../applets/maintained/yama/yama.py:153
 msgid "Protect your computer from unauthorized use"
 msgstr "Den Rechner vor unbefugtem Zugriff schützen"
 
@@ -4061,12 +4096,12 @@ msgstr ""
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:1
 #: ../applets/maintained/quit/quit.py:48
-#: ../applets/maintained/yama/yama.py:172
+#: ../applets/maintained/yama/yama.py:175
 msgid "Shut Down..."
 msgstr "Ausschalten …"
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:2
-#: ../applets/maintained/yama/yama.py:172
+#: ../applets/maintained/yama/yama.py:175
 msgid "Shut down the system"
 msgstr "Den Rechner herunterfahren"
 
@@ -4101,7 +4136,7 @@ msgstr "Ausschalten"
 #. Translators: %s is a username
 #. Translators: %s is a user name.
 #: ../applets/maintained/quit/quit.py:43
-#: ../applets/maintained/yama/yama.py:168
+#: ../applets/maintained/yama/yama.py:171
 #, python-format
 msgid "Log Out %s..."
 msgstr "%s abmelden …"
@@ -4407,14 +4442,14 @@ msgid "A prettier desktop switcher"
 msgstr "Der schönere Arbeitsflächenumschalter"
 
 #: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:2
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2439
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2438
 msgid "Shiny Switcher"
 msgstr "Shiny Switcher"
 
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:642
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:736
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1946
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2013
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:735
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1945
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2012
 msgid "Applet Preferences"
 msgstr "Applet-Einstellungen"
 
@@ -4664,6 +4699,10 @@ msgstr "Datei:"
 msgid "Choose a Background Image"
 msgstr "Ein Hintergrundbild wählen"
 
+#: ../applets/maintained/slickswitcher/prefs.py:347
+msgid "Pictures"
+msgstr "Bilder"
+
 #: ../applets/maintained/slickswitcher/prefs.py:367
 #: ../applets/maintained/to-do/prefs.py:445
 msgid "Background"
@@ -4795,7 +4834,7 @@ msgstr "%s ist vor Aufprall geschützt"
 msgid "%s not protected from shocks"
 msgstr "%s ist vor Aufprall nicht geschützt"
 
-#: ../applets/maintained/thinkhdaps/thinkhdaps.py:158
+#: ../applets/maintained/thinkhdaps/thinkhdaps.py:153
 msgid "No hard disk found"
 msgstr "Keine Festplatte gefunden"
 
@@ -5232,15 +5271,15 @@ msgstr ""
 msgid "Could not find any devices."
 msgstr "Konnte keine Geräte finden."
 
-#: ../applets/maintained/volume-control/volume-control.py:181
+#: ../applets/maintained/volume-control/volume-control.py:184
 msgid "_Open Volume Control"
 msgstr "Audio-_Einstellungen öffnen"
 
-#: ../applets/maintained/volume-control/volume-control.py:376
+#: ../applets/maintained/volume-control/volume-control.py:379
 msgid "No mixer found"
 msgstr "Kein Mischer gefunden"
 
-#: ../applets/maintained/volume-control/volume-control.py:382
+#: ../applets/maintained/volume-control/volume-control.py:385
 msgid "No devices found"
 msgstr "Keine Geräte gefunden"
 
@@ -5824,44 +5863,44 @@ msgstr "Noch ein weiteres Menü-Applet"
 msgid "YAMA"
 msgstr "YAMA"
 
-#: ../applets/maintained/yama/yama.py:168
+#: ../applets/maintained/yama/yama.py:171
 #, python-format
 msgid "Log out %s of this session to log in as a different user"
 msgstr ""
 "%s von dieser Sitzung abmelden, um sich als ein anderer Benutzer anzumelden"
 
-#: ../applets/maintained/yama/yama.py:205
+#: ../applets/maintained/yama/yama.py:189
 msgid "_Edit Menus"
 msgstr "Menüs _bearbeiten"
 
-#: ../applets/maintained/yama/yama.py:268
+#: ../applets/maintained/yama/yama.py:253
 msgid "Open your personal folder"
 msgstr "Persönlichen Ordner öffnen"
 
-#: ../applets/maintained/yama/yama.py:270
+#: ../applets/maintained/yama/yama.py:255
 msgid "Open the contents of your desktop in a folder"
 msgstr "Die Inhalte Ihrer Arbeitsfläche in einem Ordner öffnen"
 
-#: ../applets/maintained/yama/yama.py:321
+#: ../applets/maintained/yama/yama.py:306
 msgid "Connect to a remote computer or shared disk"
 msgstr ""
 "Zu einem entfernten Rechner oder einer gemeinsamen Festplatte verbinden"
 
-#: ../applets/maintained/yama/yama.py:351
+#: ../applets/maintained/yama/yama.py:336
 msgid "Clear all items from the recent documents list"
 msgstr "Alle Objekte aus der Liste der zuletzt verwendeten Dokumente leeren"
 
-#: ../applets/maintained/yama/yama.py:402
+#: ../applets/maintained/yama/yama.py:375
 #, python-format
 msgid "Open '%s'"
 msgstr "»%s« öffnen"
 
-#: ../applets/maintained/yama/yama.py:444
+#: ../applets/maintained/yama/yama.py:417
 #, python-format
 msgid "Mount %s"
 msgstr "%s einhängen"
 
-#: ../applets/maintained/yama/yama.py:596
+#: ../applets/maintained/yama/yama.py:569
 msgid ""
 "Clearing the Recent Documents list will clear the following:\n"
 "* All items from the Places > Recent Documents menu item.\n"
@@ -5870,11 +5909,6 @@ msgstr ""
 "Das Leeren der Liste der zuletzt verwendeten Dokumente betrifft:\n"
 "  Alle Einträge im Menü Orte → Zuletzt geöffnete Dokumente.\n"
 "  Die Liste der zuletzt geöffneten Dokumente in allen Anwendungen."
-
-#: ../applets/maintained/yama/yama.py:611
-#, python-format
-msgid "Unable to mount %s"
-msgstr "Könnte %s nicht einhängen"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:1
 msgid "Awn System Monitor"
@@ -5905,12 +5939,12 @@ msgstr ""
 msgid "The pixel width of the applet border."
 msgstr "Die Breite des Appletrahmens in Pixeln."
 
-#: ../applets/unmaintained/main-menu/applet.c:394
+#: ../applets/unmaintained/main-menu/applet.c:393
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:2
 msgid "Awn Main Menu"
 msgstr "AWN Hauptmenü"
 
-#: ../applets/unmaintained/main-menu/applet.c:395
+#: ../applets/unmaintained/main-menu/applet.c:394
 msgid "Displays a list of all your applications"
 msgstr "Zeigt eine Liste Ihrer Anwendungen"
 
@@ -5930,7 +5964,7 @@ msgstr "Pandora Internet-Radio hören"
 msgid "Pandora Radio"
 msgstr "Pandora-Radio"
 
-#: ../shared/python/awnlib.py:110
+#: ../shared/python/awnlib.py:125
 #, python-format
 msgid "_About %s"
 msgstr "_Über %s"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-09 21:43+0200\n"
-"PO-Revision-Date: 2010-09-19 20:05+0000\n"
+"POT-Creation-Date: 2010-09-25 11:18+0200\n"
+"PO-Revision-Date: 2010-09-25 19:15+0000\n"
 "Last-Translator: Asier Sarasua Garmendia <Unknown>\n"
 "Language-Team: Basque <eu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-09-20 04:56+0000\n"
+"X-Launchpad-Export-Date: 2010-09-26 04:39+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -467,9 +467,65 @@ msgstr "Bateriaren egoera"
 msgid "An applet which displays battery information"
 msgstr "Bateriaren informazioa erakusten duen appleta"
 
-#: ../applets/maintained/battery/battery.py:99
+#: ../applets/maintained/battery/battery.py:98
 msgid "No batteries"
 msgstr "Bateriarik ez"
+
+#: ../applets/maintained/battery/battery.py:121
+#: ../applets/maintained/battery/battery.py:254
+#: ../applets/maintained/battery/battery.ui.h:6
+msgid "Percent"
+msgstr "Ehunekoa"
+
+#: ../applets/maintained/battery/battery.py:209
+msgid "AC"
+msgstr "AC"
+
+#: ../applets/maintained/battery/battery.py:209
+msgid "battery"
+msgstr "bateria"
+
+#: ../applets/maintained/battery/battery.py:210
+#, python-format
+msgid "Computer running on %s power"
+msgstr "Ordenagailuak %s energia dauka"
+
+#: ../applets/maintained/battery/battery.py:213
+msgid "Battery charged"
+msgstr "Bateria kargatu da"
+
+#: ../applets/maintained/battery/battery.py:221
+msgid "until charged"
+msgstr "kargatu arte"
+
+#: ../applets/maintained/battery/battery.py:225
+msgid "remaining"
+msgstr "falta dena"
+
+#: ../applets/maintained/battery/battery.py:263
+#: ../applets/maintained/battery/battery.ui.h:7
+msgid "Time Remaining"
+msgstr "Geratzen den denbora"
+
+#: ../applets/maintained/battery/battery.py:279
+#, python-format
+msgid "%d hours"
+msgstr "%d ordu"
+
+#: ../applets/maintained/battery/battery.py:281
+#, python-format
+msgid "%d hour"
+msgstr "ordu %d"
+
+#: ../applets/maintained/battery/battery.py:285
+#, python-format
+msgid "%d minutes"
+msgstr "%d minutu"
+
+#: ../applets/maintained/battery/battery.py:287
+#, python-format
+msgid "%d minute"
+msgstr "minutu %d"
 
 #: ../applets/maintained/battery/battery.ui.h:2
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:5
@@ -494,14 +550,6 @@ msgid "If enabled, shows a notification when the charge levels drops too low"
 msgstr ""
 "Gaituta badago, jakinarazpen bat erakusten du karga-maila gehiegi jaisten "
 "bada"
-
-#: ../applets/maintained/battery/battery.ui.h:6
-msgid "Percent"
-msgstr "Ehunekoa"
-
-#: ../applets/maintained/battery/battery.ui.h:7
-msgid "Time Remaining"
-msgstr "Geratzen den denbora"
 
 #: ../applets/maintained/battery/battery.ui.h:8
 msgid "_Battery:"
@@ -718,23 +766,12 @@ msgstr "Kokapenak"
 msgid "Edit"
 msgstr "Editatu"
 
-#. FIXME priv->display_name should be _("Places")
-#. awn_icon_set_tooltip_text (AWN_ICON(object),priv->display_name);
-#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:197
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1003
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1017
-#: ../applets/maintained/file-browser-launcher/prefs.py:249
-#: ../applets/maintained/places/places.desktop.in.in.h:2
-#: ../applets/maintained/yama/yama.py:261
-msgid "Places"
-msgstr "Lekuak"
-
-#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:351
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:305
 msgid "Remove Icon"
 msgstr "Kendu ikonoa"
 
 #: ../applets/maintained/cairo-menu/cairo-main-icon.c:161
-#: ../applets/unmaintained/main-menu/applet.c:453
+#: ../applets/unmaintained/main-menu/applet.c:452
 msgid "Main Menu"
 msgstr "Menu nagusia"
 
@@ -747,107 +784,123 @@ msgid "Cairo Main Menu"
 msgstr "Cairo menu nagusia"
 
 #. hope that gnome-session-save exists; needed for GNOME 2.22, at least.
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:107
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:111
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:116
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:125
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:129
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:134
 msgid "Logout"
 msgstr "Amaitu saioa"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:121
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:123
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:128
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:139
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:141
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:146
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:1
 #: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:46
 #: ../applets/maintained/quit/quit.py:57
 #: ../applets/maintained/quit/quit.py:265
-#: ../applets/maintained/yama/yama.py:150
+#: ../applets/maintained/yama/yama.py:153
 msgid "Lock Screen"
 msgstr "Blokeatu pantaila"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:132
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:134
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:145
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:150
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:152
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:163
 msgid "Suspend"
 msgstr "Eseki"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:137
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:139
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:150
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:155
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:157
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:168
 msgid "Hibernate"
 msgstr "Hibernatu"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:158
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:176
 msgid "Shutdown"
 msgstr "Itzali"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:195
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:213
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:381
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:610
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:585
 #: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Computer"
 msgstr "Ordenagailua"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:196
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:214
 msgid "Home"
 msgstr "Etxea"
 
-#. Check if this is the Desktop directory
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:197
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:568
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:215
 #: ../applets/maintained/places/applet.c:344
-#: ../applets/maintained/yama/yama.py:270
+#: ../applets/maintained/yama/yama.py:255
 msgid "Desktop"
 msgstr "Mahaigaina"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:203
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:205
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:635
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:221
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:223
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:610
 #: ../applets/maintained/file-browser-launcher/prefs.py:236
 msgid "Trash"
 msgstr "Zakarrontzia"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:207
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:225
 msgid "File System"
 msgstr "Fitxategi-sistema"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:336
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:613
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:356
+msgid "Removable Media"
+msgstr "Euskarri aldagarria"
+
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:367
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
 msgid "Network"
 msgstr "Sarea"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:337
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:368
 msgid "Connect to Server"
 msgstr "Konektatu zerbitzarira"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1040
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1055
-#: ../applets/maintained/yama/yama.py:337
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1034
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1048
+#: ../applets/maintained/file-browser-launcher/prefs.py:249
+#: ../applets/maintained/places/places.desktop.in.in.h:2
+#: ../applets/maintained/yama/yama.py:246
+msgid "Places"
+msgstr "Lekuak"
+
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1071
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1086
+#: ../applets/maintained/yama/yama.py:322
 msgid "Recent Documents"
 msgstr "Azken dokumentuak"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1086
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1097
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1117
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1128
 msgid "Session"
 msgstr "Saioa"
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1113
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1144
 msgid "Search\\u2026"
 msgstr "Bilatu\\u2026"
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1130
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1161
 msgid "Launch\\u2026"
 msgstr "Abiarazi\\u2026"
 
-#: ../applets/maintained/cairo-menu/misc.c:310
-#: ../applets/maintained/yama/yama.py:590
+#: ../applets/maintained/cairo-menu/misc.c:161
+#: ../applets/maintained/yama/yama.py:584
+#, c-format, python-format
+msgid "Unable to mount %s"
+msgstr "Ezin da %s muntatu"
+
+#: ../applets/maintained/cairo-menu/misc.c:407
+#: ../applets/maintained/yama/yama.py:563
 msgid "Clear the Recent Documents list?"
 msgstr "Garbitu azken dokumentuen zerrenda?"
 
 #. Translators: This is taken from gnome-panel, when deleting the Recent Documents List.
 #. * Please use the same translation.
-#: ../applets/maintained/cairo-menu/misc.c:314
+#: ../applets/maintained/cairo-menu/misc.c:411
 msgid ""
 "If you clear the Recent Documents list, you clear the following:\n"
 "• All items from the Places → Recent Documents menu item.\n"
@@ -857,10 +910,10 @@ msgstr ""
 " • 'Lekuak → Azken dokumentuak' menuko elementu guztiak.\n"
 " • Aplikazio guztietako azken dokumentuen zerrendako elementu guztiak."
 
-#: ../applets/maintained/cairo-menu/misc.c:326
-#: ../applets/maintained/cairo-menu/misc.c:420
-#: ../applets/maintained/yama/yama.py:351
-#: ../applets/maintained/yama/yama.py:595
+#: ../applets/maintained/cairo-menu/misc.c:423
+#: ../applets/maintained/cairo-menu/misc.c:532
+#: ../applets/maintained/yama/yama.py:336
+#: ../applets/maintained/yama/yama.py:568
 msgid "Clear Recent Documents"
 msgstr "Garbitu azken dokumentuak"
 
@@ -1004,7 +1057,7 @@ msgstr "Egutegiaren URLa"
 
 #. default title/tooltip to show on startup.
 #: ../applets/maintained/calendar/clockcal.py:51
-#: ../applets/maintained/calendar/clockcal.py:490
+#: ../applets/maintained/calendar/clockcal.py:494
 #: ../applets/maintained/digital-clock/digital-clock.vala:119
 msgid "Calendar"
 msgstr "Egutegia"
@@ -1031,17 +1084,26 @@ msgstr "Avant egutegi-appleta"
 msgid "A Calendar Applet for the Avant Window Navigator. Images by Deleket."
 msgstr "Avant Window Navigator-entzako egutegi-appleta. Irudiak: Deleket."
 
-#: ../applets/maintained/calendar/clockcal.py:496
+#. Translators: This is a date/time format string. You can check the
+#. output in terminal with 'date +"%x %X"'. In most cases you don't have
+#. to change it. See 'date --help' for other formats, that might be more
+#. common in your locale.
+#: ../applets/maintained/calendar/clockcal.py:293
+#, no-python-format
+msgid "%x %X"
+msgstr "%x %X"
+
+#: ../applets/maintained/calendar/clockcal.py:500
 msgid "Open in "
 msgstr "Ireki hemen: "
 
-#: ../applets/maintained/calendar/clockcal.py:500
+#: ../applets/maintained/calendar/clockcal.py:504
 #: ../applets/maintained/weather/forecast.py:171
 msgid "Today"
 msgstr "Gaur"
 
 #. print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
-#: ../applets/maintained/calendar/clockcal.py:548
+#: ../applets/maintained/calendar/clockcal.py:552
 msgid "Unable to read calendar data from external source."
 msgstr "Ezin izan dira egutegiaren datuak irakurri kanpoko iturburutik."
 
@@ -2449,7 +2511,7 @@ msgid "Source:"
 msgstr "Iturburua:"
 
 #: ../applets/maintained/feeds/prefs.py:374
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:616
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:151
 msgid "Search"
 msgstr "Bilatu"
@@ -2483,19 +2545,19 @@ msgstr "URL:"
 
 #. Username: label and entry
 #: ../applets/maintained/feeds/prefs.py:493
-#: ../applets/maintained/mail/mail.py:381
-#: ../applets/maintained/mail/mail.py:629
-#: ../applets/maintained/mail/mail.py:759
-#: ../applets/maintained/mail/mail.py:852
+#: ../applets/maintained/mail/mail.py:384
+#: ../applets/maintained/mail/mail.py:643
+#: ../applets/maintained/mail/mail.py:796
+#: ../applets/maintained/mail/mail.py:890
 msgid "Username:"
 msgstr "Erabiltzaile-izena:"
 
 #. Password: label and entry
 #: ../applets/maintained/feeds/prefs.py:507
-#: ../applets/maintained/mail/mail.py:385
-#: ../applets/maintained/mail/mail.py:632
-#: ../applets/maintained/mail/mail.py:762
-#: ../applets/maintained/mail/mail.py:855
+#: ../applets/maintained/mail/mail.py:388
+#: ../applets/maintained/mail/mail.py:646
+#: ../applets/maintained/mail/mail.py:799
+#: ../applets/maintained/mail/mail.py:893
 msgid "Password:"
 msgstr "Pasahitza:"
 
@@ -2607,7 +2669,7 @@ msgid "A launcher for your file manager"
 msgstr "Abiarazlea zure fitxategi-arakatzailerako"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:385
-#: ../applets/maintained/yama/yama.py:268
+#: ../applets/maintained/yama/yama.py:253
 msgid "Home Folder"
 msgstr "Karpeta nagusia"
 
@@ -2617,86 +2679,50 @@ msgid "Filesystem"
 msgstr "Fitxategi-sistema"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:518
-#: ../applets/maintained/yama/yama.py:321
+#: ../applets/maintained/yama/yama.py:306
 msgid "Connect to Server..."
 msgstr "Zerbitzarira konektatzen..."
 
-#. Documents
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:572
-msgid "Documents"
-msgstr "Dokumentuak"
-
-#. Downloads
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:576
-msgid "Downloads"
-msgstr "Deskargak"
-
-#. Music
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:580
-msgid "Music"
-msgstr "Musika"
-
-#. Pictures
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:584
-#: ../applets/maintained/slickswitcher/prefs.py:347
-msgid "Pictures"
-msgstr "Irudiak"
-
-#. Public
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
-msgid "Public"
-msgstr "Publikoa"
-
-#. Templates
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:592
-msgid "Templates"
-msgstr "Txantiloiak"
-
-#. Videos
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:596
-msgid "Videos"
-msgstr "Bideoak"
-
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:619
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:594
 msgid "CD/DVD Burner"
 msgstr "CD/DVD grabagailua"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:622
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:597
 msgid "Fonts"
 msgstr "Letra-tipoak"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:626
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:601
 #: ../applets/maintained/file-browser-launcher/prefs.py:295
 #: ../applets/maintained/file-browser-launcher/prefs.py:370
 msgid "Folder"
 msgstr "Karpeta"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:632
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:607
 #, python-format
 msgid "Trash (%d)"
 msgstr "Zakarrontzia (%d)"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:742
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:717
 msgid "DVD Drive"
 msgstr "DVD unitatea"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:746
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:721
 msgid "CD Drive"
 msgstr "CD unitatea"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1089
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1064
 msgid "Eject"
 msgstr "Egotzi"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1097
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1072
 msgid "Empty Trash"
 msgstr "Hustu zakarrontzia"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1120
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1095
 msgid "Confirm deletion"
 msgstr "Baieztatu ezabaketa"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1128
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1103
 msgid ""
 "<big><b>Are you sure you want to delete\n"
 "every item from the trash?</b></big>"
@@ -2704,7 +2730,7 @@ msgstr ""
 "<big><b>Seguru zaude zakarrontziko\n"
 "elementuak ezabatu nahi dituzula?</b></big>"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1130
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1105
 msgid "This action cannot be undone."
 msgstr "Ekintza hau ezin da desegin."
 
@@ -2841,7 +2867,7 @@ msgid "A lightweight, cross-desktop trash applet"
 msgstr "Zakarrontzi appleta, mahaigain anitza eta arina"
 
 #. This is a window title, %s is an applet's name.
-#: ../applets/maintained/garbage/prefs.vala:32 ../shared/python/awnlib.py:367
+#: ../applets/maintained/garbage/prefs.vala:32 ../shared/python/awnlib.py:404
 #, c-format, python-format
 msgid "%s Preferences"
 msgstr "%s hobespenak"
@@ -3220,7 +3246,7 @@ msgstr "Ikusi postarik duzun Awn-tik"
 
 #: ../applets/maintained/mail/mail.desktop.in.h:2
 #: ../applets/maintained/mail/mail.py:136
-#: ../applets/maintained/mail/mail.py:904
+#: ../applets/maintained/mail/mail.py:942
 msgid "Mail Applet"
 msgstr "Posta elektronikoaren appleta"
 
@@ -3247,69 +3273,69 @@ msgstr "Posta elektronikoaren appleta (egin klik saioa hasteko)"
 msgid "Logging in as %s"
 msgstr "%s bezala sartzen"
 
-#: ../applets/maintained/mail/mail.py:158
+#: ../applets/maintained/mail/mail.py:161
 msgid "Network error - Mail Applet"
 msgstr "Sare-errorea -  Posta elektronikoaren appleta"
 
-#: ../applets/maintained/mail/mail.py:167
+#: ../applets/maintained/mail/mail.py:170
 msgid "New Mail - Mail Applet"
 msgstr "Mezu berria - Posta elektronikoaren appleta"
 
-#: ../applets/maintained/mail/mail.py:271
+#: ../applets/maintained/mail/mail.py:274
 msgid "Mail"
 msgstr "Posta"
 
-#: ../applets/maintained/mail/mail.py:307
+#: ../applets/maintained/mail/mail.py:310
 msgid "Open Web Mail"
 msgstr "Ireki web posta"
 
-#: ../applets/maintained/mail/mail.py:316
+#: ../applets/maintained/mail/mail.py:319
 msgid "Open Desktop Client"
 msgstr "Ireki mahaigaineko bezeroa"
 
-#: ../applets/maintained/mail/mail.py:325
+#: ../applets/maintained/mail/mail.py:328
 msgid "Refresh"
 msgstr "Freskatu"
 
-#: ../applets/maintained/mail/mail.py:334
+#: ../applets/maintained/mail/mail.py:337
 #: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:47
 #: ../applets/maintained/quit/quit.py:58
 #: ../applets/maintained/quit/quit.py:267
 msgid "Log Out"
 msgstr "Amaitu saioa"
 
-#: ../applets/maintained/mail/mail.py:364
+#: ../applets/maintained/mail/mail.py:367
 msgid "No unread messages"
 msgstr "Ez dago irakurri gabeko mezurik"
 
-#: ../applets/maintained/mail/mail.py:366
+#: ../applets/maintained/mail/mail.py:369
 msgid "No new messages"
 msgstr "Ez dago mezu berririk"
 
-#: ../applets/maintained/mail/mail.py:405
+#: ../applets/maintained/mail/mail.py:408
 msgid "Wrong username or password"
 msgstr "Erabiltzaile-izen edo pasahitz okerra"
 
-#: ../applets/maintained/mail/mail.py:413
-#: ../applets/maintained/mail/mail.py:474
+#: ../applets/maintained/mail/mail.py:416
+#: ../applets/maintained/mail/mail.py:477
 msgid "Log In"
 msgstr "Hasi saioa"
 
-#: ../applets/maintained/mail/mail.py:450
+#: ../applets/maintained/mail/mail.py:453
 msgid "Type:"
 msgstr "Mota:"
 
-#: ../applets/maintained/mail/mail.py:455
+#: ../applets/maintained/mail/mail.py:458
 msgid "Backend"
 msgstr "Motorra"
 
-#: ../applets/maintained/mail/mail.py:510
-#: ../applets/maintained/mail/mail.py:719
+#: ../applets/maintained/mail/mail.py:514
+#: ../applets/maintained/mail/mail.py:742
 msgid "Could not log in: No username"
 msgstr "Ezin izan da saioa hasi: Erabiltzaile-izena falta da"
 
-#: ../applets/maintained/mail/mail.py:518
-#: ../applets/maintained/mail/mail.py:583
+#: ../applets/maintained/mail/mail.py:522
+#: ../applets/maintained/mail/mail.py:592
 msgid ""
 "There seem to be problems with our connection to your account. Your best bet "
 "is probably to log out and try again."
@@ -3317,67 +3343,76 @@ msgstr ""
 "Dirudienez arazoak daude zure kontura konektatzeko. Aukerarik onena saioa "
 "bukatu eta berriro saiatzea da."
 
-#: ../applets/maintained/mail/mail.py:540
-#: ../applets/maintained/mail/mail.py:605
+#: ../applets/maintained/mail/mail.py:533
+#: ../applets/maintained/mail/mail.py:549
+#: ../applets/maintained/mail/mail.py:603
+#: ../applets/maintained/mail/mail.py:619
+#: ../applets/maintained/mail/mail.py:687
+#: ../applets/maintained/mail/mail.py:781
 msgid "[No Subject]"
 msgstr "[Gairik ez]"
 
-#: ../applets/maintained/mail/mail.py:562
+#: ../applets/maintained/mail/mail.py:535
+#: ../applets/maintained/mail/mail.py:605
+msgid "[Unknown]"
+msgstr "[Ezezaguna]"
+
+#: ../applets/maintained/mail/mail.py:571
 msgid "Google Apps"
 msgstr "Google Apps"
 
-#: ../applets/maintained/mail/mail.py:574
+#: ../applets/maintained/mail/mail.py:583
 msgid "Could not log in: No username or domain"
 msgstr "Ezin izan da saioa hasi: Erabiltzaile-izena edo domeinua falta da"
 
-#: ../applets/maintained/mail/mail.py:636
+#: ../applets/maintained/mail/mail.py:650
 msgid "Domain:"
 msgstr "Domeinua:"
 
-#: ../applets/maintained/mail/mail.py:658
+#: ../applets/maintained/mail/mail.py:673
 msgid "Unix Spool"
 msgstr "Unix Spool"
 
-#: ../applets/maintained/mail/mail.py:680
+#: ../applets/maintained/mail/mail.py:695
 msgid "Spool Path:"
 msgstr "Spool bide-izena:"
 
-#: ../applets/maintained/mail/mail.py:713
-#: ../applets/maintained/mail/mail.py:715
+#: ../applets/maintained/mail/mail.py:736
+#: ../applets/maintained/mail/mail.py:738
 msgid "Could not log in: "
 msgstr "Ezin izan da saioa hasi: "
 
-#: ../applets/maintained/mail/mail.py:724
+#: ../applets/maintained/mail/mail.py:747
 msgid "Could not log in: Username or password incorrect"
 msgstr "Ezin izan da saioa hasi: Erabiltzaile-izena edo pasahitza okerra da"
 
-#: ../applets/maintained/mail/mail.py:766
-#: ../applets/maintained/mail/mail.py:859
+#: ../applets/maintained/mail/mail.py:803
+#: ../applets/maintained/mail/mail.py:897
 msgid "Server:"
 msgstr "Zerbitzaria:"
 
-#: ../applets/maintained/mail/mail.py:769
-#: ../applets/maintained/mail/mail.py:862
+#: ../applets/maintained/mail/mail.py:806
+#: ../applets/maintained/mail/mail.py:900
 msgid "Use SSL encryption"
 msgstr "SSL enkriptazioa erabili"
 
-#: ../applets/maintained/mail/mail.py:805
+#: ../applets/maintained/mail/mail.py:843
 msgid "Could not log in"
 msgstr "Ezin izan da saios hasi"
 
-#: ../applets/maintained/mail/mail.py:811
+#: ../applets/maintained/mail/mail.py:849
 msgid "Folder does not exst"
 msgstr "Karpeta ez da existitzen"
 
-#: ../applets/maintained/mail/mail.py:865
+#: ../applets/maintained/mail/mail.py:903
 msgid "Get messages from only one folder"
 msgstr "Jaso karpeta bakar bateko mezuak"
 
-#: ../applets/maintained/mail/mail.py:872
+#: ../applets/maintained/mail/mail.py:907
 msgid "Folder:"
 msgstr "Karpeta:"
 
-#: ../applets/maintained/mail/mail.py:907
+#: ../applets/maintained/mail/mail.py:945
 msgid "An applet to check one's email"
 msgstr "Posta elektronikoa egiaztatzeko appleta"
 
@@ -4019,7 +4054,7 @@ msgid "Quit-Log Out applet"
 msgstr "Irten-Saioa amaitu appleta"
 
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:2
-#: ../applets/maintained/yama/yama.py:150
+#: ../applets/maintained/yama/yama.py:153
 msgid "Protect your computer from unauthorized use"
 msgstr "Babestu zure ordenagailua baimentik gabeko erabileratik"
 
@@ -4033,12 +4068,12 @@ msgstr "Amaitu saio hau beste erabiltzaile batekin saioa hasteko"
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:1
 #: ../applets/maintained/quit/quit.py:48
-#: ../applets/maintained/yama/yama.py:172
+#: ../applets/maintained/yama/yama.py:175
 msgid "Shut Down..."
 msgstr "Itzali..."
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:2
-#: ../applets/maintained/yama/yama.py:172
+#: ../applets/maintained/yama/yama.py:175
 msgid "Shut down the system"
 msgstr "Itzali sistema"
 
@@ -4072,7 +4107,7 @@ msgstr "Itzali"
 #. Translators: %s is a username
 #. Translators: %s is a user name.
 #: ../applets/maintained/quit/quit.py:43
-#: ../applets/maintained/yama/yama.py:168
+#: ../applets/maintained/yama/yama.py:171
 #, python-format
 msgid "Log Out %s..."
 msgstr "Amaitu %s(r)en saioa..."
@@ -4369,14 +4404,14 @@ msgid "A prettier desktop switcher"
 msgstr "Mahaigain-aldatzaile politagoa"
 
 #: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:2
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2439
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2438
 msgid "Shiny Switcher"
 msgstr "Aldatzaile distiratsua"
 
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:642
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:736
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1946
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2013
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:735
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1945
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2012
 msgid "Applet Preferences"
 msgstr "Appletaren hobespenak"
 
@@ -4619,6 +4654,10 @@ msgstr "Fitxategia:"
 msgid "Choose a Background Image"
 msgstr "Hautako atzeko planoko irudia"
 
+#: ../applets/maintained/slickswitcher/prefs.py:347
+msgid "Pictures"
+msgstr "Irudiak"
+
 #: ../applets/maintained/slickswitcher/prefs.py:367
 #: ../applets/maintained/to-do/prefs.py:445
 msgid "Background"
@@ -4749,7 +4788,7 @@ msgstr "%s shock-etatik babestuta"
 msgid "%s not protected from shocks"
 msgstr "%s shock-etatik babestu gabe"
 
-#: ../applets/maintained/thinkhdaps/thinkhdaps.py:158
+#: ../applets/maintained/thinkhdaps/thinkhdaps.py:153
 msgid "No hard disk found"
 msgstr "Ez da disko gogorrik aurkitu"
 
@@ -5182,15 +5221,15 @@ msgstr "Instalatu GStreamer-en hurrengo elementuak: %s."
 msgid "Could not find any devices."
 msgstr "Ezin izan da gailurik aurkitu."
 
-#: ../applets/maintained/volume-control/volume-control.py:181
+#: ../applets/maintained/volume-control/volume-control.py:184
 msgid "_Open Volume Control"
 msgstr "_Ireki bolumen-kontrola"
 
-#: ../applets/maintained/volume-control/volume-control.py:376
+#: ../applets/maintained/volume-control/volume-control.py:379
 msgid "No mixer found"
 msgstr "Ez da nahasgailurik aurkitu"
 
-#: ../applets/maintained/volume-control/volume-control.py:382
+#: ../applets/maintained/volume-control/volume-control.py:385
 msgid "No devices found"
 msgstr "Ez da gailurik aurkitu"
 
@@ -5776,42 +5815,42 @@ msgstr "Beste menu-applet bat"
 msgid "YAMA"
 msgstr "YAMA"
 
-#: ../applets/maintained/yama/yama.py:168
+#: ../applets/maintained/yama/yama.py:171
 #, python-format
 msgid "Log out %s of this session to log in as a different user"
 msgstr "Atera %s saiotik beste erabiltzaile-izen batekin sartzeko"
 
-#: ../applets/maintained/yama/yama.py:205
+#: ../applets/maintained/yama/yama.py:189
 msgid "_Edit Menus"
 msgstr "_Editatu menuak"
 
-#: ../applets/maintained/yama/yama.py:268
+#: ../applets/maintained/yama/yama.py:253
 msgid "Open your personal folder"
 msgstr "Ireki karpeta pertsonala"
 
-#: ../applets/maintained/yama/yama.py:270
+#: ../applets/maintained/yama/yama.py:255
 msgid "Open the contents of your desktop in a folder"
 msgstr "Ireki mahaigaineko edukia karpeta batean"
 
-#: ../applets/maintained/yama/yama.py:321
+#: ../applets/maintained/yama/yama.py:306
 msgid "Connect to a remote computer or shared disk"
 msgstr "Konektatu urruneko ordenagailura edo partekatutako diskora"
 
-#: ../applets/maintained/yama/yama.py:351
+#: ../applets/maintained/yama/yama.py:336
 msgid "Clear all items from the recent documents list"
 msgstr "Garbitu azken dokumentuen zerrendako elementu guztiak"
 
-#: ../applets/maintained/yama/yama.py:402
+#: ../applets/maintained/yama/yama.py:375
 #, python-format
 msgid "Open '%s'"
 msgstr "Ireki '%s'"
 
-#: ../applets/maintained/yama/yama.py:444
+#: ../applets/maintained/yama/yama.py:417
 #, python-format
 msgid "Mount %s"
 msgstr "Muntatu %s"
 
-#: ../applets/maintained/yama/yama.py:596
+#: ../applets/maintained/yama/yama.py:569
 msgid ""
 "Clearing the Recent Documents list will clear the following:\n"
 "* All items from the Places > Recent Documents menu item.\n"
@@ -5820,11 +5859,6 @@ msgstr ""
 "Azken dokumentuen zerrenda garbitzean hurrengoa ezabatuko da:\n"
 "* Lekuak > Azken dokumentuak menuko elementu guztiak.\n"
 "* Aplikazio guztietako azken dokumentuen ataleko elementu guztiak."
-
-#: ../applets/maintained/yama/yama.py:611
-#, python-format
-msgid "Unable to mount %s"
-msgstr "Ezin da %s muntatu"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:1
 msgid "Awn System Monitor"
@@ -5856,12 +5890,12 @@ msgstr ""
 msgid "The pixel width of the applet border."
 msgstr "Appletaren ertzaren zabalera pixeletan."
 
-#: ../applets/unmaintained/main-menu/applet.c:394
+#: ../applets/unmaintained/main-menu/applet.c:393
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:2
 msgid "Awn Main Menu"
 msgstr "Awn-ren menu nagusia"
 
-#: ../applets/unmaintained/main-menu/applet.c:395
+#: ../applets/unmaintained/main-menu/applet.c:394
 msgid "Displays a list of all your applications"
 msgstr "Zure aplikazio guztien zerrenda erakusten du"
 
@@ -5881,7 +5915,7 @@ msgstr "Entzun Pandora Internet Radio"
 msgid "Pandora Radio"
 msgstr "Pandora Radio"
 
-#: ../shared/python/awnlib.py:110
+#: ../shared/python/awnlib.py:125
 #, python-format
 msgid "_About %s"
 msgstr "%s-(e)i buruz"

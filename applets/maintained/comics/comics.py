@@ -165,7 +165,8 @@ class ComicApplet(awn.AppletSimple):
         about_item = gtk.ImageMenuItem(_("_About %s") % applet_display_name)
         if gtk_show_image_ok:
             about_item.props.always_show_image = True
-        about_item.set_image(gtk.image_new_from_stock(gtk.STOCK_ABOUT, gtk.ICON_SIZE_MENU))
+        about_item.set_image(gtk.image_new_from_stock(gtk.STOCK_ABOUT,
+                                                      gtk.ICON_SIZE_MENU))
         menu.append(about_item)
         about_item.connect("activate", self.on_show_about_activated)
         menu.show_all()
@@ -234,7 +235,7 @@ class ComicApplet(awn.AppletSimple):
     def on_button3_pressed(self, event):
         menu = self.make_menu()
         if menu:
-            self.popup_gtk_menu (menu, event.button, event.time)
+            self.popup_gtk_menu(menu, event.button, event.time)
 
     def on_button_press(self, widget, event):
         if event.button == 1:
@@ -279,16 +280,16 @@ class ComicApplet(awn.AppletSimple):
                          'Gabor Karsay'])
         win.set_artists(['Moses Palmér'])
         win.set_comments(_("View your favourite comics on your desktop"))
-        win.set_license("This program is free software; you can redistribute it "+\
-            "and/or modify it under the terms of the GNU General Public License "+\
-            "as published by the Free Software Foundation; either version 2 of "+\
-            "the License, or (at your option) any later version.\n\nThis program is "+\
-            "distributed in the hope that it will be useful, but WITHOUT ANY "+\
-            "WARRANTY; without even the implied warranty of MERCHANTABILITY or "+\
-            "FITNESS FOR A PARTICULAR PURPOSE.    See the GNU General Public "+\
-            "License for more details.\n\nYou should have received a copy of the GNU "+\
-            "General Public License along with this program; if not, write to the "+\
-            "Free Software Foundation, Inc., "+\
+        win.set_license("This program is free software; you can redistribute it " +\
+            "and/or modify it under the terms of the GNU General Public License " +\
+            "as published by the Free Software Foundation; either version 2 of " +\
+            "the License, or (at your option) any later version.\n\nThis program is " +\
+            "distributed in the hope that it will be useful, but WITHOUT ANY " +\
+            "WARRANTY; without even the implied warranty of MERCHANTABILITY or " +\
+            "FITNESS FOR A PARTICULAR PURPOSE.    See the GNU General Public " +\
+            "License for more details.\n\nYou should have received a copy of the GNU " +\
+            "General Public License along with this program; if not, write to the " +\
+            "Free Software Foundation, Inc., " +\
             "51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.")
         win.set_wrap_license(True)
         win.set_logo(pixbuf)
@@ -318,7 +319,6 @@ if __name__ == '__main__':
     #Initialise AWN and create the applet
     awn.init(sys.argv[1:])
     applet = ComicApplet(awn.uid, awn.panel_id, feeds)
-
 
     # Initialize user agent string
     import urllib

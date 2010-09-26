@@ -27,7 +27,7 @@ import awn
 import os
 import sys
 import tempfile
-from awn.extras import _
+from awn.extras import _, awnlib
 
 # Import Comics! modules, but check dependencies first
 awn.check_dependencies(globals(), 'feedparser', 'pynotify')
@@ -42,6 +42,9 @@ from shared import (
     USER_DIR, USER_FEEDS_DIR)
 
 APPLET_NAME = 'comics'
+applet_display_name = _('Comics!')
+applet_icon = os.path.join(ICONS_DIR, 'comics-icon.svg')
+gtk_show_image_ok = awnlib.is_required_version(gtk.gtk_version, (2, 16, 0))
 
 
 class BidirectionalIterator:
@@ -159,6 +162,12 @@ class ComicApplet(awn.AppletSimple):
         manage_item = gtk.MenuItem(_('Manage Comics'))
         manage_item.connect("activate", self.on_manage_comics_activated)
         menu.append(manage_item)
+        about_item = gtk.ImageMenuItem(_("_About %s") % applet_display_name)
+        if gtk_show_image_ok:
+            about_item.props.always_show_image = True
+        about_item.set_image(gtk.image_new_from_stock(gtk.STOCK_ABOUT, gtk.ICON_SIZE_MENU))
+        menu.append(about_item)
+        about_item.connect("activate", self.on_show_about_activated)
         menu.show_all()
         return menu
 
@@ -176,7 +185,7 @@ class ComicApplet(awn.AppletSimple):
 
         self.set_icon_name('comics-icon')
         # Initialise notifications
-        notify_init(_('Comics!'))
+        notify_init(applet_display_name)
         self.dialog = awn.Dialog(self)
         self.dialog.connect('button-release-event',
                             self.on_dialog_button_press)
@@ -209,8 +218,7 @@ class ComicApplet(awn.AppletSimple):
 
     def on_window_updated(self, widget, title):
         msg = Notification(_('There is a new strip of %s!') % widget.feed_name,
-                           None,
-                           os.path.join(ICONS_DIR, 'comics-icon.svg'))
+                           None, applet_icon)
         msg.show()
 
     def on_window_removed(self, widget):
@@ -258,6 +266,36 @@ class ComicApplet(awn.AppletSimple):
         manager = comics_manage.ComicsManager(self.feeds)
         manager.show()
 
+    def on_show_about_activated(self, widget):
+        pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(applet_icon, 48, 48)
+
+        win = gtk.AboutDialog()
+        win.set_name(applet_display_name)
+        win.set_copyright('Copyright \xc2\xa9 2008 Moses Palmér')
+        win.set_authors(['Moses Palmér',
+                         'Sharkbaitbobby',
+                         'Mark Lee',
+                         'Kyle L. Huff',
+                         'Gabor Karsay'])
+        win.set_artists(['Moses Palmér'])
+        win.set_comments(_("View your favourite comics on your desktop"))
+        win.set_license("This program is free software; you can redistribute it "+\
+            "and/or modify it under the terms of the GNU General Public License "+\
+            "as published by the Free Software Foundation; either version 2 of "+\
+            "the License, or (at your option) any later version.\n\nThis program is "+\
+            "distributed in the hope that it will be useful, but WITHOUT ANY "+\
+            "WARRANTY; without even the implied warranty of MERCHANTABILITY or "+\
+            "FITNESS FOR A PARTICULAR PURPOSE.    See the GNU General Public "+\
+            "License for more details.\n\nYou should have received a copy of the GNU "+\
+            "General Public License along with this program; if not, write to the "+\
+            "Free Software Foundation, Inc., "+\
+            "51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.")
+        win.set_wrap_license(True)
+        win.set_logo(pixbuf)
+        win.set_icon_from_file(applet_icon)
+        win.set_version(awn.extras.__version__)
+        win.run()
+        win.destroy()
 
 if __name__ == '__main__':
     # Initialise threading

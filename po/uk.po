@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-09-25 11:18+0200\n"
-"PO-Revision-Date: 2010-09-25 20:04+0000\n"
-"Last-Translator: Fedik <Unknown>\n"
+"PO-Revision-Date: 2010-09-26 18:25+0000\n"
+"Last-Translator: oleg voitsikhovskyi <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-09-26 04:39+0000\n"
+"X-Launchpad-Export-Date: 2010-09-27 04:38+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -81,7 +81,7 @@ msgstr "Дія"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:478
 msgid "Shortcut"
-msgstr ""
+msgstr "Ярлик"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:484
 msgid "Activate"
@@ -389,7 +389,7 @@ msgstr "Інтерфейси"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:568
 msgid "Change Unit"
-msgstr ""
+msgstr "Змінити одиницю вимірювання"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:612
 msgid "Status"
@@ -436,7 +436,7 @@ msgstr ""
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:3
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:8
 msgid "The name of the theme of the icon."
-msgstr ""
+msgstr "Назва теми іконок."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:7
 msgid "Unit of low level threshold (Percent or Time Remaining)."
@@ -470,11 +470,11 @@ msgstr "Відсотки"
 
 #: ../applets/maintained/battery/battery.py:209
 msgid "AC"
-msgstr ""
+msgstr "Від мережі"
 
 #: ../applets/maintained/battery/battery.py:209
 msgid "battery"
-msgstr ""
+msgstr "акумулятор"
 
 #: ../applets/maintained/battery/battery.py:210
 #, python-format
@@ -483,7 +483,7 @@ msgstr ""
 
 #: ../applets/maintained/battery/battery.py:213
 msgid "Battery charged"
-msgstr ""
+msgstr "Акумулятор заряджено"
 
 #: ../applets/maintained/battery/battery.py:221
 msgid "until charged"
@@ -491,7 +491,7 @@ msgstr ""
 
 #: ../applets/maintained/battery/battery.py:225
 msgid "remaining"
-msgstr ""
+msgstr "залишилось"
 
 #: ../applets/maintained/battery/battery.py:263
 #: ../applets/maintained/battery/battery.ui.h:7
@@ -1080,7 +1080,7 @@ msgstr "Аплет календаря для Avant Window Navigator. Зобра�
 #: ../applets/maintained/calendar/clockcal.py:293
 #, no-python-format
 msgid "%x %X"
-msgstr ""
+msgstr "%x %X"
 
 #: ../applets/maintained/calendar/clockcal.py:500
 msgid "Open in "
@@ -1098,12 +1098,12 @@ msgstr "Неможливо отримати дані календаря з ві�
 
 #: ../applets/maintained/calendar/googlecal.py:90
 msgid "No appointments."
-msgstr ""
+msgstr "Нема запланованих подій"
 
 #: ../applets/maintained/calendar/icscal.py:73
 #: ../applets/maintained/calendar/owacal.py:95
 msgid "No appointments"
-msgstr ""
+msgstr "Нема запланованих подій"
 
 #: ../applets/maintained/comics/awn-applet-comics.schema-ini.in.h:1
 msgid "The user agent to send when retrieving comics."
@@ -1339,11 +1339,11 @@ msgstr "Накладання прапорці обраної розкладки 
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:8
 msgid "User selected layouts."
-msgstr ""
+msgstr "Розкладки вибрані користувачем."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:9
 msgid "User selected variants."
-msgstr ""
+msgstr "Вибрані, користувачем, варіанти розкладки."
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:1
 msgid " Dialect Applet"
@@ -1417,6 +1417,25 @@ msgid ""
 "\tIf selected, scrolling up or down with your mouse wheel will select\n"
 "\tthe next or previous layout in your user list.\n"
 msgstr ""
+"\n"
+"Лівий клік:\n"
+"\n"
+"\tНаступна розкладка\t\tвибір наступної розкладки із списку користувача.\n"
+"\tПопередня розкладка\tвибір попередньої розкладки із списку користувача.\n"
+"\tМеню\t\t\tвибір розкладки із меню.\n"
+"\tНемає\t\t\tкнопка не буде виконувати якихось дій.\n"
+"\n"
+"Клік середньою кнопкою:\n"
+"\n"
+"\tНаступна розкладка\t\tвибір наступної розкладки із списку користувача.\n"
+"\tПопередня розкладка\tвибір попередньої розкладки із списку користувача.\n"
+"\tМеню\t\t\tвибір розкладки із меню.\n"
+"\tНемає\t\t\tкнопка не буде виконувати якихось дій.\n"
+"\n"
+"Вибір розкладки з допомогою колеса прокрутки:\n"
+"\n"
+"\tЯкщо обрано, то при прокручуванні колеса мишки вгору або вниз,\n"
+"\tбуде обрано попередню, або наступну розкладку, з списку користувача.\n"
 
 #: ../applets/maintained/dialect/dialect.ui.h:35
 msgid ""
@@ -1864,7 +1883,7 @@ msgstr "Виконувана команда при подвійному кляц
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:2
 msgid "Command to execute when the user wishes to adjust the date/time."
-msgstr ""
+msgstr "Виконувана команда при налаштуванні дати/часу."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:3
 msgid "Show the date before the time."
@@ -2000,7 +2019,7 @@ msgstr "Google Wave"
 
 #: ../applets/maintained/feeds/classes.py:664
 msgid "Reddit Inbox"
-msgstr ""
+msgstr "Вхідні Reddit"
 
 #: ../applets/maintained/feeds/classes.py:764
 #, python-format
@@ -2032,19 +2051,19 @@ msgstr "Аплет стрічки новин"
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
 #: ../applets/maintained/feeds/feeds.py:1114
 msgid "Monitor Web Feeds"
-msgstr ""
+msgstr "Перегляд стрічок новин."
 
 #. "Loading feeds..." label
 #: ../applets/maintained/feeds/feeds.py:98
 #: ../applets/maintained/feeds/feeds.py:155
 #: ../applets/maintained/feeds/feeds.py:232
 msgid "Loading feeds..."
-msgstr ""
+msgstr "Завантаження стрічок..."
 
 #. No feeds label
 #: ../applets/maintained/feeds/feeds.py:162
 msgid "You don't have any feeds."
-msgstr ""
+msgstr "У Вас відсутні стрічки новин."
 
 #: ../applets/maintained/feeds/feeds.py:484
 #, python-format
@@ -2054,27 +2073,31 @@ msgid ""
 "  <a href='%s'>%s</a>\n"
 "(%s More)\n"
 msgstr ""
+"%s\n"
+"  <a href='%s'>%s</a>\n"
+"  <a href='%s'>%s</a>\n"
+"(%s More)\n"
 
 #: ../applets/maintained/feeds/feeds.py:494
 #, python-format
 msgid "%s New Item - Feeds Applet"
 msgid_plural "%s New Items - Feeds Applet"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s Нове повідомлення - Стрічка новин"
+msgstr[1] "%s Нових повідомленнь - Стрічка новин"
 
 #. +Add Feed button
 #: ../applets/maintained/feeds/feeds.py:532
 msgid "_Add Feed"
-msgstr ""
+msgstr "_Додати стрічку новин"
 
 #: ../applets/maintained/feeds/feeds.py:581
 msgid "Open this feed's website"
-msgstr ""
+msgstr "Відкрити сайт цієї стрічки"
 
 #: ../applets/maintained/feeds/feeds.py:590
 #: ../applets/maintained/feeds/prefs.py:276
 msgid "Loading..."
-msgstr ""
+msgstr "Завантаження..."
 
 #: ../applets/maintained/feeds/feeds.py:628
 #: ../applets/maintained/feeds/feeds.py:787
@@ -2116,7 +2139,7 @@ msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:70
 msgid "Updating"
-msgstr ""
+msgstr "Оновлення"
 
 #: ../applets/maintained/feeds/prefs.py:109
 msgid "_Show website icons"
@@ -2130,11 +2153,11 @@ msgstr ""
 #. Import and export buttons (OPML)
 #: ../applets/maintained/feeds/prefs.py:121
 msgid "Import"
-msgstr ""
+msgstr "Імпортувати"
 
 #: ../applets/maintained/feeds/prefs.py:124
 msgid "Export"
-msgstr ""
+msgstr "Експортувати"
 
 #. Updating section (enable/disable automatically updating and change how often)
 #. Checkbox: Notify for updated feeds
@@ -2150,11 +2173,11 @@ msgstr ""
 #. Update every [SpinButton] minutes
 #: ../applets/maintained/feeds/prefs.py:163
 msgid "Update every "
-msgstr ""
+msgstr "Оновлювати кожні "
 
 #: ../applets/maintained/feeds/prefs.py:164
 msgid " minutes"
-msgstr ""
+msgstr " хвилин"
 
 #: ../applets/maintained/feeds/prefs.py:176
 msgid "Keep items unread when updating"
@@ -2162,11 +2185,11 @@ msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:283
 msgid "Open OPML File"
-msgstr ""
+msgstr "Відкрити OPML файл"
 
 #: ../applets/maintained/feeds/prefs.py:297
 msgid "Save OPML File"
-msgstr ""
+msgstr "Зберегти OPML файл"
 
 #. Note: the following string is used as an exmaple filename
 #: ../applets/maintained/feeds/prefs.py:303
@@ -2186,7 +2209,7 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:151
 msgid "Search"
-msgstr ""
+msgstr "Пошук"
 
 #: ../applets/maintained/feeds/prefs.py:377
 msgid "You must sign in to a Google service to search for feeds."
@@ -2198,7 +2221,7 @@ msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:431
 msgid "Timeline"
-msgstr ""
+msgstr "Шкала часу"
 
 #: ../applets/maintained/feeds/prefs.py:436
 msgid "Replies"
@@ -2213,7 +2236,7 @@ msgstr ""
 #: ../applets/maintained/feeds/prefs.py:479
 #: ../applets/maintained/webapplet/applet.c:276
 msgid "URL:"
-msgstr ""
+msgstr "URL:"
 
 #. Username: label and entry
 #: ../applets/maintained/feeds/prefs.py:493
@@ -2222,7 +2245,7 @@ msgstr ""
 #: ../applets/maintained/mail/mail.py:796
 #: ../applets/maintained/mail/mail.py:890
 msgid "Username:"
-msgstr ""
+msgstr "Користувач:"
 
 #. Password: label and entry
 #: ../applets/maintained/feeds/prefs.py:507
@@ -2231,7 +2254,7 @@ msgstr ""
 #: ../applets/maintained/mail/mail.py:799
 #: ../applets/maintained/mail/mail.py:893
 msgid "Password:"
-msgstr ""
+msgstr "Пароль:"
 
 #: ../applets/maintained/feeds/prefs.py:534
 msgid "Feed search by "
@@ -2247,12 +2270,16 @@ msgid ""
 "There was an error while searching.\n"
 "Please try again later."
 msgstr ""
+"Під час пошуку виникла помилка.\n"
+"Будь-ласка, спробуйте пізніше."
 
 #: ../applets/maintained/feeds/prefs.py:826
 msgid ""
 "No results found.\n"
 "Try checking your spelling or using different search terms."
 msgstr ""
+"Не знайдено жодних результатів.\n"
+"Перевірте граматику, чи введіть інші пошукові слова."
 
 #: ../applets/maintained/file-browser-launcher/about.py:39
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:2
@@ -2337,31 +2364,31 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:385
 #: ../applets/maintained/yama/yama.py:253
 msgid "Home Folder"
-msgstr ""
+msgstr "Домашня тека"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:389
 #: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Filesystem"
-msgstr ""
+msgstr "Файлова система"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:518
 #: ../applets/maintained/yama/yama.py:306
 msgid "Connect to Server..."
-msgstr ""
+msgstr "З'єднання з сервером..."
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:594
 msgid "CD/DVD Burner"
-msgstr ""
+msgstr "Запис CD/DVD дисків"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:597
 msgid "Fonts"
-msgstr ""
+msgstr "Шрифти"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:601
 #: ../applets/maintained/file-browser-launcher/prefs.py:295
 #: ../applets/maintained/file-browser-launcher/prefs.py:370
 msgid "Folder"
-msgstr ""
+msgstr "Тека"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:607
 #, python-format
@@ -2370,19 +2397,19 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:717
 msgid "DVD Drive"
-msgstr ""
+msgstr "Привід DVD"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:721
 msgid "CD Drive"
-msgstr ""
+msgstr "Привід CD"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1064
 msgid "Eject"
-msgstr ""
+msgstr "Витягнути"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1072
 msgid "Empty Trash"
-msgstr ""
+msgstr "Очистити смітник"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1095
 msgid "Confirm deletion"
@@ -2393,6 +2420,8 @@ msgid ""
 "<big><b>Are you sure you want to delete\n"
 "every item from the trash?</b></big>"
 msgstr ""
+"<big><b>Ви справді хочете очистити\n"
+"корзину?</b></big>"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1105
 msgid "This action cannot be undone."
@@ -2443,7 +2472,7 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Home folder"
-msgstr ""
+msgstr "Домашня тека"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:235
 msgid "Mounted local drives"
@@ -2455,11 +2484,11 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:236
 msgid "Connect to server"
-msgstr ""
+msgstr "З'єднання з сервером"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:236
 msgid "Bookmarks"
-msgstr ""
+msgstr "Закладки"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:270
 #: ../applets/maintained/file-browser-launcher/prefs.py:345
@@ -2469,7 +2498,7 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/prefs.py:270
 #: ../applets/maintained/file-browser-launcher/prefs.py:345
 msgid "Open the folder"
-msgstr ""
+msgstr "Відкрити теку"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:271
 #: ../applets/maintained/file-browser-launcher/prefs.py:346
@@ -2478,12 +2507,12 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:552
 msgid "Choose a folder"
-msgstr ""
+msgstr "Оберіть теку"
 
 #: ../applets/maintained/garbage/applet.vala:57
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:2
 msgid "Garbage"
-msgstr ""
+msgstr "Сміття"
 
 #. set the title as well
 #. $display_name: $count item(s)
@@ -2669,11 +2698,11 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:535
 msgid "properties"
-msgstr ""
+msgstr "властивості"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:1
 msgid "<b>Alarms</b>"
-msgstr ""
+msgstr "<b>Нагадування</b>"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:3
 msgid "<b>Sensor value limits</b>"
@@ -2682,11 +2711,11 @@ msgstr ""
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:4
 #: ../applets/maintained/mail/mail.ui.h:3
 msgid "<b>Update</b>"
-msgstr ""
+msgstr "<b>Оновити</b>"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:5
 msgid "Add"
-msgstr ""
+msgstr "Додати"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:6
 msgid "Enable high alarm"
@@ -2698,7 +2727,7 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:8
 msgid "Font size:"
-msgstr ""
+msgstr "Розмір шрифту:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:10
 msgid "Meter hand color:"
@@ -2706,7 +2735,7 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:11
 msgid "Remove"
-msgstr ""
+msgstr "Видалити"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:12
 msgid "Sensor high value"
@@ -2726,24 +2755,24 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:17
 msgid "Theme:"
-msgstr ""
+msgstr "Тема:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:18
 msgid "Update interval:"
-msgstr ""
+msgstr "Інтервал оновлення:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:19
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:45
 msgid "seconds"
-msgstr ""
+msgstr "секунд"
 
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "Volt"
-msgstr ""
+msgstr "Вольт"
 
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "rpm"
-msgstr ""
+msgstr "об/хв"
 
 #: ../applets/maintained/indicator-applet/applet.c:89
 #: ../applets/maintained/indicator-applet/applet.c:182
@@ -2751,7 +2780,7 @@ msgstr ""
 #: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.h:2
 #: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.in.h:2
 msgid "Indicator Applet"
-msgstr ""
+msgstr "Аплет сповіщення"
 
 #: ../applets/maintained/indicator-applet/applet.c:92
 #: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.h:1
@@ -2793,15 +2822,15 @@ msgstr ""
 
 #: ../applets/maintained/indicator-applet/applet.c:204
 msgid "Options"
-msgstr ""
+msgstr "Налаштування"
 
 #: ../applets/maintained/indicator-applet/applet.c:212
 msgid "Number of rows:"
-msgstr ""
+msgstr "Кількість рядків:"
 
 #: ../applets/maintained/indicator-applet/applet.c:216
 msgid "Number of columns:"
-msgstr ""
+msgstr "Кількість стовпчиків:"
 
 #: ../applets/maintained/indicator-applet/applet.c:228
 msgid "Enable Applet Icon mode"
@@ -2948,7 +2977,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.py:328
 msgid "Refresh"
-msgstr ""
+msgstr "Оновити"
 
 #: ../applets/maintained/mail/mail.py:337
 #: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:47
@@ -2963,11 +2992,11 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.py:369
 msgid "No new messages"
-msgstr ""
+msgstr "Немає нових листів"
 
 #: ../applets/maintained/mail/mail.py:408
 msgid "Wrong username or password"
-msgstr ""
+msgstr "Неправильний логін чи пароль"
 
 #: ../applets/maintained/mail/mail.py:416
 #: ../applets/maintained/mail/mail.py:477
@@ -3018,7 +3047,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.py:650
 msgid "Domain:"
-msgstr ""
+msgstr "Домен:"
 
 #: ../applets/maintained/mail/mail.py:673
 msgid "Unix Spool"
@@ -3040,7 +3069,7 @@ msgstr ""
 #: ../applets/maintained/mail/mail.py:803
 #: ../applets/maintained/mail/mail.py:897
 msgid "Server:"
-msgstr ""
+msgstr "Сервер:"
 
 #: ../applets/maintained/mail/mail.py:806
 #: ../applets/maintained/mail/mail.py:900
@@ -3053,7 +3082,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.py:849
 msgid "Folder does not exst"
-msgstr ""
+msgstr "Тека не існує"
 
 #: ../applets/maintained/mail/mail.py:903
 msgid "Get messages from only one folder"
@@ -3061,7 +3090,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.py:907
 msgid "Folder:"
-msgstr ""
+msgstr "Тека:"
 
 #: ../applets/maintained/mail/mail.py:945
 msgid "An applet to check one's email"
@@ -3089,7 +3118,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:9
 msgid "minutes"
-msgstr ""
+msgstr "хвилин"
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:1
 msgid "Close the docklet when mouse moves out from it."
@@ -5463,11 +5492,11 @@ msgstr ""
 
 #: ../applets/unmaintained/pandora/pandora.desktop.in.h:1
 msgid "Listen to Pandora Internet Radio"
-msgstr ""
+msgstr "Слухати інтернет радіо Pandora"
 
 #: ../applets/unmaintained/pandora/pandora.desktop.in.h:2
 msgid "Pandora Radio"
-msgstr ""
+msgstr "Радіо Pandora"
 
 #: ../shared/python/awnlib.py:125
 #, python-format

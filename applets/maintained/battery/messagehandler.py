@@ -18,6 +18,8 @@ try:
 except ImportError:
     import gobject as glib
 
+from awn.extras import _
+
 from awn import check_dependencies
 check_dependencies(globals(), "pynotify")
 

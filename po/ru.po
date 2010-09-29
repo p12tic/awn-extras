@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras-applets 0.2.7\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-09-25 11:18+0200\n"
-"PO-Revision-Date: 2010-09-27 12:30+0000\n"
+"PO-Revision-Date: 2010-09-28 18:34+0000\n"
 "Last-Translator: diablo <Unknown>\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-09-28 04:38+0000\n"
+"X-Launchpad-Export-Date: 2010-09-29 04:38+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -2413,13 +2413,13 @@ msgstr "Показать сообщения ленты"
 
 #: ../applets/maintained/feeds/feeds.py:777
 msgid "Hide this feed's items"
-msgstr "Скрыть элементы ленты"
+msgstr "Скрыть сообщения ленты"
 
 #. Create the items
 #: ../applets/maintained/feeds/feeds.py:1033
 #: ../applets/maintained/feeds/prefs.py:360
 msgid "Add Feed"
-msgstr "Добавить ленту новостей"
+msgstr "Добавить ленту"
 
 #: ../applets/maintained/feeds/feeds.py:1035
 msgid "Show Only _New Feeds"
@@ -2433,8 +2433,9 @@ msgstr "Импорт OPML"
 #, python-format
 msgid "Do you want to add %d feed?"
 msgid_plural "Do you want to add %d feeds?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Вы хотите добавить %d ленту?"
+msgstr[1] "Вы хотите добавить %d ленты?"
+msgstr[2] "Вы хотите добавить %d лент?"
 
 #: ../applets/maintained/feeds/prefs.py:59
 msgid "Feeds Applet Preferences"
@@ -2488,7 +2489,7 @@ msgstr " минут"
 
 #: ../applets/maintained/feeds/prefs.py:176
 msgid "Keep items unread when updating"
-msgstr "Сохранять элементы непрочитанными при обновлении"
+msgstr "Сохранять новости непрочитанными при обновлении"
 
 #: ../applets/maintained/feeds/prefs.py:283
 msgid "Open OPML File"
@@ -2505,7 +2506,7 @@ msgstr "feeds.opml"
 
 #: ../applets/maintained/feeds/prefs.py:314
 msgid "Awn Feeds Applet Items"
-msgstr ""
+msgstr "Сообщения апплета новостей Awn"
 
 #. Source: label and radio buttons
 #: ../applets/maintained/feeds/prefs.py:364

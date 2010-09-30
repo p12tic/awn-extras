@@ -52,25 +52,7 @@ usr/share/avant-window-navigator/applets/yama.desktop
 #usr/share/avant-window-navigator/applets/comic/
 #usr/share/avant-window-navigator/applets/comic.desktop
 #
-# Awn-meebo
-#
-#usr/share/avant-window-navigator/applets/awn-meebo/
-#usr/share/avant-window-navigator/applets/awn-meebo/icons/
-#usr/share/avant-window-navigator/applets/awn-meebo/profile/
-#usr/share/avant-window-navigator/applets/awn-meebo.desktop
-#
-# Digg
-#
-#usr/share/avant-window-navigator/applets/digg/
-#usr/share/avant-window-navigator/applets/digg.desktop
-#
 # Rtm
 #
 #usr/share/avant-window-navigator/applets/rtm/
 #usr/share/avant-window-navigator/applets/rtm.desktop
-#
-# Mimenu
-#
-#usr/share/avant-window-navigator/applets/mimenu/*.py
-#usr/share/avant-window-navigator/applets/mimenu/icons/*.svg
-#usr/share/avant-window-navigator/applets/mimenu.desktop

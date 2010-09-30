@@ -1,3 +1,0 @@
-aRSS is a RSS reader meant to display feed titles in a gtk.Menu
-
-Dependencies: python-feedparser, python-sqlalchemy, sqlite3

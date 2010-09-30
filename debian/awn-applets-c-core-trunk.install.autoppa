@@ -82,7 +82,5 @@ etc/gconf/schemas/awn-applet-garbage.schemas
 ####################
 #
 #usr/lib/awn/applets/separator/*.so
-#usr/lib/awn/applets/plugger/*.so
 #usr/share/avant-window-navigator/applets/separator.desktop
-#usr/share/avant-window-navigator/applets/plugger.desktop
 #usr/share/icons/hicolor/scalable/apps/separator.svg

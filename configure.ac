@@ -167,11 +167,6 @@ if test x$enable_sound != xno; then
 fi
 
 # applet-specific libraries
-#if test "$with_gconf" != "no" -a "$with_gnome" != "no"; then
-#PKG_CHECK_MODULES(FILEBROWSER, [$gconf gnome-desktop-2.0 gnome-vfs-2.0 libgnomeui-2.0])
-#PKG_CHECK_MODULES(PLUGGER, [$gconf gnome-vfs-2.0])
-#PKG_CHECK_MODULES(TRASHER, [$gconf gnome-vfs-2.0])
-#fi
 if test "$with_gconf" != "no"; then
 PKG_CHECK_MODULES(AWN_SYSTEM_MONITOR, [$gconf libgtop-2.0])
 PKG_CHECK_MODULES(NOTIFICATION_DAEMON, [$gconf $gstreampkg libnotify $url_label_module libwnck-1.0 x11])
@@ -193,9 +188,9 @@ AC_ARG_ENABLE(pymod_checks,
               enable_pymod_checks=yes)
 
 if test x${enable_pymod_checks} = xyes; then
-    # awnlib, battery, DesktopManager
+    # awnlib, battery
     AM_CHECK_PYMOD(pynotify,,,AC_MSG_ERROR([python module pynotify required (python-notify)]))
-    # arss, feeds, mail
+    # feeds, mail
     AM_CHECK_PYMOD(feedparser,,,AC_MSG_ERROR([python module feedparser required (python-feedparser)]))
     # cairo-clock
     AM_CHECK_PYMOD(rsvg,,,AC_MSG_ERROR([python module rsvg required (gnome-python-desktop)]))

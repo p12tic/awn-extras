@@ -474,6 +474,7 @@ class Dialect(awn.AppletSimple):
     # OVERLAY flag option changed
     def on_overlay(self, obj):
         if not self.init:
+            self.overlay = not self.overlay
             self.update_applet(self.layout[self.current], \
               self.variant[self.current], False)
 

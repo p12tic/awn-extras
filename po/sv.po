@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-09-25 11:18+0200\n"
-"PO-Revision-Date: 2010-09-25 18:14+0000\n"
+"PO-Revision-Date: 2010-09-30 13:07+0000\n"
 "Last-Translator: David Bengtsson <Unknown>\n"
 "Language-Team: Launchpad Swedish Translators <lp-l10n-"
 "sv@lists.launchpad.net>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-09-26 04:39+0000\n"
+"X-Launchpad-Export-Date: 2010-10-01 08:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Language: Swedish\n"
 
@@ -230,7 +230,7 @@ msgstr "Välj en giltig enhet"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:1
 msgid "A Network Bandwidth monitor for AWN"
-msgstr "En bandbreddsövervakare av nätverk för Awn"
+msgstr "Bandbreddsövervakning av nätverket för Awn"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:1
 #: ../applets/maintained/battery/battery.ui.h:1
@@ -509,22 +509,22 @@ msgstr "Återstående tid"
 #: ../applets/maintained/battery/battery.py:279
 #, python-format
 msgid "%d hours"
-msgstr ""
+msgstr "%d timmar"
 
 #: ../applets/maintained/battery/battery.py:281
 #, python-format
 msgid "%d hour"
-msgstr ""
+msgstr "%d timme"
 
 #: ../applets/maintained/battery/battery.py:285
 #, python-format
 msgid "%d minutes"
-msgstr ""
+msgstr "%d minuter"
 
 #: ../applets/maintained/battery/battery.py:287
 #, python-format
 msgid "%d minute"
-msgstr ""
+msgstr "%d minut"
 
 #: ../applets/maintained/battery/battery.ui.h:2
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:5
@@ -837,7 +837,7 @@ msgstr "Filsystem"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:356
 msgid "Removable Media"
-msgstr ""
+msgstr "Flyttbara media"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:367
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
@@ -881,7 +881,7 @@ msgstr "Starta\\u2026"
 #: ../applets/maintained/yama/yama.py:584
 #, c-format, python-format
 msgid "Unable to mount %s"
-msgstr ""
+msgstr "Kan inte montera %s"
 
 #: ../applets/maintained/cairo-menu/misc.c:407
 #: ../applets/maintained/yama/yama.py:563
@@ -1062,8 +1062,8 @@ msgid ""
 "you choose to clear your password, you will be prompted again for your "
 "calendar login credentials."
 msgstr ""
-"Vill du ta bort dina kalenderlösenord ifrån kalenderprogrammet? Om du väljer "
-"att rensa dina lösenord, kommer du att bli tillfrågad efter dina "
+"Vill du ta bort ditt kalenderlösenord från kalenderprogrammet? Om du väljer "
+"att rensa ditt lösenord, kommer du att bli tillfrågad efter dina "
 "inloggningsuppgifter igen."
 
 #: ../applets/maintained/calendar/clockcal.py:246
@@ -1096,7 +1096,7 @@ msgstr "Idag"
 #. print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
 #: ../applets/maintained/calendar/clockcal.py:552
 msgid "Unable to read calendar data from external source."
-msgstr "Det gick inte att läsa kalenderdata från extern källa."
+msgstr "Kan inte läsa kalenderdata från extern källa."
 
 #: ../applets/maintained/calendar/googlecal.py:90
 msgid "No appointments."
@@ -1356,7 +1356,7 @@ msgstr " Dialekt"
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:2
 msgid "Change your keyboard input layout from Awn."
-msgstr "Ändra din inmatningslayout för tangentbordet från Awn"
+msgstr "Ändra din layout för tangentbordsinmatningen från Awn"
 
 #: ../applets/maintained/dialect/dialect.ui.h:1
 msgid ""
@@ -1387,8 +1387,8 @@ msgstr ""
 "\n"
 "Detta miniprogram tillåter dig att ändra språk för din tangentbordsinmatning "
 "genom endast ett klick med musen.\n"
-"Du kan välja vilket tillgängligt inmatningsspråk som helst som finns på ditt "
-"system, eller från en lista över de du mest använder.\n"
+"Du kan välja ett tillgängligt inmatningsspråk som finns på ditt system, "
+"eller från en lista över de du mest använder.\n"
 "\n"
 "Se flikarna för musåtgärder och layoutlistor för konfigureringsalternativ.\n"
 "\n"
@@ -2390,8 +2390,8 @@ msgstr ""
 #, python-format
 msgid "%s New Item - Feeds Applet"
 msgid_plural "%s New Items - Feeds Applet"
-msgstr[0] "%s nytt objekt - Miniprogrammet Flöden"
-msgstr[1] "%s nya objekt - Miniprogrammet Flöden"
+msgstr[0] "%s nytt flödesobjekt"
+msgstr[1] "%s nya flödesobjekt"
 
 #. +Add Feed button
 #: ../applets/maintained/feeds/feeds.py:532
@@ -2835,7 +2835,7 @@ msgstr[1] "%s: %u objekt"
 #: ../applets/maintained/garbage/applet.vala:194
 #, c-format
 msgid "Could not open the trash folder with your file manager: %s"
-msgstr "Det gick inte att öppna papperskorgen med din filhanterare: %s"
+msgstr "Kunde inte öppna papperskorgen med filhanteraren: %s"
 
 #: ../applets/maintained/garbage/applet.vala:209
 msgid "_Empty Trash"
@@ -2852,8 +2852,7 @@ msgstr ""
 #: ../applets/maintained/garbage/applet.vala:344
 #, c-format
 msgid "Could not send the dragged file(s) to the trash: %s"
-msgstr ""
-"Det gick inte att flytta de(n) dragna filen/filerna till papperskorgen: %s"
+msgstr "Kunde inte flytta de(n) dragna filen/filerna till papperskorgen: %s"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:1
@@ -3205,7 +3204,7 @@ msgstr ""
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:8
 msgid "If true, use an Awn applet icon instead"
-msgstr ""
+msgstr "Om aktiverat, används en Awn-ikon istället."
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:9
 msgid "The number of rows (top and bottom edge) or columns (side edges)"
@@ -3274,11 +3273,11 @@ msgstr "Loggar in som %s"
 
 #: ../applets/maintained/mail/mail.py:161
 msgid "Network error - Mail Applet"
-msgstr "Nätverksfel - Miniprogrammet E-post"
+msgstr "Nätverksfel för e-post"
 
 #: ../applets/maintained/mail/mail.py:170
 msgid "New Mail - Mail Applet"
-msgstr "Ny e-post - Miniprogrammet E-post"
+msgstr "Nytt e-postmeddelande"
 
 #: ../applets/maintained/mail/mail.py:274
 msgid "Mail"
@@ -3331,7 +3330,7 @@ msgstr "Bakände"
 #: ../applets/maintained/mail/mail.py:514
 #: ../applets/maintained/mail/mail.py:742
 msgid "Could not log in: No username"
-msgstr "Det gick inte att logga in: inget användarnamn"
+msgstr "Kunde inte logga in: inget användarnamn"
 
 #: ../applets/maintained/mail/mail.py:522
 #: ../applets/maintained/mail/mail.py:592
@@ -3362,7 +3361,7 @@ msgstr "Google Apps"
 
 #: ../applets/maintained/mail/mail.py:583
 msgid "Could not log in: No username or domain"
-msgstr "Det gick inte att logga in: inget användarnamn eller domän"
+msgstr "Kunde inte logga in: inget användarnamn eller domän"
 
 #: ../applets/maintained/mail/mail.py:650
 msgid "Domain:"
@@ -3379,11 +3378,11 @@ msgstr "Sökväg till spool:"
 #: ../applets/maintained/mail/mail.py:736
 #: ../applets/maintained/mail/mail.py:738
 msgid "Could not log in: "
-msgstr "Det gick inte att logga in: "
+msgstr "Kunde inte logga in: "
 
 #: ../applets/maintained/mail/mail.py:747
 msgid "Could not log in: Username or password incorrect"
-msgstr "Det gick inte att logga in: användarnamn eller lösenord är felaktigt"
+msgstr "Kunde inte logga in: användarnamn eller lösenord är felaktigt"
 
 #: ../applets/maintained/mail/mail.py:803
 #: ../applets/maintained/mail/mail.py:897
@@ -3397,7 +3396,7 @@ msgstr "Använd SSL-kryptering"
 
 #: ../applets/maintained/mail/mail.py:843
 msgid "Could not log in"
-msgstr "Det gick inte att logga in"
+msgstr "Kunde inte logga in"
 
 #: ../applets/maintained/mail/mail.py:849
 msgid "Folder does not exst"
@@ -3449,8 +3448,7 @@ msgstr "Visa omslagsbild om tillgänglig."
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:3
 msgid "Display docklet instead of standard applet dialog."
-msgstr ""
-"Visa docklet istället för den standardiserade dialogrutan för miniprogrammet."
+msgstr "Visa docklet istället för miniprogrammets standard-dialogruta."
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:4
 msgid "Size of the album art."
@@ -3595,7 +3593,7 @@ msgstr "Mediaspelare"
 
 #: ../applets/maintained/media-player/media-player.desktop.in.h:2
 msgid "Plays any media files you drop on the applet"
-msgstr "Spelar upp vilken mediafil som helst du släpper på miniprogrammet"
+msgstr "Spelar upp den mediafil som du släpper på miniprogrammet"
 
 #. PyGObject doesn't have BOXED support implemented
 #. recent_items = gobject.property(type=gobject.TYPE_BOXED,
@@ -3616,7 +3614,7 @@ msgstr ""
 
 #: ../applets/maintained/media-player/media_player.py:426
 msgid "Plays any media files you drop on the applet."
-msgstr "Spelar upp vilken mediafil som helst du släpper på miniprogrammet."
+msgstr "Spelar upp den mediafil som du släpper på miniprogrammet."
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:1
 msgid "<b>GStreamer properties</b>"
@@ -3684,7 +3682,7 @@ msgstr "_Dolda monteringspunkter:"
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:1
 msgid "Extra offset from the panel's egde."
-msgstr "Extra kompensation ifrån panelens kant."
+msgstr "Extra kompensation från panelens kant."
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:2
 msgid ""
@@ -3819,7 +3817,7 @@ msgid ""
 "awn-notification-daemon should place windows relative to its position in the "
 "bar."
 msgstr ""
-"NOTERA: Den här nyckeln ska inte anses som stabil, det kommer sannolikt att "
+"NOTERA! Denna nyckel ska inte anses som stabil... det kommer sannolikt att "
 "förändras. Ungefärlig X-position för notifieringsfönster. Standard är -1, "
 "vilket betyder att awn-notification-daemon placerar fönster relativt till "
 "dess position i panelen."
@@ -3831,7 +3829,7 @@ msgid ""
 "awn-notification-daemon should place windows relative to its position in the "
 "bar."
 msgstr ""
-"NOTERA: Den här nyckeln ska inte anses som stabil, det kommer sannolikt att "
+"NOTERA! Denna nyckel ska inte anses som stabil... det kommer sannolikt att "
 "förändras. Ungefärlig Y-position för notifieringsfönster. Standard är -1, "
 "vilket betyder att awn-notification-daemon placerar fönster relativt till "
 "dess position i panelen."
@@ -3874,7 +3872,8 @@ msgstr "Använd fet text."
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:14
 msgid "Whether to attempt to kill any running notification-daemons."
 msgstr ""
-"Huruvida notifieringsdemoner som redan körs ska försökas dödas eller inte."
+"Huruvida notifieringsdemoner som redan körs ska försökas att dödas eller "
+"inte."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:15
 msgid "Whether to honour client notification window positioning requests."
@@ -3894,7 +3893,7 @@ msgid ""
 msgstr ""
 "En ersättare till den standardiserade notifieringsdemonen och notify-osd. "
 "Detta kommer att inaktivera de befintliga notifieringsdemonerna medan "
-"miniprogrammet är aktivt."
+"miniprogrammet är aktivt"
 
 #: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.in.h:2
 #: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.h:2
@@ -4049,7 +4048,7 @@ msgstr "Stäng av/logga ut"
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:2
 #: ../applets/maintained/yama/yama.py:153
 msgid "Protect your computer from unauthorized use"
-msgstr "Skydda din dator ifrån obehörigt användande"
+msgstr "Skydda din dator från obehörigt användande"
 
 #: ../applets/maintained/quit/quit-log-out.desktop.in.h:1
 msgid "Log Out..."
@@ -4410,7 +4409,7 @@ msgstr "Glänsande växlare"
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1945
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2012
 msgid "Applet Preferences"
-msgstr "Inställningar för miniprogrammet"
+msgstr "Inställningar"
 
 #: ../applets/maintained/showdesktop/applet.vala:40
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:2
@@ -5213,7 +5212,7 @@ msgstr "Installera en eller flera av de följande GStreamer-elementen: %s"
 
 #: ../applets/maintained/volume-control/volume-control.py:68
 msgid "Could not find any devices."
-msgstr "Det gick inte att hitta några enheter."
+msgstr "Kunde inte hitta några enheter."
 
 #: ../applets/maintained/volume-control/volume-control.py:184
 msgid "_Open Volume Control"
@@ -5659,8 +5658,7 @@ msgstr "Miniprogram för att visa aktuella väderprognoser"
 #: ../applets/maintained/weather/weather.py:71
 msgid ""
 "Could not retrieve weather data. You may be experiencing connectivity issues."
-msgstr ""
-"Det gick inte hämta väderinformation. Du kanske upplever anslutningsproblem."
+msgstr "Kunde inte hämta väderinformation. Du kanske har anslutningsproblem."
 
 #: ../applets/maintained/weather/weather.py:205
 msgid "Network error in Weather"
@@ -5785,7 +5783,7 @@ msgstr "Höjd i procent eller bildpunkter."
 
 #: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:1
 msgid "Applet for Websites"
-msgstr "Panelprogram för webbplatser"
+msgstr "Miniprogram för webbplatser"
 
 #: ../applets/maintained/wobblyzini/wobblyzini.desktop.in.in.h:1
 msgid "A simple test animation"
@@ -5806,7 +5804,7 @@ msgstr "Ytterligare en meny"
 
 #: ../applets/maintained/yama/yama.py:45
 msgid "YAMA"
-msgstr ""
+msgstr "YEM"
 
 #: ../applets/maintained/yama/yama.py:171
 #, python-format
@@ -5852,7 +5850,7 @@ msgstr ""
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:1
 msgid "Awn System Monitor"
-msgstr "Systemövervakare för Awn"
+msgstr "Awn-systemövervakare"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:1
 msgid "Graph update frequency, in milliseconds."
@@ -5882,7 +5880,7 @@ msgstr "Bildpunktsbredden på miniprogrammets ram."
 #: ../applets/unmaintained/main-menu/applet.c:393
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:2
 msgid "Awn Main Menu"
-msgstr "Huvudmeny för Awn"
+msgstr "Awn-huvudmeny"
 
 #: ../applets/unmaintained/main-menu/applet.c:394
 msgid "Displays a list of all your applications"

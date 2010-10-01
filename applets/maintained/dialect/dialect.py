@@ -31,6 +31,7 @@ awn.check_dependencies(globals(), 'xklavier')
 from xklavier import *
 from desktopagnostic.config import GROUP_DEFAULT as group
 from desktopagnostic.config import BIND_METHOD_FALLBACK as bind_fb
+from awn.extras import _
 
 # DEFINE applet class
 
@@ -53,19 +54,18 @@ class Dialect(awn.AppletSimple):
     variant = []
 
     # CONFIG variables
-    widgets = ['about', 'help', 'hpage', 'prefs', 'tlist', 'left', \
+    widgets = ['about', 'prefs', 'tlist', 'left', \
       'middle', 'scroll', 'stree', 'utree', 'slist', 'ulist', \
       'add', 'remove', 'overlay', 'scale', 'opacity', 'toggle']
     schema = {'left': 'active', 'middle': 'active', 'scroll': 'active', \
       'scale': 'value', 'opacity': 'value', 'overlay': 'active'}
-    ctitle = ['Preferences', 'Help', 'Separator', 'About']
-    cdata = [['gtk-preferences', 'prefs'], ['gtk-help', 'help'], \
-      None, ['gtk-about', 'about']]
+    ctitle = ['Preferences', 'About']
+    cdata = [['gtk-preferences', 'prefs'], ['gtk-about', 'about']]
     wheel = [gtk.gdk.SCROLL_DOWN, None, gtk.gdk.SCROLL_UP]
     watch = '/var/lib/xkb'
     ui = 'dialect.ui'
     theme_icon = 'input-keyboard'
-    app_name = 'Dialect Applet'
+    app_name = _('Dialect Applet')
 
     # INITIALISE applet
     def __init__(self, canonical, uid, panel_id):
@@ -193,6 +193,15 @@ class Dialect(awn.AppletSimple):
             self.gtk[item] = gtk.ImageMenuItem(str(item))
             self.gtk['umenu'].append(self.gtk[item])
             self.gtk[item].connect('activate', self.on_umenu, item)
+        layout_info = builder.get_object('layout_info')
+        layout_info.set_tooltip_markup(_('<b>User List:</b> The list of ' +\
+            'layouts you commonly use. The maximum number of layouts is ' +\
+            'restricted by the X11 xkb system (currently 4). Select an item ' +\
+            'and click the remove button to delete from your user list. You ' +\
+            'can order the list by drag and drop.\n' +\
+            '<b>System List:</b> The complete list of layouts and variants ' +\
+            'available. Select an item and click the add button to include ' +\
+            'in your user list.'))  # glade3 doesn't support translatable markup
 
     # Create CONTEXT menu
     def context_init(self):
@@ -455,8 +464,6 @@ class Dialect(awn.AppletSimple):
 
     # CONTEXT menu response
     def on_cmenu(self, obj, data):
-        if data == 'help':
-            self.gtk['hpage'].set_current_page(0)
         response = self.gtk[data].run()
         self.gtk[data].hide()
 

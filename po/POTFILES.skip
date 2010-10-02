@@ -23,7 +23,6 @@ applets/unmaintained/main-menu/main-menu.desktop.in
 # Disabled applets
 #
 applets/maintained/rtm/rtm.desktop.in
-applets/unmaintained/comic/comic.desktop.in
 applets/unmaintained/dropper/awn-applet-dropper.schema-ini.in
 applets/unmaintained/dropper/dropper.desktop.in
 applets/unmaintained/dropper/dropper-prefs.ui

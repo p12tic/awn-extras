@@ -70,28 +70,24 @@ The Oxygen Icon Theme (in battery-applet/icons)
     Copyright © 2007 David Miller <miller@oxygen-icons.org>
 
 
-Licence for applets and folders	arss
+Licence for applets and folders
 				awnsystemmonitor
 				awnterm
-				battery-applet
+				battery
 				cairo-menu
-				cairo-menu-classic
 				calendar
 				comics
-				filebrowser
 				file-browser-launcher
 				lastfm
 				libawn-extras
 				main-menu
 				media-control
 				media-icon-*
-				MiMenu
 				mount-applet
 				notification-area
 				places
-				plugger
 				python-test
-				quit-applet
+				quit
 				rtm
 				separator
 				shiny-switcher

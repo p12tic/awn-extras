@@ -451,7 +451,7 @@ class UPowerBackend(AbstractBackend):
         time = int(UPowerBackend.__get_property(self.__battery, "TimeToEmpty"))
 
         if time == 0:
-            return super(UPowerBackend, self).get_discharge_time()
+            return super(UPowerBackend, self).get_remaining_time()
 
         hours = time / 3600
         seconds = time % 3600

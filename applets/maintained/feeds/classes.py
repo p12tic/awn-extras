@@ -39,12 +39,11 @@ from desktopagnostic.config import GROUP_DEFAULT
 import feedparser
 import gtk
 
-from awn import extras
-from awn.extras import _, awnlib
+from awn.extras import _, awnlib, __version__, PREFIX
 
 pickle_path = '%s/.config/awn/applets/.feeds-tokens' % os.environ['HOME']
 
-twitter_path = extras.PREFIX + '/share/avant-window-navigator/applets/feeds/icons/twitter-16x16.png'
+twitter_path = PREFIX + '/share/avant-window-navigator/applets/feeds/icons/twitter-16x16.png'
 
 cache_dir = os.environ['HOME'] + '/.cache/awn-feeds-applet'
 
@@ -464,7 +463,7 @@ class GoogleFeed(KeySaver):
                     data = urllib.urlencode({'service': service,
                         'Email': self.username,
                         'Passwd': self.password,
-                        'source': 'awn-feeds-applet-' + extras.__version__,
+                        'source': 'awn-feeds-applet-' + __version__,
                         'continue': 'http://www.google.com/'})
 
                     #Send the data to get the SID
@@ -982,24 +981,26 @@ def deboldify(widget, button=False):
     widget.set_markup(widget.get_text())
 
 def safify(text):
-    text = text.replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
-    text2 = list(text)
-    for char, i in enumerate(text2):
-        if char == '&':
-            ok = False
-            if len(text2) >= i:
-                if text2[i + 1] == '#' and (text2[i + 4] == ';' or text2[i + 6] == ';'):
-                    ok = True
-                elif len(text2) - 1 >= i + 3:
-                    if text2[i + 1:3] == 'lt;':
-                        ok = True
-                    elif text2[i + 1:3] == 'gt;':
-                        ok = True
-                    elif len(text2) -1 >= i + 4:
-                        if text2[i + 1:4] == 'quot;':
-                            ok = True
+    """Removes HTML/XML character references and entities from a text string.
+       Taken from Fredrik Lundh - http://effbot.org/zone/re-sub.htm#unescape-html
 
-            if not ok:
-                text2[i] = '&amp;'
-
-    return ''.join(text2)
+    """
+    def fixup(m):
+        text = m.group(0)
+        if text[:2] == "&#":
+            # character reference
+            try:
+                if text[:3] == "&#x":
+                    return unichr(int(text[3:-1], 16))
+                else:
+                    return unichr(int(text[2:-1]))
+            except ValueError:
+                pass
+        else:
+            # named entity
+            try:
+                text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
+            except KeyError:
+                pass
+        return text # leave as is
+    return re.sub("&#?\w+;", fixup, text)

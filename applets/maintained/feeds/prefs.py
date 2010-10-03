@@ -1,6 +1,5 @@
 #! /usr/bin/python
-#
-# Copyright (c) 2009, 2010 Sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
+# Copyright (C) 2009 - 2010 Sharkbaitbobby <sharkbaitbobby+awn@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -13,29 +12,22 @@
 # Lesser General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public
-# License along with this library; if not, write to the
-# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# Boston, MA 02111-1307, USA.
+# License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 import os
-import urllib
-import urllib2
 import time
 
 import pygtk
 pygtk.require('2.0')
 import gtk
-import gobject
 
 from desktopagnostic.config import GROUP_DEFAULT
 import awn
-from awn import extras
-from awn.extras import _, awnlib
+from awn.extras import _, PREFIX
 
 import classes
 
-icon_dir = extras.PREFIX + '/share/avant-window-navigator/applets/feeds/icons'
+icon_dir = PREFIX + '/share/avant-window-navigator/applets/feeds/icons'
 icon_path = os.path.join(icon_dir, 'awn-feeds.svg')
 greader_path = os.path.join(icon_dir, 'awn-feeds-greader.svg')
 twitter_path = os.path.join(icon_dir, 'twitter-16x16.png')

@@ -2,7 +2,7 @@
 # Copyright (C) 2007, 2008:
 #   Mike Rooney (launchpad.net/~michael) <mrooney@gmail.com>
 #   Mike (mosburger) Desjardins <desjardinsmike@gmail.com>
-#     Please do not email the above person for support. The 
+#     Please do not email the above person for support. The
 #     email address is only there for license/copyright purposes.
 # Copyright (C) 2009  onox <denkpadje@gmail.com>
 #
@@ -51,7 +51,7 @@ class Forecast:
                 if self.forecastDialog is None:
                     self.setup_forecast_dialog()
                 elif not self.parent.applet.settings['curved_dialog']:
-                    self.forecastDialog.set_title("%s %s %s"%(_("Forecast"), _("for"), self.cachedForecast['CITY']))
+                    self.forecastDialog.set_title("%s %s %s" % (_("Forecast"), _("for"), self.cachedForecast['CITY']))
                 self.forecastArea.set_forecast(self.cachedForecast)
         self.parent.fetch_forecast(cb)
 
@@ -74,16 +74,16 @@ class Forecast:
         """
         if self.cachedForecast is not None:
             self.finalize_dialog()
-    
+
             if self.parent.applet.settings['curved_dialog']:
                 self.forecastDialog = self.CurvedDialogWrapper(self.applet)
                 self.applet.dialog.register("main", self.forecastDialog)
                 self.forecastArea = CurvedDialog(self.cachedForecast, self.parent)
             else:
                 self.forecastDialog = self.applet.dialog.new("main")
-                self.forecastDialog.set_title("%s %s %s"%(_("Forecast"), _("for"), self.cachedForecast['CITY']))
+                self.forecastDialog.set_title("%s %s %s" % (_("Forecast"), _("for"), self.cachedForecast['CITY']))
                 self.forecastArea = NormalDialog(self.cachedForecast, self.parent)
-    
+
             box = gtk.VBox()
             self.forecastArea.set_size_request(450, 160)
             box.pack_start(self.forecastArea, False, False, 0)
@@ -133,12 +133,15 @@ class NormalDialog(gtk.Image):
 
     def getTextWidth(self, context, text, maxwidth):
         potential_text = text
-        text_width = context.text_extents(potential_text.encode('ascii', 'replace'))[2]
+        text_width = context.text_extents(potential_text.encode('utf-8', 'replace'))[2]
         end = -1
         while text_width > maxwidth:
             end -= 1
-            potential_text = text.encode('ascii', 'replace')[:end] + '...'
-            text_width = context.text_extents(potential_text.encode('ascii', 'replace'))[2]
+            potential_text = text.encode('utf-8', 'replace')[:end] + '...'
+            try:
+                text_width = context.text_extents(potential_text.encode('utf-8', 'replace'))[2]
+            except UnicodeDecodeError:
+                pass
         return potential_text, text_width
 
     def drawSingleDay(self, context, x, y, day, text_color):
@@ -173,7 +176,7 @@ class NormalDialog(gtk.Image):
             day_name = _("Tomorrow")
 
         day_name, day_width = self.getTextWidth(context, _(day_name), 999)
-        text_x = rect_x + (rect_width - day_width)/2
+        text_x = rect_x + (rect_width - day_width) / 2
         text_y = rect_y - 10
 
         # Background Day Text
@@ -200,17 +203,17 @@ class NormalDialog(gtk.Image):
         context.select_font_face("Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
         context.set_font_size(9.0)
         context.set_line_width(1)
-        condition_text, text_width = self.getTextWidth(context, condition_text, rect_width-5)
+        condition_text, text_width = self.getTextWidth(context, condition_text, rect_width - 5)
         startx = (rect_width - text_width) / 2
 
         # Text Shadow
         context.set_source_rgba(0.0, 0.0, 0.0)
-        context.move_to(rect_x + startx - 1, high_temp_y-15)
+        context.move_to(rect_x + startx - 1, high_temp_y - 15)
         context.show_text(condition_text)
 
         # Foreground Text
         context.set_source_rgba(1.0, 1.0, 1.0)
-        context.move_to(rect_x + startx - 2, high_temp_y-16)
+        context.move_to(rect_x + startx - 2, high_temp_y - 16)
         context.show_text(condition_text)
 
         # High and Low
@@ -219,12 +222,12 @@ class NormalDialog(gtk.Image):
         context.set_line_width(1)
 
         temp_high = self.__parent_weather.convert_temperature(day['HIGH']) + u"\u00B0" if day['HIGH'] != "N/A" else "N/A"
-        context.move_to(high_temp_x-3, high_temp_y)
+        context.move_to(high_temp_x - 3, high_temp_y)
         context.set_source_rgba(1.0, 0.25, 0.25, 1.0)
         context.show_text(temp_high)
 
         temp_low = self.__parent_weather.convert_temperature(day['LOW']) + u"\u00B0" if day['LOW'] != "N/A" else "N/A"
-        context.move_to(high_temp_x+36, high_temp_y)
+        context.move_to(high_temp_x + 36, high_temp_y)
         context.set_source_rgba(0.5, 0.75, 1.0, 1.0)
         context.show_text(temp_low)
 
@@ -250,7 +253,7 @@ class NormalDialog(gtk.Image):
             cache_context.set_source_rgb(text_color.red / 65535.0, text_color.green / 65535.0, text_color.blue / 65535.0)
             descStr = _("Weather data provided by weather.com")
             width = cache_context.text_extents(descStr)[2:4][0]
-            xpos = event.area.width/2.0 - width/2.0 
+            xpos = event.area.width / 2.0 - width / 2.0
             cache_context.move_to(xpos, 145)
             cache_context.show_text(descStr)
 

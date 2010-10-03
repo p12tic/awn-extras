@@ -30,7 +30,7 @@ public class GarbagePrefs : Dialog
   {
     GLib.Object (type: Gtk.WindowType.TOPLEVEL);
     this.title = Gettext._ ("%s Preferences").printf (applet.display_name);
-    this.icon_name = "gtk-preferences";
+    this.icon_name = "user-trash";
     this._applet = applet;
 
     this.create_ui ();
@@ -41,20 +41,25 @@ public class GarbagePrefs : Dialog
   {
     CheckButton empty_button, count_button;
 
-    this.vbox.spacing = 5;
+    Gtk.VBox inner_vbox = new Gtk.VBox (false, 6);
+    inner_vbox.border_width = 3;
 
-    empty_button =
-      new CheckButton.with_mnemonic (Gettext._ ("Confirm when emptying the trash"));
+    empty_button = new CheckButton.with_mnemonic (Gettext._ ("Confirm when _emptying the trash"));
     empty_button.active = this._applet.confirm_empty;
     empty_button.toggled.connect (this.on_empty_toggled);
-    this.vbox.add (empty_button);
-    count_button =
-      new CheckButton.with_mnemonic (Gettext._ ("Show the item count on the icon"));
+    inner_vbox.add (empty_button);
+
+    count_button = new CheckButton.with_mnemonic (Gettext._ ("Show the _item count on the icon"));
     count_button.active = this._applet.show_count;
     count_button.toggled.connect (this.on_count_toggled);
-    this.vbox.add (count_button);
+    inner_vbox.add (count_button);
 
     this.add_button (STOCK_CLOSE, ResponseType.CLOSE);
+    this.vbox.add(inner_vbox);
+
+    this.has_separator = false;
+    this.border_width = 5;
+    this.delete_event.connect (this.on_delete_event);
     this.response.connect (this.on_response);
   }
 
@@ -68,6 +73,12 @@ public class GarbagePrefs : Dialog
   on_count_toggled (ToggleButton button)
   {
     this._applet.show_count = button.active;
+  }
+
+  private bool
+  on_delete_event (Gdk.Event event)
+  {
+    return true;
   }
 
   private void

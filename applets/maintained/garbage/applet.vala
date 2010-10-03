@@ -152,6 +152,8 @@ public class GarbageApplet : AppletSimple
         // moonbeam says get_icon generally returns Awn.ThemedIcon
         overlayable = this.get_icon () as Overlayable;
         this.text_overlay = new OverlayText ();
+        this.text_overlay.font_sizing = 17;
+        this.text_overlay.gravity = Gdk.Gravity.SOUTH;
         overlayable.add_overlay (this.text_overlay);
       }
 
@@ -171,8 +173,8 @@ public class GarbageApplet : AppletSimple
     }
     // set the title as well
     // $display_name: $count item(s)
-    plural = Gettext.ngettext ("%s: %u item", "%s: %u items", file_count);
-    this.set_tooltip_text (plural.printf (this.display_name, file_count));
+    plural = Gettext.ngettext ("%u item", "%u items", file_count);
+    this.set_tooltip_text (plural.printf (file_count));
   }
   private void
   on_clicked ()
@@ -203,6 +205,10 @@ public class GarbageApplet : AppletSimple
     {
       ImageMenuItem prefs_item;
       Widget about_item;
+      SeparatorMenuItem sep_item;
+      string[] authors = {
+        "Mark Lee <avant-wn@lazymalevolence.com>"
+      };
 
       this.menu = this.create_default_menu () as Menu;
       this.empty_menu_item =
@@ -211,14 +217,20 @@ public class GarbageApplet : AppletSimple
       this.empty_menu_item.set_sensitive (this.trash.file_count > 0);
       this.empty_menu_item.show ();
       this.menu.append (this.empty_menu_item);
+
+      sep_item = new Gtk.SeparatorMenuItem();
+      sep_item.show();
+      this.menu.append (sep_item);
+
       prefs_item = new ImageMenuItem.from_stock (STOCK_PREFERENCES, null);
       prefs_item.activate.connect (this.on_menu_prefs_activate);
       prefs_item.show ();
       this.menu.append (prefs_item);
-      about_item = this.create_about_item_simple ("Copyright © 2009 Mark Lee <avant-wn@lazymalevolence.com>",
-                                                  AppletLicense.GPLV2,
-                                                  Build.VERSION);
-      about_item.show ();
+
+      about_item = this.create_about_item ("Copyright © 2009 Mark Lee",
+                                           AppletLicense.GPLV2, Build.VERSION,
+                                           Gettext._ ("A lightweight, cross-desktop trash applet"),
+                                           null, null, "user-trash", null, authors, null, null);
       this.menu.append (about_item as MenuItem);
     }
     ctx_menu = (Menu)this.menu;

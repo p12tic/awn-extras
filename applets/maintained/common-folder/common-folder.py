@@ -156,7 +156,8 @@ class CommonFolderApplet:
             icon = icon.get_icon()
 
         if isinstance(icon, gio.ThemedIcon):
-            return filter(self.icon_theme.has_icon, icon.get_names())[0]
+            existing_icons = filter(self.icon_theme.has_icon, icon.get_names())
+            return existing_icons[0] if len(existing_icons) > 0 else "image-missing"
         elif isinstance(icon, gio.FileIcon):
             return icon.get_file().get_path()
 

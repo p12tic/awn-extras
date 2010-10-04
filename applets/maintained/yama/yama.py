@@ -40,7 +40,8 @@ except ImportError:
 import gio
 import glib
 import gmenu
-from xdg import BaseDirectory
+
+xdg_data_dirs = [os.path.expanduser("~/.local/share")] + os.environ["XDG_DATA_DIRS"].split(":")
 
 applet_name = _("YAMA")
 applet_description = _("Main menu with places and recent documents")
@@ -517,7 +518,7 @@ class YamaApplet:
         selection_data.set_uris(["file://" + path])
 
     def append_awn_desktop(self, menu, desktop_name):
-        for dir in BaseDirectory.xdg_data_dirs:
+        for dir in xdg_data_dirs:
             path = os.path.join(dir, "applications", desktop_name + ".desktop")
             file = vfs.File.for_path(path)
 
@@ -549,7 +550,7 @@ class YamaApplet:
             self.icon_theme.handler_block_by_func(self.theme_changed_cb)
             return self.icon_theme.load_icon(icon_name, 24, gtk.ICON_LOOKUP_FORCE_SIZE)
         except:
-            for dir in BaseDirectory.xdg_data_dirs:
+            for dir in xdg_data_dirs:
                 for i in ("pixmaps", "icons"):
                     path = os.path.join(dir, i, icon_value)
                     if os.path.isfile(path):

@@ -373,7 +373,7 @@ class UPowerBackend(AbstractBackend):
                 if device_type == 2 and is_present:
                     udi_models[str(udi)] = str(UPowerBackend.__get_property(device_iface, "Model"))
         except dbus.DBusException, e:
-            print e.message
+            print e
         finally:
             return udi_models
 
@@ -499,7 +499,7 @@ class HalBackend(AbstractBackend):
                     udi_models[str(udi)] = commands.getoutput("hal-get-property --udi " + str(udi) + " --key battery.model")
             return udi_models
         except dbus.DBusException, e:
-            print e.message
+            print e
             return udi_models
 
     def set_active_udi(self, udi):

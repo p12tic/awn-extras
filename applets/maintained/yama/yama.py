@@ -397,7 +397,8 @@ class YamaApplet:
             return icon.get_file().get_path()
 
     def get_first_existing_icon(self, icons):
-        return filter(self.icon_theme.has_icon, icons)[0]
+        existing_icons = filter(self.icon_theme.has_icon, icons)
+        return existing_icons[0] if len(existing_icons) > 0 else "image-missing"
 
     def append_volumes(self):
         # Delete old items

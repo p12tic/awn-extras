@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-02 00:09+0200\n"
-"PO-Revision-Date: 2010-10-02 10:16+0000\n"
+"PO-Revision-Date: 2010-10-04 11:54+0000\n"
 "Last-Translator: Nicolas Delvaux <Unknown>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2010-10-03 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-10-05 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Generated-By: pygettext.py 1.5\n"
 
@@ -210,6 +210,8 @@ msgstr "Interface sélectionnée"
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:20
 msgid "Throughput label control - 0: no label, 1: Sum, 2: Upload/Download"
 msgstr ""
+"Étiquette de contrôle du débit - 0 : pas d'étiquette, 1 : Somme, 2 :  "
+"Envoi/Réception"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:21
 msgid ""
@@ -663,6 +665,8 @@ msgid ""
 "Applet that displays an analog clock and supports additional clocks for "
 "different locations"
 msgstr ""
+"Applet qui affiche une horloge analogique et qui supporte des horloges "
+"supplémentaires pour différents fuseaux horaires."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:1
 #: ../applets/maintained/weather/weather.ui.h:1
@@ -928,6 +932,10 @@ msgid ""
 "• All items from the Places → Recent Documents menu item.\n"
 "• All items from the recent documents list in all applications."
 msgstr ""
+"Si vous videz la liste des documents récents, vous videz ce qui suit :\n"
+"• Tous les éléments du sous-menu Raccourcis → Documents récents.\n"
+"• Tous les éléments de la liste des documents récents de toutes les "
+"applications."
 
 #: ../applets/maintained/cairo-menu/misc.c:423
 #: ../applets/maintained/cairo-menu/misc.c:532

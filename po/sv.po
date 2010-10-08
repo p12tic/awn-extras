@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-02 00:09+0200\n"
-"PO-Revision-Date: 2010-10-01 16:12+0000\n"
+"PO-Revision-Date: 2010-10-06 11:46+0000\n"
 "Last-Translator: David Bengtsson <Unknown>\n"
 "Language-Team: Launchpad Swedish Translators <lp-l10n-"
 "sv@lists.launchpad.net>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-10-02 04:58+0000\n"
+"X-Launchpad-Export-Date: 2010-10-08 04:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Language: Swedish\n"
 
@@ -3840,7 +3840,7 @@ msgstr "Vilken källa för bakgrundsbild(er) att använda: gnome, compiz, fil."
 
 #: ../applets/maintained/slickswitcher/prefs.py:69
 msgid "SlickSwitcher Preferences"
-msgstr "Inställningar för GlättadVäxlare"
+msgstr "Inställningar för SlickSwitcher"
 
 #. Colors: Borders, Windows, and Dialog
 #. Border Colors
@@ -4002,7 +4002,7 @@ msgstr "En visuell arbetsyteväxlare"
 #: ../applets/maintained/slickswitcher/slickswitcher.py:63
 #: ../applets/maintained/slickswitcher/slickswitcher.py:272
 msgid "SlickSwitcher"
-msgstr "GlättadVäxlare"
+msgstr "SlickSwitcher"
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:1
 msgid ""
@@ -5134,7 +5134,7 @@ msgstr "Huvudmeny med platser och senaste dokument"
 
 #: ../applets/maintained/yama/yama.desktop.in.h:2
 msgid "Yet Another Menu Applet"
-msgstr "Ytterligare en meny"
+msgstr "Yet Another Menu Applet"
 
 #: ../applets/maintained/yama/yama.py:45
 msgid "YAMA"

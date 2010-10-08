@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-02 00:09+0200\n"
-"PO-Revision-Date: 2010-10-04 03:15+0000\n"
+"PO-Revision-Date: 2010-10-08 03:05+0000\n"
 "Last-Translator: Sam Samuels <gemini_sam_samuels@hotmail.co.uk>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2010-10-05 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-10-08 04:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -453,16 +453,16 @@ msgstr "Máscara"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:738
 msgid "Wireless graph type"
-msgstr ""
+msgstr "Modo de gráfico wireless"
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:1
 msgid "HAL UDI of battery."
-msgstr ""
+msgstr "HAL UDI da bateria."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:2
 msgid ""
 "If charge level drops below this threadhold, a warning will be displayed."
-msgstr ""
+msgstr "Se o nível de carga cair abaixo deste valor, um aviso será exibido."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:3
 msgid "If charge level reaches this threshold, a notification will be sent."
@@ -627,50 +627,58 @@ msgstr ""
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:4
 msgid "If enabled, the date will be shown in the title."
-msgstr ""
+msgstr "Se ativado, a data será mostrada no título."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:5
 msgid "If enabled, the seconds hand will be visible in the clock."
-msgstr ""
+msgstr "Se ativado, o ponteiro dos segundos será visível no relógio."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:6
 msgid "List of cities and timezones separated by a '#' character."
-msgstr ""
+msgstr "Lista das cidades e fusos horários separados por um caractere '#'."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:7
 msgid ""
 "Show time in 24 hour format if enabled, or 12 hour format when disabled."
 msgstr ""
+"Mostrar a hora no formato 24 horas, se habilitado, ou formato de 12 horas, "
+"quando desabilitado."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:8
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:10
 msgid "Temperature unit (0: Celsius, 1: Fahrenheit, 2: Kelvin)."
-msgstr ""
+msgstr "Unidade de temperatura (0: Celsius, 1: Fahrenheit, 2: Kelvin)."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:9
 msgid "The name of the theme of the analog clock."
-msgstr ""
+msgstr "Nome do tema do relógio analógico."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:10
 msgid "Wind speed unit (0: m/s, 1: km/h, 2: mph, 3: knots, 4: Beaufort)."
 msgstr ""
+"Unidade de velocidade do vento (0: m/s, 1: km/h, 2: mph, 3: nós, 4: "
+"Beaufort)."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:1
 #: ../applets/maintained/cairo-clock/cairo-clock.py:29
 msgid "Cairo Clock"
-msgstr ""
+msgstr "Cairo Clock"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:2
 msgid ""
 "Displays an analog clock and supports additional clocks for different "
 "locations"
 msgstr ""
+"Exibe um relógio analógico e suporta relógios adicionais para diferentes "
+"locais"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.py:30
 msgid ""
 "Applet that displays an analog clock and supports additional clocks for "
 "different locations"
 msgstr ""
+"Miniaplicativo que exibe um relógio analógico e suporta relógios adicionais "
+"para diferentes locais"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:1
 #: ../applets/maintained/weather/weather.ui.h:1
@@ -679,23 +687,23 @@ msgstr " "
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:2
 msgid "12 _hour format"
-msgstr ""
+msgstr "Formato 12 _horas"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:3
 msgid "24 h_our format"
-msgstr ""
+msgstr "Formato 24 h_oras"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:4
 msgid "<b>Clock Display</b>"
-msgstr ""
+msgstr "<b>Visor do Relógio</b>"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:6
 msgid "<b>Title Options</b>"
-msgstr ""
+msgstr "<b>Opções do Título</b>"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:7
 msgid "Beaufort"
-msgstr ""
+msgstr "Beaufort"
 
 #. Unit long strings
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:8
@@ -704,120 +712,121 @@ msgstr ""
 #: ../applets/maintained/weather/weather.py:562
 #: ../applets/maintained/weather/weather.py:567
 msgid "Celsius"
-msgstr ""
+msgstr "Celsius"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:9
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
 #: ../applets/maintained/weather/weather.py:59
 #: ../applets/maintained/weather/weather.py:560
 msgid "Fahrenheit"
-msgstr ""
+msgstr "Fahrenheit"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:10
 msgid "Find _Next"
-msgstr ""
+msgstr "Localizar _Próximo"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:11
 msgid ""
 "If enabled, besides hours and minutes, the seconds will be visible too"
 msgstr ""
+"Se ativado, além de horas e minutos, os segundos serão visíveis também"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:12
 msgid "If enabled, the date will be shown in the title"
-msgstr ""
+msgstr "Se ativado, a data será mostrada no título"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:13
 msgid "If enabled, the seconds hand will be visible in the clock"
-msgstr ""
+msgstr "Se ativado, o ponteiro dos segundos será visível no relógio"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:14
 msgid "If enabled, time will be shown like 1:23 AM"
-msgstr ""
+msgstr "Se ativado, a hora será mostrada como 1:23 AM"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:15
 msgid "If enabled, time will be shown like 23:45"
-msgstr ""
+msgstr "Se ativoado, a hora será mostrada como 23:45"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:16
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "Kelvin"
-msgstr ""
+msgstr "Kelvin"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:17
 msgid "Location Name:"
-msgstr ""
+msgstr "Nome do local:"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:18
 msgid "Show _seconds"
-msgstr ""
+msgstr "Mostrar _segundos"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:19
 msgid "Show seco_nds hand"
-msgstr ""
+msgstr "Mostrar ponteiro de segund_os"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:20
 msgid "Show the _date"
-msgstr ""
+msgstr "Mostrar a _data"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:21
 msgid "_Show weather of current location"
-msgstr ""
+msgstr "_Mostrar clima do local atual"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:22
 msgid "_Temperature unit:"
-msgstr ""
+msgstr "Unidade de _temperatura:"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:24
 msgid "_Wind speed unit:"
-msgstr ""
+msgstr "Unidade de velocidade do _vento:"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:25
 msgid "km/h"
-msgstr ""
+msgstr "km/h"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:26
 msgid "knots"
-msgstr ""
+msgstr "nós"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:27
 msgid "m/s"
-msgstr ""
+msgstr "m/s"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:28
 msgid "mph"
-msgstr ""
+msgstr "mph"
 
 #: ../applets/maintained/cairo-clock/locations.py:142
 msgid "Locations"
-msgstr ""
+msgstr "Locais"
 
 #: ../applets/maintained/cairo-clock/locations.py:145
 msgid "Edit"
-msgstr ""
+msgstr "Editar"
 
 #: ../applets/maintained/cairo-menu/cairo-aux-icon.c:305
 msgid "Remove Icon"
-msgstr ""
+msgstr "Remover ícone"
 
 #: ../applets/maintained/cairo-menu/cairo-main-icon.c:161
 #: ../applets/unmaintained/main-menu/applet.c:452
 msgid "Main Menu"
-msgstr ""
+msgstr "Menu principal"
 
 #: ../applets/maintained/cairo-menu/cairo-menu.desktop.in.in.h:1
 msgid "A Main Menu."
-msgstr ""
+msgstr "Um Menu Principal."
 
 #: ../applets/maintained/cairo-menu/cairo-menu.desktop.in.in.h:2
 msgid "Cairo Main Menu"
-msgstr ""
+msgstr "Cairo Menu Principal"
 
 #. hope that gnome-session-save exists; needed for GNOME 2.22, at least.
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:125
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:129
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:134
 msgid "Logout"
-msgstr ""
+msgstr "Encerrar sessão"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:139
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:141
@@ -834,17 +843,17 @@ msgstr "Travar Tela"
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:152
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:163
 msgid "Suspend"
-msgstr ""
+msgstr "Suspender o Sistema"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:155
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:157
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:168
 msgid "Hibernate"
-msgstr ""
+msgstr "Hibernar o Sistema"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:176
 msgid "Shutdown"
-msgstr ""
+msgstr "Desligar"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:213
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:381
@@ -861,7 +870,7 @@ msgstr "Pasta do usuário"
 #: ../applets/maintained/places/applet.c:344
 #: ../applets/maintained/yama/yama.py:255
 msgid "Desktop"
-msgstr ""
+msgstr "Área de trabalho"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:221
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:223
@@ -872,7 +881,7 @@ msgstr "Lixeira"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:225
 msgid "File System"
-msgstr ""
+msgstr "Sistema de arquivos"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:356
 msgid "Removable Media"
@@ -885,7 +894,7 @@ msgstr "Rede"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:368
 msgid "Connect to Server"
-msgstr ""
+msgstr "Conectar ao servidor"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1034
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1048
@@ -904,17 +913,17 @@ msgstr "Documentos Recentes"
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1117
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1128
 msgid "Session"
-msgstr ""
+msgstr "Sessão"
 
 #. generates a compiler warning due to the ellipse
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1144
 msgid "Search\\u2026"
-msgstr ""
+msgstr "Procurar\\u2026"
 
 #. generates a compiler warning due to the ellipse
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1161
 msgid "Launch\\u2026"
-msgstr ""
+msgstr "Lançar\\u2026"
 
 #: ../applets/maintained/cairo-menu/misc.c:161
 #: ../applets/maintained/yama/yama.py:584
@@ -925,7 +934,7 @@ msgstr ""
 #: ../applets/maintained/cairo-menu/misc.c:407
 #: ../applets/maintained/yama/yama.py:563
 msgid "Clear the Recent Documents list?"
-msgstr ""
+msgstr "Limpar a lista de documentos recentes?"
 
 #. Translators: This is taken from gnome-panel, when deleting the Recent Documents List.
 #. * Please use the same translation.
@@ -935,25 +944,28 @@ msgid ""
 "• All items from the Places → Recent Documents menu item.\n"
 "• All items from the recent documents list in all applications."
 msgstr ""
+"Se você limpar a lista de documentos recentes, você limpará:\n"
+"• Todos os itens do menu Locais → Documentos recentes.\n"
+"• Todos os itens da lista de documentos recentes em todas as aplicações."
 
 #: ../applets/maintained/cairo-menu/misc.c:423
 #: ../applets/maintained/cairo-menu/misc.c:532
 #: ../applets/maintained/yama/yama.py:336
 #: ../applets/maintained/yama/yama.py:568
 msgid "Clear Recent Documents"
-msgstr ""
+msgstr "Limpar documentos recentes"
 
 #: ../applets/maintained/calendar/awn-applet-calendar.schema-ini.in.h:1
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:1
 msgid "Clock/Calendar Applet"
-msgstr ""
+msgstr "Miniaplicativo Relógio/Calendário"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:2
 msgid "Watch appointments on your dock"
-msgstr ""
+msgstr "Ver compromissos na sua tela"
 
 #: ../applets/maintained/calendar/calendarlogin.py:43
 msgid "Login to "
@@ -1090,7 +1102,7 @@ msgstr "Calendário"
 
 #: ../applets/maintained/calendar/clockcal.py:110
 msgid "Forget Password"
-msgstr ""
+msgstr "Esquecer a Senha"
 
 #: ../applets/maintained/calendar/clockcal.py:218
 msgid ""
@@ -1104,11 +1116,13 @@ msgstr ""
 
 #: ../applets/maintained/calendar/clockcal.py:246
 msgid "Avant Calendar Applet"
-msgstr ""
+msgstr "Miniaplicativo Calendário Avant"
 
 #: ../applets/maintained/calendar/clockcal.py:248
 msgid "A Calendar Applet for the Avant Window Navigator. Images by Deleket."
 msgstr ""
+"Um Miniaplicativo Calendário para o Avant Window Navigator. Imagens por "
+"Deleket."
 
 #. Translators: This is a date/time format string. You can check the
 #. output in terminal with 'date +"%x %X"'. In most cases you don't have

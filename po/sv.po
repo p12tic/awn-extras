@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-02 00:09+0200\n"
-"PO-Revision-Date: 2010-10-06 11:46+0000\n"
+"PO-Revision-Date: 2010-10-09 18:15+0000\n"
 "Last-Translator: David Bengtsson <Unknown>\n"
 "Language-Team: Launchpad Swedish Translators <lp-l10n-"
 "sv@lists.launchpad.net>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-10-08 04:33+0000\n"
+"X-Launchpad-Export-Date: 2010-10-10 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Language: Swedish\n"
 
@@ -222,8 +222,8 @@ msgid ""
 "fan_bar: Waving Bar chart with density"
 msgstr ""
 "Diagramtypen att använda för trådlösa enheter. area: Ytdiagram, area_bar: "
-"Ytdiagram med färgade linjer, bar: Linjediagram, fan: Vågdiagram med "
-"densitet, fan_bar: Våglinjediagram med densitet."
+"Ytdiagram med färgade staplar, bar: Stapeldiagram, fan: Vågdiagram med "
+"densitet, fan_bar: Vågstapeldiagram med densitet."
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:40
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:261
@@ -992,31 +992,31 @@ msgstr ""
 
 #: ../applets/maintained/calendar/calendarprefs.py:46
 msgid "Classic LCD"
-msgstr "Klassisk LCD"
+msgstr "Klassisk lcd"
 
 #: ../applets/maintained/calendar/calendarprefs.py:47
 msgid "Indy Glow LCD"
-msgstr "Indyglöd-LCD"
+msgstr "Indyglöd-lcd"
 
 #: ../applets/maintained/calendar/calendarprefs.py:48
 msgid "Backlit Amber LCD"
-msgstr "Bakgrundsbelyst bärnstens-LCD"
+msgstr "Bakgrundsbelyst bärnstens-lcd"
 
 #: ../applets/maintained/calendar/calendarprefs.py:49
 msgid "Backlit Green LCD"
-msgstr "Bakgrundsbelyst grön LCD"
+msgstr "Bakgrundsbelyst grön lcd"
 
 #: ../applets/maintained/calendar/calendarprefs.py:50
 msgid "Green LED"
-msgstr "Grön LED"
+msgstr "Grön led"
 
 #: ../applets/maintained/calendar/calendarprefs.py:51
 msgid "Red LED"
-msgstr "Röd LED"
+msgstr "Röd led"
 
 #: ../applets/maintained/calendar/calendarprefs.py:52
 msgid "Blue LED"
-msgstr "Blå LED"
+msgstr "Blå led"
 
 #: ../applets/maintained/calendar/calendarprefs.py:53
 msgid "Plain White"
@@ -3020,8 +3020,8 @@ msgid ""
 "Maximum number of rows (or columns depending on the orientation of the "
 "panel) of the tray icons in the applet."
 msgstr ""
-"Maximalt antal rader (eller kolumner beroende på orienteringen av panelen) "
-"av notifieringsikoner i miniprogrammet."
+"Maximalt antal rader, eller kolumner beroende på panelens orientering, "
+"notifieringsikoner i miniprogrammet."
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:3
 msgid "Size of the icons (in percent of applet size)."
@@ -4476,11 +4476,11 @@ msgstr "Tomboy"
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:108
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:130
 msgid "Select a tag:"
-msgstr "Välj en tagg:"
+msgstr "Välj en etikett:"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:114
 msgid "No tags were created yet"
-msgstr "Inga taggar har skapats än"
+msgstr "Inga etiketter har skapats än"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:119
 msgid "Select a note:"
@@ -4497,11 +4497,11 @@ msgstr "Ny anteckning"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:159
 msgid "New Tagged Note"
-msgstr "Ny taggad anteckning"
+msgstr "Ny märkt anteckning"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:163
 msgid "View Tagged Note"
-msgstr "Visa taggad anteckning"
+msgstr "Visa märkt anteckning"
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:1
 msgid "A simple applet to test vala support"
@@ -4678,7 +4678,7 @@ msgstr "Dimma"
 
 #: ../applets/maintained/weather/weathertext.py:47
 msgid "Freezing Drizzle"
-msgstr "Underkylt duggregn"
+msgstr "Underk. duggregn"
 
 #: ../applets/maintained/weather/weathertext.py:48
 msgid "Freezing Rain"
@@ -4694,7 +4694,7 @@ msgstr "Torrdis"
 
 #: ../applets/maintained/weather/weathertext.py:51
 msgid "Heavy Snow"
-msgstr "Kraftigt snöväder"
+msgstr "Kraftig snö"
 
 #: ../applets/maintained/weather/weathertext.py:52
 msgid "Hot"
@@ -4714,7 +4714,7 @@ msgstr "Lätta regnskurar"
 
 #: ../applets/maintained/weather/weathertext.py:56
 msgid "Light Rain with Thunder"
-msgstr "Lätt regn med åska"
+msgstr "Lätt regn, åska"
 
 #: ../applets/maintained/weather/weathertext.py:57
 msgid "Light Snow Showers"
@@ -4722,47 +4722,47 @@ msgstr "Lätta snöbyar"
 
 #: ../applets/maintained/weather/weathertext.py:58
 msgid "Mixed Precipitation"
-msgstr "Blandad nederbörd"
+msgstr "Bl. nederbörd"
 
 #: ../applets/maintained/weather/weathertext.py:59
 msgid "Mixed Rain and Hail"
-msgstr "Regn blandat med hagel"
+msgstr "Hagelbl. regn"
 
 #: ../applets/maintained/weather/weathertext.py:60
 msgid "Mixed Rain and Sleet"
-msgstr "Snöblandat regn"
+msgstr "Snöbl. regn"
 
 #: ../applets/maintained/weather/weathertext.py:61
 msgid "Mixed Rain and Snow"
-msgstr "Snöblandat"
+msgstr "Snöbl. regn"
 
 #: ../applets/maintained/weather/weathertext.py:62
 msgid "Mostly Cloudy"
-msgstr "Övervägande mulet"
+msgstr "Överv. mulet"
 
 #: ../applets/maintained/weather/weathertext.py:63
 msgid "N/A"
-msgstr "-"
+msgstr "Ej tillgängligt"
 
 #: ../applets/maintained/weather/weathertext.py:64
 msgid "Partly Cloudy"
-msgstr "Växlande molnighet"
+msgstr "Växl. molnighet"
 
 #: ../applets/maintained/weather/weathertext.py:65
 msgid "Scattered Showers"
-msgstr "Spridda regnskurar"
+msgstr "Sprid. regnskurar"
 
 #: ../applets/maintained/weather/weathertext.py:66
 msgid "Scattered Snow Showers"
-msgstr "Spridda snöbyar"
+msgstr "Sprid. snöbyar"
 
 #: ../applets/maintained/weather/weathertext.py:67
 msgid "Scattered Thunderstorms"
-msgstr "Spridda åskbyar"
+msgstr "Sprid. åskbyar"
 
 #: ../applets/maintained/weather/weathertext.py:68
 msgid "Severe Thunderstorms"
-msgstr "Kraftiga åskbyar"
+msgstr "Kraft. åskbyar"
 
 #: ../applets/maintained/weather/weathertext.py:69
 msgid "Showers"
@@ -4770,7 +4770,7 @@ msgstr "Regnskurar"
 
 #: ../applets/maintained/weather/weathertext.py:70
 msgid "Sleet"
-msgstr "Snöblandat regn"
+msgstr "Snöbl. regn"
 
 #: ../applets/maintained/weather/weathertext.py:71
 msgid "Smoke"
@@ -4786,11 +4786,11 @@ msgstr "Snöbyar"
 
 #: ../applets/maintained/weather/weathertext.py:74
 msgid "Snow Showers"
-msgstr "Snöskurar"
+msgstr "Snöbyar"
 
 #: ../applets/maintained/weather/weathertext.py:75
 msgid "Thunder Showers"
-msgstr "Åskbyar"
+msgstr "Åskskurar"
 
 #: ../applets/maintained/weather/weathertext.py:76
 msgid "Thunderstorms"
@@ -4798,7 +4798,7 @@ msgstr "Åskbyar"
 
 #: ../applets/maintained/weather/weathertext.py:77
 msgid "Tornado"
-msgstr "Tornado"
+msgstr "Tromb"
 
 #: ../applets/maintained/weather/weathertext.py:78
 msgid "Tropical Storm"
@@ -4811,17 +4811,17 @@ msgstr "Blåsigt"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:84
 msgid "AM Clouds / PM Sun"
-msgstr "Mulet på fm. / sol på em."
+msgstr "Mulet på fm., sol på em."
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:86
 msgid "AM Drizzle / Wind"
-msgstr "Duggregn / blåst på fm."
+msgstr "Duggr., blåst på fm."
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:88
 msgid "AM Fog / PM Sun"
-msgstr "Dimma på fm. / sol på em."
+msgstr "Dimma på fm., sol på em."
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:90
@@ -4831,18 +4831,18 @@ msgstr "Lätt regn på fm."
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:92
 msgid "AM Rain / Wind"
-msgstr "Regn / blåst på fm."
+msgstr "Regn, blåst på fm."
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:94
 msgid "AM Showers"
-msgstr "Regnskurar på fm."
+msgstr "Regnsk. på fm."
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
 #: ../applets/maintained/weather/weathertext.py:97
 msgid "AM T-Showers"
-msgstr "Åskskurar på fm."
+msgstr "Åsksk. på fm."
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
@@ -4874,7 +4874,7 @@ msgstr "Lätt regn"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:111
 msgid "Mostly Sunny"
-msgstr "Övervägande soligt"
+msgstr "Överv. soligt"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:113
@@ -4889,13 +4889,13 @@ msgstr "Lätt regn på em."
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:117
 msgid "PM Showers"
-msgstr "Regnskurar på em."
+msgstr "Regnsk. på em."
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
 #: ../applets/maintained/weather/weathertext.py:120
 msgid "PM T-Showers"
-msgstr "Åskskurar på em."
+msgstr "Åsksk. på em."
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
@@ -4921,13 +4921,13 @@ msgstr "Regn / åska"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:131
 msgid "Scattered Showers / Wind"
-msgstr "Spridda skurar / blåst"
+msgstr "Sprid. skurar / blåst"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
 #: ../applets/maintained/weather/weathertext.py:134
 msgid "Scattered T-Storms"
-msgstr "Spridda åskbyar"
+msgstr "Sprid. åskbyar"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:136
@@ -5244,16 +5244,3 @@ msgstr "Pandora radio"
 #, python-format
 msgid "_About %s"
 msgstr "_Om %s"
-
-#~ msgid ""
-#~ "Default popup location on the workspace for stack notifications. Allowed "
-#~ "values: \"top_left\",\"top_right\",\"bottom_left\" and \"bottom_right\""
-#~ msgstr ""
-#~ "Standardposition för popup-rutor på arbetsutan för notifieringar. Tillåtna "
-#~ "värden: \"top_left\",\"top_right\",\"bottom_left\" och \"bottom_right\""
-
-#~ msgid "The theme used when displaying notifications."
-#~ msgstr "Temat som används för visning av notifieringar."
-
-#~ msgid "Set your pop-up notification preferences"
-#~ msgstr "Ställ in dina popup-notifieringsinställningar"

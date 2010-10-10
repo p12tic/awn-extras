@@ -20,7 +20,7 @@
 
 using Awn;
 using DesktopAgnostic;
-using Zeitgeist;
+//using Zeitgeist;
 
 class SimpleLauncher : Applet
 {

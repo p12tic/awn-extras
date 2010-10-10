@@ -71,6 +71,13 @@ usr/share/avant-window-navigator/applets/places.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-places.schema-ini
 etc/gconf/schemas/awn-applet-places.schemas
 #
+#Simple launcher
+#
+usr/lib/awn/applets/simple-launcher/*.so
+usr/share/avant-window-navigator/applets/simple-launcher.desktop
+usr/share/avant-window-navigator/schemas/awn-applet-simple-launcher.schema-ini
+etc/gconf/schemas/awn-applet-simple-launcher.schemas
+#
 # Related (Only lucid and +)
 #
 usr/lib/awn/applets/related/*.so 

@@ -161,7 +161,9 @@ class SimpleLauncher : Applet
       link_entry.save (df);
     }
 
-    _launcher_list.append (df.path);
+    var path = df.path;
+    Value v = path;
+    _launcher_list.append (v);
     this.notify_property ("launcher-list");
   }
 

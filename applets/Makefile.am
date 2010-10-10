@@ -7,12 +7,15 @@ if MAINTAINER_MODE
 CONDITIONAL_APPLETS += maintained/vala-test
 endif
 if HAVE_LIBZG
-CONDITIONAL_APPLETS += maintained/related
+CONDITIONAL_APPLETS += \
+	maintained/related \
+	$(NULL)
 endif
 CONDITIONAL_APPLETS += \
 	maintained/garbage \
 	maintained/notification-area \
 	maintained/showdesktop \
+	maintained/simple-launcher \
 	$(NULL)
 endif
 

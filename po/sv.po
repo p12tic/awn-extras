@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-02 00:09+0200\n"
-"PO-Revision-Date: 2010-10-09 18:15+0000\n"
+"PO-Revision-Date: 2010-10-10 15:10+0000\n"
 "Last-Translator: David Bengtsson <Unknown>\n"
 "Language-Team: Launchpad Swedish Translators <lp-l10n-"
 "sv@lists.launchpad.net>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-10-10 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-10-11 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Language: Swedish\n"
 
@@ -119,6 +119,8 @@ msgstr "Terminal"
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:1
 msgid "Adds or removes 5px to the value of the AWN setting \"Size of Icons\""
 msgstr ""
+"Lägger till eller tar bort 5 bildpunkter i värdet för Awn-inställningen "
+"\"Ikonstorlek\"."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:2
 msgid "Color to draw the background"
@@ -130,7 +132,7 @@ msgstr "Färg för ramen."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:4
 msgid "Desired applet font size"
-msgstr ""
+msgstr "Önskad typsnittsstorlek i miniprogrammet."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:5
 msgid "Display parameters for interfaces"
@@ -150,12 +152,18 @@ msgid ""
 "reflection in horizontal docks only, 2: show reflection in vertical docks, "
 "3: Disable reflection for all dock orientations"
 msgstr ""
+"Aktiverar/inaktiverar dock-reflektion för detta miniprogram. 0. Använd Awn-"
+"inställning, 1. Visa endast reflektion i horisontella dockar, 2. Visa "
+"reflektion i vertikala dockar, 3. Inaktivera reflektion för alla dock-"
+"orienteringar."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:9
 msgid ""
 "Enbables or disables drawing the applet graph - if disabled only the speed "
 "text will be displayed in the applet"
 msgstr ""
+"Aktiverar/inaktiverar visning av diagram i miniprogrammet. Om inaktiverat "
+"visas endast hastighetstexten."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:10
 msgid ""
@@ -174,32 +182,40 @@ msgid ""
 "Sets the default scale of the applet traffic graph - the scale is the amount "
 "of linear data to display at one time"
 msgstr ""
+"Ställer in standardskalan på trafikdiagrammet i miniprogrammet. Skalan är "
+"mängden linjära data som visas på en gång."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:13
 msgid ""
 "Sets the default scale of the applet wireless signal graph - the scale is "
 "the amount of linear data to display at one time"
 msgstr ""
+"Ställer in standardskalan på diagrammet över trådlös signal i "
+"miniprogrammet. Skalan är mängden linjära data som visas på en gång."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:14
 msgid ""
 "Sets the default scale of the popup-dialog traffic graph - the scale is the "
 "amount of linear data to display at one time"
 msgstr ""
+"Ställer in standardskalan på trafikdiagrammet i popup-dialogrutan. Skalan är "
+"mängden linjära data som visas på en gång."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:15
 msgid ""
 "Sets the default scale of the popup-dialog wireless signal graph - the scale "
 "is the amount of linear data to display at one time"
 msgstr ""
+"Ställer in standardskalan på diagrammet över trådlös signal i popup-"
+"dialogrutan. Skalan är mängden linjära data som visas på en gång."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:16
 msgid "Sets the offset of the applet from the edge of the dock"
-msgstr ""
+msgstr "Ställer in kompensationen av miniprogrammet från dock-kanten."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:17
 msgid "Sets the width of the applet icon"
-msgstr ""
+msgstr "Ställer inte bredden på miniprogrammets ikon."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:18
 msgid "The base display unit for transfer speed (0: bits, 1: bytes)"
@@ -302,21 +318,23 @@ msgstr "<b>Visning</b>"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:2
 msgid "Applet"
-msgstr ""
+msgstr "Miniprogram"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:3
 msgid "Applet Offset"
-msgstr ""
+msgstr "Kompensation av miniprogrammet"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:4
 msgid ""
 "Applet Size \n"
 "Override"
 msgstr ""
+"Storlek på miniprogrammet\n"
+"Åsidosättande"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:6
 msgid "Applet Width"
-msgstr ""
+msgstr "Bredd på miniprogrammet"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:7
 msgid "Background Color"
@@ -328,7 +346,7 @@ msgstr "Ramfärg"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:9
 msgid "Dialog"
-msgstr ""
+msgstr "Dialogruta"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:10
 msgid "Display MBps/KBps (bytes) instead of Mbps/Kbps (bits)"
@@ -344,7 +362,7 @@ msgstr "Visa 0 bps i diagram"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:13
 msgid "Draw Applet Graph"
-msgstr ""
+msgstr "Visa diagram i miniprogrammet"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:14
 msgid "Draw Background"
@@ -369,7 +387,7 @@ msgstr "Endast diagram"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:18
 msgid "Icon Font Size"
-msgstr ""
+msgstr "Typsnittsstorlek på ikonen"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:19
 msgid "If this is checked, the common display unit will be Bytes"
@@ -381,7 +399,7 @@ msgstr "Minsta skalningsgräns"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:23
 msgid "Signal Scale"
-msgstr ""
+msgstr "Signalskala"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:24
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:226
@@ -390,7 +408,7 @@ msgstr "Summa"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:25
 msgid "Traffic Scale"
-msgstr ""
+msgstr "Trafikskala"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:221
 msgid "Device"
@@ -1352,7 +1370,7 @@ msgstr "_Processor:"
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:1
 msgid "Can change layout with scroll wheel."
-msgstr "Det går att byta layout med mushjulet."
+msgstr "Kan ändra layout med mushjulet."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:2
 msgid "Flag opacity (min: 0.0, max: 0.9)."
@@ -1366,8 +1384,8 @@ msgstr "Flaggstorlek jämförd med ikonen."
 msgid ""
 "Keyboard toggle to change selected layout (see prefs dialog for values)."
 msgstr ""
-"Växla med tangentbordet för att ändra vald layout (se dialogrutan med "
-"inställningar för värden)."
+"Växla med tangentbordet för att ändra vald layout. Se dialogrutan med "
+"inställningar för värden."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:5
 msgid "Left click action (0: previous, 1: menu, 2: next, 3: none)."
@@ -1399,31 +1417,31 @@ msgstr "Ändra din layout för tangentbordsinmatningen från Awn"
 
 #: ../applets/maintained/dialect/dialect.ui.h:1
 msgid "<b>Flag on Applet Icon</b>"
-msgstr ""
+msgstr "<b>Flagga på miniprogrammets ikon</b>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:2
 msgid "<b>Keyboard</b>"
-msgstr ""
+msgstr "<b>Tangentbord</b>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:3
 msgid "<b>Mouse Actions</b>"
-msgstr ""
+msgstr "<b>Musåtgärder</b>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:4
 msgid "<i><small>large</small></i>"
-msgstr ""
+msgstr "<i><small>stor</small></i>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:5
 msgid "<i><small>opaque</small></i>"
-msgstr ""
+msgstr "<i><small>opak</small></i>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:6
 msgid "<i><small>small</small></i>"
-msgstr ""
+msgstr "<i><small>liten</small></i>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:7
 msgid "<i><small>transparent</small></i>"
-msgstr ""
+msgstr "<i><small>genomskinlig</small></i>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:8
 msgid "About Dialect Applet"
@@ -1440,7 +1458,7 @@ msgstr "Ändra din tangentbordslayout från Awn."
 
 #: ../applets/maintained/dialect/dialect.ui.h:11
 msgid "Control"
-msgstr ""
+msgstr "Styrning"
 
 #: ../applets/maintained/dialect/dialect.ui.h:12
 msgid "Dialect Applet Preferences"
@@ -1448,11 +1466,11 @@ msgstr "Inställningar för Dialekt"
 
 #: ../applets/maintained/dialect/dialect.ui.h:13
 msgid "Flag _Opacity:"
-msgstr ""
+msgstr "Flagg_opacitet:"
 
 #: ../applets/maintained/dialect/dialect.ui.h:14
 msgid "Flag _Size:"
-msgstr ""
+msgstr "Flagg_storlek:"
 
 #. A tooltip, layout = keyboard layout
 #: ../applets/maintained/dialect/dialect.ui.h:16
@@ -1460,52 +1478,54 @@ msgid ""
 "If selected, scrolling up or down with your mouse wheel will select the next "
 "or previous layout in your user list"
 msgstr ""
+"Om vald, kommer rullning upp eller ned med ditt mushjul att välja nästa "
+"eller föregående layout i din användarlista"
 
 #. Keyboard layouts
 #: ../applets/maintained/dialect/dialect.ui.h:18
 msgid "Layouts"
-msgstr ""
+msgstr "Layouter"
 
 #. A tooltip, layouts = keyboard layouts
 #: ../applets/maintained/dialect/dialect.ui.h:21
 msgid "Selects the hot key combination used to change layouts"
-msgstr ""
+msgstr "Väljer tangentkombinationen som används för att ändra layouter"
 
 #: ../applets/maintained/dialect/dialect.ui.h:22
 msgid "Show _Flag"
-msgstr ""
+msgstr "Visa _flagga"
 
 #: ../applets/maintained/dialect/dialect.ui.h:23
 msgid "Show menu with layouts"
-msgstr ""
+msgstr "Visa meny med layouter"
 
 #: ../applets/maintained/dialect/dialect.ui.h:24
 msgid "Switch to next layout in list"
-msgstr ""
+msgstr "Växla till nästa layout i listan"
 
 #: ../applets/maintained/dialect/dialect.ui.h:25
 msgid "Switch to previous layout in list"
-msgstr ""
+msgstr "Växla till föregående layout i listan"
 
 #: ../applets/maintained/dialect/dialect.ui.h:26
 msgid "_Add"
-msgstr ""
+msgstr "_Lägg till"
 
 #: ../applets/maintained/dialect/dialect.ui.h:27
 msgid "_Allow scroll wheel to change layout"
-msgstr ""
+msgstr "_Tillåt att ändra layout med mushjulet"
 
 #: ../applets/maintained/dialect/dialect.ui.h:28
 msgid "_Keyboard Toggle:"
-msgstr ""
+msgstr "_Tangentbordsväxling:"
 
 #: ../applets/maintained/dialect/dialect.ui.h:29
 msgid "_Left Click:"
-msgstr ""
+msgstr "_Vänsterklick:"
 
 #: ../applets/maintained/dialect/dialect.ui.h:30
 msgid "_Middle Click:"
-msgstr ""
+msgstr "_Mittenklick:"
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:1
 msgid "Command to execute when a calendar day is double-clicked."
@@ -4543,6 +4563,8 @@ msgid ""
 "Install the appropriate plug-ins for one or more of the following GStreamer "
 "elements: %s."
 msgstr ""
+"Installera de lämpliga insticksmodulerna för en eller flera av följande "
+"GStreamer-element: %s."
 
 #: ../applets/maintained/volume-control/volume-control.py:68
 msgid "Could not find any devices."
@@ -4554,7 +4576,7 @@ msgstr "_Öppna volymkontrollen"
 
 #: ../applets/maintained/volume-control/volume-control.py:379
 msgid "No GStreamer mixer found"
-msgstr ""
+msgstr "Ingen GStreamer-mixer hittades"
 
 #: ../applets/maintained/volume-control/volume-control.py:385
 msgid "No devices found"

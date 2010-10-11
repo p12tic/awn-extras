@@ -14,6 +14,7 @@ applets/maintained/bandwidth-monitor/interfaces_dialog.py
 applets/maintained/battery/battery.desktop.in
 applets/maintained/battery/battery.py
 [type: gettext/glade]applets/maintained/battery/battery.ui
+applets/maintained/battery/messagehandler.py
 [type: gettext/ini]applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in
 applets/maintained/cairo-clock/cairo-clock.desktop.in
 applets/maintained/cairo-clock/cairo-clock.py
@@ -44,12 +45,15 @@ applets/maintained/comics/feed/__init__.py
 [type: gettext/glade]applets/maintained/comics/ui/manage.ui
 [type: gettext/glade]applets/maintained/comics/ui/view.ui
 applets/maintained/comics/main.py
+applets/maintained/common-folder/common-folder.desktop.in
+applets/maintained/common-folder/common-folder.py
 [type: gettext/ini]applets/maintained/cpufreq/awn-applet-cpufreq.schema-ini.in
 applets/maintained/cpufreq/cpufreq.desktop.in
 applets/maintained/cpufreq/cpufreq.py
 [type: gettext/glade]applets/maintained/cpufreq/cpufreq.ui
 [type: gettext/ini]applets/maintained/dialect/awn-applet-dialect.schema-ini.in
 applets/maintained/dialect/dialect.desktop.in
+applets/maintained/dialect/dialect.py
 [type: gettext/glade]applets/maintained/dialect/dialect.ui
 [type: gettext/ini]applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in
 [type: gettext/glade]applets/maintained/digital-clock/dg-prefs.ui
@@ -77,7 +81,6 @@ applets/maintained/hardware-sensors/hardware-sensors.py
 applets/maintained/hardware-sensors/sensorvalues/units.py
 applets/maintained/indicator-applet/applet.c
 [type: gettext/ini]applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in
-applets/maintained/indicator-applet/indicator-applet.desktop.in
 applets/maintained/indicator-applet/indicator-applet.desktop.in.in
 [type: gettext/ini]applets/maintained/mail/awn-applet-mail.schema-ini.in
 applets/maintained/mail/mail.desktop.in
@@ -108,7 +111,6 @@ applets/maintained/notification-area/notification-area.vala
 [type: gettext/ini]applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in
 applets/maintained/notification-daemon/notification-daemon.desktop.in.in
 applets/maintained/notification-daemon/daemon.c
-applets/maintained/notification-daemon/notification-daemon.desktop.in
 applets/maintained/places/applet.c
 [type: gettext/ini]applets/maintained/places/awn-applet-places.schema-ini.in
 applets/maintained/places/places.desktop.in.in
@@ -119,7 +121,6 @@ applets/maintained/quit/quit-lock-screen.desktop.in
 applets/maintained/quit/quit-log-out.desktop.in
 applets/maintained/quit/quit-shut-down.desktop.in
 applets/maintained/quit/quit.py
-applets/maintained/related/related.desktop.in
 applets/maintained/related/related.desktop.in.in
 [type: gettext/ini]applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in
 [type: gettext/glade]applets/maintained/shiny-switcher/shiny-prefs.ui
@@ -127,6 +128,7 @@ applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in
 applets/maintained/shiny-switcher/shinyswitcherapplet.c
 applets/maintained/showdesktop/applet.vala
 applets/maintained/showdesktop/showdesktop.desktop.in.in
+applets/maintained/simple-launcher/simple-launcher.desktop.in.in
 [type: gettext/ini]applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in
 applets/maintained/slickswitcher/prefs.py
 applets/maintained/slickswitcher/slickswitcher.desktop.in

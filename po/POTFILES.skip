@@ -12,11 +12,11 @@ applets/maintained/notification-area/notification-area.c
 applets/maintained/notification-area/notification-area.desktop.in
 applets/maintained/notification-daemon/notification-daemon.desktop.in
 applets/maintained/places/places.desktop.in
-applets/maintained/shiny-switcher/shinyswitcher.desktop.in
-applets/maintained/simple-launcher/simple-launcher.desktop.in
 applets/maintained/related/related.desktop.in
+applets/maintained/shiny-switcher/shinyswitcher.desktop.in
 applets/maintained/showdesktop/applet.c
 applets/maintained/showdesktop/showdesktop.desktop.in
+applets/maintained/simple-launcher/simple-launcher.desktop.in
 applets/maintained/sysmon/sysmon.desktop.in
 applets/maintained/vala-test/vala-test.desktop.in
 applets/maintained/webapplet/webapplet.desktop.in

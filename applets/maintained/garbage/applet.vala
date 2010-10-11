@@ -41,6 +41,9 @@ public class GarbageApplet : AppletSimple
   private OverlayThrobber? throbber_overlay;
   private OverlayProgress? progress_overlay;
   private bool highlighted;
+  private const string[] authors = {
+    "Mark Lee <avant-wn@lazymalevolence.com>"
+  };
 
   public bool show_count { get; set; }
   public bool confirm_empty { get; set; }
@@ -206,9 +209,6 @@ public class GarbageApplet : AppletSimple
       ImageMenuItem prefs_item;
       Widget about_item;
       SeparatorMenuItem sep_item;
-      string[] authors = {
-        "Mark Lee <avant-wn@lazymalevolence.com>"
-      };
 
       this.menu = this.create_default_menu () as Menu;
       this.empty_menu_item =

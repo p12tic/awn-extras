@@ -199,13 +199,13 @@ class Backend(gobject.GObject):
                 entry = fdo.DesktopEntry.for_file (file)
 
                 name = entry.get_name()
-                icon_name = entry.get_icon() or "image-missing"
+                icon_name = entry.get_icon() if entry.key_exists("Icon") else "application-x-executable"
                 mime_type = ""
                 type = gio.FILE_TYPE_REGULAR
 
                 if icon_name:
                     icon_info = gtk.icon_theme_get_default().lookup_icon(icon_name, self.icon_size, 0)
-                    icon_uri = icon_info.get_filename() if icon_info else path
+                    icon_uri = icon_info.get_filename() if icon_info else icon_name
                     pixbuf = IconFactory().load_icon(icon_uri, self.icon_size)
                 if pixbuf:
                     pixbuf.add_alpha (True, '\0', '\0', '\0')

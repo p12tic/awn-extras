@@ -36,6 +36,7 @@ missing
 py-compile
 stamp-h1
 applets/maintained/awnterm/awn-terminal.c
+applets/maintained/digital-clock/*.c
 applets/maintained/garbage/*.c
 applets/maintained/notification-area/na-prefs.c
 applets/maintained/notification-area/notification-area.c

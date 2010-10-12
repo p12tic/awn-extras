@@ -85,12 +85,12 @@ class OwaCal:
         splitted = htmlsplitter.split(tablehtml.group())
         result = []
         for token in splitted:
-            titles = re.compile("<TD TITLE=\"[0-9]")  #"
+            titles = re.compile("<TD TITLE=\"[0-9]")
             titlehtml = titles.match(token)
             textre = re.compile("\".*\"")
             if titlehtml != None:
                 text = textre.search(token)
-                result.append(["", text.group().replace("\"", "")])  #"
+                result.append(["", text.group().replace("\"", "")])
         if len(result) == 0:
             result.append([None, _("No appointments")])
         return result

@@ -52,7 +52,7 @@ class InvisibleMessageState:
         try:
             self.handler.message.close()
         except glib.GError:
-            pass  # Ignore error when there's no message to close
+            pass  # Ignore error when there is no message to close
 
     def evaluate(self):
         if self.handler.applet.applet.settings["warn-low-level"]:

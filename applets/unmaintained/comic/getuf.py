@@ -78,7 +78,7 @@ for i in range(number_of_days):
 	        sequence.append(im.copy())
                 im.seek(len(sequence)) # skip to next frame
         except EOFError:
-            pass # we're done
+            pass # we are done
         im.save('/tmp/dilbert.gif');
 
 

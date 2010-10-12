@@ -672,8 +672,8 @@ class Errors:
 
         """
         try:
-            """ Don't add the module to globals[name], otherwise
-            awn.check_dependencies() won't show an error dialog. """
+            """ Do not add the module to globals[name], otherwise
+            awn.check_dependencies() will not show an error dialog. """
             scope[name] = __import__(name, scope)
         except ImportError:
             self.__parent.icon.theme("dialog-error")

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-02 00:09+0200\n"
-"PO-Revision-Date: 2010-10-11 23:12+0000\n"
-"Last-Translator: Michal Hruby <michal.mhr@gmail.com>\n"
+"PO-Revision-Date: 2010-10-13 19:46+0000\n"
+"Last-Translator: Mario Blättermann <mariobl@freenet.de>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-10-13 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-10-14 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -333,7 +333,7 @@ msgstr "Rahmenfarbe"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:9
 msgid "Dialog"
-msgstr ""
+msgstr "Dialog"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:10
 msgid "Display MBps/KBps (bytes) instead of Mbps/Kbps (bits)"
@@ -432,7 +432,7 @@ msgstr "%s %s Farbe"
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:589
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:619
 msgid "Options/Info"
-msgstr ""
+msgstr "Optionen/Info"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:581
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:584
@@ -543,11 +543,11 @@ msgstr ""
 
 #: ../applets/maintained/battery/battery.py:221
 msgid "until charged"
-msgstr ""
+msgstr "bis geladen"
 
 #: ../applets/maintained/battery/battery.py:225
 msgid "remaining"
-msgstr ""
+msgstr "verbleibend"
 
 #: ../applets/maintained/battery/battery.py:263
 #: ../applets/maintained/battery/battery.ui.h:7
@@ -1141,7 +1141,7 @@ msgstr ""
 #: ../applets/maintained/calendar/clockcal.py:293
 #, no-python-format
 msgid "%x %X"
-msgstr ""
+msgstr "%x %X"
 
 #: ../applets/maintained/calendar/clockcal.py:500
 msgid "Open in "
@@ -1421,7 +1421,7 @@ msgstr "Tastaturbelegung von AWN aus ändern"
 
 #: ../applets/maintained/dialect/dialect.ui.h:1
 msgid "<b>Flag on Applet Icon</b>"
-msgstr ""
+msgstr "<b>Flagge auf dem Appletsymbol</b>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:2
 msgid "<b>Keyboard</b>"
@@ -1429,23 +1429,23 @@ msgstr "<b>Tastatur</b>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:3
 msgid "<b>Mouse Actions</b>"
-msgstr ""
+msgstr "<b>Mausaktionen</b>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:4
 msgid "<i><small>large</small></i>"
-msgstr ""
+msgstr "<i><small>groß</small></i>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:5
 msgid "<i><small>opaque</small></i>"
-msgstr ""
+msgstr "<i><small>deckend</small></i>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:6
 msgid "<i><small>small</small></i>"
-msgstr ""
+msgstr "<i><small>klein</small></i>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:7
 msgid "<i><small>transparent</small></i>"
-msgstr ""
+msgstr "<i><small>transparent</small></i>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:8
 msgid "About Dialect Applet"
@@ -1470,11 +1470,11 @@ msgstr "Einstellungen für das Dialekt-Applet"
 
 #: ../applets/maintained/dialect/dialect.ui.h:13
 msgid "Flag _Opacity:"
-msgstr ""
+msgstr "_Deckkraft der Flagge:"
 
 #: ../applets/maintained/dialect/dialect.ui.h:14
 msgid "Flag _Size:"
-msgstr ""
+msgstr "_Größe der Flagge:"
 
 #. A tooltip, layout = keyboard layout
 #: ../applets/maintained/dialect/dialect.ui.h:16
@@ -1495,7 +1495,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:22
 msgid "Show _Flag"
-msgstr ""
+msgstr "_Flagge zeigen"
 
 #: ../applets/maintained/dialect/dialect.ui.h:23
 msgid "Show menu with layouts"
@@ -1503,11 +1503,11 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:24
 msgid "Switch to next layout in list"
-msgstr ""
+msgstr "Zur nächsten Tastaturbelegung in der Liste wechseln"
 
 #: ../applets/maintained/dialect/dialect.ui.h:25
 msgid "Switch to previous layout in list"
-msgstr ""
+msgstr "Zur vorigen Tastaturbelegung in der Liste wechseln"
 
 #: ../applets/maintained/dialect/dialect.ui.h:26
 msgid "_Add"
@@ -1519,15 +1519,15 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:28
 msgid "_Keyboard Toggle:"
-msgstr ""
+msgstr "_Tastaturumschalter:"
 
 #: ../applets/maintained/dialect/dialect.ui.h:29
 msgid "_Left Click:"
-msgstr ""
+msgstr "_Linksklick:"
 
 #: ../applets/maintained/dialect/dialect.ui.h:30
 msgid "_Middle Click:"
-msgstr ""
+msgstr "_Mittelklick:"
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:1
 msgid "Command to execute when a calendar day is double-clicked."

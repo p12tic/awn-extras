@@ -57,7 +57,6 @@ Description: A collection of applets for avant-window-navigator
   * separator: Display a white line to separate applets.
   * shinyswitcher: A workspace switcher supporting compiz and other WMs.
   * showdesktop: Hides/shows all of the windows of the current viewport.
-  * simple-launcher: Applet used to launch stuff.
 
 Package: awn-applets-c-extras-trunk
 Section: gnome

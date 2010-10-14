@@ -57,13 +57,6 @@ usr/share/avant-window-navigator/applets/shinyswitcher/*.ui
 usr/lib/awn/applets/showdesktop/*.so
 usr/share/avant-window-navigator/applets/showdesktop.desktop
 #
-#Simple launcher
-#
-usr/lib/awn/applets/simple-launcher/*.so
-usr/share/avant-window-navigator/applets/simple-launcher.desktop
-usr/share/avant-window-navigator/schemas/awn-applet-simple-launcher.schema-ini
-etc/gconf/schemas/awn-applet-simple-launcher.schemas
-#
 # Places
 #
 usr/lib/awn/applets/places/*.so 

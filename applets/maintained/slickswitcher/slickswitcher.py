@@ -222,9 +222,7 @@ class App(awn.AppletSimple):
         if self.update_backgrounds():
             self.update_icon()
 
-        gobject.timeout_add_seconds(2, self.timeout_icon)
-
-        return False
+        return True
 
     #Show the dialog.
     def show_dialog(self):

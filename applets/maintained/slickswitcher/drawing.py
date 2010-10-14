@@ -96,7 +96,7 @@ class Drawing(gtk.Table):
     def timeout_update(self):
         self.update_backgrounds()
         self.update()
-        gobject.timeout_add_seconds(2, self.timeout_update)
+        return True
 
     #Update
     def update(self):

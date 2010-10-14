@@ -345,8 +345,6 @@ applets/maintained/shiny-switcher/Makefile
 applets/maintained/shiny-switcher/shinyswitcher.desktop.in
 applets/maintained/showdesktop/Makefile
 applets/maintained/showdesktop/showdesktop.desktop.in
-applets/maintained/simple-launcher/Makefile
-applets/maintained/simple-launcher/simple-launcher.desktop.in
 applets/maintained/slickswitcher/Makefile
 applets/maintained/sysmon/Makefile
 applets/maintained/sysmon/sysmon.desktop.in

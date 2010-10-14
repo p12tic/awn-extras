@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <interface>
-  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-requires gtk+ 2.10 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkAssistant" id="add_assistant">
     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
@@ -147,6 +147,12 @@ Press "next" to proceed.</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                 <property name="item_width">100</property>
                 <signal name="selection_changed" handler="on_image_list_selection_changed"/>
+                <child>
+                  <object class="GtkCellRendererPixbuf" id="cellrenderertext"/>
+                  <attributes>
+                    <attribute name="pixbuf">1</attribute>
+                  </attributes>
+                </child>
               </object>
             </child>
           </object>

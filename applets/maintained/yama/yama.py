@@ -362,11 +362,12 @@ class YamaApplet:
                     uri, name = (url_name[0], url_name[1])
 
                     if uri.startswith("file://"):
-                        if not vfs.File.for_uri(uri).exists():
+                        file = vfs.File.for_uri(uri)
+
+                        if not file.exists():
                             continue
-                        file = gio.File(uri)
-                        info = file.query_info(gio.FILE_ATTRIBUTE_STANDARD_ICON, gio.FILE_QUERY_INFO_NONE)
-                        icon = self.get_icon_name(info.get_attribute_object(gio.FILE_ATTRIBUTE_STANDARD_ICON))
+
+                        icon = self.get_first_existing_icon(file.get_icon_names())
                         display_uri = uri[7:]
                     else:
                         icon = "folder-remote"

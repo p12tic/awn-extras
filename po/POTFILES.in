@@ -128,7 +128,6 @@ applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in
 applets/maintained/shiny-switcher/shinyswitcherapplet.c
 applets/maintained/showdesktop/applet.vala
 applets/maintained/showdesktop/showdesktop.desktop.in.in
-applets/maintained/simple-launcher/simple-launcher.desktop.in.in
 [type: gettext/ini]applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in
 applets/maintained/slickswitcher/prefs.py
 applets/maintained/slickswitcher/slickswitcher.desktop.in

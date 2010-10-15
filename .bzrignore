@@ -43,7 +43,6 @@ applets/maintained/notification-area/notification-area.c
 applets/maintained/notification-daemon/notificationdaemon-dbus-glue.h
 applets/maintained/related/related-applet.c
 applets/maintained/showdesktop/*.c
-applets/maintained/simple-launcher/simple-launcher.c
 applets/maintained/vala-test/*.c
 debian/*.debhelper.log
 debian/*.postinst.debhelper

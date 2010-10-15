@@ -52,9 +52,11 @@ conditions = [
     N_("Hot"),
     N_("Hurricane"),
     N_("Isolated Thunderstorms"),
+    N_("Light Drizzle"),
     N_("Light Rain Shower"),
     N_("Light Rain with Thunder"),
     N_("Light Snow Showers"),
+    N_("Mist"),
     N_("Mixed Precipitation"),
     N_("Mixed Rain and Hail"),
     N_("Mixed Rain and Sleet"),
@@ -82,6 +84,8 @@ conditions = [
 forecast = [
     # Please keep translation short, approx. 12 characters
     N_("AM Clouds / PM Sun"),
+    # Please keep translation short, approx. 12 characters
+    N_("AM Drizzle"),
     # Please keep translation short, approx. 12 characters
     N_("AM Drizzle / Wind"),
     # Please keep translation short, approx. 12 characters
@@ -124,9 +128,11 @@ forecast = [
     # Please keep translation short, approx. 12 characters
     N_("Rain"),
     # Please keep translation short, approx. 12 characters
-    N_("Rain / Wind"),
+    N_("Rain / Snow Showers"),
     # Please keep translation short, approx. 12 characters
     N_("Rain / Thunder"),
+    # Please keep translation short, approx. 12 characters
+    N_("Rain / Wind"),
     # Please keep translation short, approx. 12 characters
     N_("Scattered Showers / Wind"),
     # Please keep translation short, approx. 12 characters

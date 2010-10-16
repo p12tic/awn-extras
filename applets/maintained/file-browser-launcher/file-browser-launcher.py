@@ -571,13 +571,10 @@ class App(awn.Applet):
               if name is None:
                 try: name = path.split('/')[-1]
                 except: name = path
+                if name == '':
+                  name = '/'
 
-              if path.replace('/', '') != '/':
-                path2 = path
-                while path2[-1] == '/':
-                  path2 = path2[:-1]
-
-                self.place(self.try_to_get_custom_icon_for_path(path), name, path)
+              self.place(self.try_to_get_custom_icon_for_path(path), name, path)
 
           # computer://, trash://, network fs, etc.
           else:

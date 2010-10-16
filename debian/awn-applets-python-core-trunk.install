@@ -155,19 +155,3 @@ usr/share/avant-window-navigator/schemas/awn-applet-weather.schema-ini
 #usr/share/avant-window-navigator/applets/mount/icons/*.png
 #usr/share/avant-window-navigator/applets/mount.desktop
 #usr/share/avant-window-navigator/schemas/awn-applet-mount.schema-ini
-#
-# Arss
-#
-#etc/gconf/schemas/arss.schemas
-#usr/share/avant-window-navigator/applets/arss/*.py
-#usr/share/avant-window-navigator/applets/arss/icons/*.png
-#usr/share/avant-window-navigator/applets/arss/icons/*.svg
-#usr/share/avant-window-navigator/applets/arss/*.py
-#usr/share/avant-window-navigator/applets/arss/*.glade
-#usr/share/avant-window-navigator/applets/arss.desktop
-#
-# DesktopManager
-#
-#etc/gconf/schemas/DesktopManager.schemas
-#usr/share/avant-window-navigator/applets/DesktopManager/
-#usr/share/avant-window-navigator/applets/DesktopManager.desktop

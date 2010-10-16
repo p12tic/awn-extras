@@ -152,9 +152,20 @@ class InterfaceGraph(gtk.DrawingArea):
             self.interface = self.__parent.iface
         if self.interface in self.__parent.netstats.ifaces:
             if self.show_text:
+                graph_source = 'dialog'
                 line_width = 3
                 icon_size = 0
                 pixbuf = None
+                if self.__parent.applet.settings['dialog_traffic_scale']:
+                    traffic_scale = int(self.__parent.applet.settings['dialog_traffic_scale'] \
+                      * 8)
+                else:
+                    traffic_scale = 90
+                if self.__parent.applet.settings['dialog_signal_scale']:
+                    signal_scale = int(self.__parent.applet.settings['dialog_signal_scale'] \
+                      * 8)
+                else:
+                    signal_scale = 90
                 self.interface = self.__parent.iface
                 ''' if wireless, draw it '''
                 if iface in self.__parent.netstats.ifaces:
@@ -176,7 +187,12 @@ class InterfaceGraph(gtk.DrawingArea):
                         pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(os.path.join(ICON_DIR, icon_name), icon_size, icon_size)
                         signal = self.__parent.netstats.ifaces[iface]['signal']
                         ssid = None
-                        self.__parent.draw_wireless(context, self.width, self.height, self.interface)
+                        self.__parent.draw_wireless(context, 
+                            self.width,
+                            self.height,
+                            self.interface,
+                            scale=signal_scale,
+                            graph_source='dialog')
                         if self.network_manager:
                             nm_device = self.network_manager.get_device_by_name(iface)
                             nm_device_status = self.network_manager.get_device_status(nm_device)
@@ -284,6 +300,7 @@ class InterfaceGraph(gtk.DrawingArea):
                 context.show_text(rx_label)
                 context.fill()
             else:
+                graph_source = 'applet'
                 line_width = 2
                 context.set_line_width(line_width)
                 x, y = 0, 0
@@ -373,8 +390,11 @@ class InterfaceGraph(gtk.DrawingArea):
                     if abs(event.time - self.button_click_time) > 500:
                         self.button_click_time = event.time
                         self.__parent.change_iface(widget, self.interface)
-                        self.__parent.interface_dialog.buttonArea.change_dialog(widget, event, 'graph')
+                        self.__parent.interface_dialog.buttonArea.change_dialog(
+                        widget, event, 'graph')
                 self.connect('button_release_event', click_event)
+                traffic_scale = 24
+                signal_scale = 24
             context.set_font_size(12.0)
             multi = True if self.interface == 'Multi Interface' else False
             if multi:
@@ -390,18 +410,44 @@ class InterfaceGraph(gtk.DrawingArea):
                 ratio = max_val / 28 if max_val > self.__parent.ratio else 1
                 for iface in self.__parent.netstats.ifaces:
                     if self.__parent.netstats.ifaces[iface]['multi_include']:
-                        self.__parent.draw_meter(context, self.width, self.height, iface, multi=multi, line_width=line_width, ratio=ratio, border=True)
+                        self.__parent.draw_meter(context,
+                            self.width,
+                            self.height,
+                            iface,
+                            multi=multi,
+                            line_width=line_width,
+                            ratio=ratio,
+                            scale=traffic_scale,
+                            border=True,
+                            graph_source=graph_source)
             else:
-                self.__parent.draw_meter(context, self.width, self.height, self.interface, multi=multi, line_width=line_width, ratio=1, border=True)
+                self.__parent.draw_meter(context,
+                    self.width,
+                    self.height,
+                    self.interface,
+                    multi=multi,
+                    line_width=line_width,
+                    ratio=1,
+                    scale=traffic_scale,
+                    border=True,
+                    graph_source=graph_source)
             if not self.show_text:
                 if self.highlight:
                     context.set_source_rgba(1, 1, 1, 1)
                     context.set_line_width(3)
-                    cairo_rounded_rect(context, 1, 1, self.width - 2, self.height - 2, 6, ROUND_ALL)
+                    cairo_rounded_rect(context,
+                        1, 1,
+                        self.width - 2,
+                        self.height - 2,
+                        6, ROUND_ALL)
                     context.stroke()
                 else:
                     context.set_source_rgba(1, 1, 1, 1)
-                    cairo_rounded_rect(context, 0, 0, self.width, self.height, 4, ROUND_ALL)
+                    cairo_rounded_rect(context,
+                        0, 0,
+                        self.width,
+                        self.height,
+                        4, ROUND_ALL)
                     context.stroke()
         else:
             context.set_source_rgba(1, 1, 1)

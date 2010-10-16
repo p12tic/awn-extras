@@ -36,10 +36,12 @@ missing
 py-compile
 stamp-h1
 applets/maintained/awnterm/awn-terminal.c
+applets/maintained/digital-clock/*.c
 applets/maintained/garbage/*.c
 applets/maintained/notification-area/na-prefs.c
 applets/maintained/notification-area/notification-area.c
 applets/maintained/notification-daemon/notificationdaemon-dbus-glue.h
+applets/maintained/related/related-applet.c
 applets/maintained/showdesktop/*.c
 applets/maintained/vala-test/*.c
 debian/*.debhelper.log

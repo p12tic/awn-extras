@@ -18,7 +18,8 @@
 # Boston, MA 02111-1307, USA.
 
 
-import sys, os
+import sys
+import os
 
 import gobject
 import pygtk
@@ -72,7 +73,7 @@ def get_app_name():
 class GenericPlayer(object):
     """Insert the level of support here"""
 
-    def __init__(self, dbus_name = None):
+    def __init__(self, dbus_name=None):
         # set signalling_supported to True in your subclass's constructor if you use signal(s) which are received when currently played song changes (e.g. playingUriChanged signal)
         self.signalling_supported = False
         # set to DBus service name string in your subclass
@@ -157,13 +158,13 @@ class GenericPlayer(object):
         """
         return False
 
-    def previous (self):
+    def previous(self):
         pass
 
-    def play_pause (self):
+    def play_pause(self):
         pass
 
-    def next (self):
+    def next(self):
         pass
 
     def play_uri(self, uri):
@@ -214,12 +215,11 @@ class MPRISPlayer(GenericPlayer):
         elif 'location' in info.keys():
             pos = info['location'].rfind("/")
             if pos is not -1:
-              result['title'] = str(info['location'][pos+1:])
+                result['title'] = str(info['location'][pos + 1:])
             else:
-              result['title'] = ''
+                result['title'] = ''
         else:
             result['title'] = ''
-
 
         if 'artist' in info.keys():
             result['artist'] = str(info['artist'])
@@ -292,12 +292,13 @@ class Rhythmbox(GenericPlayer):
         if result['artist'] != '':
             ret_dict['artist'] = result['artist']
             ret_dict['title'] = result['title']
-            if 'album' in result: ret_dict['album'] = result['album']
+            if 'album' in result:
+                ret_dict['album'] = result['album']
         elif 'rb:stream-song-title' in result:
             if result['title'] != '':
                 ret_dict['title'] = result['rb:stream-song-title'] + ' (' + result['title'] + ')'
             else:
-               ret_dict['title'] = result['rb:stream-song-title']
+                ret_dict['title'] = result['rb:stream-song-title']
         elif 'title' in result:
             ret_dict['title'] = result['title']
 
@@ -323,14 +324,14 @@ class Rhythmbox(GenericPlayer):
         self.dbus_driver()
         return self._is_playing
 
-    def previous (self):
-        self.player.previous ()
+    def previous(self):
+        self.player.previous()
 
-    def play_pause (self):
-        self.player.playPause (1)
+    def play_pause(self):
+        self.player.playPause(1)
 
-    def next (self):
-        self.player.next ()
+    def next(self):
+        self.player.next()
 
     def play_uri(self, uri):
         # unfortunatelly this only works for items present in media library
@@ -340,7 +341,7 @@ class Rhythmbox(GenericPlayer):
     def enqueue_uris(self, uris):
         # unfortunatelly this only works for items present in media library
         for uri in uris:
-          self.rbShell.addToQueue(uri)
+            self.rbShell.addToQueue(uri)
         return True
 
 
@@ -376,13 +377,13 @@ class Exaile(GenericPlayer):
 
         return result
 
-    def previous (self):
+    def previous(self):
         self.player.prev_track()
 
-    def play_pause (self):
+    def play_pause(self):
         self.player.play_pause()
 
-    def next (self):
+    def next(self):
         self.player.next_track()
 
     def play_uri(self, uri):
@@ -391,8 +392,9 @@ class Exaile(GenericPlayer):
 
     def enqueue_uris(self, uris):
         for uri in uris:
-          self.player.play_file(uri)
+            self.player.play_file(uri)
         return True
+
 
 class Banshee(GenericPlayer):
     """Full Support for the banshee media player
@@ -409,7 +411,7 @@ class Banshee(GenericPlayer):
         bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
         if bus_obj.NameHasOwner('org.gnome.Banshee') == True:
             self.session_bus = dbus.SessionBus()
-            self.proxy_obj = self.session_bus.get_object('org.gnome.Banshee',"/org/gnome/Banshee/Player")
+            self.proxy_obj = self.session_bus.get_object('org.gnome.Banshee', "/org/gnome/Banshee/Player")
             self.player = dbus.Interface(self.proxy_obj, "org.gnome.Banshee.Core")
 
     def get_media_info(self):
@@ -424,13 +426,13 @@ class Banshee(GenericPlayer):
 
         return result
 
-    def previous (self):
+    def previous(self):
         self.player.Previous()
 
-    def play_pause (self):
-        self.player.TogglePlaying ()
+    def play_pause(self):
+        self.player.TogglePlaying()
 
-    def next (self):
+    def next(self):
         self.player.Next()
 
     def play_uri(self, uri):
@@ -458,8 +460,8 @@ class BansheeOne(GenericPlayer):
         bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
         if bus_obj.NameHasOwner('org.bansheeproject.Banshee') == True:
             self.session_bus = dbus.SessionBus()
-            self.proxy_obj = self.session_bus.get_object('org.bansheeproject.Banshee',"/org/bansheeproject/Banshee/PlayerEngine")
-            self.proxy_obj1 = self.session_bus.get_object('org.bansheeproject.Banshee',"/org/bansheeproject/Banshee/PlaybackController")
+            self.proxy_obj = self.session_bus.get_object('org.bansheeproject.Banshee', "/org/bansheeproject/Banshee/PlayerEngine")
+            self.proxy_obj1 = self.session_bus.get_object('org.bansheeproject.Banshee', "/org/bansheeproject/Banshee/PlaybackController")
             self.player = dbus.Interface(self.proxy_obj, "org.bansheeproject.Banshee.PlayerEngine")
             self.player1 = dbus.Interface(self.proxy_obj1, "org.bansheeproject.Banshee.PlaybackController")
             self.player.connect_to_signal('EventChanged', self.event_changed, member_keyword='member')
@@ -483,7 +485,7 @@ class BansheeOne(GenericPlayer):
     def get_media_info(self):
         self.dbus_driver()
         result = {}
-        
+
         self.albumart_general = os.environ['HOME'] + "/.cache/media-art/"
         self.albumart_general2 = os.environ['HOME'] + "/.cache/album-art/"
 
@@ -507,7 +509,7 @@ class BansheeOne(GenericPlayer):
                 result['album-art'] = '%s.jpg' % (self.albumart_general2 + info['artwork-id'])
         elif 'album' in info:
             albumart_exact = '%s-%s.jpg' % (self.albumart_general + result['artist'], info['album'])
-            result['album-art'] = albumart_exact.replace(' ','').lower()
+            result['album-art'] = albumart_exact.replace(' ', '').lower()
 
         return result
 
@@ -515,13 +517,13 @@ class BansheeOne(GenericPlayer):
         self.dbus_driver()
         return self._is_playing
 
-    def previous (self):
+    def previous(self):
         self.player1.Previous(False)
 
-    def play_pause (self):
-        self.player.TogglePlaying ()
+    def play_pause(self):
+        self.player.TogglePlaying()
 
-    def next (self):
+    def next(self):
         self.player1.Next(False)
 
 
@@ -538,28 +540,43 @@ class Listen(GenericPlayer):
         bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
         if bus_obj.NameHasOwner('org.gnome.Listen') == True:
             self.session_bus = dbus.SessionBus()
-            self.proxy_obj = self.session_bus.get_object('org.gnome.Listen',"/org/gnome/listen")
+            self.proxy_obj = self.session_bus.get_object('org.gnome.Listen', "/org/gnome/listen")
             self.player = dbus.Interface(self.proxy_obj, "org.gnome.Listen")
 
     def get_media_info(self):
         self.dbus_driver()
+        result = {}
 
         # Currently Playing Title
-        result = {}
-        result['title'] = self.player.current_playing().split(" - ",3)[0]
-        result['artist'] = self.player.current_playing().split(" - ",3)[2]
-        result['album'] = self.player.current_playing().split(" - ",3)[1][1:]
-        result['album-art'] = os.environ['HOME'] + "/.listen/cover/" + result['artist'].lower() + "+" + result['album'].lower() + ".jpg"
+        try:
+            # Version => 0.6
+            result['title'] = self.player.get_title()
+            if result['title'] == None:  # if paused
+                result['title'] = ''
+            result['artist'] = self.player.get_artist()
+            result['album'] = self.player.get_album()
+            result['album-art'] = self.player.get_cover_path()
+        except:
+            # Version == 0.5
+            # A single string of this pattern: Title - (Album - Artist)
+            # Streaming media can have less fields
+            result['title'] = self.player.current_playing().split(" - ", 3)[0]
+            try:
+                result['album'] = self.player.current_playing().split(" - ", 3)[1][1:]
+                result['artist'] = self.player.current_playing().split(" - ", 3)[2][:-1]
+                result['album-art'] = os.environ['HOME'] + "/.listen/cover/" + result['artist'].lower() + "+" + result['album'].lower() + ".jpg"
+            except IndexError:
+                pass
 
         return result
 
-    def previous (self):
+    def previous(self):
         self.player.previous()
 
-    def play_pause (self):
-        self.player.play_pause ()
+    def play_pause(self):
+        self.player.play_pause()
 
-    def next (self):
+    def next(self):
         self.player.next()
 
     def play_uri(self, uri):
@@ -572,7 +589,7 @@ class Listen(GenericPlayer):
 
 
 class QuodLibet(GenericPlayer):
-    """Full Support with signals""" #(but not implemented yet)
+    """Full Support with signals"""  # (but not implemented yet)
 
     def __init__(self):
         GenericPlayer.__init__(self, 'net.sacredchao.QuodLibet')
@@ -599,14 +616,14 @@ class QuodLibet(GenericPlayer):
 
         return albumart_exact, markup, tooltip
 
-    def previous (self):
-        self.player.Previous ()
+    def previous(self):
+        self.player.Previous()
 
-    def play_pause (self):
-        self.player.PlayPause ()
+    def play_pause(self):
+        self.player.PlayPause()
 
-    def next (self):
-        self.player.Next ()
+    def next(self):
+        self.player.Next()
 
 
 class Songbird(MPRISPlayer):
@@ -664,5 +681,3 @@ class mpDris(MPRISPlayer):
 
     def __init__(self):
         MPRISPlayer.__init__(self, 'org.freedesktop.MediaPlayer')
-
-

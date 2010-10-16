@@ -32,17 +32,3 @@ etc/gconf/schemas/awn-applet-webapplet.schemas
 ####################
 # Disabled applets #
 ####################
-#
-# Filebrowser
-#
-#usr/lib/awn/applets/filebrowser/*.so
-#usr/share/avant-window-navigator/applets/filebrowser.desktop
-#usr/share/icons/hicolor/scalable/apps/filebrowser.svg
-#etc/gconf/schemas/filebrowser.schemas
-#
-# Trasher
-#
-#
-#
-#usr/lib/awn/applets/trasher/*.so
-#usr/share/avant-window-navigator/applets/trasher.desktop

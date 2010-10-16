@@ -7,240 +7,223 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-29 01:04+0300\n"
-"PO-Revision-Date: 2010-04-10 23:37+0000\n"
-"Last-Translator: Bundo <bundo@bundo.biz>\n"
+"POT-Creation-Date: 2010-09-25 11:18+0200\n"
+"PO-Revision-Date: 2010-09-30 05:06+0000\n"
+"Last-Translator: Para <Unknown>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2010-04-11 04:11+0000\n"
+"X-Launchpad-Export-Date: 2010-10-01 08:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
+#: ../applets/maintained/animal-farm/animal-farm.py:30
 msgid "Animal Farm"
-msgstr ""
+msgstr "애니멀 팜(속담)"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:2
 msgid "Display fortune messages"
-msgstr ""
+msgstr "속담 메시지 표시"
+
+#: ../applets/maintained/animal-farm/animal-farm.py:31
+msgid "Applet that displays fortune messages"
+msgstr "점괘를 보여주는 애플릿"
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:1
 msgid "Global hotkey used to activate the terminal."
-msgstr ""
+msgstr "터미널 활성시 전체적인 핫키를 사용"
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:2
 msgid "Set whether the applet should hide itself when it loses focus."
-msgstr ""
+msgstr "포커스를 잃었을 때 날씨 애플릿의 스스로  숨김 여부 설정"
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:3
 msgid "The applet's background image."
-msgstr ""
+msgstr "애플릿 배경 이미지"
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:4
 msgid "The applet's opacity level."
-msgstr ""
+msgstr "애플릿 불투명도 단계"
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:5
 msgid "The default external terminal application."
-msgstr ""
+msgstr "기본 확장 터미널 프로그램"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:100
 msgid "Disabled"
 msgstr "사용 안 함"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:410
+#: ../applets/maintained/awnterm/awn-terminal.vala:412
 #: ../applets/maintained/calendar/calendarprefs.py:75
 msgid "Preferences"
 msgstr "기본 설정"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:425
-#: ../applets/maintained/file-browser-launcher/prefs.py:154
+#: ../applets/maintained/awnterm/awn-terminal.vala:427
+#: ../applets/maintained/file-browser-launcher/prefs.py:162
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:16
 #, c-format
 msgid "Behavior"
-msgstr "동작"
+msgstr "행동"
 
 #. focus out behavior checkbox
-#: ../applets/maintained/awnterm/awn-terminal.vala:437
+#: ../applets/maintained/awnterm/awn-terminal.vala:439
 msgid "Hide when focus is lost"
-msgstr ""
+msgstr "포커스 잃었을때 숨김"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:456
-#: ../applets/maintained/file-browser-launcher/prefs.py:253
-#: ../applets/maintained/file-browser-launcher/prefs.py:328
+#: ../applets/maintained/awnterm/awn-terminal.vala:458
+#: ../applets/maintained/file-browser-launcher/prefs.py:259
+#: ../applets/maintained/file-browser-launcher/prefs.py:334
 msgid "Action"
-msgstr ""
+msgstr "동작"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:476
+#: ../applets/maintained/awnterm/awn-terminal.vala:478
 msgid "Shortcut"
-msgstr ""
+msgstr "바로 가기"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:482
+#: ../applets/maintained/awnterm/awn-terminal.vala:484
 msgid "Activate"
-msgstr ""
+msgstr "활성화"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:491
+#: ../applets/maintained/awnterm/awn-terminal.vala:493
 #, c-format
 msgid "Background image"
-msgstr ""
+msgstr "배경 그림"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:503
+#: ../applets/maintained/awnterm/awn-terminal.vala:505
 msgid "Select a file"
-msgstr ""
+msgstr "파일을 선택하십시오"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:545
+#: ../applets/maintained/awnterm/awn-terminal.vala:547
 #, c-format
 msgid "Terminal opacity"
-msgstr ""
+msgstr "터미널 불투명도"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:572
+#: ../applets/maintained/awnterm/awn-terminal.vala:574
 #, c-format
 msgid "External Terminal"
-msgstr ""
+msgstr "확장 터미널"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:1
 msgid "A simple popup terminal"
-msgstr ""
+msgstr "심플한 팝업 터미널"
 
 #: ../applets/maintained/awnterm/awnterm.desktop.in.in.h:2
 msgid "Terminal Applet"
-msgstr ""
+msgstr "터미널 애플릿"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:1
-msgid " Upload/Download"
-msgstr ""
+msgid "Color to draw the background"
+msgstr "배경에 그릴 색상"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:2
-msgid " bytes)"
-msgstr ""
+msgid "Color to draw the border"
+msgstr "색으로 그릴 테두리"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:3
-msgid "Color to draw the background"
-msgstr ""
+msgid "Display parameters for interfaces"
+msgstr "모양을 위한 값 표시"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:4
-msgid "Color to draw the border"
-msgstr ""
+msgid "Draw the applet background"
+msgstr "애플릿  배경 그리기"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:5
-msgid "Display parameters for interfaces"
-msgstr ""
+msgid "Draw the applet border"
+msgstr "애플릿 테두리 그리기"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:6
-msgid "Draw the applet background"
-msgstr ""
-
-#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:7
-msgid "Draw the applet border"
-msgstr ""
-
-#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:8
 msgid ""
 "If enabled this will draw a line at the bottom of the graph even if the "
 "value is 0. If unchecked, values below 1 are not drawn"
-msgstr ""
+msgstr "활성화된 후 값이 0이면 그래프의 밑에 선을 그릴 것이고 같이 1이면 그리지 않습니다."
+
+#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:7
+msgid "Minimum threshold to draw meter (dependent upon DEFAULT/unit)"
+msgstr "계기에 표시할 최소 경계값 (기본값/단위에 좌우됨)"
+
+#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:8
+msgid "The base display unit for transfer speed (0: bits, 1: bytes)"
+msgstr "전송 속도의 기본 표시 단위 (0: bits, 1: bytes)"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:9
-msgid "Minimum threshold to draw meter (dependent upon DEFAULT/unit)"
-msgstr ""
+msgid "The interface currently selected"
+msgstr "현재 선택한 모양"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:10
-msgid "The interface currently selected"
-msgstr ""
+msgid "Throughput label control - 0: no label, 1: Sum, 2: Upload/Download"
+msgstr "처리량 라벨 제어 - 0: 라벨 없음, 1: 합계, 2: 업로드/다운로드"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:37
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:231
+#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:11
+msgid ""
+"Type of graph to use for wireless devices - area: Area chart, area_bar: Area "
+"chart with colored bars, bar: Bar chart, fan: Waving chart with density, "
+"fan_bar: Waving Bar chart with density"
+msgstr ""
+"무선 장치에 사용할 그래프 형식 - 영역: 영역 차트, 영역_막대: 유색 막대기로 그린 영역 차트, 막대: 막대 그래프, 팬: 밀도 "
+"표시한 파동 차트, 팬_막대: 밀도 표시한 파동 막대"
+
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:40
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:258
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:2
 msgid "Bandwidth Monitor"
-msgstr ""
+msgstr "대여폭 모니터"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:41
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:44
 msgid "Network Bandwidth monitor"
-msgstr ""
+msgstr "네트워크 대여폭 모니터"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:225
-msgid "Unable to caclulate statistics"
-msgstr ""
-
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:225
-msgid "Statistics calculation requires read access to /proc/net/dev"
-msgstr ""
-
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:244
-msgid "Change Unit"
-msgstr ""
-
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:295
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:320
 msgid "Scanning"
-msgstr ""
+msgstr "스캐닝"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:296
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:321
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:400
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:4
 msgid "Devices"
-msgstr ""
+msgstr "장치들"
 
 #. kilobytes per second
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:323
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:347
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:19
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:50
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:81
 msgid "KBps"
-msgstr ""
+msgstr "KB초"
 
 #. kilobits per second
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:327
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:53
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:351
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:84
 msgid "Kbps"
-msgstr ""
+msgstr "Kb초"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:349
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:468
-msgid "Interface"
-msgstr ""
-
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:354
-msgid "Sent"
-msgstr ""
-
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:359
-msgid "Received"
-msgstr ""
-
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:364
-msgid "Sending"
-msgstr ""
-
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:369
-msgid "Receiving"
-msgstr ""
-
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:417
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:413
 msgid "Please select a valid Network Device"
-msgstr ""
+msgstr "유효한 네트워크 장치를 선택 하십시오"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:419
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:415
 #, python-format
 msgid "Total Sent: %s - Total Received: %s (All Interfaces)"
-msgstr ""
+msgstr "총 보내기: %s - 총 받기: %s (모든 상황)"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:610
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:760
 msgid "No"
-msgstr ""
+msgstr "아니오"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:611
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:136
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:761
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:155
 msgid "Device"
-msgstr ""
+msgstr "장치"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:612
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:763
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:412
 msgid "Please select a valid device"
-msgstr ""
+msgstr "유효한 창치를 선택하십시오"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:1
 msgid "A Network Bandwidth monitor for AWN"
-msgstr ""
+msgstr "AWN 네트워크 모니터링"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:1
 #: ../applets/maintained/battery/battery.ui.h:1
@@ -253,86 +236,87 @@ msgstr ""
 #: ../applets/maintained/volume-control/volume-control.ui.h:4
 #: ../applets/maintained/weather/weather.ui.h:2
 msgid "<b>Display</b>"
-msgstr ""
+msgstr "<b>화면</b>"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:2
 msgid "Background Color"
-msgstr ""
+msgstr "배경 색"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:3
 msgid "Border Color"
-msgstr ""
+msgstr "테두리 색"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:5
 msgid "Display MBps/KBps (bytes) instead of Mbps/Kbps (bits)"
-msgstr ""
+msgstr "Mbps/Kbps (bits) 대신 MBps/KBps (bytes)로 표시합니다."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:6
 msgid "Display Speed Text"
-msgstr ""
+msgstr "문자로 속도 표시"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:7
 msgid "Display the sum of upload and download"
-msgstr ""
+msgstr "업로드 및 다운로드의 합계를 표시"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:8
 msgid "Display upload and download text representation of speed"
-msgstr ""
+msgstr "업로드와 다운로드 속도에 수치를 표시합니다."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:9
 msgid "Do not display the speed as text, only draw the graph"
-msgstr ""
+msgstr "속도를 수치없이 그래프로만 표시합니다."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:10
 msgid "Draw 0 bps in graphs"
-msgstr ""
+msgstr "0 bps를 그래프에 표시합니다."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:11
 msgid "Draw Background"
-msgstr ""
+msgstr "배경을 표시합니다."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:12
 msgid "Draw Border"
-msgstr ""
+msgstr "테두리 그리기"
 
 #. Put the general tab together
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:13
+#: ../applets/maintained/cairo-clock/cairo-clock.py:166
 #: ../applets/maintained/dialect/dialect.ui.h:74
-#: ../applets/maintained/file-browser-launcher/prefs.py:204
+#: ../applets/maintained/file-browser-launcher/prefs.py:212
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:9
 #: ../applets/maintained/to-do/prefs.py:60
 msgid "General"
-msgstr ""
+msgstr "일반"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:14
 msgid "Graph Only"
-msgstr ""
+msgstr "그래프"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:15
 msgid ""
 "If enabled, this will draw a line at the bottom of the graph even if the "
 "value is 0. If unchecked, values below 1 are not drawn in the graph."
-msgstr ""
+msgstr "활성화되면, 값이 0이라도 그래프 밑에 선을 그립니다. 비활성화 되면, 1 미만의 값은 그래프에 그리지 않습니다."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:16
 msgid ""
 "If this is checked the applet background will use the selected color. If "
 "unchecked, background will be transparent"
-msgstr ""
+msgstr "활성화되면 애플릿 배경은 선택한 색상을 사용합니다. 비활성화되면 배경은 투명하게 됩니다."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:17
 msgid ""
 "If this is checked the applet border will use the selected color. If "
 "unchecked, border will be transparent"
-msgstr ""
+msgstr "활성화되면 애플릿 외곽선은 선택한 색상을 사용합니다. 비활성화되면 외곽선은 투명하게 됩니다."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:18
 msgid "If this is checked, the common display unit will be Bytes"
-msgstr ""
+msgstr "체크하시면, 공통 표시 단위를 Bytes로 설정합니다."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:20
 msgid "Minimum Scaling threshold"
-msgstr ""
+msgstr "최소 크기 조정 한계치"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:21
 msgid ""
@@ -340,177 +324,287 @@ msgid ""
 "amounts of traffic. e.g.: Setting to 32.0 KBps will cause the graph to only "
 "draw if throughput exceeds 32.0 KBps"
 msgstr ""
+"적은 양의 트래픽에서 급격한 변동량을 보여주지 않기 위한 크기 조정용 최소 한계값을 설정하십시오. 예: 32.0 KBps로 설정하였다면 "
+"그래프에서는 32.0 KBps를 초과하는 처리량만을 표시합니다."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:22
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:141
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:160
 msgid "Sum"
-msgstr ""
-
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:147
-msgid "Multi"
-msgstr ""
-
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:155
-msgid "Upload Color"
-msgstr ""
+msgstr "합계"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:166
+msgid "Multi"
+msgstr "멀티"
+
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:174
+msgid "Upload Color"
+msgstr "업로드 색"
+
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:185
 msgid "Download Color"
-msgstr ""
+msgstr "다운로드 색"
 
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:239
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:261
 msgid "Upload"
-msgstr ""
+msgstr "업로드"
 
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:241
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:263
 msgid "Download"
-msgstr ""
+msgstr "다운로드"
 
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:243
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:265
 #, python-format
 msgid "%s %s Color"
-msgstr ""
+msgstr "%s %s 색"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:411
+msgid "No Device"
+msgstr "장치 없음"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:533
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:543
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:573
+msgid "Options/Info"
+msgstr "선택사항/정보"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:535
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:538
+msgid "Back to Graph"
+msgstr "그래프로 돌아가기"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:539
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:542
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:563
+msgid "Interfaces"
+msgstr "인터페이스"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:568
+msgid "Change Unit"
+msgstr "단위 바꾸기"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:612
+msgid "Status"
+msgstr "상태"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:612
+msgid "IP Address"
+msgstr "IP 주소"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:612
+msgid "Subnet Mask"
+msgstr "서브넷 마스크"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:692
+msgid "Wireless graph type"
+msgstr "무선랜 그래프 형식"
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:1
 msgid "HAL UDI of battery."
-msgstr ""
+msgstr "HAL UDI의 배터리."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:2
 msgid ""
 "If charge level drops below this threadhold, a warning will be displayed."
-msgstr ""
+msgstr "충전 수준이 이 한계치 이하로 떨어지면 경고를 표시할 것입니다."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:3
 msgid "If charge level reaches this threshold, a notification will be sent."
-msgstr ""
+msgstr "충전 수준이 이 한계치에 도달하면, 알려드립니다."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:4
 msgid "If enabled, notify when the charge level reaches the high level."
-msgstr ""
+msgstr "활성화되면, 충전 수준이 고수준으로 도달하면 알려드립니다."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:5
 msgid ""
 "If enabled, warn when the charge level drops below the warning threshold."
-msgstr ""
+msgstr "활성화되면, 충전 수준이 경고 한계치 이하로 떨어지면 경고합니다."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:6
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:3
-#: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:7
+#: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:8
 msgid "The name of the theme of the icon."
-msgstr ""
+msgstr "아이콘 테마의 이름"
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:7
 msgid "Unit of low level threshold (Percent or Time Remaining)."
-msgstr ""
+msgstr "저수준 한계치의 단위 (퍼센트 또는 남은 시간)"
 
 #: ../applets/maintained/battery/battery.desktop.in.h:1
 msgid "Battery"
-msgstr ""
+msgstr "배터리"
 
 #: ../applets/maintained/battery/battery.desktop.in.h:2
 msgid "Display battery state"
-msgstr ""
+msgstr "배터리 상황 표시"
+
+#: ../applets/maintained/battery/battery.py:37
+msgid "Battery Status"
+msgstr "배터리 상태"
+
+#: ../applets/maintained/battery/battery.py:38
+msgid "An applet which displays battery information"
+msgstr "배터리 정보를 표시하는 애플릿"
+
+#: ../applets/maintained/battery/battery.py:98
+msgid "No batteries"
+msgstr "배터리 없음"
+
+#: ../applets/maintained/battery/battery.py:121
+#: ../applets/maintained/battery/battery.py:254
+#: ../applets/maintained/battery/battery.ui.h:6
+msgid "Percent"
+msgstr "퍼센트"
+
+#: ../applets/maintained/battery/battery.py:209
+msgid "AC"
+msgstr "AC"
+
+#: ../applets/maintained/battery/battery.py:209
+msgid "battery"
+msgstr "배터리"
+
+#: ../applets/maintained/battery/battery.py:210
+#, python-format
+msgid "Computer running on %s power"
+msgstr "컴퓨터가 %s 전원을 사용합니다."
+
+#: ../applets/maintained/battery/battery.py:213
+msgid "Battery charged"
+msgstr "배터리를 충전하였습니다."
+
+#: ../applets/maintained/battery/battery.py:221
+msgid "until charged"
+msgstr "충전될 때까지"
+
+#: ../applets/maintained/battery/battery.py:225
+msgid "remaining"
+msgstr "남은 시간"
+
+#: ../applets/maintained/battery/battery.py:263
+#: ../applets/maintained/battery/battery.ui.h:7
+msgid "Time Remaining"
+msgstr "남은 시간"
+
+#: ../applets/maintained/battery/battery.py:279
+#, python-format
+msgid "%d hours"
+msgstr "%d 시간"
+
+#: ../applets/maintained/battery/battery.py:281
+#, python-format
+msgid "%d hour"
+msgstr "%d 시간"
+
+#: ../applets/maintained/battery/battery.py:285
+#, python-format
+msgid "%d minutes"
+msgstr "%d 분"
+
+#: ../applets/maintained/battery/battery.py:287
+#, python-format
+msgid "%d minute"
+msgstr "%d 분"
 
 #: ../applets/maintained/battery/battery.ui.h:2
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:5
 #: ../applets/maintained/weather/weather.ui.h:3
 msgid "<b>General Options</b>"
-msgstr ""
+msgstr "<b>일반 설정</b>"
 
 #: ../applets/maintained/battery/battery.ui.h:3
 msgid "<b>Notifications</b>"
-msgstr ""
+msgstr "<b>알림</b>"
 
 #: ../applets/maintained/battery/battery.ui.h:4
 msgid ""
 "If enabled, shows a notification when the charge level reaches a certain "
 "percentage"
-msgstr ""
+msgstr "활성화가 되면, 충전 수준이 일정 퍼센트에 도달하면 알려드립니다."
 
 #: ../applets/maintained/battery/battery.ui.h:5
 msgid "If enabled, shows a notification when the charge levels drops too low"
-msgstr ""
-
-#: ../applets/maintained/battery/battery.ui.h:6
-msgid "Percent"
-msgstr ""
-
-#: ../applets/maintained/battery/battery.ui.h:7
-msgid "Time Remaining"
-msgstr ""
+msgstr "활성화가 되면, 충전 수준이 너무 낮은 경우 알려드립니다."
 
 #: ../applets/maintained/battery/battery.ui.h:8
 msgid "_Battery:"
-msgstr ""
+msgstr "배터리(_B):"
 
 #: ../applets/maintained/battery/battery.ui.h:9
 msgid "_Notify when charge level reaches:"
-msgstr ""
+msgstr "변경할 수준에 도달하면 알림(_N):"
 
 #: ../applets/maintained/battery/battery.ui.h:10
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:23
 #: ../applets/maintained/mail/mail.ui.h:8
-#: ../applets/maintained/volume-control/volume-control.ui.h:7
+#: ../applets/maintained/volume-control/volume-control.ui.h:8
 #: ../applets/maintained/weather/weather.ui.h:18
 msgid "_Theme:"
-msgstr ""
+msgstr "테마(_T):"
 
 #: ../applets/maintained/battery/battery.ui.h:11
 msgid "_Warn when charge level drops to:"
-msgstr ""
+msgstr "경고할 방전 수준(_W):"
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:1
 msgid "A custom time format (strftime()), used if not empty."
-msgstr ""
+msgstr "사용자 지정 시각 형식 (strftime()). 입력시 사용합니다."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:2
-msgid "Beaufort)."
-msgstr ""
-
-#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:3
 msgid ""
 "If enabled, besides hours and minutes, the seconds will be visible too."
-msgstr ""
+msgstr "활성화되면 시분뿐만 아니라 초도 표시합니다."
+
+#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:3
+msgid "If enabled, displays the weather as an overlay on top of the clock."
+msgstr "활성화하면, 시계 위에 날씨를 겹쳐서 표시합니다."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:4
-msgid "If enabled, displays the weather as an overlay on top of the clock."
-msgstr ""
+msgid "If enabled, the date will be shown in the title."
+msgstr "활성화하면, 날짜를 제목에 표시합니다."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:5
-msgid "If enabled, the date will be shown in the title."
-msgstr ""
+msgid "If enabled, the seconds hand will be visible in the clock."
+msgstr "활성화하면, 시계의 초침을 표시합니다."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:6
-msgid "If enabled, the seconds hand will be visible in the clock."
-msgstr ""
+msgid "List of cities and timezones separated by a '#' character."
+msgstr "'#' 문자로 도시와 시간대를 목록을 구별합니다."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:7
-#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:6
-msgid "Kelvin)."
-msgstr ""
-
-#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:8
-msgid "List of cities and timezones separated by a '#' character."
-msgstr ""
-
-#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:9
 msgid ""
 "Show time in 24 hour format if enabled, or 12 hour format when disabled."
-msgstr ""
+msgstr "활성화하면 24시간제로 비활성화하면 12시간제로 시각을 표시합니다."
+
+#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:8
+#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:10
+msgid "Temperature unit (0: Celsius, 1: Fahrenheit, 2: Kelvin)."
+msgstr "온도 단위 (0: 섭씨, 1: 화씨, 2: 켈빈)."
+
+#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:9
+msgid "The name of the theme of the analog clock."
+msgstr "아날로그 시계 테마의 이름"
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:10
-msgid "The name of the theme of the analog clock."
-msgstr ""
+msgid "Wind speed unit (0: m/s, 1: km/h, 2: mph, 3: knots, 4: Beaufort)."
+msgstr "풍속 단위 (0: m/s, 1: km/h, 2: mph, 3: 노트, 4: 보퍼트)."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:1
+#: ../applets/maintained/cairo-clock/cairo-clock.py:29
 msgid "Cairo Clock"
-msgstr ""
+msgstr "카리오 시계"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:2
 msgid ""
 "Displays an analog clock and supports additional clocks for different "
 "locations"
-msgstr ""
+msgstr "아날로그 시계를 표시하고 다른 지역의 시계의 추가도 지원합니다."
+
+#: ../applets/maintained/cairo-clock/cairo-clock.py:30
+msgid ""
+"Applet that displays an analog clock and supports additional clocks for "
+"different locations"
+msgstr "아날로그 시계를 표시하고 다른 지역의 시계의 추가도 지원하는 애플릿"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:1
 #: ../applets/maintained/weather/weather.ui.h:1
@@ -519,232 +613,304 @@ msgstr " "
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:2
 msgid "12 _hour format"
-msgstr ""
+msgstr "12시간 형식(_H)"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:3
 msgid "24 h_our format"
-msgstr ""
+msgstr "24시간 형식(_O)"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:4
 msgid "<b>Clock Display</b>"
-msgstr ""
+msgstr "<b>시계 표시</b>"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:6
 msgid "<b>Title Options</b>"
-msgstr ""
+msgstr "<b>제목 속성</b>"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:7
 msgid "Beaufort"
-msgstr ""
+msgstr "보퍼트"
 
+#. Unit long strings
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:8
-msgid "Celcius"
-msgstr ""
+#: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
+#: ../applets/maintained/weather/weather.py:59
+#: ../applets/maintained/weather/weather.py:562
+#: ../applets/maintained/weather/weather.py:567
+msgid "Celsius"
+msgstr "섭씨"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:9
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
+#: ../applets/maintained/weather/weather.py:59
+#: ../applets/maintained/weather/weather.py:560
 msgid "Fahrenheit"
-msgstr ""
+msgstr "화씨"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:10
 msgid "Find _Next"
-msgstr ""
+msgstr "다음 찾기(_N)"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:11
 msgid ""
 "If enabled, besides hours and minutes, the seconds will be visible too"
-msgstr ""
+msgstr "활성화하면, 시분뿐만 아니라 초도 표시합니다."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:12
 msgid "If enabled, the date will be shown in the title"
-msgstr ""
+msgstr "활성화하면, 제목에 날짜를 표시합니다."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:13
 msgid "If enabled, the seconds hand will be visible in the clock"
-msgstr ""
+msgstr "활성화하면, 시계에 초침을 표시합니다."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:14
 msgid "If enabled, time will be shown like 1:23 AM"
-msgstr ""
+msgstr "활성하면, 시간이 오전 1시 23분 같이 표시됩니다"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:15
 msgid "If enabled, time will be shown like 23:45"
-msgstr ""
+msgstr "활성 하면, 시간은 23시 45분 같이 표시됩니다"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:16
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "Kelvin"
-msgstr ""
+msgstr "켈빈"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:17
 msgid "Location Name:"
-msgstr ""
+msgstr "위치 이름:"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:18
 msgid "Show _seconds"
-msgstr ""
+msgstr "초 보기(_S)"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:19
 msgid "Show seco_nds hand"
-msgstr ""
+msgstr "초침을 보여줍니다.(_N)"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:20
 msgid "Show the _date"
-msgstr ""
+msgstr "날짜 표시(_D)"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:21
 msgid "_Show weather of current location"
-msgstr ""
+msgstr "현재 위치의 날씨 표시(_S)"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:22
 msgid "_Temperature unit:"
-msgstr ""
+msgstr "온도 단위(_T):"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:24
 msgid "_Wind speed unit:"
-msgstr ""
+msgstr "풍속 단위(_W):"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:25
 msgid "km/h"
-msgstr ""
+msgstr "km/h"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:26
 msgid "knots"
-msgstr ""
+msgstr "노트"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:27
 msgid "m/s"
-msgstr ""
+msgstr "m/s"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:28
 msgid "mph"
-msgstr ""
+msgstr "mph"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:107
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:111
+#: ../applets/maintained/cairo-clock/locations.py:142
+msgid "Locations"
+msgstr "위치"
+
+#: ../applets/maintained/cairo-clock/locations.py:145
+msgid "Edit"
+msgstr "편집"
+
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:305
+msgid "Remove Icon"
+msgstr "아이콘 제거"
+
+#: ../applets/maintained/cairo-menu/cairo-main-icon.c:161
+#: ../applets/unmaintained/main-menu/applet.c:452
+msgid "Main Menu"
+msgstr "주 메뉴"
+
+#: ../applets/maintained/cairo-menu/cairo-menu.desktop.in.in.h:1
+msgid "A Main Menu."
+msgstr "주메뉴"
+
+#: ../applets/maintained/cairo-menu/cairo-menu.desktop.in.in.h:2
+msgid "Cairo Main Menu"
+msgstr "카이로 주메뉴"
+
+#. hope that gnome-session-save exists; needed for GNOME 2.22, at least.
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:125
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:129
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:134
 msgid "Logout"
-msgstr ""
+msgstr "로그아웃"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:115
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:117
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:122
-#: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:1
-msgid "Lock Screen"
-msgstr ""
-
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:126
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:128
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:139
-msgid "Suspend"
-msgstr ""
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:141
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:146
+#: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:1
+#: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:46
+#: ../applets/maintained/quit/quit.py:57
+#: ../applets/maintained/quit/quit.py:265
+#: ../applets/maintained/yama/yama.py:153
+msgid "Lock Screen"
+msgstr "화면 잠금"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:131
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:133
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:144
-msgid "Hibernate"
-msgstr ""
-
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:150
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:152
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:163
+msgid "Suspend"
+msgstr "절전 모드"
+
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:155
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:157
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:168
+msgid "Hibernate"
+msgstr "최대 절전 모드"
+
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:176
 msgid "Shutdown"
-msgstr ""
+msgstr "컴퓨터 끄기"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:187
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:562
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:213
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:381
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:585
+#: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Computer"
-msgstr ""
+msgstr "컴퓨터"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:188
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:214
 msgid "Home"
-msgstr ""
+msgstr "홈"
 
-#. Check if this is the Desktop directory
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:189
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:520
-#: ../applets/maintained/places/applet.c:341
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:215
+#: ../applets/maintained/places/applet.c:344
+#: ../applets/maintained/yama/yama.py:255
 msgid "Desktop"
-msgstr ""
+msgstr "데스크톱"
 
-#. 
-#. TODO: check the trash and set to stock_trash_empty if trash is empty
-#. 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:193
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:221
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:223
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:610
+#: ../applets/maintained/file-browser-launcher/prefs.py:236
 msgid "Trash"
-msgstr ""
+msgstr "휴지통"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:194
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:225
 msgid "File System"
-msgstr ""
+msgstr "파일 시스템"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:315
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:565
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:356
+msgid "Removable Media"
+msgstr "이동식 미디어"
+
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:367
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
 msgid "Network"
-msgstr ""
+msgstr "네트워크"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:316
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:368
 msgid "Connect to Server"
-msgstr ""
+msgstr "서버에 연결"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:946
-#: ../applets/maintained/file-browser-launcher/prefs.py:243
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1034
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1048
+#: ../applets/maintained/file-browser-launcher/prefs.py:249
 #: ../applets/maintained/places/places.desktop.in.in.h:2
+#: ../applets/maintained/yama/yama.py:246
 msgid "Places"
-msgstr ""
+msgstr "위치"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:984
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1071
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1086
+#: ../applets/maintained/yama/yama.py:322
 msgid "Recent Documents"
-msgstr ""
+msgstr "최근 문서"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1029
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1117
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1128
 msgid "Session"
-msgstr ""
+msgstr "세션"
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1056
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1144
 msgid "Search\\u2026"
-msgstr ""
+msgstr "검색\\u2026"
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1073
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1161
 msgid "Launch\\u2026"
-msgstr ""
+msgstr "실행\\u2026"
 
-#: ../applets/maintained/cairo-menu/misc.c:356
-msgid "Clear Recent Documents"
+#: ../applets/maintained/cairo-menu/misc.c:161
+#: ../applets/maintained/yama/yama.py:584
+#, c-format, python-format
+msgid "Unable to mount %s"
+msgstr "%s을(를) 마운트 할 수 없습니다"
+
+#: ../applets/maintained/cairo-menu/misc.c:407
+#: ../applets/maintained/yama/yama.py:563
+msgid "Clear the Recent Documents list?"
+msgstr "최근 문서 목록을 지우시겠습니까?"
+
+#. Translators: This is taken from gnome-panel, when deleting the Recent Documents List.
+#. * Please use the same translation.
+#: ../applets/maintained/cairo-menu/misc.c:411
+msgid ""
+"If you clear the Recent Documents list, you clear the following:\n"
+"• All items from the Places → Recent Documents menu item.\n"
+"• All items from the recent documents list in all applications."
 msgstr ""
+"최근 문서 목록을 지우면, 다음이 지워집니다:\n"
+"• 위치 → 최근 문서에 있는 모든 항목.\n"
+"• 모든 프로그램의 최근 문서 목록에 들어 있는 모든 항목."
+
+#: ../applets/maintained/cairo-menu/misc.c:423
+#: ../applets/maintained/cairo-menu/misc.c:532
+#: ../applets/maintained/yama/yama.py:336
+#: ../applets/maintained/yama/yama.py:568
+msgid "Clear Recent Documents"
+msgstr "최근 문서 지우기"
 
 #: ../applets/maintained/calendar/awn-applet-calendar.schema-ini.in.h:1
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:1
 msgid "Clock/Calendar Applet"
-msgstr ""
+msgstr "시계/달력 애플릿"
 
 #: ../applets/maintained/calendar/calendar.desktop.in.h:2
 msgid "Watch appointments on your dock"
-msgstr ""
+msgstr "독에서 약속을 지켜볼 수 있습니다."
 
 #: ../applets/maintained/calendar/calendarlogin.py:43
 msgid "Login to "
-msgstr ""
+msgstr "로그인 "
 
 #: ../applets/maintained/calendar/calendarlogin.py:48
 msgid "Online Calendar"
-msgstr ""
+msgstr "온라인 달력"
 
 #: ../applets/maintained/calendar/calendarlogin.py:53
 msgid "Calendar Username"
-msgstr ""
+msgstr "달력 사용자 이름"
 
 #: ../applets/maintained/calendar/calendarlogin.py:61
 msgid "Calendar Password"
-msgstr ""
+msgstr "달력 암호"
 
 #: ../applets/maintained/calendar/calendarlogin.py:71
 msgid "Save Password"
-msgstr ""
+msgstr "암호 저장"
 
 #: ../applets/maintained/calendar/calendarlogin.py:89
 msgid ""
@@ -753,155 +919,178 @@ msgid ""
 "password can be stolen and decrypted if your computer's security is "
 "breached.  Are you still sure you want to save your password?"
 msgstr ""
+"암호를 저장할 것을 선택하셨습니다. 암호는 암호화하여 저장하지만 누군가 원격으로 컴퓨터의 보안을 뚫고 침입하여 암호를 훔치고 해독할 "
+"가능성이 항상 있습니다. 암호를 저장하시겠습니까?"
 
 #: ../applets/maintained/calendar/calendarprefs.py:46
 msgid "Classic LCD"
-msgstr ""
+msgstr "예전 LCD"
 
 #: ../applets/maintained/calendar/calendarprefs.py:47
 msgid "Indy Glow LCD"
-msgstr ""
+msgstr "청백색 LCD"
 
 #: ../applets/maintained/calendar/calendarprefs.py:48
 msgid "Backlit Amber LCD"
-msgstr ""
+msgstr "미색 백라이트 LCD"
 
 #: ../applets/maintained/calendar/calendarprefs.py:49
 msgid "Backlit Green LCD"
-msgstr ""
+msgstr "녹색 백라이트 LCD"
 
 #: ../applets/maintained/calendar/calendarprefs.py:50
 msgid "Green LED"
-msgstr ""
+msgstr "녹색 LED"
 
 #: ../applets/maintained/calendar/calendarprefs.py:51
 msgid "Red LED"
-msgstr ""
+msgstr "적색 LED"
 
 #: ../applets/maintained/calendar/calendarprefs.py:52
 msgid "Blue LED"
-msgstr ""
+msgstr "청색 LED"
 
 #: ../applets/maintained/calendar/calendarprefs.py:53
 msgid "Plain White"
-msgstr ""
+msgstr "백색"
 
 #: ../applets/maintained/calendar/calendarprefs.py:54
 msgid "Plain Black"
-msgstr ""
+msgstr "흑색"
 
 #: ../applets/maintained/calendar/calendarprefs.py:57
 msgid "Red"
-msgstr ""
+msgstr "빨강"
 
 #: ../applets/maintained/calendar/calendarprefs.py:58
 msgid "Green"
-msgstr ""
+msgstr "녹색"
 
 #: ../applets/maintained/calendar/calendarprefs.py:59
 msgid "Blue"
-msgstr ""
+msgstr "파랑"
 
 #: ../applets/maintained/calendar/calendarprefs.py:60
 msgid "Gray"
-msgstr ""
+msgstr "회색"
 
 #: ../applets/maintained/calendar/calendarprefs.py:61
 msgid "Black"
-msgstr ""
+msgstr "검은색"
 
 #: ../applets/maintained/calendar/calendarprefs.py:84
 msgid "Twelve Hour Clock"
-msgstr ""
+msgstr "12시간 시계"
 
 #: ../applets/maintained/calendar/calendarprefs.py:104
 msgid "Clock Appearance"
-msgstr ""
+msgstr "시계 모양"
 
 #: ../applets/maintained/calendar/calendarprefs.py:114
 msgid "Calendar Appearance"
-msgstr ""
+msgstr "달력 모양"
 
 #: ../applets/maintained/calendar/calendarprefs.py:121
 #: ../applets/maintained/dialect/dialect.ui.h:82
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:32
 msgid "None"
-msgstr ""
+msgstr "없음"
 
 #: ../applets/maintained/calendar/calendarprefs.py:122
 msgid "Evolution"
-msgstr ""
+msgstr "에볼루션"
 
 #: ../applets/maintained/calendar/calendarprefs.py:123
 msgid "Google Calendar"
-msgstr ""
+msgstr "구글 달력"
 
 #: ../applets/maintained/calendar/calendarprefs.py:124
 msgid "Outlook Web Access"
-msgstr ""
+msgstr "아웃룩 웹 허용"
 
 #: ../applets/maintained/calendar/calendarprefs.py:127
 msgid "Calendar Integration"
-msgstr ""
+msgstr "달력 통합"
 
 #: ../applets/maintained/calendar/calendarprefs.py:150
 msgid "Calendar URL"
-msgstr ""
+msgstr "달력 URL"
 
 #. default title/tooltip to show on startup.
 #: ../applets/maintained/calendar/clockcal.py:51
-#: ../applets/maintained/calendar/clockcal.py:491
+#: ../applets/maintained/calendar/clockcal.py:494
 #: ../applets/maintained/digital-clock/digital-clock.vala:119
 msgid "Calendar"
-msgstr ""
+msgstr "달력"
+
+#: ../applets/maintained/calendar/clockcal.py:110
+msgid "Forget Password"
+msgstr "암호 분실"
 
 #: ../applets/maintained/calendar/clockcal.py:218
 msgid ""
 "Do you want to erase your calendar password from the calendar applet?  If "
 "you choose to clear your password, you will be prompted again for your "
 "calendar login credentials."
-msgstr ""
+msgstr "달력 애플릿에서 달력 암호를 지우시겠습니까? 암호를 제거하시면, 달력 로그인 증명을 위해서 암호를 요구할 것입니다."
 
-#: ../applets/maintained/calendar/clockcal.py:497
+#: ../applets/maintained/calendar/clockcal.py:246
+msgid "Avant Calendar Applet"
+msgstr "아반트 달력 애플릿"
+
+#: ../applets/maintained/calendar/clockcal.py:248
+msgid "A Calendar Applet for the Avant Window Navigator. Images by Deleket."
+msgstr "아반트 윈도우 네비게이터용 달력 애플릿, Deleket의 제안"
+
+#. Translators: This is a date/time format string. You can check the
+#. output in terminal with 'date +"%x %X"'. In most cases you don't have
+#. to change it. See 'date --help' for other formats, that might be more
+#. common in your locale.
+#: ../applets/maintained/calendar/clockcal.py:293
+#, no-python-format
+msgid "%x %X"
+msgstr "%x %X"
+
+#: ../applets/maintained/calendar/clockcal.py:500
 msgid "Open in "
 msgstr ""
 
-#: ../applets/maintained/calendar/clockcal.py:501
-#: ../applets/maintained/weather/forecast.py:169
+#: ../applets/maintained/calendar/clockcal.py:504
+#: ../applets/maintained/weather/forecast.py:171
 msgid "Today"
-msgstr ""
+msgstr "오늘"
 
 #. print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
-#: ../applets/maintained/calendar/clockcal.py:549
+#: ../applets/maintained/calendar/clockcal.py:552
 msgid "Unable to read calendar data from external source."
-msgstr ""
+msgstr "외부 소스에서 달력 자료를 읽을 수 없습니다."
 
 #: ../applets/maintained/calendar/googlecal.py:90
 msgid "No appointments."
-msgstr ""
+msgstr "약속 없음"
 
 #: ../applets/maintained/calendar/icscal.py:73
 #: ../applets/maintained/calendar/owacal.py:95
 msgid "No appointments"
-msgstr ""
+msgstr "약속 없음"
 
 #: ../applets/maintained/comics/awn-applet-comics.schema-ini.in.h:1
 msgid "The user agent to send when retrieving comics."
-msgstr ""
+msgstr "만화를 받을 때 보내는 인터넷 브라우저 식별값"
 
 #: ../applets/maintained/comics/comics_add.py:57
 #, python-format
 msgid "Failed to download %s. Press \"next\" to try again."
-msgstr ""
+msgstr "%s을(를) 다운받는데 실패하였습니다. \"다음\" 버튼을 눌러 다시 시도하십시오."
 
 #: ../applets/maintained/comics/comics_add.py:63
 msgid "The URL is not a valid comic feed. Press \"next\" to try again"
-msgstr ""
+msgstr "이 URL은 잘못된 만화 피드입니다. \"다음\"을 눌러 다시 시도하십시오."
 
 #: ../applets/maintained/comics/comics_add.py:140
 #, python-format
 msgid "Connecting to <i>%s</i>..."
-msgstr ""
+msgstr "<i>%s</i>로 연결 중..."
 
 #: ../applets/maintained/comics/comics_add.py:174
 #, python-format
@@ -910,6 +1099,9 @@ msgid ""
 "\n"
 "Press \"apply\" to add <i>%s</i>."
 msgstr ""
+"이 가이드를 종료합니다.\n"
+"\n"
+"<i>%s</i>.을(를) 추가하시려면 \"적용\" 버튼을 누르십시오."
 
 #: ../applets/maintained/comics/comics_add.py:198
 #, python-format
@@ -918,6 +1110,9 @@ msgid ""
 "\n"
 "<i>%(description)s</i>"
 msgstr ""
+"<b>%(name)s</b> 발견!\n"
+"\n"
+"<i>%(description)s</i>"
 
 #. Initialise notifications
 #: ../applets/maintained/comics/comics.desktop.in.h:1
@@ -925,37 +1120,37 @@ msgstr ""
 #: ../applets/maintained/comics/main.py:294
 #: ../applets/maintained/comics/main.py:300
 msgid "Comics!"
-msgstr ""
+msgstr "만화!"
 
 #: ../applets/maintained/comics/comics.desktop.in.h:2
 msgid "View your favourite comics on your desktop"
-msgstr ""
+msgstr "컴퓨터에서  유명한 만화들을 보기"
 
 #: ../applets/maintained/comics/comics_manage.py:51
 msgid "Shared comics"
-msgstr ""
+msgstr "코믹 공유"
 
 #: ../applets/maintained/comics/comics_manage.py:52
 msgid "Your comics"
-msgstr ""
+msgstr "보유한 코믹"
 
 #: ../applets/maintained/comics/comics_manage.py:119
 #, python-format
 msgid "Failed to remove <i>%s</i>."
-msgstr ""
+msgstr "<i>%s</i> 제거 실패"
 
 #: ../applets/maintained/comics/comics_manage.py:125
-#: ../applets/maintained/feeds/feeds.py:388
+#: ../applets/maintained/feeds/feeds.py:391
 msgid "Error"
-msgstr ""
+msgstr "오류"
 
 #: ../applets/maintained/comics/comics.py:155
 msgid "Comics"
-msgstr ""
+msgstr "코믹"
 
 #: ../applets/maintained/comics/comics.py:159
 msgid "Manage Comics"
-msgstr ""
+msgstr "코믹 관리"
 
 #: ../applets/maintained/comics/comics.py:211
 #: ../applets/maintained/comics/main.py:192
@@ -965,40 +1160,40 @@ msgstr ""
 
 #: ../applets/maintained/comics/comics_view.py:164
 msgid "%A %d %B"
-msgstr ""
+msgstr "%A %d %B"
 
 #: ../applets/maintained/comics/comics_view.py:532
 #, python-format
 msgid "Failed to save <i>%s</i>."
-msgstr ""
+msgstr "<i>%s</i> 저장 실패"
 
 #: ../applets/maintained/comics/ui/add.ui.h:1
 msgid "Add Comic"
-msgstr ""
+msgstr "코믹 추가"
 
 #: ../applets/maintained/comics/ui/add.ui.h:2
 msgid "Downloading Comic"
-msgstr ""
+msgstr "코믹 다운로드 중"
 
 #: ../applets/maintained/comics/ui/add.ui.h:3
 msgid "Enter the URL of the RSS feed:"
-msgstr ""
+msgstr "코믹 RSS 피드 주소를 입력:"
 
 #: ../applets/maintained/comics/ui/add.ui.h:4
 msgid "Ready to add comic!"
-msgstr ""
+msgstr "코믹 추가 준비"
 
 #: ../applets/maintained/comics/ui/add.ui.h:5
 msgid "Select Comic"
-msgstr ""
+msgstr "코밀 선택"
 
 #: ../applets/maintained/comics/ui/add.ui.h:6
 msgid "Select Image"
-msgstr ""
+msgstr "이미지 선택"
 
 #: ../applets/maintained/comics/ui/add.ui.h:7
 msgid "The guide found more than one image. Please select which one to use."
-msgstr ""
+msgstr "이 가이드가 한 개이상의 이미지를 발견하였습니다. 사용하려는 이미지를 선택하십시오."
 
 #: ../applets/maintained/comics/ui/add.ui.h:8
 msgid ""
@@ -1009,10 +1204,15 @@ msgid ""
 "\n"
 "Press \"next\" to proceed."
 msgstr ""
+"이 가이드는 새로운 만화의 추가를 도와드립니다.\n"
+"\n"
+"추가하기에 알맞은 만화를 발견하시려면, 인터넷에서 \"comics rss\"를 검색해 보십시오.\n"
+"\n"
+"다음을 누르시면 진행합니다."
 
 #: ../applets/maintained/comics/ui/manage.ui.h:1
 msgid "Manage comics"
-msgstr ""
+msgstr "코믹 관리"
 
 #: ../applets/maintained/comics/ui/manage.ui.h:2
 msgid "The following comics are installed:"
@@ -1020,11 +1220,11 @@ msgstr ""
 
 #: ../applets/maintained/comics/ui/view.ui.h:1
 msgid "Show link"
-msgstr ""
+msgstr "링크 보기"
 
 #: ../applets/maintained/comics/ui/view.ui.h:2
 msgid "Size"
-msgstr ""
+msgstr "크기"
 
 #: ../applets/maintained/comics/main.py:152
 #, python-format
@@ -1033,34 +1233,52 @@ msgstr ""
 
 #: ../applets/maintained/cpufreq/awn-applet-cpufreq.schema-ini.in.h:1
 msgid "Index of processor."
-msgstr ""
+msgstr "목차 정리 중"
 
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:1
+#: ../applets/maintained/cpufreq/cpufreq.py:40
 msgid "An applet to monitor and control the CPU frequency"
 msgstr ""
 
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:2
+#: ../applets/maintained/cpufreq/cpufreq.py:39
 msgid "CPU Frequency Monitor"
+msgstr ""
+
+#: ../applets/maintained/cpufreq/cpufreq.py:233
+msgid ""
+"<span size=\"large\"><b>Scaling unavailable</b></span>\n"
+"\n"
+"Frequency scaling is not\n"
+"available for the selected CPU."
+msgstr ""
+
+#: ../applets/maintained/cpufreq/cpufreq.py:261
+msgid "GHz"
+msgstr ""
+
+#: ../applets/maintained/cpufreq/cpufreq.py:264
+msgid "MHz"
 msgstr ""
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:1
 msgid "<b>Monitored CPU</b>"
-msgstr ""
+msgstr "<b>CPU 모니터</b>"
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:2
 msgid "_Processor:"
-msgstr ""
+msgstr "진행중(_P):"
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:1
-msgid " 0.9)."
+msgid "Can change layout with scroll wheel."
 msgstr ""
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:2
-msgid " none)."
+msgid "Flag opacity (min: 0.0, max: 0.9)."
 msgstr ""
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:3
-msgid "Can change layout with scroll wheel."
+msgid "Flag size compared to icon (min: 0.1, max: 0.9)."
 msgstr ""
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:4
@@ -1069,14 +1287,22 @@ msgid ""
 msgstr ""
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:5
-msgid "Overlay selected layout flag on icon."
+msgid "Left click action (0: previous, 1: menu, 2: next, 3: none)."
 msgstr ""
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:6
-msgid "User selected layouts."
+msgid "Middle click action (0: previous, 1: menu, 2: next, 3: none)."
 msgstr ""
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:7
+msgid "Overlay selected layout flag on icon."
+msgstr ""
+
+#: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:8
+msgid "User selected layouts."
+msgstr ""
+
+#: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:9
 msgid "User selected variants."
 msgstr ""
 
@@ -1217,22 +1443,22 @@ msgid "Layout Lists"
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:77
-#: ../applets/maintained/file-browser-launcher/prefs.py:318
+#: ../applets/maintained/file-browser-launcher/prefs.py:324
 msgid "Left Click"
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:78
 msgid "Menu"
-msgstr ""
+msgstr "메뉴"
 
 #: ../applets/maintained/dialect/dialect.ui.h:79
-#: ../applets/maintained/file-browser-launcher/prefs.py:393
+#: ../applets/maintained/file-browser-launcher/prefs.py:399
 msgid "Middle Click"
-msgstr ""
+msgstr "가운데 클릭"
 
 #: ../applets/maintained/dialect/dialect.ui.h:80
 msgid "Mouse Actions"
-msgstr ""
+msgstr "마우스 동작"
 
 #: ../applets/maintained/dialect/dialect.ui.h:81
 msgid "Next Layout"
@@ -1244,11 +1470,11 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:84
 msgid "Previous Layout"
-msgstr ""
+msgstr "이전 레이아웃"
 
 #: ../applets/maintained/dialect/dialect.ui.h:85
 msgid "System List"
-msgstr ""
+msgstr "시스템 목록"
 
 #: ../applets/maintained/dialect/dialect.ui.h:86
 msgid ""
@@ -1540,7 +1766,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:206
 msgid "User List"
-msgstr ""
+msgstr "사용자 목록"
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:1
 msgid "Command to execute when a calendar day is double-clicked."
@@ -1568,51 +1794,51 @@ msgstr ""
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:7
 msgid "Toggle 12-hour mode."
-msgstr ""
+msgstr "12시간 모드로 바꾸기"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:1
 msgid "12 hour format"
-msgstr ""
+msgstr "12시간 형식"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:2
 msgid "24 hour format"
-msgstr ""
+msgstr "24시간 형식"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:3
 msgid "<b>Clock Format</b>"
-msgstr ""
+msgstr "<b>시간 형식t</b>"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:5
 msgid "Appearance"
-msgstr ""
+msgstr "모양"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:6
 msgid "Commands"
-msgstr ""
+msgstr "명령"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:7
 msgid "Date below time"
-msgstr ""
+msgstr "시간 밑에 날짜"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:8
 msgid "Digital Clock Preferences"
-msgstr ""
+msgstr "디지털 시계 기본 설정"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:9
 msgid "Run Calendar:"
-msgstr ""
+msgstr "댤력 실행:"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:10
 msgid "Run Time Admin:"
-msgstr ""
+msgstr "관리자로 시간 설정:"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:11
 msgid "Show the date"
-msgstr ""
+msgstr "날짜 보기"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:12
 msgid "Use default Awn colors"
-msgstr ""
+msgstr "기본 AWN 색 사용"
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:1
 msgid "A clock and calendar in one."
@@ -1621,106 +1847,114 @@ msgstr ""
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:2
 #: ../applets/maintained/digital-clock/digital-clock.vala:57
 msgid "Digital Clock"
-msgstr ""
+msgstr "디지털 시계"
 
 #. "Copy Time" menu item
 #: ../applets/maintained/digital-clock/digital-clock.vala:335
 msgid "Copy Time"
-msgstr ""
+msgstr "시간 복사"
 
 #. "Copy Date" menu item
 #: ../applets/maintained/digital-clock/digital-clock.vala:354
 msgid "Copy Date"
-msgstr ""
+msgstr "날짜 복사"
 
 #. "Adjust Date & Time" menu item
 #: ../applets/maintained/digital-clock/digital-clock.vala:366
 msgid "Adjust Date & Time"
-msgstr ""
+msgstr "시간/날짜 조정"
 
 #: ../applets/maintained/digital-clock/digital-clock.vala:412
 msgid "Displays digital clock."
-msgstr ""
+msgstr "디지털 시계 표시"
 
 #. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
 #: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:1
-msgid "Notify if any feeds have new items"
+msgid "Hide feeds which do not have any new items"
 msgstr ""
 
 #: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:2
-msgid "Show each feed's website's icon in the dialog"
+msgid "If false, all previous items will be marked as read when updating"
 msgstr ""
 
 #: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:3
-msgid "The interval (in minutes) at which to update (3-60)"
+msgid "Notify if any feeds have new items"
 msgstr ""
 
 #: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:4
+msgid "Show each feed's website's icon in the dialog"
+msgstr ""
+
+#: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:5
+msgid "The interval (in minutes) at which to update (3-60)"
+msgstr ""
+
+#: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:6
 msgid "Update automatically at a configurable interval"
 msgstr ""
 
-#: ../applets/maintained/feeds/classes.py:328
+#: ../applets/maintained/feeds/classes.py:366
 msgid "Google"
-msgstr ""
+msgstr "구글"
 
-#: ../applets/maintained/feeds/classes.py:488
-#: ../applets/maintained/feeds/prefs.py:516
+#: ../applets/maintained/feeds/classes.py:532
+#: ../applets/maintained/feeds/prefs.py:535
 msgid "Google Reader"
-msgstr ""
+msgstr "구글 리더"
 
-#: ../applets/maintained/feeds/classes.py:533
+#: ../applets/maintained/feeds/classes.py:578
 msgid "Google Wave"
-msgstr ""
+msgstr "구글 웨이브"
 
-#: ../applets/maintained/feeds/classes.py:619
+#: ../applets/maintained/feeds/classes.py:664
 msgid "Reddit Inbox"
-msgstr ""
+msgstr "레딧"
 
-#: ../applets/maintained/feeds/classes.py:720
+#: ../applets/maintained/feeds/classes.py:764
 #, python-format
 msgid "Comment reply from %s"
 msgstr ""
 
-#: ../applets/maintained/feeds/classes.py:723
+#: ../applets/maintained/feeds/classes.py:767
 #, python-format
 msgid "Post reply from %s"
 msgstr ""
 
-#: ../applets/maintained/feeds/classes.py:765
-#: ../applets/maintained/feeds/prefs.py:410
+#: ../applets/maintained/feeds/classes.py:810
+#: ../applets/maintained/feeds/prefs.py:429
 msgid "Twitter"
-msgstr ""
+msgstr "트위터"
 
-#: ../applets/maintained/feeds/classes.py:892
+#: ../applets/maintained/feeds/classes.py:937
 msgid "Untitled"
-msgstr ""
+msgstr "제목 없음"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:1
-#: ../applets/maintained/feeds/feeds.py:241
-#: ../applets/maintained/feeds/feeds.py:404
-#: ../applets/maintained/feeds/feeds.py:480
-#: ../applets/maintained/feeds/feeds.py:1031
+#: ../applets/maintained/feeds/feeds.py:243
+#: ../applets/maintained/feeds/feeds.py:409
+#: ../applets/maintained/feeds/feeds.py:493
+#: ../applets/maintained/feeds/feeds.py:1109
 msgid "Feeds Applet"
-msgstr ""
+msgstr "피드 애플릿"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
-#: ../applets/maintained/feeds/feeds.py:1036
+#: ../applets/maintained/feeds/feeds.py:1114
 msgid "Monitor Web Feeds"
-msgstr ""
+msgstr "웹 피드 모니터"
 
 #. "Loading feeds..." label
-#: ../applets/maintained/feeds/feeds.py:96
-#: ../applets/maintained/feeds/feeds.py:153
-#: ../applets/maintained/feeds/feeds.py:230
+#: ../applets/maintained/feeds/feeds.py:98
+#: ../applets/maintained/feeds/feeds.py:155
+#: ../applets/maintained/feeds/feeds.py:232
 msgid "Loading feeds..."
-msgstr ""
+msgstr "피드 불러오는 중..."
 
 #. No feeds label
-#: ../applets/maintained/feeds/feeds.py:160
+#: ../applets/maintained/feeds/feeds.py:162
 msgid "You don't have any feeds."
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:472
+#: ../applets/maintained/feeds/feeds.py:484
 #, python-format
 msgid ""
 "%s\n"
@@ -1728,223 +1962,245 @@ msgid ""
 "  <a href='%s'>%s</a>\n"
 "(%s More)\n"
 msgstr ""
+"%s\n"
+"  <a href='%s'>%s</a>\n"
+"  <a href='%s'>%s</a>\n"
+"(%s More)\n"
 
-#: ../applets/maintained/feeds/feeds.py:481
+#: ../applets/maintained/feeds/feeds.py:494
 #, python-format
-msgid "%s New Item%s - Feeds Applet"
-msgstr ""
+msgid "%s New Item - Feeds Applet"
+msgid_plural "%s New Items - Feeds Applet"
+msgstr[0] ""
+msgstr[1] ""
 
 #. +Add Feed button
-#: ../applets/maintained/feeds/feeds.py:518
+#: ../applets/maintained/feeds/feeds.py:532
 msgid "_Add Feed"
-msgstr ""
+msgstr "피드 추가(_A)"
 
-#: ../applets/maintained/feeds/feeds.py:567
+#: ../applets/maintained/feeds/feeds.py:581
 msgid "Open this feed's website"
-msgstr ""
+msgstr "이 피드 웹사이트 열기"
 
-#: ../applets/maintained/feeds/feeds.py:576
-#: ../applets/maintained/feeds/prefs.py:257
+#: ../applets/maintained/feeds/feeds.py:590
+#: ../applets/maintained/feeds/prefs.py:276
 msgid "Loading..."
-msgstr ""
+msgstr "불러오는 중..."
 
-#: ../applets/maintained/feeds/feeds.py:614
-#: ../applets/maintained/feeds/feeds.py:773
+#: ../applets/maintained/feeds/feeds.py:628
+#: ../applets/maintained/feeds/feeds.py:787
 msgid "Show this feed's items"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:763
+#: ../applets/maintained/feeds/feeds.py:777
 msgid "Hide this feed's items"
 msgstr ""
 
 #. Create the items
-#: ../applets/maintained/feeds/feeds.py:991
-#: ../applets/maintained/feeds/prefs.py:341
+#: ../applets/maintained/feeds/feeds.py:1033
+#: ../applets/maintained/feeds/prefs.py:360
 msgid "Add Feed"
+msgstr "피드 추가"
+
+#: ../applets/maintained/feeds/feeds.py:1035
+msgid "Show Only _New Feeds"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:1079
+#: ../applets/maintained/feeds/feeds.py:1157
 msgid "OPML Import"
-msgstr ""
+msgstr "OPML 가져오기"
 
-#: ../applets/maintained/feeds/feeds.py:1083
-msgid "Do you want to add this feed?"
-msgstr ""
-
-#: ../applets/maintained/feeds/feeds.py:1086
+#: ../applets/maintained/feeds/feeds.py:1160
 #, python-format
-msgid "Do you want to add these %s feeds?"
-msgstr ""
+msgid "Do you want to add %d feed?"
+msgid_plural "Do you want to add %d feeds?"
+msgstr[0] ""
+msgstr[1] ""
 
-#: ../applets/maintained/feeds/prefs.py:58
+#: ../applets/maintained/feeds/prefs.py:59
 msgid "Feeds Applet Preferences"
-msgstr ""
-
-#: ../applets/maintained/feeds/prefs.py:68
-msgid "Feeds"
-msgstr ""
+msgstr "피드 애플릿 기본 설정"
 
 #: ../applets/maintained/feeds/prefs.py:69
-msgid "Updating"
-msgstr ""
+msgid "Feeds"
+msgstr "피드"
 
-#: ../applets/maintained/feeds/prefs.py:108
+#: ../applets/maintained/feeds/prefs.py:70
+msgid "Updating"
+msgstr "업데이트"
+
+#: ../applets/maintained/feeds/prefs.py:109
 msgid "_Show website icons"
+msgstr "웹사이트 아이콘 보기(_S)"
+
+#: ../applets/maintained/feeds/prefs.py:114
+msgid "Show _only new feeds"
 msgstr ""
 
 #. TODO: this position is a little ugly, but I don't know how to do it better.
 #. Import and export buttons (OPML)
-#: ../applets/maintained/feeds/prefs.py:115
+#: ../applets/maintained/feeds/prefs.py:121
 msgid "Import"
-msgstr ""
+msgstr "가져오기"
 
-#: ../applets/maintained/feeds/prefs.py:118
+#: ../applets/maintained/feeds/prefs.py:124
 msgid "Export"
-msgstr ""
+msgstr "내보내기"
 
 #. Updating section (enable/disable automatically updating and change how often)
 #. Checkbox: Notify for updated feeds
-#: ../applets/maintained/feeds/prefs.py:144
+#: ../applets/maintained/feeds/prefs.py:151
 msgid "_Notify for updated feeds"
-msgstr ""
+msgstr "피드 업데이트시 알림(_N)"
 
 #. Checkbox: Update automatically
-#: ../applets/maintained/feeds/prefs.py:150
+#: ../applets/maintained/feeds/prefs.py:157
 msgid "_Update automatically"
-msgstr ""
+msgstr "자동으로 업데이트(_U)"
 
 #. Update every [SpinButton] minutes
-#: ../applets/maintained/feeds/prefs.py:156
+#: ../applets/maintained/feeds/prefs.py:163
 msgid "Update every "
-msgstr ""
+msgstr "다음 시간마다 업데이트 "
 
-#: ../applets/maintained/feeds/prefs.py:157
+#: ../applets/maintained/feeds/prefs.py:164
 msgid " minutes"
+msgstr " 분"
+
+#: ../applets/maintained/feeds/prefs.py:176
+msgid "Keep items unread when updating"
 msgstr ""
 
-#: ../applets/maintained/feeds/prefs.py:264
+#: ../applets/maintained/feeds/prefs.py:283
 msgid "Open OPML File"
-msgstr ""
+msgstr "OPML 파일 열기"
 
-#: ../applets/maintained/feeds/prefs.py:278
+#: ../applets/maintained/feeds/prefs.py:297
 msgid "Save OPML File"
-msgstr ""
+msgstr "OPML 파일 저장"
 
 #. Note: the following string is used as an exmaple filename
-#: ../applets/maintained/feeds/prefs.py:284
+#: ../applets/maintained/feeds/prefs.py:303
 msgid "feeds.opml"
-msgstr ""
+msgstr "feeds.opml"
 
-#: ../applets/maintained/feeds/prefs.py:295
+#: ../applets/maintained/feeds/prefs.py:314
 msgid "Awn Feeds Applet Items"
-msgstr ""
+msgstr "AWN 피드 애플릿 항목"
 
 #. Source: label and radio buttons
-#: ../applets/maintained/feeds/prefs.py:345
+#: ../applets/maintained/feeds/prefs.py:364
 msgid "Source:"
-msgstr ""
+msgstr "소스:"
 
-#: ../applets/maintained/feeds/prefs.py:355
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:594
-#: ../applets/maintained/tomboy-applet/tomboy-applet.py:157
+#: ../applets/maintained/feeds/prefs.py:374
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:151
 msgid "Search"
-msgstr ""
+msgstr "검색"
 
-#: ../applets/maintained/feeds/prefs.py:358
+#: ../applets/maintained/feeds/prefs.py:377
 msgid "You must sign in to a Google service to search for feeds."
-msgstr ""
+msgstr "구글 서비스에서 피드를 찾으려면 구글에 등록되어 있어야 합니다."
 
-#: ../applets/maintained/feeds/prefs.py:367
+#: ../applets/maintained/feeds/prefs.py:386
 msgid "RSS/Atom"
-msgstr ""
+msgstr "RSS/Atom"
 
-#: ../applets/maintained/feeds/prefs.py:412
+#: ../applets/maintained/feeds/prefs.py:431
 msgid "Timeline"
-msgstr ""
+msgstr "타임라인"
 
-#: ../applets/maintained/feeds/prefs.py:417
+#: ../applets/maintained/feeds/prefs.py:436
 msgid "Replies"
-msgstr ""
+msgstr "답글"
 
 #. "Search for" label and entry
-#: ../applets/maintained/feeds/prefs.py:446
+#: ../applets/maintained/feeds/prefs.py:465
 msgid "Search for"
-msgstr ""
+msgstr "찾을 내용"
 
 #. URL: label and entry
-#: ../applets/maintained/feeds/prefs.py:460
+#: ../applets/maintained/feeds/prefs.py:479
 #: ../applets/maintained/webapplet/applet.c:276
 msgid "URL:"
-msgstr ""
+msgstr "주소:"
 
 #. Username: label and entry
-#: ../applets/maintained/feeds/prefs.py:474
-#: ../applets/maintained/mail/mail.py:393
-#: ../applets/maintained/mail/mail.py:630
-#: ../applets/maintained/mail/mail.py:758
-#: ../applets/maintained/mail/mail.py:851
+#: ../applets/maintained/feeds/prefs.py:493
+#: ../applets/maintained/mail/mail.py:384
+#: ../applets/maintained/mail/mail.py:643
+#: ../applets/maintained/mail/mail.py:796
+#: ../applets/maintained/mail/mail.py:890
 msgid "Username:"
-msgstr ""
+msgstr "사용자 이름:"
 
 #. Password: label and entry
-#: ../applets/maintained/feeds/prefs.py:488
-#: ../applets/maintained/mail/mail.py:397
-#: ../applets/maintained/mail/mail.py:633
-#: ../applets/maintained/mail/mail.py:761
-#: ../applets/maintained/mail/mail.py:854
+#: ../applets/maintained/feeds/prefs.py:507
+#: ../applets/maintained/mail/mail.py:388
+#: ../applets/maintained/mail/mail.py:646
+#: ../applets/maintained/mail/mail.py:799
+#: ../applets/maintained/mail/mail.py:893
 msgid "Password:"
-msgstr ""
+msgstr "암호:"
 
-#: ../applets/maintained/feeds/prefs.py:515
+#: ../applets/maintained/feeds/prefs.py:534
 msgid "Feed search by "
-msgstr ""
+msgstr "피드 검색 "
 
 #. If signed in to Google Reader
-#: ../applets/maintained/feeds/prefs.py:553
+#: ../applets/maintained/feeds/prefs.py:572
 msgid "_Search"
-msgstr ""
+msgstr "검색(_S)"
 
-#: ../applets/maintained/feeds/prefs.py:760
+#: ../applets/maintained/feeds/prefs.py:776
 msgid ""
 "There was an error while searching.\n"
 "Please try again later."
 msgstr ""
+"검색중 오류 발생\n"
+"나중에 다시 시도 바랍니다."
 
-#: ../applets/maintained/feeds/prefs.py:810
+#: ../applets/maintained/feeds/prefs.py:826
 msgid ""
 "No results found.\n"
 "Try checking your spelling or using different search terms."
 msgstr ""
+"결과가 없습니다.\n"
+"맞춤법을 확인하거나 다른 검색어를 사용해보십시오."
 
 #: ../applets/maintained/file-browser-launcher/about.py:39
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:2
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:63
 msgid "File Browser Launcher"
-msgstr ""
+msgstr "파일 열람기"
 
 #: ../applets/maintained/file-browser-launcher/about.py:42
 msgid "A customizable launcher for browsing your files."
-msgstr ""
+msgstr "파일 열람을 위한 사용자 지정 열람기"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:1
-msgid " persistent docklet"
+msgid ""
+"0: one icon with dialog; 1: one icon with docklet on click; 2: persistent "
+"docklet"
 msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:2
 msgid "The action to perform on left click"
-msgstr ""
+msgstr "왼쪽 클릭에 행할 작업"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:3
 msgid "The action to perform on middle click"
-msgstr ""
+msgstr "가운데 클릭에 행할 작업"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:4
 msgid "The file browser to use"
-msgstr ""
+msgstr "파일 열람기 사용"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:5
 msgid "The path to use on left click"
-msgstr ""
+msgstr "왼쪽 클릭시 사용할 경로"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:6
 msgid "The path to use on middle click"
@@ -1952,33 +2208,41 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:7
 msgid "Whether or not to display Connect to server"
-msgstr ""
+msgstr "서버에 연결 표시할지 여부"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:8
 msgid "Whether or not to display bookmarks"
-msgstr ""
+msgstr "책갈피를 표시할지 여부"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:9
 msgid "Whether or not to display local drives"
-msgstr ""
+msgstr "로컬 드라이브를 표시할지 여부"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:10
 msgid "Whether or not to display network drives"
-msgstr ""
+msgstr "네트워크 드라이브를 표시할지 여부"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:11
 msgid "Whether or not to display the Filesystem"
-msgstr ""
+msgstr "파일 시스탬을 표시할지 여부"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:12
-msgid "Whether or not to display the home folder"
+msgid "Whether or not to display the Trash"
 msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:13
-msgid "Whether or not to focus the location text box"
+msgid "Whether or not to display the computer"
 msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:14
+msgid "Whether or not to display the home folder"
+msgstr "홈 폴더를 표시할지 여부"
+
+#: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:15
+msgid "Whether or not to focus the location text box"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:16
 msgid "Whether or not to open the place when clicked"
 msgstr ""
 
@@ -1986,167 +2250,156 @@ msgstr ""
 msgid "A launcher for your file manager"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:346
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:385
+#: ../applets/maintained/yama/yama.py:253
 msgid "Home Folder"
-msgstr ""
+msgstr "홈 폴더"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:350
-#: ../applets/maintained/file-browser-launcher/prefs.py:223
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:389
+#: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Filesystem"
-msgstr ""
+msgstr "파일 시스템"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:473
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:518
+#: ../applets/maintained/yama/yama.py:306
 msgid "Connect to Server..."
-msgstr ""
+msgstr "서버에 연결..."
 
-#. Documents
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:524
-msgid "Documents"
-msgstr ""
-
-#. Downloads
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:528
-msgid "Downloads"
-msgstr ""
-
-#. Music
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:532
-msgid "Music"
-msgstr ""
-
-#. Pictures
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:536
-#: ../applets/maintained/slickswitcher/prefs.py:347
-msgid "Pictures"
-msgstr ""
-
-#. Public
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:540
-msgid "Public"
-msgstr ""
-
-#. Templates
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:544
-msgid "Templates"
-msgstr ""
-
-#. Videos
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:548
-msgid "Videos"
-msgstr ""
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:594
+msgid "CD/DVD Burner"
+msgstr "CD/DVD 굽기"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:597
-msgid "CD/DVD Burner"
-msgstr ""
-
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:600
 msgid "Fonts"
-msgstr ""
+msgstr "글꼴"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:604
-#: ../applets/maintained/file-browser-launcher/prefs.py:289
-#: ../applets/maintained/file-browser-launcher/prefs.py:364
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:601
+#: ../applets/maintained/file-browser-launcher/prefs.py:295
+#: ../applets/maintained/file-browser-launcher/prefs.py:370
 msgid "Folder"
+msgstr "폴더"
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:607
+#, python-format
+msgid "Trash (%d)"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:709
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:717
 msgid "DVD Drive"
-msgstr ""
+msgstr "DVD 드라이브"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:713
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:721
 msgid "CD Drive"
+msgstr "CD 드라이브"
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1064
+msgid "Eject"
+msgstr "꺼내기"
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1072
+msgid "Empty Trash"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1017
-msgid "Eject"
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1095
+msgid "Confirm deletion"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1103
+msgid ""
+"<big><b>Are you sure you want to delete\n"
+"every item from the trash?</b></big>"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1105
+msgid "This action cannot be undone."
 msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:44
 msgid "File Browser Launcher Preferences"
-msgstr ""
+msgstr "파일 열람기 기본 설정"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:93
+#: ../applets/maintained/file-browser-launcher/prefs.py:101
 msgid "File Browser"
-msgstr ""
+msgstr "파일 열람기"
 
 #. xdg-open (aka system default)
-#: ../applets/maintained/file-browser-launcher/prefs.py:103
+#: ../applets/maintained/file-browser-launcher/prefs.py:111
 msgid "System Default"
-msgstr ""
+msgstr "시스템 기본값"
 
 #. Last option: custom with an entry for the app name
-#: ../applets/maintained/file-browser-launcher/prefs.py:127
+#: ../applets/maintained/file-browser-launcher/prefs.py:135
 msgid "Other"
-msgstr ""
+msgstr "그 외"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:163
+#: ../applets/maintained/file-browser-launcher/prefs.py:171
 msgid "One icon with dialog"
-msgstr ""
+msgstr "하나의 아이콘 창"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:168
+#: ../applets/maintained/file-browser-launcher/prefs.py:176
 msgid "One icon with docklet"
-msgstr ""
+msgstr "독에 아이콘 여러개"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:175
+#: ../applets/maintained/file-browser-launcher/prefs.py:183
 msgid "Multiple icons"
-msgstr ""
+msgstr "멀티플 아이콘(다중 보이기)"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:182
+#: ../applets/maintained/file-browser-launcher/prefs.py:190
 msgid "Focus text entry"
-msgstr ""
+msgstr "텍스트 입력"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:191
+#: ../applets/maintained/file-browser-launcher/prefs.py:199
 msgid "Open place when clicked"
-msgstr ""
+msgstr "클릭했을때 위치 열기"
 
 #. Show all places
-#: ../applets/maintained/file-browser-launcher/prefs.py:211
+#: ../applets/maintained/file-browser-launcher/prefs.py:219
 msgid "Show all places"
-msgstr ""
+msgstr "모든 위치 보기"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:223
+#: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Home folder"
-msgstr ""
+msgstr "홈 폴더"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:224
+#: ../applets/maintained/file-browser-launcher/prefs.py:235
 msgid "Mounted local drives"
-msgstr ""
+msgstr "마운트된 로컬 드라이브"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:224
+#: ../applets/maintained/file-browser-launcher/prefs.py:235
 msgid "Mounted network drives"
-msgstr ""
+msgstr "마운트된 네트워크 드라이브"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:225
+#: ../applets/maintained/file-browser-launcher/prefs.py:236
 msgid "Connect to server"
-msgstr ""
+msgstr "서버에 연결"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:225
+#: ../applets/maintained/file-browser-launcher/prefs.py:236
 msgid "Bookmarks"
-msgstr ""
+msgstr "책갈피"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:264
-#: ../applets/maintained/file-browser-launcher/prefs.py:339
+#: ../applets/maintained/file-browser-launcher/prefs.py:270
+#: ../applets/maintained/file-browser-launcher/prefs.py:345
 msgid "Display dialog/docklet"
-msgstr ""
+msgstr "독렛 창으로 보기"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:264
-#: ../applets/maintained/file-browser-launcher/prefs.py:339
+#: ../applets/maintained/file-browser-launcher/prefs.py:270
+#: ../applets/maintained/file-browser-launcher/prefs.py:345
 msgid "Open the folder"
-msgstr ""
+msgstr "폴더 열기"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:265
-#: ../applets/maintained/file-browser-launcher/prefs.py:340
+#: ../applets/maintained/file-browser-launcher/prefs.py:271
+#: ../applets/maintained/file-browser-launcher/prefs.py:346
 msgid "Nothing"
-msgstr ""
+msgstr "없음"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:540
+#: ../applets/maintained/file-browser-launcher/prefs.py:552
 msgid "Choose a folder"
-msgstr ""
+msgstr "폴더 선택"
 
 #: ../applets/maintained/garbage/applet.vala:57
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:2
 msgid "Garbage"
-msgstr ""
+msgstr "휴지통"
 
 #. set the title as well
 #. $display_name: $count item(s)
@@ -2154,28 +2407,27 @@ msgstr ""
 #, c-format
 msgid "%s: %u item"
 msgid_plural "%s: %u items"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s: %u 개"
 
 #: ../applets/maintained/garbage/applet.vala:194
 #, c-format
 msgid "Could not open the trash folder with your file manager: %s"
-msgstr ""
+msgstr "당신의 파일 관리자는 휴지통을 비울 수 없습니다: %s"
 
 #: ../applets/maintained/garbage/applet.vala:209
 msgid "_Empty Trash"
-msgstr ""
+msgstr "휴지통 비우기(_E)"
 
 #: ../applets/maintained/garbage/applet.vala:235
 #, c-format
 msgid ""
 "Are you sure you want to empty your trash? It currently contains %u item(s)."
-msgstr ""
+msgstr "당신은 당신의 휴지통을 비우시겠습니까? 그것은 현재 %u개 항목들이 포함되어 있습니다."
 
 #: ../applets/maintained/garbage/applet.vala:344
 #, c-format
 msgid "Could not send the dragged file(s) to the trash: %s"
-msgstr ""
+msgstr "휴지통에 파일들을 버릴 수 없습니다: %s"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:1
@@ -2191,23 +2443,24 @@ msgstr ""
 msgid "A lightweight, cross-desktop trash applet"
 msgstr ""
 
-#: ../applets/maintained/garbage/prefs.vala:32
-#, c-format
+#. This is a window title, %s is an applet's name.
+#: ../applets/maintained/garbage/prefs.vala:32 ../shared/python/awnlib.py:404
+#, c-format, python-format
 msgid "%s Preferences"
-msgstr ""
+msgstr "%s 기본 설정"
 
 #: ../applets/maintained/garbage/prefs.vala:47
 msgid "Confirm when emptying the trash"
-msgstr ""
+msgstr "휴지통을 비우기 확인"
 
 #: ../applets/maintained/garbage/prefs.vala:52
 msgid "Show the item count on the icon"
-msgstr ""
+msgstr "휴지통의 항목 개수 보이기"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:1
 msgid "Applet theme."
-msgstr ""
+msgstr "애플릿 테마"
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:2
 msgid "For each sensor, whether to show it in main dialog or not."
@@ -2225,41 +2478,40 @@ msgstr ""
 msgid "In what row of dialog is the sensor shown."
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:7
+#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:6
 msgid "Low value limit (at which alarm triggers) for each sensor."
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:8
+#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:7
 msgid "Sensor ids."
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:9
+#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:8
 msgid "Sensor labels."
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:10
-msgid "The color (RGBA) of the meter hand/needle."
+#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:9
+msgid "Size of value overlay in the icon (0: small, 1: medium, 2: large)."
 msgstr ""
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:11
-msgid "Timeout between two value updates (in seconds)."
+msgid "The color (RGBA) of the meter hand/needle."
 msgstr ""
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:12
-msgid "Whether alarm should trigger at high value limit or not."
+msgid "Timeout between two value updates (in seconds)."
 msgstr ""
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:13
-msgid "Whether alarm should trigger at low value limit or not."
+msgid "Whether alarm should trigger at high value limit or not."
 msgstr ""
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:14
-msgid "Whether to show a sensor in applet icon or not."
+msgid "Whether alarm should trigger at low value limit or not."
 msgstr ""
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:15
-#: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:8
-msgid "large)."
+msgid "Whether to show a sensor in applet icon or not."
 msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:1
@@ -2267,132 +2519,270 @@ msgid "Applet to show the hw sensors readouts"
 msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:2
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:48
 msgid "Hardware Sensors"
-msgstr ""
+msgstr "하드웨어 센서"
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:49
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:50
 msgid "Applet to show the hardware sensors readouts"
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:83
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:61
+#: ../applets/maintained/weather/weather.ui.h:13
+msgid "Small"
+msgstr "작게"
+
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:61
+#: ../applets/maintained/weather/weather.ui.h:11
+msgid "Medium"
+msgstr "중간"
+
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:61
+#: ../applets/maintained/weather/weather.ui.h:9
+msgid "Large"
+msgstr "크게"
+
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:84
+msgid "Warning from Hardware Sensors: No sensors found"
+msgstr ""
+
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:85
 msgid ""
-"Warning: No sensors found. Install one or more of ACPI, HDDTemp, LM-Sensors "
+"Install one or more of ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock "
 "and restart the applet."
 msgstr ""
 
 #. == Dialog == #
 #. Create main applet dialog showing selected sensors.
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:117
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:119
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:14
 msgid "Sensors"
-msgstr ""
+msgstr "센서"
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:470
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:471
+msgid "Interface"
+msgstr "모양새"
+
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:473
 msgid "Name"
-msgstr ""
+msgstr "이름"
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:472
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:475
 msgid "Label"
-msgstr ""
+msgstr "레이블"
 
 #. Set the cell "active" attribute to column_show - retrieve the state
 #. of the toggle button from that column in liststore
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:476
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:479
 msgid "In dialog"
-msgstr ""
+msgstr "창"
 
 #. Add treeview-column to treeview
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:514
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:517
 msgid "Sensors displayed in icon"
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:532
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:535
 msgid "properties"
-msgstr ""
+msgstr "속성"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:1
 msgid "<b>Alarms</b>"
-msgstr ""
+msgstr "<b>알람</b>"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:3
 msgid "<b>Sensor value limits</b>"
-msgstr ""
+msgstr "<b>센서 한계 값</b>"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:4
 #: ../applets/maintained/mail/mail.ui.h:3
 msgid "<b>Update</b>"
-msgstr ""
+msgstr "<b>업데이트</b>"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:5
 msgid "Add"
-msgstr ""
+msgstr "추가"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:6
 msgid "Enable high alarm"
-msgstr ""
+msgstr "높을때 알람 가능"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:7
 msgid "Enable low alarm"
-msgstr ""
+msgstr "낮을때 알람 가능"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:8
 msgid "Font size:"
-msgstr ""
+msgstr "글꼴 크기:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:10
 msgid "Meter hand color:"
-msgstr ""
+msgstr "미터 바늘 색:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:11
 msgid "Remove"
-msgstr ""
+msgstr "제거"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:12
 msgid "Sensor high value"
-msgstr ""
+msgstr "높은 수치"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:13
 msgid "Sensor low value"
-msgstr ""
+msgstr "낮은 수치"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:15
 msgid "Show value in icon"
-msgstr ""
+msgstr "값 아이콘 보기"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:16
 msgid "Temperature unit:"
-msgstr ""
+msgstr "온도 단위:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:17
 msgid "Theme:"
-msgstr ""
+msgstr "테마:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:18
-#: ../applets/maintained/mail/mail.ui.h:4
 msgid "Update interval:"
-msgstr ""
+msgstr "업데이트 간격:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:19
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:45
 msgid "seconds"
-msgstr ""
-
-#. Unit long strings
-#: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
-msgid "Celsius"
-msgstr ""
+msgstr "초"
 
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "Volt"
-msgstr ""
+msgstr "볼트"
 
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "rpm"
+msgstr "rpm"
+
+#: ../applets/maintained/indicator-applet/applet.c:89
+#: ../applets/maintained/indicator-applet/applet.c:182
+#: ../applets/maintained/indicator-applet/applet.c:784
+#: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.h:2
+#: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.in.h:2
+msgid "Indicator Applet"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:92
+#: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.h:1
+#: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.in.h:1
+msgid "An applet to hold all of the system indicators"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:170
+msgid "Indicator Applet Preferences"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:177
+msgid "Enabled Entries"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:184
+msgid "Indicator Applet Session (Quit)"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:186
+msgid "Me Menu"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:188
+msgid "Messaging Menu"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:190
+msgid "Network Menu"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:192
+msgid "Sound Control Menu"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:194
+msgid "Other Menus"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:204
+msgid "Options"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:212
+msgid "Number of rows:"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:216
+msgid "Number of columns:"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:228
+msgid "Enable Applet Icon mode"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:764
+msgid "Me menu"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:768
+msgid "Messaging menu"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:772
+msgid "Network menu"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:776
+msgid "Indicator Applet Session"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:780
+msgid "Sound Menu"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:1
+msgid "If true, show any other menus"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:2
+msgid "If true, show the Me menu (chat, microblogging, etc)"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:3
+msgid "If true, show the Messaging icon"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:4
+msgid "If true, show the Network menu"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:5
+msgid "If true, show the Sound control menu"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:6
+msgid "If true, show the indicator applet icons"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:7
+msgid ""
+"If true, show the indicator applet session icon (lock screen, switch users, "
+"etc)"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:8
+msgid "If true, use an Awn applet icon instead"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:9
+msgid "The number of rows (top and bottom edge) or columns (side edges)"
 msgstr ""
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:1
 msgid "Display any network errors"
-msgstr ""
+msgstr "네트워크 오류 표시"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:2
 msgid "Hide the icon if there is no new mail"
@@ -2420,173 +2810,199 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.desktop.in.h:1
 msgid "Check Your Email from AWN"
-msgstr ""
+msgstr "AWN에서 메일을 체크"
 
 #: ../applets/maintained/mail/mail.desktop.in.h:2
-#: ../applets/maintained/mail/mail.py:134
-#: ../applets/maintained/mail/mail.py:903
+#: ../applets/maintained/mail/mail.py:136
+#: ../applets/maintained/mail/mail.py:942
 msgid "Mail Applet"
-msgstr ""
+msgstr "메일 애플릿"
 
-#: ../applets/maintained/mail/mail.py:37
+#: ../applets/maintained/mail/mail.py:39
 #, python-format
 msgid "You have %d new message"
 msgid_plural "You have %d new messages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d개의 새 메시지가 있습니다."
 
-#: ../applets/maintained/mail/mail.py:41
+#: ../applets/maintained/mail/mail.py:43
 #, python-format
 msgid "%d unread message"
 msgid_plural "%d unread messages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d개의 읽지 않은 메시지"
 
-#: ../applets/maintained/mail/mail.py:74
+#: ../applets/maintained/mail/mail.py:76
 msgid "Mail Applet (Click to Log In)"
-msgstr ""
+msgstr "메일 애플릿(클릭으로 로그인)"
 
-#: ../applets/maintained/mail/mail.py:135
+#: ../applets/maintained/mail/mail.py:137
 #, python-format
 msgid "Logging in as %s"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:165
-msgid "New Mail - Mail Applet"
-msgstr ""
+#: ../applets/maintained/mail/mail.py:161
+msgid "Network error - Mail Applet"
+msgstr "네트워크 오류 - 메일 애플릿"
 
-#: ../applets/maintained/mail/mail.py:283
+#: ../applets/maintained/mail/mail.py:170
+msgid "New Mail - Mail Applet"
+msgstr "새 메일 - 메일 애플릿"
+
+#: ../applets/maintained/mail/mail.py:274
 msgid "Mail"
-msgstr ""
+msgstr "메일"
+
+#: ../applets/maintained/mail/mail.py:310
+msgid "Open Web Mail"
+msgstr "웹 메일 열기"
 
 #: ../applets/maintained/mail/mail.py:319
-msgid "Open Web Mail"
-msgstr ""
+msgid "Open Desktop Client"
+msgstr "데스크톱 프로그램"
 
 #: ../applets/maintained/mail/mail.py:328
-msgid "Open Desktop Client"
-msgstr ""
+msgid "Refresh"
+msgstr "새로고침"
 
 #: ../applets/maintained/mail/mail.py:337
-msgid "Refresh"
-msgstr ""
-
-#: ../applets/maintained/mail/mail.py:346
+#: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:47
+#: ../applets/maintained/quit/quit.py:58
+#: ../applets/maintained/quit/quit.py:267
 msgid "Log Out"
-msgstr ""
+msgstr "로그아웃"
 
-#: ../applets/maintained/mail/mail.py:376
+#: ../applets/maintained/mail/mail.py:367
 msgid "No unread messages"
-msgstr ""
+msgstr "읽지 않은 메일 없음"
 
-#: ../applets/maintained/mail/mail.py:378
+#: ../applets/maintained/mail/mail.py:369
 msgid "No new messages"
-msgstr ""
+msgstr "새 메일 없음"
 
-#: ../applets/maintained/mail/mail.py:417
+#: ../applets/maintained/mail/mail.py:408
 msgid "Wrong username or password"
-msgstr ""
+msgstr "잘못된 사용자 이름이나 암호"
 
-#: ../applets/maintained/mail/mail.py:425
-#: ../applets/maintained/mail/mail.py:486
+#: ../applets/maintained/mail/mail.py:416
+#: ../applets/maintained/mail/mail.py:477
 msgid "Log In"
-msgstr ""
+msgstr "로그인"
 
-#: ../applets/maintained/mail/mail.py:462
+#: ../applets/maintained/mail/mail.py:453
 msgid "Type:"
-msgstr ""
+msgstr "종류:"
 
-#: ../applets/maintained/mail/mail.py:467
+#: ../applets/maintained/mail/mail.py:458
 msgid "Backend"
-msgstr ""
+msgstr "백엔드"
 
-#: ../applets/maintained/mail/mail.py:525
-#: ../applets/maintained/mail/mail.py:584
+#: ../applets/maintained/mail/mail.py:514
+#: ../applets/maintained/mail/mail.py:742
+msgid "Could not log in: No username"
+msgstr "로그인 불가: 사용자 이름이 없음"
+
+#: ../applets/maintained/mail/mail.py:522
+#: ../applets/maintained/mail/mail.py:592
 msgid ""
-"There seem to be problems with our                     connection to your "
-"account. Your best bet is probably                     to log out and try "
-"again."
+"There seem to be problems with our connection to your account. Your best bet "
+"is probably to log out and try again."
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:547
-#: ../applets/maintained/mail/mail.py:606
+#: ../applets/maintained/mail/mail.py:533
+#: ../applets/maintained/mail/mail.py:549
+#: ../applets/maintained/mail/mail.py:603
+#: ../applets/maintained/mail/mail.py:619
+#: ../applets/maintained/mail/mail.py:687
+#: ../applets/maintained/mail/mail.py:781
 msgid "[No Subject]"
+msgstr "[제목 없음]"
+
+#: ../applets/maintained/mail/mail.py:535
+#: ../applets/maintained/mail/mail.py:605
+msgid "[Unknown]"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:569
+#: ../applets/maintained/mail/mail.py:571
 msgid "Google Apps"
-msgstr ""
+msgstr "구글 어플"
 
-#: ../applets/maintained/mail/mail.py:637
+#: ../applets/maintained/mail/mail.py:583
+msgid "Could not log in: No username or domain"
+msgstr "로그인 불가: 사용자 이름 또는 도메인이 없음"
+
+#: ../applets/maintained/mail/mail.py:650
 msgid "Domain:"
-msgstr ""
+msgstr "도메인:"
 
-#: ../applets/maintained/mail/mail.py:659
+#: ../applets/maintained/mail/mail.py:673
 msgid "Unix Spool"
-msgstr ""
+msgstr "유닉스 스폴:"
 
-#: ../applets/maintained/mail/mail.py:681
+#: ../applets/maintained/mail/mail.py:695
 msgid "Spool Path:"
-msgstr ""
+msgstr "스폴 경로:"
 
-#: ../applets/maintained/mail/mail.py:714
-#: ../applets/maintained/mail/mail.py:716
+#: ../applets/maintained/mail/mail.py:736
+#: ../applets/maintained/mail/mail.py:738
 msgid "Could not log in: "
-msgstr ""
+msgstr "로그인 불가: "
 
-#: ../applets/maintained/mail/mail.py:723
+#: ../applets/maintained/mail/mail.py:747
 msgid "Could not log in: Username or password incorrect"
-msgstr ""
+msgstr "로그인 불가: 잘못된 사용자 이름 또는 암호"
 
-#: ../applets/maintained/mail/mail.py:765
-#: ../applets/maintained/mail/mail.py:858
+#: ../applets/maintained/mail/mail.py:803
+#: ../applets/maintained/mail/mail.py:897
 msgid "Server:"
-msgstr ""
+msgstr "서버:"
 
-#: ../applets/maintained/mail/mail.py:768
-#: ../applets/maintained/mail/mail.py:861
+#: ../applets/maintained/mail/mail.py:806
+#: ../applets/maintained/mail/mail.py:900
 msgid "Use SSL encryption"
-msgstr ""
+msgstr "SSL 암호화 사용"
 
-#: ../applets/maintained/mail/mail.py:804
+#: ../applets/maintained/mail/mail.py:843
 msgid "Could not log in"
-msgstr ""
+msgstr "로그인을 할 수 없음"
 
-#: ../applets/maintained/mail/mail.py:810
+#: ../applets/maintained/mail/mail.py:849
 msgid "Folder does not exst"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:864
+#: ../applets/maintained/mail/mail.py:903
 msgid "Get messages from only one folder"
-msgstr ""
+msgstr "하나의 폴더에서만 메시지 가져오기"
 
-#: ../applets/maintained/mail/mail.py:871
+#: ../applets/maintained/mail/mail.py:907
 msgid "Folder:"
-msgstr ""
+msgstr "폴더:"
 
-#: ../applets/maintained/mail/mail.py:906
+#: ../applets/maintained/mail/mail.py:945
 msgid "An applet to check one's email"
-msgstr ""
+msgstr "이메일 확인을 위한 애플릿"
 
 #: ../applets/maintained/mail/mail.ui.h:2
 msgid "<b>Mail</b>"
 msgstr ""
 
+#: ../applets/maintained/mail/mail.ui.h:4
+msgid "Update _interval:"
+msgstr ""
+
 #: ../applets/maintained/mail/mail.ui.h:5
 msgid "_Alert on network errors"
-msgstr ""
+msgstr "네트워크 오류 경고(_A)"
 
 #: ../applets/maintained/mail/mail.ui.h:6
 msgid "_Email client:"
-msgstr ""
+msgstr "이메일 클라이언트(_E):"
 
 #: ../applets/maintained/mail/mail.ui.h:7
 msgid "_Hide applet if no new messages"
-msgstr ""
+msgstr "새 메시지 없을시에 애플릿 숨김(_H)"
 
 #: ../applets/maintained/mail/mail.ui.h:9
 msgid "minutes"
-msgstr ""
+msgstr "분"
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:1
 msgid "Close the docklet when mouse moves out from it."
@@ -2598,55 +3014,74 @@ msgstr ""
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:3
 msgid "Display docklet instead of standard applet dialog."
-msgstr ""
+msgstr "독렛 대신에 표준 애플릿 창으로 보기"
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:4
 msgid "Size of the album art."
-msgstr ""
+msgstr "앨범 표지 그림의 크기."
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:5
 msgid "Tooltip format to use."
-msgstr ""
+msgstr "툴팁 형식 사용."
 
 #: ../applets/maintained/media-control/media-control.desktop.in.h:1
 msgid "Control your music player"
-msgstr ""
+msgstr "당신의 음악 플레이어를 조정"
 
 #: ../applets/maintained/media-control/media-control.desktop.in.h:2
 msgid "Media Control"
+msgstr "미디어 콘트롤"
+
+#: ../applets/maintained/media-control/media_control.py:51
+#: ../applets/maintained/media-control/media_control.py:653
+msgid "Media Control Applet"
 msgstr ""
 
-#: ../applets/maintained/media-control/media_control.py:612
+#. Used in this sentence: Title by Artist from Album
+#: ../applets/maintained/media-control/media_control.py:509
+msgid "by"
+msgstr ""
+
+#. Used in this sentence: Title by Artist from Album
+#: ../applets/maintained/media-control/media_control.py:512
+msgid "from"
+msgstr ""
+
+#: ../applets/maintained/media-control/media_control.py:613
 msgid "Title - Artist"
-msgstr ""
+msgstr "제목 - 음악가"
 
-#: ../applets/maintained/media-control/media_control.py:612
+#: ../applets/maintained/media-control/media_control.py:613
 msgid "Artist - Title"
+msgstr "음악가 - 제목"
+
+#: ../applets/maintained/media-control/media_control.py:656
+msgid "Controls your favourite music player."
 msgstr ""
 
 #: ../applets/maintained/media-control/media-control.ui.h:2
 msgid "Close docklet when mouse leaves it"
-msgstr ""
+msgstr "마우스가 떠났을떄 독렛 닫기"
 
 #: ../applets/maintained/media-control/media-control.ui.h:3
 msgid "Display _docklet instead of dialog"
-msgstr ""
+msgstr "독렛 대신에 표준 애플릿 창으로 보기(_D)"
 
 #: ../applets/maintained/media-control/media-control.ui.h:4
 msgid "Media-control preferences"
-msgstr ""
+msgstr "미디어-콘트롤 기본 설정"
 
 #: ../applets/maintained/media-control/media-control.ui.h:5
 msgid "Show _album art when available"
-msgstr ""
+msgstr "사용 중일 때 앨범 표지 보기(_A)"
 
 #: ../applets/maintained/media-control/media-control.ui.h:6
 msgid "_Size of the album art:"
-msgstr ""
+msgstr "앨범 표지의 크기(_S):"
 
 #: ../applets/maintained/media-control/media-control.ui.h:7
 msgid "_Tooltip format:"
-msgstr ""
+msgstr "풍선 도움말 형식(_T):"
 
 #: ../applets/maintained/media-control/media-control.ui.h:8
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:8
@@ -2654,57 +3089,57 @@ msgstr ""
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:44
 #: ../applets/maintained/weather/weather.ui.h:19
 msgid "pixels"
-msgstr ""
+msgstr "픽셀"
 
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:68
 msgid "A media-control applet (Next Track)"
-msgstr ""
+msgstr "미디어 콘트롤 애플릿 (다음 트랙)"
 
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:74
 msgid "Media Icons Next"
-msgstr ""
+msgstr "다음 미디어 아이콘"
 
 #: ../applets/maintained/media-icons/media-icon-previous.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:69
 msgid "A media-control applet (Previous Track)"
-msgstr ""
+msgstr "미디어 콘트롤 애플릿 (이전 트랙)"
 
 #: ../applets/maintained/media-icons/media-icon-previous.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:75
 msgid "Media Icons Previous"
-msgstr ""
+msgstr "이전 미디어 아이콘"
 
 #: ../applets/maintained/media-icons/media-icons.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:70
 msgid "A media-control applet (Play/Pause)"
-msgstr ""
+msgstr "미디어 콘트롤 애플릿(재생/일시중지)"
 
 #: ../applets/maintained/media-icons/media-icons.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:76
 msgid "Media Icons Play/Pause"
-msgstr ""
+msgstr "미디어 아이콘 재생/일시중지"
 
 #: ../applets/maintained/media-icons/media-icons.py:57
 msgid "Next"
-msgstr ""
+msgstr "다음"
 
 #: ../applets/maintained/media-icons/media-icons.py:58
 msgid "Previous"
-msgstr ""
+msgstr "이전"
 
 #: ../applets/maintained/media-icons/media-icons.py:59
 msgid "Play/Pause"
-msgstr ""
+msgstr "재생/일시정지"
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:1
 msgid "Audio sink to use."
-msgstr ""
+msgstr "오디오 싱크 사용."
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:2
 msgid "Height of the video window."
-msgstr ""
+msgstr "비디오 창의 너비"
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:3
 msgid "List of recently played URLs."
@@ -2716,43 +3151,64 @@ msgstr ""
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:5
 msgid "Width of the video window."
-msgstr ""
+msgstr "비디오 창 높이"
 
 #: ../applets/maintained/media-player/media-player.desktop.in.h:1
 msgid "Media Player"
-msgstr ""
+msgstr "미디어 플레이어"
 
 #: ../applets/maintained/media-player/media-player.desktop.in.h:2
 msgid "Plays any media files you drop on the applet"
+msgstr "어떤 미디어 파일이든 애플릿에 드롭하여 재생"
+
+#. PyGObject doesn't have BOXED support implemented
+#. recent_items = gobject.property(type=gobject.TYPE_BOXED,
+#. nick='Recent Items')
+#: ../applets/maintained/media-player/media_player.py:50
+#: ../applets/maintained/media-player/media_player.py:423
+msgid "Media Player Applet"
+msgstr ""
+
+#. Popup menu
+#: ../applets/maintained/media-player/media_player.py:78
+msgid "Recent items"
+msgstr ""
+
+#: ../applets/maintained/media-player/media_player.py:406
+msgid "Please restart the applet to apply changes to sinks."
+msgstr ""
+
+#: ../applets/maintained/media-player/media_player.py:426
+msgid "Plays any media files you drop on the applet."
 msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:1
 msgid "<b>GStreamer properties</b>"
-msgstr ""
+msgstr "<b>GStreamer 속성</b>"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:2
 msgid "<b>Video size</b>"
-msgstr ""
+msgstr "<b>비디오 크기</b>"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:3
 msgid "Media Player Preferences"
-msgstr ""
+msgstr "미디어 플레이어 기본 설정"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:4
 msgid "_Audiosink:"
-msgstr ""
+msgstr "오디오싱크(_A):"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:5
 msgid "_Height:"
-msgstr ""
+msgstr "세로(_H):"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:6
 msgid "_Videosink:"
-msgstr ""
+msgstr "비디오 싱크(_V):"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:7
 msgid "_Width:"
-msgstr ""
+msgstr "가로(_W):"
 
 #: ../applets/maintained/mount/awn-applet-mount.schema-ini.in.h:1
 msgid "Command to execute after mounting a mountpoint."
@@ -2763,17 +3219,19 @@ msgid "List of mountpoints that should remain hidden in the UI."
 msgstr ""
 
 #: ../applets/maintained/mount/mount.desktop.in.h:1
+#: ../applets/maintained/mount/mount.py:31
 msgid "An applet to (un)mount devices"
 msgstr ""
 
 #: ../applets/maintained/mount/mount.desktop.in.h:2
+#: ../applets/maintained/mount/mount.py:30
 msgid "Mount Applet"
-msgstr ""
+msgstr "마운트 애플릿"
 
 #: ../applets/maintained/mount/mount.ui.h:2
 #, no-c-format
 msgid "<i><b>Note:</b> use %D for the mountpoint</i>"
-msgstr ""
+msgstr "<i><b>참고:</b> 마운트포인트를 위해 %D 사용</i>"
 
 #: ../applets/maintained/mount/mount.ui.h:3
 msgid "List of hidden mountpoints, separated by a space"
@@ -2781,11 +3239,11 @@ msgstr ""
 
 #: ../applets/maintained/mount/mount.ui.h:4
 msgid "_Execute command after successful mount:"
-msgstr ""
+msgstr "실행 명령 이후에 성공적으로 마운트(_E):"
 
 #: ../applets/maintained/mount/mount.ui.h:5
 msgid "_Hidden mountpoints:"
-msgstr ""
+msgstr "숨길 마운트포인트(_H):"
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:1
 msgid "Extra offset from the panel's egde."
@@ -2826,23 +3284,23 @@ msgstr ""
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:2
 #, no-c-format
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:3
 msgid "<b>Background Color</b>"
-msgstr ""
+msgstr "<b>배경색</b>"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:4
 msgid "<b>Border Color</b>"
-msgstr ""
+msgstr "<b>테두리 색</b>"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:6
 msgid "Automatic"
-msgstr ""
+msgstr "자동"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:7
 msgid "Custom:"
-msgstr ""
+msgstr "사용자 정의:"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:8
 msgid "Extra _offset:"
@@ -2850,27 +3308,36 @@ msgstr ""
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:9
 msgid "Icon _size:"
-msgstr ""
+msgstr "아이콘 크기(_S):"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:10
 msgid "Notification Area Preferences"
-msgstr ""
+msgstr "알림 영역 기본 설정"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:11
 msgid "_Number of icon rows:"
-msgstr ""
+msgstr "아이콘 행의 갯수(_N):"
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:1
 msgid "A Notification Area (systray)"
-msgstr ""
+msgstr "알림 영역 (시스템트레이)"
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:2
 msgid "Notification Area"
+msgstr "알림 영역"
+
+#: ../applets/maintained/notification-area/notification-area.vala:638
+msgid "There is already another notification area running on this screen!"
+msgstr ""
+
+#: ../applets/maintained/notification-area/notification-area.vala:642
+msgid ""
+"Please remove the existing notification area and then restart the applet."
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:1
 msgid "Background colour in the form (Hex) rrggbbaa"
-msgstr ""
+msgstr "(Hex) rrggbbaa 로 부터의 배경색"
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:2
 msgid "Border Width. A value of 0 indicates that is should not be drawn."
@@ -2917,7 +3384,7 @@ msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:9
 msgid "Sound."
-msgstr ""
+msgstr "소리."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:10
 msgid ""
@@ -2930,6 +3397,8 @@ msgid ""
 "The default sound file used unless a notification supplies the 'sound-file' "
 "or 'suppress-sound' hint. Leave empty for no default sound."
 msgstr ""
+"알림창에 'sound-file' 혹은 'suppress-sound' 힌트를 주지 않는 한 기본 소리 파일이 사용됩니다. 비워두면 소리가 "
+"나지 않습니다."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:12
 msgid ""
@@ -2940,7 +3409,7 @@ msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:13
 msgid "Use bold text."
-msgstr ""
+msgstr "굵은 글씨 사용:"
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:14
 msgid "Whether to attempt to kill any running notification-daemons."
@@ -2954,10 +3423,22 @@ msgstr ""
 msgid "Whether to the use configured awn theme color values for xxxx."
 msgstr ""
 
-#: ../applets/maintained/notification-daemon/daemon.c:1422
+#: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.in.h:1
+#: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.h:1
+msgid ""
+"A replacement for the standard notification daemon and notify-osd. This will "
+"disable existing notification daemons while the applet is active."
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.in.h:2
+#: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.h:2
+msgid "Notification Daemon"
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/daemon.c:1421
 #, c-format
 msgid "%u is not a valid notification ID"
-msgstr ""
+msgstr "%u은(는) 유효한 알림 ID가 아닙니다"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:35
 msgid "Whether to show tooltips when hovering over a place.);"
@@ -3084,23 +3565,75 @@ msgid "Quit-Log Out applet"
 msgstr ""
 
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:2
+#: ../applets/maintained/yama/yama.py:153
 msgid "Protect your computer from unauthorized use"
-msgstr ""
+msgstr "비정상적인 사용으로부터 컴퓨터를 보호합니다"
 
 #: ../applets/maintained/quit/quit-log-out.desktop.in.h:1
 msgid "Log Out..."
-msgstr ""
+msgstr "로그아웃..."
 
 #: ../applets/maintained/quit/quit-log-out.desktop.in.h:2
 msgid "Log out of this session to log in as a different user"
-msgstr ""
+msgstr "다른 사용자가 로그인하기 위해 이 세션을 로그아웃합니다"
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:1
+#: ../applets/maintained/quit/quit.py:48
+#: ../applets/maintained/yama/yama.py:175
 msgid "Shut Down..."
-msgstr ""
+msgstr "컴퓨터 끄기..."
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:2
+#: ../applets/maintained/yama/yama.py:175
 msgid "Shut down the system"
+msgstr "컴퓨터 시스템 끄기"
+
+#: ../applets/maintained/quit/quit.py:33
+msgid "Quit-Log Out"
+msgstr ""
+
+#: ../applets/maintained/quit/quit.py:34
+msgid ""
+"An applet to lock your screen, log out of your session, or shut down the "
+"system"
+msgstr ""
+
+#: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:52
+#: ../applets/maintained/quit/quit.py:104
+#: ../applets/maintained/quit/quit.py:114
+#: ../applets/maintained/quit/quit.py:231
+#: ../applets/maintained/quit/quit.py:263
+msgid "Show Docklet"
+msgstr ""
+
+#: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:48
+#: ../applets/maintained/quit/quit.py:59 ../applets/maintained/quit/quit.py:89
+#: ../applets/maintained/quit/quit.py:90
+#: ../applets/maintained/quit/quit.py:233
+#: ../applets/maintained/quit/quit.py:269
+msgid "Shut Down"
+msgstr ""
+
+#. Translators: %s is a username
+#. Translators: %s is a user name.
+#: ../applets/maintained/quit/quit.py:43
+#: ../applets/maintained/yama/yama.py:171
+#, python-format
+msgid "Log Out %s..."
+msgstr ""
+
+#: ../applets/maintained/quit/quit.py:247
+msgid "Left click _action:"
+msgstr ""
+
+#: ../applets/maintained/related/related.desktop.in.h:1
+#: ../applets/maintained/related/related.desktop.in.in.h:1
+msgid "Applet displaying related items by talking to Zeitgeist"
+msgstr ""
+
+#: ../applets/maintained/related/related.desktop.in.h:2
+#: ../applets/maintained/related/related.desktop.in.in.h:2
+msgid "Related applet"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:1
@@ -3112,35 +3645,37 @@ msgid " The color of the desktop (RGBA) if grab_wallpaper is FALSE."
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:3
-msgid " gdk."
-msgstr ""
-
-#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:4
 msgid "0... centre  1 NW    2 NE   3 SE  4 SW\t"
 msgstr ""
 
-#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:5
-msgid "1"
-msgstr ""
-
-#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:6
+#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:4
 msgid "Alpha to apply to icon overlayed on active window."
 msgstr ""
 
-#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:7
+#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:5
 msgid "Alpha to apply to icon overlayed on inactive window."
 msgstr ""
 
-#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:8
+#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:6
 msgid "Alpha value to apply to active workspace background."
 msgstr ""
 
-#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:9
+#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:7
 msgid "Alpha value to apply to inactive workspace background."
 msgstr ""
 
-#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:10
+#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:8
 msgid "Applet border width.  0 indicates no border."
+msgstr ""
+
+#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:9
+msgid ""
+"Factor to scale icons as specified by scale_icon_mode.  range greater 0, "
+"less or equal 1"
+msgstr ""
+
+#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:10
+msgid "Method to grab windows.  0...gdk."
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:11
@@ -3207,19 +3742,19 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:3
 msgid "<b>Background transparency</b>"
-msgstr ""
+msgstr "<b>배경 투명도</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:4
 msgid "<b>Background</b>"
-msgstr ""
+msgstr "<b>배경색</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:6
 msgid "<b>Icon transparency</b>"
-msgstr ""
+msgstr "<b>아이콘 투명도</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:7
 msgid "<b>Timers</b>"
-msgstr ""
+msgstr "<b>테마</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:8
 msgid "<b>Viewport size</b>"
@@ -3227,107 +3762,107 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:9
 msgid "<b>Windows</b>"
-msgstr ""
+msgstr "<b>창</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:10
 msgid "Active window:"
-msgstr ""
+msgstr "활성 창:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:11
 msgid "Active workspace"
-msgstr ""
+msgstr "활성 작업 공간"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:12
 msgid "Active workspace:"
-msgstr ""
+msgstr "활성 작업 공간:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:13
 msgid "All window"
-msgstr ""
+msgstr "모든 창"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:14
 msgid "All windows"
-msgstr ""
+msgstr "모든 창"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:15
 msgid "B_order color:"
-msgstr ""
+msgstr "테두리 색(_O):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:17
 msgid "Border _size:"
-msgstr ""
+msgstr "테두리 크기(_S):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:18
 msgid "C_ustom color:"
-msgstr ""
+msgstr "사용자 색(_U):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:19
 msgid "Cache expiration:"
-msgstr ""
+msgstr "캐시 만료:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:20
 msgid "Center"
-msgstr ""
+msgstr "가운데"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:21
 msgid "Co_lumns:"
-msgstr ""
+msgstr "열(_L):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:22
 msgid "Icon _display:"
-msgstr ""
+msgstr "아이콘 표시(_D):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:23
 msgid "Icon _scaling:"
-msgstr ""
+msgstr "아이콘 크기 조정(_S):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:24
 msgid "Inactive window:"
-msgstr ""
+msgstr "비활성 창:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:25
 msgid "Inactive windows"
-msgstr ""
+msgstr "비활성 창"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:26
 msgid "Inactive workspace:"
-msgstr ""
+msgstr "비활성 작업공간:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:27
 msgid "Inactive workspaces"
-msgstr ""
+msgstr "비활성 작업공간"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:28
 msgid "Look"
-msgstr ""
+msgstr "모양"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:29
 msgid "Lower left"
-msgstr ""
+msgstr "좌하단"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:30
 msgid "Lower right"
-msgstr ""
+msgstr "우하단"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:31
 msgid "Never"
-msgstr ""
+msgstr "하지 않음"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:33
 msgid "Only active window"
-msgstr ""
+msgstr "오직 활성 창만"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:34
 msgid "Render update:"
-msgstr ""
+msgstr "랜더 업데이트:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:35
 msgid "Scale _amount:"
-msgstr ""
+msgstr "크기 조정 양(_A):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:36
 msgid "Scaled icon _position:"
-msgstr ""
+msgstr "크기 조정된 아이콘 위치(_P):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:37
 msgid "Shiny Switcher Preferences"
@@ -3335,38 +3870,54 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:38
 msgid "Upper left"
-msgstr ""
+msgstr "좌상단"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:39
 msgid "Upper right"
-msgstr ""
+msgstr "우상단"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:40
 msgid "Use _desktop background"
-msgstr ""
+msgstr "데스크톱 배경 사용(_D)"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:41
 msgid "_Applet size:"
-msgstr ""
+msgstr "애플릿 크기(_A):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:42
 msgid "_Rows:"
-msgstr ""
+msgstr "행(_R):"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:43
 msgid "_Thumbnailing:"
+msgstr "썸네일(_T):"
+
+#: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:1
+msgid "A prettier desktop switcher"
+msgstr ""
+
+#: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:2
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2438
+msgid "Shiny Switcher"
+msgstr ""
+
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:642
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:735
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1945
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2012
+msgid "Applet Preferences"
 msgstr ""
 
 #: ../applets/maintained/showdesktop/applet.vala:40
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:2
 msgid "Show Desktop"
-msgstr ""
+msgstr "바탕 화면 보기"
 
 #. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
 #: ../applets/maintained/showdesktop/applet.vala:78
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:1
 msgid "Hides your windows and shows your desktop."
-msgstr ""
+msgstr "창을 숨기고 바탕 화면 보이기"
 
 #: ../applets/maintained/showdesktop/applet.vala:93
 msgid "Show hidden windows"
@@ -3374,19 +3925,19 @@ msgstr ""
 
 #: ../applets/maintained/showdesktop/applet.vala:98
 msgid "Hide windows and show desktop"
-msgstr ""
+msgstr "창을 숨기고 바탕 화면 보이기"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:1
 msgid "The background color of the dialog"
-msgstr ""
+msgstr "알림창의 배경 색"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:2
 msgid "The border color of a drawn window"
-msgstr ""
+msgstr "그려진 창의 테두리 색"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:3
 msgid "The border color of the dialog"
-msgstr ""
+msgstr "알림창의 테두리 색"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:4
 msgid "The bottom part of the shiny gradient"
@@ -3454,71 +4005,71 @@ msgstr ""
 
 #: ../applets/maintained/slickswitcher/prefs.py:69
 msgid "SlickSwitcher Preferences"
-msgstr ""
+msgstr "SlickSwitcher 기본 설정"
 
 #. Colors: Borders, Windows, and Dialog
 #. Border Colors
 #: ../applets/maintained/slickswitcher/prefs.py:94
 msgid "Border Colors"
-msgstr ""
+msgstr "테두리 색"
 
 #. Icon Border
 #: ../applets/maintained/slickswitcher/prefs.py:100
 msgid "Icon border:"
-msgstr ""
+msgstr "아이콘 태두리:"
 
 #. Normal Border
 #: ../applets/maintained/slickswitcher/prefs.py:103
 msgid "Normal border:"
-msgstr ""
+msgstr "일반 테두리:"
 
 #. Hovered Border
 #: ../applets/maintained/slickswitcher/prefs.py:106
 msgid "Hovered border:"
-msgstr ""
+msgstr "덮었을때 테두리:"
 
 #. Window Colors
 #: ../applets/maintained/slickswitcher/prefs.py:109
 msgid "Window Colors"
-msgstr ""
+msgstr "창 색"
 
 #. Main Color
 #: ../applets/maintained/slickswitcher/prefs.py:115
 #: ../applets/maintained/slickswitcher/prefs.py:200
 msgid "Main color:"
-msgstr ""
+msgstr "주요 색:"
 
 #. Border Color
 #: ../applets/maintained/slickswitcher/prefs.py:118
 #: ../applets/maintained/slickswitcher/prefs.py:137
 msgid "Border color:"
-msgstr ""
+msgstr "테두리 색:"
 
 #. Dialog Colors
 #: ../applets/maintained/slickswitcher/prefs.py:121
 msgid "Dialog colors"
-msgstr ""
+msgstr "알림 창 색"
 
 #. Use custom colors (CheckButton)
 #: ../applets/maintained/slickswitcher/prefs.py:127
 #: ../applets/maintained/slickswitcher/prefs.py:193
 msgid "Use custom colors"
-msgstr ""
+msgstr "사용자 정의 색 사용"
 
 #. Background Color
 #: ../applets/maintained/slickswitcher/prefs.py:134
 msgid "Background color:"
-msgstr ""
+msgstr "배경색:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:183
 msgid "Colors"
-msgstr ""
+msgstr "색상"
 
 #. Other colors: text and shine
 #. Number Colors
 #: ../applets/maintained/slickswitcher/prefs.py:187
 msgid "Number Colors"
-msgstr ""
+msgstr "숫자의 색"
 
 #. Drop-Shadow Color
 #: ../applets/maintained/slickswitcher/prefs.py:203
@@ -3528,54 +4079,54 @@ msgstr ""
 #. Shine Colors
 #: ../applets/maintained/slickswitcher/prefs.py:206
 msgid "Shine Colors"
-msgstr ""
+msgstr "햇빛 색"
 
 #. Top Color
 #: ../applets/maintained/slickswitcher/prefs.py:212
 msgid "Top color:"
-msgstr ""
+msgstr "위 색:"
 
 #. Bottom Color
 #: ../applets/maintained/slickswitcher/prefs.py:215
 msgid "Bottom color:"
-msgstr ""
+msgstr "단추 색:"
 
 #. Hover Top Color
 #: ../applets/maintained/slickswitcher/prefs.py:218
 msgid "Hover top color:"
-msgstr ""
+msgstr "덥었을때 위의 색:"
 
 #. Hover Bottom Color
 #: ../applets/maintained/slickswitcher/prefs.py:221
 msgid "Hover bottom color:"
-msgstr ""
+msgstr "덥었을때 단추 색:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:254
 msgid "Other colors"
-msgstr ""
+msgstr "그외 색"
 
 #. Width
 #: ../applets/maintained/slickswitcher/prefs.py:262
 msgid "Width:"
-msgstr ""
+msgstr "넓이:"
 
 #. Height
 #: ../applets/maintained/slickswitcher/prefs.py:279
 msgid "Height:"
-msgstr ""
+msgstr "높이:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:299
 msgid "Workspace Size"
-msgstr ""
+msgstr "작업 공간"
 
 #. Mode
 #: ../applets/maintained/slickswitcher/prefs.py:315
 msgid "Mode:"
-msgstr ""
+msgstr "모드:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:318
 msgid "GNOME"
-msgstr ""
+msgstr "그놈"
 
 #: ../applets/maintained/slickswitcher/prefs.py:319
 msgid "Compiz Wallpaper Plugin"
@@ -3583,36 +4134,40 @@ msgstr ""
 
 #: ../applets/maintained/slickswitcher/prefs.py:320
 msgid "File"
-msgstr ""
+msgstr "파일"
 
 #. File
 #: ../applets/maintained/slickswitcher/prefs.py:339
 msgid "File:"
-msgstr ""
+msgstr "파일:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:341
 msgid "Choose a Background Image"
-msgstr ""
+msgstr "배경 이미지에서 선택"
+
+#: ../applets/maintained/slickswitcher/prefs.py:347
+msgid "Pictures"
+msgstr "사진"
 
 #: ../applets/maintained/slickswitcher/prefs.py:367
 #: ../applets/maintained/to-do/prefs.py:445
 msgid "Background"
-msgstr ""
+msgstr "배경"
 
 #: ../applets/maintained/slickswitcher/prefs.py:379
 msgid "Advanced"
-msgstr ""
+msgstr "고급 설정"
 
 #: ../applets/maintained/slickswitcher/slickswitcher.desktop.in.h:1
 #: ../applets/maintained/slickswitcher/slickswitcher.py:281
 msgid "A visual workspace switcher"
-msgstr ""
+msgstr "가상 작업공간 스위치"
 
 #: ../applets/maintained/slickswitcher/slickswitcher.desktop.in.h:2
 #: ../applets/maintained/slickswitcher/slickswitcher.py:63
 #: ../applets/maintained/slickswitcher/slickswitcher.py:272
 msgid "SlickSwitcher"
-msgstr ""
+msgstr "SlickSwitcher"
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:1
 msgid ""
@@ -3630,27 +4185,98 @@ msgstr ""
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:4
 msgid "List of icons"
-msgstr ""
+msgstr "아이콘 목록"
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:5
 msgid "Render background."
+msgstr "배경 나타냄"
+
+#. Translators: %2.0lf is a number, %% is a percent sign, do not change them
+#: ../applets/maintained/sysmon/cpuicon.c:161
+#: ../applets/maintained/sysmon/cpuicon.c:204
+#, c-format
+msgid "CPU: %2.0lf%%"
+msgstr ""
+
+#: ../applets/maintained/sysmon/cpuicon.c:353
+#: ../applets/maintained/sysmon/cpu-dialog.c:256
+msgid "CPU"
+msgstr ""
+
+#: ../applets/maintained/sysmon/cpuicon.c:580
+msgid "Graph Type"
+msgstr ""
+
+#. Translators: refers to a graph type
+#: ../applets/maintained/sysmon/cpuicon.c:587
+msgid "Area"
+msgstr ""
+
+#: ../applets/maintained/sysmon/cpuicon.c:590
+msgid "Circle"
+msgstr ""
+
+#: ../applets/maintained/sysmon/cpuicon.c:593
+msgid "Bars"
+msgstr ""
+
+#: ../applets/maintained/sysmon/cpuicon.c:596
+msgid "Default"
+msgstr ""
+
+#. item = gtk_menu_item_new_with_label ("Add Icon");
+#. gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
+#. submenu = gtk_menu_new ();
+#. gtk_menu_item_set_submenu (GTK_MENU_ITEM(item),submenu);
+#. item = gtk_menu_item_new_with_label ("CPU");
+#. gtk_menu_shell_append(GTK_MENU_SHELL(submenu), item);
+#. 
+#. item = gtk_menu_item_new_with_label ("Remove Icon");
+#. gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
+#. 
+#: ../applets/maintained/sysmon/cpuicon.c:610
+msgid "Render Background"
+msgstr ""
+
+#: ../applets/maintained/sysmon/cpu-dialog.c:240
+msgid "PID"
+msgstr ""
+
+#: ../applets/maintained/sysmon/cpu-dialog.c:248
+msgid "Process Name"
 msgstr ""
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:1
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:2
 msgid "Manage system activity"
-msgstr ""
+msgstr "시스템 움직임 관리"
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:2
 msgid "System Monitor"
-msgstr ""
+msgstr "시스템 감시"
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:1
+#: ../applets/maintained/thinkhdaps/thinkhdaps.py:35
 msgid "Applet that shows the shock protection status of your disks"
 msgstr ""
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:2
+#: ../applets/maintained/thinkhdaps/thinkhdaps.py:34
 msgid "ThinkHDAPS"
+msgstr ""
+
+#: ../applets/maintained/thinkhdaps/thinkhdaps.py:40
+#, python-format
+msgid "%s protected from shocks"
+msgstr ""
+
+#: ../applets/maintained/thinkhdaps/thinkhdaps.py:41
+#, python-format
+msgid "%s not protected from shocks"
+msgstr ""
+
+#: ../applets/maintained/thinkhdaps/thinkhdaps.py:153
+msgid "No hard disk found"
 msgstr ""
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:1
@@ -3707,7 +4333,7 @@ msgstr ""
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:14
 msgid "The icon's opacity (10-100)"
-msgstr ""
+msgstr "아이콘 불투명도 (10-100)"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:15
 msgid "The list of categories that are expanded"
@@ -3743,11 +4369,11 @@ msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Custom"
-msgstr ""
+msgstr "사용자 지정"
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Current Theme"
-msgstr ""
+msgstr "현재 테마"
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Butter"
@@ -3791,243 +4417,251 @@ msgstr ""
 
 #: ../applets/maintained/to-do/prefs.py:37
 msgid "Progress"
-msgstr ""
+msgstr "진행률"
 
 #: ../applets/maintained/to-do/prefs.py:37
 msgid "Both"
-msgstr ""
+msgstr "둘다"
 
 #: ../applets/maintained/to-do/prefs.py:45
 msgid "To-Do List Preferences"
-msgstr ""
+msgstr "할-일 목록 기본 설정"
 
 #: ../applets/maintained/to-do/prefs.py:61
 msgid "Priority"
-msgstr ""
+msgstr "우선 순위"
 
 #: ../applets/maintained/to-do/prefs.py:62
 msgid "Icon"
-msgstr ""
+msgstr "아이콘"
 
 #. Label: Title (bold)
 #: ../applets/maintained/to-do/prefs.py:72
 msgid "Title"
-msgstr ""
+msgstr "제목"
 
 #. Label: Confirm when removing... (bold)
 #: ../applets/maintained/to-do/prefs.py:86
 msgid "Confirm when removing..."
-msgstr ""
+msgstr "제거 할때 확인..."
 
 #. CheckButton: Items
 #: ../applets/maintained/to-do/prefs.py:95
 msgid "_Items"
-msgstr ""
+msgstr "항목(_I)"
 
 #. CheckButton: Categories
 #: ../applets/maintained/to-do/prefs.py:102
 msgid "C_ategories"
-msgstr ""
+msgstr "범주(_A)"
 
 #. Label: Width (bold)
 #: ../applets/maintained/to-do/prefs.py:109
 msgid "Width"
-msgstr ""
+msgstr "너비"
 
 #. CheckButton: Use Custom Width
 #: ../applets/maintained/to-do/prefs.py:118
 msgid "_Use Custom Width"
-msgstr ""
+msgstr "사용자 너비 사용(_U)"
 
 #. Label: Width (pixels)
 #: ../applets/maintained/to-do/prefs.py:125
 msgid "Width (pixels)"
-msgstr ""
+msgstr "너비 (픽셀)"
 
 #. Label: Low Priority (bold)
 #: ../applets/maintained/to-do/prefs.py:173
 msgid "Low Priority"
-msgstr ""
+msgstr "낮은 우선 순위"
 
 #. Label: Medium Priority (bold)
 #: ../applets/maintained/to-do/prefs.py:186
 msgid "Medium Priority"
-msgstr ""
+msgstr "중간 우선 순위"
 
 #. Label: High Priority (bold)
 #: ../applets/maintained/to-do/prefs.py:199
 msgid "High Priority"
-msgstr ""
+msgstr "높은 우선 순위"
 
 #. Label: Icon Color (bold)
 #: ../applets/maintained/to-do/prefs.py:251
 msgid "Icon Color"
-msgstr ""
+msgstr "아이콘 색"
 
 #. Label: Custom Colors (bold)
 #: ../applets/maintained/to-do/prefs.py:274
 msgid "Custom Colors"
-msgstr ""
+msgstr "사용자 지정 색"
 
 #. Colors: Outer Border, Inner Border, Main Color, Text Color
 #: ../applets/maintained/to-do/prefs.py:283
 msgid "Outer Border"
-msgstr ""
+msgstr "바깥 테두리"
 
 #: ../applets/maintained/to-do/prefs.py:284
 msgid "Inner Border"
-msgstr ""
+msgstr "안쪽 테두리"
 
 #: ../applets/maintained/to-do/prefs.py:285
 msgid "Main"
-msgstr ""
+msgstr "기본"
 
 #: ../applets/maintained/to-do/prefs.py:286
 #: ../applets/maintained/to-do/prefs.py:447
 msgid "Text"
-msgstr ""
+msgstr "글자"
 
 #. Label: Icon Type (bold)
 #: ../applets/maintained/to-do/prefs.py:289
 msgid "Icon Type"
-msgstr ""
+msgstr "아이콘 형태"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:1
 msgid "Manage a simple To-Do list"
-msgstr ""
+msgstr "간편한 할-일 목록 관리자"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:2
-#: ../applets/maintained/to-do/to-do.py:68
-#: ../applets/maintained/to-do/to-do.py:217
-#: ../applets/maintained/to-do/to-do.py:269
-#: ../applets/maintained/to-do/to-do.py:907
+#: ../applets/maintained/to-do/to-do.py:69
+#: ../applets/maintained/to-do/to-do.py:218
+#: ../applets/maintained/to-do/to-do.py:270
+#: ../applets/maintained/to-do/to-do.py:908
 msgid "To-Do List"
-msgstr ""
+msgstr "할-일 목록"
 
-#: ../applets/maintained/to-do/to-do.py:220
+#: ../applets/maintained/to-do/to-do.py:221
 msgid "A simple To-Do List"
-msgstr ""
+msgstr "간편한 할-일 목록"
 
-#: ../applets/maintained/to-do/to-do.py:299
+#: ../applets/maintained/to-do/to-do.py:300
 msgid "Remove item"
-msgstr ""
+msgstr "항목 제거"
 
-#: ../applets/maintained/to-do/to-do.py:381
+#: ../applets/maintained/to-do/to-do.py:382
 msgid "Remove category"
-msgstr ""
+msgstr "카테고리 제거"
 
-#: ../applets/maintained/to-do/to-do.py:405
+#: ../applets/maintained/to-do/to-do.py:406
 msgid "View/Edit details"
-msgstr ""
+msgstr "보기/편집 자세히"
 
 #. Make the RadioButtons for each category
 #. First category: No category! (Uncategorized)
-#: ../applets/maintained/to-do/to-do.py:525
+#: ../applets/maintained/to-do/to-do.py:526
 msgid "_Uncategorized"
 msgstr ""
 
 #. First RadioButton - ( )Category
-#: ../applets/maintained/to-do/to-do.py:549
+#: ../applets/maintained/to-do/to-do.py:550
 msgid "_Category"
 msgstr ""
 
 #. Second RadioButton - (-)To-Do item
 #. TODO: better text than "To-Do item"?
-#: ../applets/maintained/to-do/to-do.py:556
+#: ../applets/maintained/to-do/to-do.py:557
 msgid "_To-Do item"
-msgstr ""
+msgstr "할-일 항목(_D)"
 
 #. Label: Priority:
-#: ../applets/maintained/to-do/to-do.py:641
+#: ../applets/maintained/to-do/to-do.py:642
 msgid "Priority: "
-msgstr ""
+msgstr "중요 순서: "
 
 #. Neutral, Low, Medium, and High priority RadioButtons
-#: ../applets/maintained/to-do/to-do.py:644
+#: ../applets/maintained/to-do/to-do.py:645
 msgid "_Neutral"
-msgstr ""
+msgstr "애매한(_N)"
 
-#: ../applets/maintained/to-do/to-do.py:646
+#: ../applets/maintained/to-do/to-do.py:647
 msgid "_Low"
-msgstr ""
+msgstr "낮음(_L)"
 
-#: ../applets/maintained/to-do/to-do.py:648
+#: ../applets/maintained/to-do/to-do.py:649
 msgid "_Medium"
-msgstr ""
+msgstr "보통(_M)"
 
-#: ../applets/maintained/to-do/to-do.py:650
+#: ../applets/maintained/to-do/to-do.py:651
 msgid "_High"
-msgstr ""
+msgstr "높음(_H)"
 
 #. Label: Progress(%):
-#: ../applets/maintained/to-do/to-do.py:678
+#: ../applets/maintained/to-do/to-do.py:679
 msgid "Progress(%): "
-msgstr ""
+msgstr "진행율(%): "
 
 #. Make Label
-#: ../applets/maintained/to-do/to-do.py:1130
+#: ../applets/maintained/to-do/to-do.py:1131
 #, python-format
 msgid ""
 "Are you sure you want to remove the category \"%s?\"\n"
 "All of its items will be removed."
 msgstr ""
+"카테고리  \"%s\"을(를) 제거 하시겠습니까?\"\n"
+"제거하는 카테고리의 모든 항목은 함께 제거됩니다."
 
 #. Make CheckButton
-#: ../applets/maintained/to-do/to-do.py:1134
-#: ../applets/maintained/to-do/to-do.py:1170
+#: ../applets/maintained/to-do/to-do.py:1135
+#: ../applets/maintained/to-do/to-do.py:1171
 msgid "Don't show this again."
-msgstr ""
+msgstr "다시 보지 않음"
 
 #. Make Label
-#: ../applets/maintained/to-do/to-do.py:1167
+#: ../applets/maintained/to-do/to-do.py:1168
 msgid "Are you sure you want to remove this item?"
-msgstr ""
+msgstr "정말 이 항목을 제거 하시겠습니까?"
 
+#. Set the tooltip: X% done
+#. Translators: %d is a number, %% is a percent sign, please don't change them,
+#. but you may add a space character between them, e.g. in German: %d %% erledigt
 #. Reset the tooltip
-#: ../applets/maintained/to-do/to-do.py:1366
+#. Translators: %d is a number, %% is a percent sign, please don't change them,
+#. but you may add a space character between them, e.g. in German: %d %% erledigt
+#: ../applets/maintained/to-do/to-do.py:1360
+#: ../applets/maintained/to-do/to-do.py:1371
 #, python-format
-msgid "% done"
+msgid "%d%% done"
 msgstr ""
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:1
-#: ../applets/maintained/tomboy-applet/tomboy-applet.py:34
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:31
 msgid "Control Tomboy with D-Bus"
-msgstr ""
+msgstr "D-Bus로 함께 톰보이 조정"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:2
-#: ../applets/maintained/tomboy-applet/tomboy-applet.py:33
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:30
 msgid "Tomboy Applet"
-msgstr ""
+msgstr "톰보이 애플릿"
+
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:108
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:130
+msgid "Select a tag:"
+msgstr "태그 선택:"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:114
-#: ../applets/maintained/tomboy-applet/tomboy-applet.py:136
-msgid "Select a tag:"
-msgstr ""
-
-#: ../applets/maintained/tomboy-applet/tomboy-applet.py:120
 msgid "No tags were created yet"
-msgstr ""
+msgstr "아직 만들어진 태그가 없습니다."
 
-#: ../applets/maintained/tomboy-applet/tomboy-applet.py:125
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:119
 msgid "Select a note:"
-msgstr ""
+msgstr "쪽지 선택:"
 
-#: ../applets/maintained/tomboy-applet/tomboy-applet.py:155
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:149
 #, python-format
 msgid "Version: %s"
-msgstr ""
+msgstr "버전: %s"
 
-#: ../applets/maintained/tomboy-applet/tomboy-applet.py:161
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:155
 msgid "New Note"
-msgstr ""
+msgstr "새 쪽지"
 
-#: ../applets/maintained/tomboy-applet/tomboy-applet.py:165
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:159
 msgid "New Tagged Note"
-msgstr ""
+msgstr "새 태그 쪽지"
 
-#: ../applets/maintained/tomboy-applet/tomboy-applet.py:169
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:163
 msgid "View Tagged Note"
-msgstr ""
+msgstr "태그 쪽지 보기"
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:1
 msgid "A simple applet to test vala support"
@@ -4039,190 +4673,568 @@ msgstr ""
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:1
 msgid "Name of the device."
-msgstr ""
+msgstr "장치의 이름"
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:2
 msgid "Name of the mixer track."
-msgstr ""
+msgstr "믹서 트렉의 이름"
 
 #: ../applets/maintained/volume-control/volume-control.desktop.in.h:1
 msgid "Control your computer's volume"
-msgstr ""
+msgstr "컴퓨터의 볼륨을 조정합니다."
 
 #: ../applets/maintained/volume-control/volume-control.desktop.in.h:2
+#: ../applets/maintained/volume-control/volume-control.py:43
 msgid "Volume Control"
+msgstr "볼륨 조정"
+
+#: ../applets/maintained/volume-control/volume-control.py:44
+msgid "Applet to control your computer's volume"
 msgstr ""
 
-#: ../applets/maintained/volume-control/volume-control.ui.h:1
-msgid "+"
+#: ../applets/maintained/volume-control/volume-control.py:49
+#: ../applets/maintained/weather/weather.py:62
+msgid "System theme"
+msgstr ""
+
+#: ../applets/maintained/volume-control/volume-control.py:67
+#, python-format
+msgid "Install one or more of the following GStreamer elements: %s."
+msgstr ""
+
+#: ../applets/maintained/volume-control/volume-control.py:68
+msgid "Could not find any devices."
+msgstr ""
+
+#: ../applets/maintained/volume-control/volume-control.py:184
+msgid "_Open Volume Control"
+msgstr ""
+
+#: ../applets/maintained/volume-control/volume-control.py:379
+msgid "No mixer found"
+msgstr ""
+
+#: ../applets/maintained/volume-control/volume-control.py:385
+msgid "No devices found"
 msgstr ""
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:2
-msgid "-"
+#, no-c-format
+msgid "100%"
 msgstr ""
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:3
 msgid "<b>Audio Options</b>"
-msgstr ""
+msgstr "<b>오디오 속성</b>"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:5
 msgid "_Device:"
-msgstr ""
+msgstr "장치(_D):"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:6
 msgid "_Mixer track:"
+msgstr "믹서 트렉(_M):"
+
+#: ../applets/maintained/volume-control/volume-control.ui.h:7
+msgid "_Mute"
 msgstr ""
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:1
 msgid "City, and country of the weather location."
-msgstr ""
+msgstr "날씨 위치의 국가와 도시"
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:2
 msgid "Code that identifies the weather location."
 msgstr ""
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:3
-msgid "Fahrenheit)."
-msgstr ""
-
-#: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:4
 msgid "If enabled, show the temperature as an overlay in the icon."
 msgstr ""
 
-#: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:5
+#: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:4
 msgid "Maximum width of map in pixels."
-msgstr ""
+msgstr "지도의  최대 너비."
 
-#: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:6
+#: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:5
 msgid "Show days of forecast in a transparent, curved dialog."
 msgstr ""
 
-#: ../applets/maintained/weather/forecast.py:54
-#: ../applets/maintained/weather/forecast.py:82
-msgid "Forecast"
+#: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:6
+msgid ""
+"Size of the temperature overlay in the icon (0: small, 1: medium, 2: large)."
+msgstr ""
+
+#: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:7
+msgid "Temperature unit (0: Celsius, 1: Fahrenheit)."
 msgstr ""
 
 #: ../applets/maintained/weather/forecast.py:54
-#: ../applets/maintained/weather/forecast.py:82
+#: ../applets/maintained/weather/forecast.py:84
+msgid "Forecast"
+msgstr "날씨 예보"
+
+#: ../applets/maintained/weather/forecast.py:54
+#: ../applets/maintained/weather/forecast.py:84
 msgid "for"
 msgstr ""
 
-#: ../applets/maintained/weather/forecast.py:167
+#: ../applets/maintained/weather/forecast.py:169
 msgid "WEEKDAY"
-msgstr ""
+msgstr "WEEKDAY"
 
-#: ../applets/maintained/weather/forecast.py:171
+#: ../applets/maintained/weather/forecast.py:173
 msgid "Tomorrow"
-msgstr ""
+msgstr "내일"
 
 #. Weather condition
-#: ../applets/maintained/weather/forecast.py:197
-#: ../applets/maintained/weather/weather.py:452
+#: ../applets/maintained/weather/forecast.py:199
+#: ../applets/maintained/weather/weather.py:475
 msgid "DESCRIPTION"
 msgstr ""
 
-#: ../applets/maintained/weather/forecast.py:249
+#: ../applets/maintained/weather/forecast.py:251
 msgid "Weather data provided by weather.com"
+msgstr "날씨 정보 weather.com 제공"
+
+#: ../applets/maintained/weather/weathertext.py:38
+msgid "Blowing Snow"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:39
+msgid "Blustery"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:40
+msgid "Clear"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:41
+msgid "Cloudy"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:42
+msgid "Cold"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:43
+msgid "Drizzle"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:44
+msgid "Dust"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:45
+msgid "Fair"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:46
+msgid "Fog"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:47
+msgid "Freezing Drizzle"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:48
+msgid "Freezing Rain"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:49
+msgid "Hail"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:50
+msgid "Haze"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:51
+msgid "Heavy Snow"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:52
+msgid "Hot"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:53
+msgid "Hurricane"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:54
+msgid "Isolated Thunderstorms"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:55
+msgid "Light Rain Shower"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:56
+msgid "Light Rain with Thunder"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:57
+msgid "Light Snow Showers"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:58
+msgid "Mixed Precipitation"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:59
+msgid "Mixed Rain and Hail"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:60
+msgid "Mixed Rain and Sleet"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:61
+msgid "Mixed Rain and Snow"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:62
+msgid "Mostly Cloudy"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:63
+msgid "N/A"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:64
+msgid "Partly Cloudy"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:65
+msgid "Scattered Showers"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:66
+msgid "Scattered Snow Showers"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:67
+msgid "Scattered Thunderstorms"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:68
+msgid "Severe Thunderstorms"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:69
+msgid "Showers"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:70
+msgid "Sleet"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:71
+msgid "Smoke"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:72
+msgid "Snow"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:73
+msgid "Snow Flurries"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:74
+msgid "Snow Showers"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:75
+msgid "Thunder Showers"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:76
+msgid "Thunderstorms"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:77
+msgid "Tornado"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:78
+msgid "Tropical Storm"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:79
+msgid "Windy"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:84
+msgid "AM Clouds / PM Sun"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:86
+msgid "AM Drizzle / Wind"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:88
+msgid "AM Fog / PM Sun"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:90
+msgid "AM Light Rain"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:92
+msgid "AM Rain / Wind"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:94
+msgid "AM Showers"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#. T-Showers = Thunder Showers
+#: ../applets/maintained/weather/weathertext.py:97
+msgid "AM T-Showers"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#. T-Storms = Thunderstorms
+#: ../applets/maintained/weather/weathertext.py:100
+msgid "AM T-Storms"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:102
+msgid "Few Showers"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:104
+msgid "Heavy Rain"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#. T-Storms = Thunderstorms
+#: ../applets/maintained/weather/weathertext.py:107
+msgid "Isolated T-Storms"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:109
+msgid "Light Rain"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:111
+msgid "Mostly Sunny"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:113
+msgid "Partly Cloudy / Wind"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:115
+msgid "PM Light Rain"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:117
+msgid "PM Showers"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#. T-Showers = Thunder Showers
+#: ../applets/maintained/weather/weathertext.py:120
+msgid "PM T-Showers"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#. T-Storms = Thunderstorms
+#: ../applets/maintained/weather/weathertext.py:123
+msgid "PM T-Storms"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:125
+msgid "Rain"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:127
+msgid "Rain / Wind"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:129
+msgid "Rain / Thunder"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:131
+msgid "Scattered Showers / Wind"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#. T-Storms = Thunderstorms
+#: ../applets/maintained/weather/weathertext.py:134
+msgid "Scattered T-Storms"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:136
+msgid "Sunny"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:138
+msgid "Sunny / Wind"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#. T-Showers = Thunder Showers
+#: ../applets/maintained/weather/weathertext.py:141
+msgid "T-Showers"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:145
+msgid "Monday"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:146
+msgid "Tuesday"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:147
+msgid "Wednesday"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:148
+msgid "Thursday"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:149
+msgid "Friday"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:150
+msgid "Saturday"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:151
+msgid "Sunday"
 msgstr ""
 
 #: ../applets/maintained/weather/weather.desktop.in.h:1
 msgid "Display the local weather"
-msgstr ""
+msgstr "지역 날씨 보기"
 
 #: ../applets/maintained/weather/weather.desktop.in.h:2
 msgid "Weather Applet"
+msgstr "날씨 애플릿"
+
+#: ../applets/maintained/weather/weather.py:41
+msgid "Weather"
 msgstr ""
 
-#: ../applets/maintained/weather/weather.py:215
+#: ../applets/maintained/weather/weather.py:42
+msgid "Applet to display current weather and forecast"
+msgstr ""
+
+#: ../applets/maintained/weather/weather.py:71
+msgid ""
+"Could not retrieve weather data. You may be experiencing connectivity issues."
+msgstr ""
+
+#: ../applets/maintained/weather/weather.py:205
+msgid "Network error in Weather"
+msgstr ""
+
+#: ../applets/maintained/weather/weather.py:213
+#: ../applets/maintained/weather/weather.py:255
 msgid "Fetching conditions for"
 msgstr ""
 
-#: ../applets/maintained/weather/weather.py:254
+#: ../applets/maintained/weather/weather.py:273
 msgid "Show _Map"
-msgstr ""
+msgstr "기상 지도 보기(_M)"
 
-#: ../applets/maintained/weather/weather.py:302
-#: ../applets/maintained/weather/weather.py:380
+#: ../applets/maintained/weather/weather.py:322
+#: ../applets/maintained/weather/weather.py:400
 msgid "No records found"
-msgstr ""
+msgstr "녹음기를 찾을 수 없음"
 
-#: ../applets/maintained/weather/weather.py:371
+#: ../applets/maintained/weather/weather.py:391
 msgid "Searching..."
-msgstr ""
+msgstr "찾는 중..."
 
 #: ../applets/maintained/weather/weather.ui.h:4
 msgid "<b>Icon Display</b>"
-msgstr ""
+msgstr "<b>아이콘 표시</b>"
 
 #: ../applets/maintained/weather/weather.ui.h:5
 msgid ""
 "<i><b>Examples:</b> Boston; Portland, ME, Amsterdam; or Osaka, Japan.</i>"
 msgstr ""
+"<i><b>예:</b>Seoul, South Korea; Cheju, South Korea; 혹은 Inc'on, South "
+"Korea.</i>"
 
 #: ../applets/maintained/weather/weather.ui.h:6
 msgid "Current _location:"
-msgstr ""
+msgstr "현재 위치(_L):"
 
 #: ../applets/maintained/weather/weather.ui.h:7
 msgid ""
 "If enabled, the dialog will be transparent, and the five days of the "
 "forecast will be curved"
-msgstr ""
+msgstr "체크하면, 알림창이 투명하고  5일의 날씨를 곡선으로 보여줍니다"
 
 #: ../applets/maintained/weather/weather.ui.h:8
 msgid "If enabled, the temperature will be displayed in the icon"
-msgstr ""
-
-#: ../applets/maintained/weather/weather.ui.h:9
-msgid "Large"
-msgstr ""
+msgstr "체크하면, 아이콘에 온도가 표시 됩니다"
 
 #: ../applets/maintained/weather/weather.ui.h:10
 msgid "Maximum _map width:"
-msgstr ""
-
-#: ../applets/maintained/weather/weather.ui.h:11
-msgid "Medium"
-msgstr ""
+msgstr "최대 지도  너비(_M):"
 
 #: ../applets/maintained/weather/weather.ui.h:12
 msgid "Show temperature in _icon"
-msgstr ""
-
-#: ../applets/maintained/weather/weather.ui.h:13
-msgid "Small"
-msgstr ""
+msgstr "아이콘에 온도 표시(_I)"
 
 #: ../applets/maintained/weather/weather.ui.h:14
 msgid "Temperature _unit:"
-msgstr ""
+msgstr "온도 단위(_U):"
 
 #: ../applets/maintained/weather/weather.ui.h:15
 msgid "Temperature font _size:"
-msgstr ""
+msgstr "온도 글자 크기(_S):"
 
 #: ../applets/maintained/weather/weather.ui.h:16
 msgid "Use transparent/curved _forecast dialog"
-msgstr ""
+msgstr "날씨 알림창에 투명도/곡선 사용(_F)"
 
 #: ../applets/maintained/weather/weather.ui.h:17
 msgid "_Location Name:"
-msgstr ""
+msgstr "위치 이름(_L):"
 
 #. Make the dialog
 #: ../applets/maintained/webapplet/applet.c:262
 #: ../applets/maintained/webapplet/applet.c:460
 msgid "Open Location"
-msgstr ""
+msgstr "위치 열기"
 
 #: ../applets/maintained/webapplet/applet.c:281
 msgid "Set as new _Home Page"
-msgstr ""
+msgstr "새 홈페이지 설정(_H)"
 
 #: ../applets/maintained/webapplet/applet.c:399
 #: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:2
 msgid "Web Applet"
-msgstr ""
+msgstr "웹 애플릿"
 
 #. vim: set et ts=2 sts=2 sw=2 :
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:1
@@ -4232,7 +5244,7 @@ msgstr ""
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:2
 msgid "HTML engine to use."
-msgstr ""
+msgstr "HTML 엔진 사용."
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:3
 msgid "If true display location entry and website buttons"
@@ -4244,7 +5256,7 @@ msgstr ""
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:5
 msgid "URI"
-msgstr ""
+msgstr "URI"
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:7
 #, no-c-format
@@ -4258,7 +5270,7 @@ msgstr ""
 
 #: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:1
 msgid "Applet for Websites"
-msgstr ""
+msgstr "웹사이트를 위한 애플릿"
 
 #: ../applets/maintained/wobblyzini/wobblyzini.desktop.in.in.h:1
 msgid "A simple test animation"
@@ -4269,16 +5281,63 @@ msgid "Wobbly Zini"
 msgstr ""
 
 #: ../applets/maintained/yama/yama.desktop.in.h:1
+#: ../applets/maintained/yama/yama.py:46
 msgid "Main menu with places and recent documents"
 msgstr ""
 
 #: ../applets/maintained/yama/yama.desktop.in.h:2
 msgid "Yet Another Menu Applet"
+msgstr "좀 색다른 메뉴 애플릿"
+
+#: ../applets/maintained/yama/yama.py:45
+msgid "YAMA"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.py:171
+#, python-format
+msgid "Log out %s of this session to log in as a different user"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.py:189
+msgid "_Edit Menus"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.py:253
+msgid "Open your personal folder"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.py:255
+msgid "Open the contents of your desktop in a folder"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.py:306
+msgid "Connect to a remote computer or shared disk"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.py:336
+msgid "Clear all items from the recent documents list"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.py:375
+#, python-format
+msgid "Open '%s'"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.py:417
+#, python-format
+msgid "Mount %s"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.py:569
+msgid ""
+"Clearing the Recent Documents list will clear the following:\n"
+"* All items from the Places > Recent Documents menu item.\n"
+"* All items from the recent documents list in all applications."
 msgstr ""
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:1
 msgid "Awn System Monitor"
-msgstr ""
+msgstr "Awn 시스템 감시"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:1
 msgid "Graph update frequency, in milliseconds."
@@ -4304,22 +5363,18 @@ msgstr ""
 msgid "The pixel width of the applet border."
 msgstr ""
 
-#: ../applets/unmaintained/main-menu/applet.c:394
+#: ../applets/unmaintained/main-menu/applet.c:393
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:2
 msgid "Awn Main Menu"
-msgstr ""
+msgstr "Awn 주 메뉴"
 
-#: ../applets/unmaintained/main-menu/applet.c:395
+#: ../applets/unmaintained/main-menu/applet.c:394
 msgid "Displays a list of all your applications"
-msgstr ""
-
-#: ../applets/unmaintained/main-menu/applet.c:453
-msgid "Main Menu"
 msgstr ""
 
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:1
 msgid "A main menu for Awn"
-msgstr ""
+msgstr "AWN을 위한 주 메뉴"
 
 #: ../applets/unmaintained/pandora/awn-applet-pandora.schema-ini.in.h:1
 msgid "The url of the Pandora mini flash player."
@@ -4333,157 +5388,7 @@ msgstr ""
 msgid "Pandora Radio"
 msgstr ""
 
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:1
-msgid " sort by date)."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:2
-msgid ""
-"Backend type for this applet (0 - file, 1 - folder, 2 - plugger, 3 - "
-"trasher, 4 - recent files)."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:3
-msgid "Close dialog on focusout."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:4
-msgid "Display number of items in the stack."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:5
-msgid "File operation to use."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:6
-msgid "Hoverbox background color 1."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:7
-msgid "Hoverbox background color 2."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:8
-msgid "Hoverbox border color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:9
-msgid "Icon to use for empty stack."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:10
-msgid "Icon to use for full stack."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:11
-msgid "Label background color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:12
-msgid "Label border color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:13
-msgid "Label hover background color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:14
-msgid "Label hover border color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:15
-msgid "Label length."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:16
-msgid "Label text color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:17
-msgid "Label text hover color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:18
-msgid "Layout direction."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:19
-msgid "Layout interval."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:20
-msgid "Layout radius."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:21
-msgid "Number of columns to use."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:22
-msgid "Number of rows to use."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:23
-msgid "Size of the icons inside stack."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:24
-msgid "Sort direction of the items."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:25
-msgid "Sort folders before files."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:26
-msgid "Stack tooltip description."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:27
-msgid "Stacks backend file/directory."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:28
-msgid "Tooltip background color 1."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:29
-msgid "Tooltip background color 2."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:30
-msgid "Tooltip border color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:31
-msgid "Tooltip font name."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:32
-msgid "Tooltip text color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:33
-msgid "Type of UI used for the stack."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:34
-msgid "Use Awn's tooltip font."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:35
-msgid "Whether hoverbox contains label."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:36
-msgid "Whether to browse stack contents."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:37
-msgid ""
-"Whether to combine icons of the files inside the stacks with its icon."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:38
-msgid "Whether tooltips are enabled."
+#: ../shared/python/awnlib.py:125
+#, python-format
+msgid "_About %s"
 msgstr ""

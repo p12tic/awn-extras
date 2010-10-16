@@ -19,7 +19,6 @@
 
 import sys
 import os
-import urllib
 import urllib2
 import socket
 from xml.dom import minidom
@@ -34,8 +33,7 @@ import gettext
 
 from desktopagnostic.config import GROUP_DEFAULT
 import awn
-from awn import extras
-from awn.extras import _, awnlib
+from awn.extras import _, awnlib, __version__, APPLET_BASEDIR
 from awn.extras.threadqueue import ThreadQueue, async_method
 
 awn.check_dependencies(globals(), 'feedparser', 'pynotify', json=('json', 'simplejson'))
@@ -44,7 +42,7 @@ import classes
 
 socket.setdefaulttimeout(30)
 
-icondir = os.path.join(extras.APPLET_BASEDIR, 'feeds', 'icons')
+icondir = os.path.join(APPLET_BASEDIR, 'feeds', 'icons')
 
 icon_path = os.path.join(icondir, 'awn-feeds.svg')
 
@@ -56,7 +54,7 @@ config_path = os.path.join(config_dir, 'feeds.txt')
 cache_dir = os.environ['HOME'] + '/.cache/awn-feeds-applet'
 cache_index = os.path.join(cache_dir, 'index.txt')
 
-user_agent = 'AwnFeedsApplet/' + awn.extras.__version__
+user_agent = 'AwnFeedsApplet/' + __version__
 
 override_icons = {'google-reader': 'http://www.google.com/reader/ui/favicon.ico',
     'twitter.com': icondir + '/' + 'twitter-16x16.png'}
@@ -379,7 +377,7 @@ class App(awn.AppletSimple):
                 button.child.set_use_underline(False)
                 button.set_relief(gtk.RELIEF_NONE)
                 if len(entry['title']) > 25:
-                    button.set_tooltip_text(entry['title'])
+                    button.set_tooltip_text(classes.safify(entry['title']))
                 button.connect('clicked', self.feed_item_clicked, (feed, i))
                 button.show_all()
 
@@ -1035,7 +1033,10 @@ class App(awn.AppletSimple):
             self.show_only_new_check = gtk.CheckMenuItem(_("Show Only _New Feeds"))
             sep = gtk.SeparatorMenuItem()
             prefs_item = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
-            about = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
+            about = gtk.ImageMenuItem(_("_About %s") % _("Feeds Applet"))
+            if awnlib.is_required_version(gtk.gtk_version, (2, 16, 0)):
+                about.props.always_show_image = True
+            about.set_image(gtk.image_new_from_stock(gtk.STOCK_ABOUT, gtk.ICON_SIZE_MENU))
 
             #Add icon for "Add Feed"
             add_icon = gtk.image_new_from_stock(gtk.STOCK_ADD, gtk.ICON_SIZE_MENU)
@@ -1107,11 +1108,11 @@ class App(awn.AppletSimple):
 
         win = gtk.AboutDialog()
         win.set_name(_("Feeds Applet"))
-        win.set_copyright('Copyright 2009 Sharkbaitbobby')
+        win.set_copyright('Copyright \xc2\xa9 2009 Sharkbaitbobby')
         win.set_authors(['Sharkbaitbobby <sharkbaitbobby+awn@gmail.com>'])
         win.set_artists(['Victor C.', '  (Icon modified by Sharkbaitbobby)', \
             'Jakub Szypulka'])
-        win.set_comments(_("Monitor Web Feeds"))
+        win.set_comments(_("Applet to monitor web feeds"))
         win.set_license("This program is free software; you can redistribute it "+\
             "and/or modify it under the terms of the GNU General Public License "+\
             "as published by the Free Software Foundation; either version 2 of "+\
@@ -1128,7 +1129,7 @@ class App(awn.AppletSimple):
         win.set_icon_from_file(icon_path)
         win.set_website('http://wiki.awn-project.org/Feeds_Applet')
         win.set_website_label('wiki.awn-project.org')
-        win.set_version(awn.extras.__version__)
+        win.set_version(__version__)
         win.run()
         win.destroy()
 

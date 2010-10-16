@@ -54,10 +54,9 @@ Description: A collection of applets for avant-window-navigator
   * garbage: Manages your desktop's trash can.
   * notification-area : Replaces the gnome-panel notification area and shows
     it right on your dock 
-  * plugger: Displays mounted volumes and allows you to browse them.
   * separator: Display a white line to separate applets.
   * shinyswitcher: A workspace switcher supporting compiz and other WMs.
-  * showdesktop: Hides/shows all of the windows of the current viewport, 
+  * showdesktop: Hides/shows all of the windows of the current viewport.
 
 Package: awn-applets-c-extras-trunk
 Section: gnome
@@ -76,7 +75,6 @@ Description: A collection of applets for avant-window-navigator
  .
  This package contains extras applets written in C:
   * digitalClock: A digital clock and calendar applet.
-  * filebrowser: Displays the contents of a directory and allows you to 
     navigate folders.
   * main-menu: Display a list of all the applications on your computer.
   * places: Displays shortcuts in buttons.
@@ -133,7 +131,6 @@ Description: A collection of applets for avant-window-navigator
   * comics: View your favourite comics on your desktop.
   * common-folder: Display common folders.
   * cpufreq: Monitors and controls the CPU frequency. 
-  * DesktopManager: Manages the desktop Wallpaper.
   * feeds: A Python feed viewer.
   * file-browser-launcher: Launches the user's file manager or opens bookmarks.
   * hardware-sensors: Applet to show the hw sensors readouts
@@ -180,13 +177,10 @@ Description: A collection of applets for avant-window-navigator
  Awn-extras-applets is a collection of applets for avant-window-navigator. It
  provides some extensions to the bar and some new features (like 
  applets in the gnome-panel).
-  * awn-meebo: Access to the Meebo Instant Messenger.
   * calendar: Displays a clock and calendar on the bar, and integrates with 
     several external calendar applications to display appointments.
-  * digg: Access to Digg.
   * media-icon-applet: This applet allows you to add media icons like play,
     pause, and next/back to your awn bar, and control a list of media players.
-  * mimenu: Another applet for the Menu.
   * pandora: Plays Pandora internet radio.
   * rtm: Use Remember The Milk from AWN. 
   * slickswitcher: A visual workspace switcher.

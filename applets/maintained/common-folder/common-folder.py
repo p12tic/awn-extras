@@ -42,7 +42,6 @@ user_path = os.path.expanduser("~/")
 bookmarks_file = os.path.expanduser("~/.gtk-bookmarks")
 
 pyglib_ok = awnlib.is_required_version(glib.pyglib_version, (2, 18, 0))
-pygio_emblemed_icon_ok = awnlib.is_required_version(gio.pygio_version, (2, 17, 0))
 
 if pyglib_ok:
     # Ordered sequence of XDG user special folders
@@ -121,6 +120,7 @@ class CommonFolderApplet:
 
         if uri.startswith("file://"):
             file = vfs.File.for_uri(uri)
+
             monitor = file.monitor()
             self.__monitors.append(monitor)
             monitor.connect("changed", self.file_changed_cb)
@@ -128,9 +128,8 @@ class CommonFolderApplet:
             if not file.exists():
                 return
 
-            file = gio.File(uri)
-            info = file.query_info(gio.FILE_ATTRIBUTE_STANDARD_ICON, gio.FILE_QUERY_INFO_NONE)
-            icon = self.get_icon_name(info.get_attribute_object(gio.FILE_ATTRIBUTE_STANDARD_ICON))
+            existing_icons = filter(self.icon_theme.has_icon, file.get_icon_names())
+            icon = existing_icons[0] if len(existing_icons) > 0 else "image-missing"
         else:
             icon = "folder-remote"
 
@@ -143,22 +142,13 @@ class CommonFolderApplet:
     def icon_clicked_cb(self, widget, uri):
         file = vfs.File.for_uri(uri)
 
-        if file is not None and (not uri.startswith("file://") or file.exists()):
+        if file is not None and (not file.is_native() or file.exists()):
             try:
                 file.launch()
             except glib.GError, e:
                 print "Error when opening: %s" % e
         else:
             print "File at URI not found (%s)" % uri
-
-    def get_icon_name(self, icon):
-        if pygio_emblemed_icon_ok and isinstance(icon, gio.EmblemedIcon):
-            icon = icon.get_icon()
-
-        if isinstance(icon, gio.ThemedIcon):
-            return filter(self.icon_theme.has_icon, icon.get_names())[0]
-        elif isinstance(icon, gio.FileIcon):
-            return icon.get_file().get_path()
 
     def file_changed_cb(self, monitor, file, other_file, event):
         if event in (vfs.FILE_MONITOR_EVENT_CREATED, vfs.FILE_MONITOR_EVENT_DELETED):

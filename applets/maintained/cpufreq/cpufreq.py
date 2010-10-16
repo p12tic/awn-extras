@@ -129,6 +129,7 @@ class CpuFreqApplet:
         applet.connect_size_changed(self.size_changed_cb)
 
         applet.timing.register(self.draw_freq_cb, draw_freq_interval)
+        self.draw_freq_cb()
 
         if dbus is not None:
             try:

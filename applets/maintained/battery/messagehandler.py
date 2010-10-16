@@ -18,6 +18,8 @@ try:
 except ImportError:
     import gobject as glib
 
+from awn.extras import _
+
 from awn import check_dependencies
 check_dependencies(globals(), "pynotify")
 
@@ -50,7 +52,7 @@ class InvisibleMessageState:
         try:
             self.handler.message.close()
         except glib.GError:
-            pass  # Ignore error when there's no message to close
+            pass  # Ignore error when there is no message to close
 
     def evaluate(self):
         if self.handler.applet.applet.settings["warn-low-level"]:
@@ -68,7 +70,7 @@ class VisibleWarningState:
     def __init__(self, handler):
         self.handler = handler
 
-        self.handler.message.set_property("summary", "Battery is running low")
+        self.handler.message.set_property("summary", _("Battery is running low"))
         self.handler.message.set_property("icon-name", "dialog-warning")
         self.handler.message.set_urgency(pynotify.URGENCY_NORMAL)
         self.__closed_id = self.handler.message.connect("closed", self.__closed_cb)
@@ -94,7 +96,7 @@ class VisibleWarningState:
         backend = self.handler.applet.backend
         time = backend.get_remaining_time()
         if time is not None:
-            body = "You have approximately <b>%s</b> of remaining battery power (%d%%)." % (self.handler.applet.format_time(time), backend.get_capacity_percentage())
+            body = _("You have approximately <b>%s</b> of remaining battery power (%d%%).") % (self.handler.applet.format_time(time), backend.get_capacity_percentage())
             self.handler.message.set_property("body", body)
             self.handler.message.set_timeout(time[0] * 60 * 60000 + time[1] * 60000)
             try:
@@ -125,7 +127,7 @@ class VisibleErrorState(VisibleWarningState):
         # Close to avoid messing up the message when the urgency changes
         self.handler.message.close()
 
-        self.handler.message.set_property("summary", "Battery is critically low")
+        self.handler.message.set_property("summary", _("Battery is critically low"))
         self.handler.message.set_property("icon-name", "dialog-warning")
         self.handler.message.set_urgency(pynotify.URGENCY_CRITICAL)
         self.update_message()
@@ -146,7 +148,7 @@ class VisibleNotificationState:
     def __init__(self, handler):
         self.handler = handler
 
-        self.handler.message.set_property("summary", "Battery is charged")
+        self.handler.message.set_property("summary", _("Battery is charged"))
         self.handler.message.set_property("icon-name", "dialog-information")
         self.handler.message.set_timeout(3 * 3600 * 1000)
         self.handler.message.set_urgency(pynotify.URGENCY_NORMAL)
@@ -167,9 +169,9 @@ class VisibleNotificationState:
     def __update_message(self):
         charge_percentage = self.handler.applet.backend.get_capacity_percentage()
         if charge_percentage == 100:
-            body = "Your battery is fully charged."
+            body = _("Your battery is fully charged.")
         else:
-            body = "Your battery is charged to <b>%d%%</b>." % charge_percentage
+            body = _("Your battery is charged to <b>%d%%</b>.") % charge_percentage
         self.handler.message.set_property("body", body)
         try:
             self.handler.message.show()

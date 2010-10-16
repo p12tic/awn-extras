@@ -6,25 +6,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-29 01:04+0300\n"
-"PO-Revision-Date: 2010-04-10 23:28+0000\n"
-"Last-Translator: Michal Hruby <michal.mhr@gmail.com>\n"
+"POT-Creation-Date: 2010-10-02 00:09+0200\n"
+"PO-Revision-Date: 2010-10-04 11:54+0000\n"
+"Last-Translator: Nicolas Delvaux <Unknown>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2010-04-11 04:11+0000\n"
+"X-Launchpad-Export-Date: 2010-10-05 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Generated-By: pygettext.py 1.5\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
+#: ../applets/maintained/animal-farm/animal-farm.py:30
 msgid "Animal Farm"
-msgstr "Ferme aux animaux"
+msgstr "Ferme des animaux"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:2
 msgid "Display fortune messages"
 msgstr "Affiche une fortune."
+
+#: ../applets/maintained/animal-farm/animal-farm.py:31
+msgid "Applet that displays fortune messages"
+msgstr "Applet qui affiche des fortunes"
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:1
 msgid "Global hotkey used to activate the terminal."
@@ -50,52 +55,52 @@ msgstr "Émulateur de terminal par défaut."
 msgid "Disabled"
 msgstr "Désactivé"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:410
+#: ../applets/maintained/awnterm/awn-terminal.vala:412
 #: ../applets/maintained/calendar/calendarprefs.py:75
 msgid "Preferences"
 msgstr "Préférences"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:425
-#: ../applets/maintained/file-browser-launcher/prefs.py:154
+#: ../applets/maintained/awnterm/awn-terminal.vala:427
+#: ../applets/maintained/file-browser-launcher/prefs.py:162
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:16
 #, c-format
 msgid "Behavior"
 msgstr "Comportement"
 
 #. focus out behavior checkbox
-#: ../applets/maintained/awnterm/awn-terminal.vala:437
+#: ../applets/maintained/awnterm/awn-terminal.vala:439
 msgid "Hide when focus is lost"
 msgstr "Cacher lors de la perte du focus"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:456
-#: ../applets/maintained/file-browser-launcher/prefs.py:253
-#: ../applets/maintained/file-browser-launcher/prefs.py:328
+#: ../applets/maintained/awnterm/awn-terminal.vala:458
+#: ../applets/maintained/file-browser-launcher/prefs.py:259
+#: ../applets/maintained/file-browser-launcher/prefs.py:334
 msgid "Action"
 msgstr "Action"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:476
+#: ../applets/maintained/awnterm/awn-terminal.vala:478
 msgid "Shortcut"
 msgstr "Raccourci"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:482
+#: ../applets/maintained/awnterm/awn-terminal.vala:484
 msgid "Activate"
 msgstr "Activer"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:491
+#: ../applets/maintained/awnterm/awn-terminal.vala:493
 #, c-format
 msgid "Background image"
 msgstr "Image d'arrière-plan"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:503
+#: ../applets/maintained/awnterm/awn-terminal.vala:505
 msgid "Select a file"
 msgstr "Sélectionnez un fichier"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:545
+#: ../applets/maintained/awnterm/awn-terminal.vala:547
 #, c-format
 msgid "Terminal opacity"
 msgstr "Opacité du terminal"
 
-#: ../applets/maintained/awnterm/awn-terminal.vala:572
+#: ../applets/maintained/awnterm/awn-terminal.vala:574
 #, c-format
 msgid "External Terminal"
 msgstr "Terminal externe"
@@ -110,20 +115,20 @@ msgid "Terminal Applet"
 msgstr "Applet Terminal"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:1
-msgid " Upload/Download"
-msgstr " Envoi/Réception"
+msgid "Adds or removes 5px to the value of the AWN setting \"Size of Icons\""
+msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:2
-msgid " bytes)"
-msgstr " octets)"
-
-#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:3
 msgid "Color to draw the background"
 msgstr "Couleur de l'arrière-plan"
 
-#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:4
+#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:3
 msgid "Color to draw the border"
 msgstr "Couleur de la bordure"
+
+#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:4
+msgid "Desired applet font size"
+msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:5
 msgid "Display parameters for interfaces"
@@ -139,105 +144,137 @@ msgstr "Dessiner la bordure de l'applet"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:8
 msgid ""
+"Enables/Disables dock reflection for this applet 0: Use awn setting, 1: Show "
+"reflection in horizontal docks only, 2: show reflection in vertical docks, "
+"3: Disable reflection for all dock orientations"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:9
+msgid ""
+"Enbables or disables drawing the applet graph - if disabled only the speed "
+"text will be displayed in the applet"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:10
+msgid ""
 "If enabled this will draw a line at the bottom of the graph even if the "
 "value is 0. If unchecked, values below 1 are not drawn"
 msgstr ""
 "Si activé, une ligne sera dessinée en bas du graphe même si la valeur est 0. "
 "Sinon, les valeurs inférieures à 1 ne seront pas dessinées."
 
-#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:9
+#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:11
 msgid "Minimum threshold to draw meter (dependent upon DEFAULT/unit)"
 msgstr "Seuil minimal pour dessiner"
 
-#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:10
+#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:12
+msgid ""
+"Sets the default scale of the applet traffic graph - the scale is the amount "
+"of linear data to display at one time"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:13
+msgid ""
+"Sets the default scale of the applet wireless signal graph - the scale is "
+"the amount of linear data to display at one time"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:14
+msgid ""
+"Sets the default scale of the popup-dialog traffic graph - the scale is the "
+"amount of linear data to display at one time"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:15
+msgid ""
+"Sets the default scale of the popup-dialog wireless signal graph - the scale "
+"is the amount of linear data to display at one time"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:16
+msgid "Sets the offset of the applet from the edge of the dock"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:17
+msgid "Sets the width of the applet icon"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:18
+msgid "The base display unit for transfer speed (0: bits, 1: bytes)"
+msgstr "Affichage de base de la vitesse de transfert (0 : bits, 1 : octets)"
+
+#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:19
 msgid "The interface currently selected"
 msgstr "Interface sélectionnée"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:37
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:231
+#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:20
+msgid "Throughput label control - 0: no label, 1: Sum, 2: Upload/Download"
+msgstr ""
+"Étiquette de contrôle du débit - 0 : pas d'étiquette, 1 : Somme, 2 :  "
+"Envoi/Réception"
+
+#: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:21
+msgid ""
+"Type of graph to use for wireless devices - area: Area chart, area_bar: Area "
+"chart with colored bars, bar: Bar chart, fan: Waving chart with density, "
+"fan_bar: Waving Bar chart with density"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:40
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:261
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:2
 msgid "Bandwidth Monitor"
 msgstr "Moniteur de bande passante"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:41
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:44
 msgid "Network Bandwidth monitor"
 msgstr "Moniteur de bande passante"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:225
-msgid "Unable to caclulate statistics"
-msgstr "Incapable de calculer les statistiques"
-
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:225
-msgid "Statistics calculation requires read access to /proc/net/dev"
-msgstr ""
-"Le calcul des statistiques nécessite l'accès en lecture à /proc/net/dev"
-
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:244
-msgid "Change Unit"
-msgstr "Changer l'unité"
-
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:295
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:329
 msgid "Scanning"
 msgstr "Analyse en cours"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:296
-#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:4
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:330
 msgid "Devices"
 msgstr "Périphériques"
 
 #. kilobytes per second
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:323
-#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:19
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:50
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:356
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:21
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:81
 msgid "KBps"
 msgstr "Ko/s"
 
 #. kilobits per second
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:327
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:53
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:360
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:84
 msgid "Kbps"
 msgstr "kb/s"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:349
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:468
-msgid "Interface"
-msgstr "Interface"
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:408
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:20
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:585
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:588
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:609
+msgid "Interfaces"
+msgstr "Interfaces"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:354
-msgid "Sent"
-msgstr "Envoyé"
-
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:359
-msgid "Received"
-msgstr "Reçu"
-
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:364
-msgid "Sending"
-msgstr "Envoi"
-
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:369
-msgid "Receiving"
-msgstr "Réception"
-
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:417
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:421
 msgid "Please select a valid Network Device"
 msgstr "Veuillez sélectionner un périphérique réseau valide"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:419
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:423
 #, python-format
 msgid "Total Sent: %s - Total Received: %s (All Interfaces)"
 msgstr "Total envoyé : %s - Total reçu : %s (toute interfaces)"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:610
-msgid "No"
-msgstr "Non"
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:838
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:457
+msgid "No Device"
+msgstr "Pas de périphérique"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:611
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:136
-msgid "Device"
-msgstr "Périphérique"
-
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:612
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:839
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:458
 msgid "Please select a valid device"
 msgstr "Veuillez sélectionner un périphérique valide"
 
@@ -256,134 +293,159 @@ msgstr "Un moniteur réseau pour AWN"
 #: ../applets/maintained/volume-control/volume-control.ui.h:4
 #: ../applets/maintained/weather/weather.ui.h:2
 msgid "<b>Display</b>"
-msgstr "<b>Affichage<b>"
+msgstr "<b>Affichage</b>"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:2
+msgid "Applet"
+msgstr "Applet"
+
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:3
+msgid "Applet Offset"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:4
+msgid ""
+"Applet Size \n"
+"Override"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:6
+msgid "Applet Width"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:7
 msgid "Background Color"
 msgstr "Couleur de l'arrière-plan"
 
-#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:3
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:8
 msgid "Border Color"
 msgstr "Couleur de la bordure"
 
-#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:5
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:9
+msgid "Dialog"
+msgstr "Boîte de dialogue"
+
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:10
 msgid "Display MBps/KBps (bytes) instead of Mbps/Kbps (bits)"
 msgstr "Afficher des Mo/s ou Ko/s au lieu de Mb/s ou Kb/s"
 
-#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:6
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:11
 msgid "Display Speed Text"
 msgstr "Afficher la vitesse du texte"
 
-#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:7
-msgid "Display the sum of upload and download"
-msgstr "Afficher la somme des réceptions et des envois"
-
-#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:8
-msgid "Display upload and download text representation of speed"
-msgstr ""
-"Afficher une représentation textuelle des vitesses d'émission et de réception"
-
-#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:9
-msgid "Do not display the speed as text, only draw the graph"
-msgstr ""
-"Ne pas représenter la vitesse par du texte, dessiner seulement le graphe"
-
-#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:10
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:12
 msgid "Draw 0 bps in graphs"
 msgstr "Dessiner 0 b/s dans le graphe"
 
-#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:11
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:13
+msgid "Draw Applet Graph"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:14
 msgid "Draw Background"
 msgstr "Dessiner l'arrière-plan"
 
-#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:12
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:15
 msgid "Draw Border"
 msgstr "Dessiner la bordure"
 
 #. Put the general tab together
-#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:13
-#: ../applets/maintained/dialect/dialect.ui.h:74
-#: ../applets/maintained/file-browser-launcher/prefs.py:204
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:16
+#: ../applets/maintained/cairo-clock/cairo-clock.py:166
+#: ../applets/maintained/file-browser-launcher/prefs.py:212
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:9
 #: ../applets/maintained/to-do/prefs.py:60
 msgid "General"
 msgstr "Général"
 
-#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:14
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:17
 msgid "Graph Only"
 msgstr "Graphe uniquement"
 
-#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:15
-msgid ""
-"If enabled, this will draw a line at the bottom of the graph even if the "
-"value is 0. If unchecked, values below 1 are not drawn in the graph."
-msgstr ""
-"Si activé, une ligne sera dessinée en bas du graphe même si la valeur est 0. "
-"Sinon, les valeurs inférieures à 1 ne seront pas dessinées."
-
-#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:16
-msgid ""
-"If this is checked the applet background will use the selected color. If "
-"unchecked, background will be transparent"
-msgstr ""
-"Si activé, l'arrière-plan de l'applet utilisera la couleur sélectionnée. "
-"Sinon, l'arrière-plan sera transparent."
-
-#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:17
-msgid ""
-"If this is checked the applet border will use the selected color. If "
-"unchecked, border will be transparent"
-msgstr ""
-"Si activé, la bordure de l'applet utilisera la couleur sélectionnée. Sinon, "
-"la bordure sera transparente."
-
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:18
+msgid "Icon Font Size"
+msgstr "Taille de la police de l'icône"
+
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:19
 msgid "If this is checked, the common display unit will be Bytes"
 msgstr "Si activé, l'unité affichée par défaut sera l'octet"
 
-#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:20
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:22
 msgid "Minimum Scaling threshold"
 msgstr "Limite basse de l'échelle"
 
-#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:21
-msgid ""
-"Sets the minimum threshold for scaling to not show large spikes for small "
-"amounts of traffic. e.g.: Setting to 32.0 KBps will cause the graph to only "
-"draw if throughput exceeds 32.0 KBps"
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:23
+msgid "Signal Scale"
 msgstr ""
-"Défini le seuil minimum de l'échelle pour ne pas afficher de grands piques "
-"pour un trafic faible. ex : En définissant 32.0Ko/s, seul les débits de plus "
-"de 32.0Ko/s seront affichés."
 
-#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:22
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:141
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:24
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:226
 msgid "Sum"
 msgstr "Somme"
 
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:147
+#: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:25
+msgid "Traffic Scale"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:221
+msgid "Device"
+msgstr "Périphérique"
+
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:232
 msgid "Multi"
 msgstr "Multi"
 
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:155
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:240
 msgid "Upload Color"
 msgstr "Couleur des réceptions"
 
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:166
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:251
 msgid "Download Color"
 msgstr "Couleur des émissions"
 
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:239
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:327
 msgid "Upload"
 msgstr "Émissions"
 
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:241
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:329
 msgid "Download"
 msgstr "Réceptions"
 
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:243
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:331
 #, python-format
 msgid "%s %s Color"
 msgstr "Couleur %s %s"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:579
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:589
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:619
+msgid "Options/Info"
+msgstr "Options/Info"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:581
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:584
+msgid "Back to Graph"
+msgstr "Retour au graphe"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:614
+msgid "Change Unit"
+msgstr "Changer l'unité"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:658
+msgid "Status"
+msgstr "État"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:658
+msgid "IP Address"
+msgstr "Adresse IP"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:658
+msgid "Subnet Mask"
+msgstr "Masque de sous-réseau"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:738
+msgid "Wireless graph type"
+msgstr "Type de graphique pour le réseau sans fil"
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:1
 msgid "HAL UDI of battery."
@@ -413,7 +475,7 @@ msgstr ""
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:6
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:3
-#: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:7
+#: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:8
 msgid "The name of the theme of the icon."
 msgstr "Nom du thème de l'icône"
 
@@ -428,6 +490,74 @@ msgstr "Batterie"
 #: ../applets/maintained/battery/battery.desktop.in.h:2
 msgid "Display battery state"
 msgstr "Afficher l'état de la batterie"
+
+#: ../applets/maintained/battery/battery.py:37
+msgid "Battery Status"
+msgstr "État de la batterie"
+
+#: ../applets/maintained/battery/battery.py:38
+msgid "An applet which displays battery information"
+msgstr "Un applet qui affiche l'état de la batterie"
+
+#: ../applets/maintained/battery/battery.py:98
+msgid "No batteries"
+msgstr "Pas de batterie"
+
+#: ../applets/maintained/battery/battery.py:121
+#: ../applets/maintained/battery/battery.py:254
+#: ../applets/maintained/battery/battery.ui.h:6
+msgid "Percent"
+msgstr "Pourcentage"
+
+#: ../applets/maintained/battery/battery.py:209
+msgid "AC"
+msgstr "Secteur"
+
+#: ../applets/maintained/battery/battery.py:209
+msgid "battery"
+msgstr "batterie"
+
+#: ../applets/maintained/battery/battery.py:210
+#, python-format
+msgid "Computer running on %s power"
+msgstr ""
+
+#: ../applets/maintained/battery/battery.py:213
+msgid "Battery charged"
+msgstr "Batterie chargée"
+
+#: ../applets/maintained/battery/battery.py:221
+msgid "until charged"
+msgstr "avant charge complète"
+
+#: ../applets/maintained/battery/battery.py:225
+msgid "remaining"
+msgstr "restant"
+
+#: ../applets/maintained/battery/battery.py:263
+#: ../applets/maintained/battery/battery.ui.h:7
+msgid "Time Remaining"
+msgstr "Temps restant"
+
+#: ../applets/maintained/battery/battery.py:279
+#, python-format
+msgid "%d hours"
+msgstr "%d heures"
+
+#: ../applets/maintained/battery/battery.py:281
+#, python-format
+msgid "%d hour"
+msgstr "%d heure"
+
+#: ../applets/maintained/battery/battery.py:285
+#, python-format
+msgid "%d minutes"
+msgstr "%d minutes"
+
+#: ../applets/maintained/battery/battery.py:287
+#, python-format
+msgid "%d minute"
+msgstr "%d minute"
 
 #: ../applets/maintained/battery/battery.ui.h:2
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:5
@@ -449,14 +579,6 @@ msgstr "Si activé, notifie lorsque la charge atteint un certain pourcentage."
 msgid "If enabled, shows a notification when the charge levels drops too low"
 msgstr "Si activé, notifie lorsque la charge atteint un un niveau trop bas."
 
-#: ../applets/maintained/battery/battery.ui.h:6
-msgid "Percent"
-msgstr "Pourcentage"
-
-#: ../applets/maintained/battery/battery.ui.h:7
-msgid "Time Remaining"
-msgstr "Temps restant"
-
 #: ../applets/maintained/battery/battery.ui.h:8
 msgid "_Battery:"
 msgstr "_Batterie :"
@@ -468,7 +590,7 @@ msgstr "_Notifie lorsque le niveau de charge atteint :"
 #: ../applets/maintained/battery/battery.ui.h:10
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:23
 #: ../applets/maintained/mail/mail.ui.h:8
-#: ../applets/maintained/volume-control/volume-control.ui.h:7
+#: ../applets/maintained/volume-control/volume-control.ui.h:8
 #: ../applets/maintained/weather/weather.ui.h:18
 msgid "_Theme:"
 msgstr "_Thème :"
@@ -482,48 +604,51 @@ msgid "A custom time format (strftime()), used if not empty."
 msgstr "Un format de temps personnalisé (strftime()), utilisé si non vide."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:2
-msgid "Beaufort)."
-msgstr "Beaufort)."
-
-#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:3
 msgid ""
 "If enabled, besides hours and minutes, the seconds will be visible too."
 msgstr ""
 "Si activé, les secondes seront affichées à côté des heures et des minutes."
 
-#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:4
+#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:3
 msgid "If enabled, displays the weather as an overlay on top of the clock."
 msgstr "Si activé, la météo sera affichée au dessus de l'horloge."
 
-#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:5
+#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:4
 msgid "If enabled, the date will be shown in the title."
 msgstr "Si activé, la date sera affichée dans le titre."
 
-#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:6
+#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:5
 msgid "If enabled, the seconds hand will be visible in the clock."
 msgstr "Si activé, l'aiguille des secondes sera visible dans l'horloge."
 
-#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:7
-#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:6
-msgid "Kelvin)."
-msgstr "Kelvin)."
-
-#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:8
+#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:6
 msgid "List of cities and timezones separated by a '#' character."
 msgstr ""
 "Liste des villes et des fuseaux horaires séparés par le symbole « # »."
 
-#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:9
+#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:7
 msgid ""
 "Show time in 24 hour format if enabled, or 12 hour format when disabled."
 msgstr ""
 "Affiche le temps au format 24 heures si activé ou au format 12 heures sinon."
 
-#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:10
+#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:8
+#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:10
+msgid "Temperature unit (0: Celsius, 1: Fahrenheit, 2: Kelvin)."
+msgstr "Unité de température (0 : Celsius, 1 : Fahrenheit, 2 : Kelvin)."
+
+#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:9
 msgid "The name of the theme of the analog clock."
 msgstr "Le nom du thème de l'horloge analogique."
 
+#: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:10
+msgid "Wind speed unit (0: m/s, 1: km/h, 2: mph, 3: knots, 4: Beaufort)."
+msgstr ""
+"Unité de vitesse du vent (0 : m/s, 1 : km/h, 2 : mph, 3 : knots, 4 : "
+"Beaufort)."
+
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:1
+#: ../applets/maintained/cairo-clock/cairo-clock.py:29
 msgid "Cairo Clock"
 msgstr "Horloge Cairo"
 
@@ -534,6 +659,14 @@ msgid ""
 msgstr ""
 "Affiche une horloge analogique et supporte les horloges additionnelles pour "
 "d'autres emplacements"
+
+#: ../applets/maintained/cairo-clock/cairo-clock.py:30
+msgid ""
+"Applet that displays an analog clock and supports additional clocks for "
+"different locations"
+msgstr ""
+"Applet qui affiche une horloge analogique et qui supporte des horloges "
+"supplémentaires pour différents fuseaux horaires."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:1
 #: ../applets/maintained/weather/weather.ui.h:1
@@ -560,12 +693,19 @@ msgstr "<b>Options du titre</b>"
 msgid "Beaufort"
 msgstr "Beaufort"
 
+#. Unit long strings
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:8
-msgid "Celcius"
-msgstr "Celcius"
+#: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
+#: ../applets/maintained/weather/weather.py:59
+#: ../applets/maintained/weather/weather.py:562
+#: ../applets/maintained/weather/weather.py:567
+msgid "Celsius"
+msgstr "Celsius"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:9
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
+#: ../applets/maintained/weather/weather.py:59
+#: ../applets/maintained/weather/weather.py:560
 msgid "Fahrenheit"
 msgstr "Fahrenheit"
 
@@ -644,97 +784,163 @@ msgstr "m/s"
 msgid "mph"
 msgstr "milles/h"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:107
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:111
+#: ../applets/maintained/cairo-clock/locations.py:142
+msgid "Locations"
+msgstr "Emplacements"
+
+#: ../applets/maintained/cairo-clock/locations.py:145
+msgid "Edit"
+msgstr "Modifier"
+
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:305
+msgid "Remove Icon"
+msgstr "Supprimer l'icône"
+
+#: ../applets/maintained/cairo-menu/cairo-main-icon.c:161
+#: ../applets/unmaintained/main-menu/applet.c:452
+msgid "Main Menu"
+msgstr "Menu principal"
+
+#: ../applets/maintained/cairo-menu/cairo-menu.desktop.in.in.h:1
+msgid "A Main Menu."
+msgstr "Un menu principal."
+
+#: ../applets/maintained/cairo-menu/cairo-menu.desktop.in.in.h:2
+msgid "Cairo Main Menu"
+msgstr "Menu principal Cairo"
+
+#. hope that gnome-session-save exists; needed for GNOME 2.22, at least.
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:125
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:129
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:134
 msgid "Logout"
 msgstr "Fermer la session"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:115
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:117
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:122
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:139
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:141
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:146
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:1
+#: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:46
+#: ../applets/maintained/quit/quit.py:57
+#: ../applets/maintained/quit/quit.py:265
+#: ../applets/maintained/yama/yama.py:153
 msgid "Lock Screen"
 msgstr "Verrouiller l'écran"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:126
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:128
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:139
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:150
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:152
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:163
 msgid "Suspend"
 msgstr "Mettre en Veille"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:131
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:133
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:144
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:155
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:157
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:168
 msgid "Hibernate"
 msgstr "Hiberner"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:152
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:176
 msgid "Shutdown"
 msgstr "Éteindre"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:187
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:562
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:213
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:381
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:585
+#: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Computer"
 msgstr "Poste de travail"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:188
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:214
 msgid "Home"
 msgstr "Dossier personnel"
 
-#. Check if this is the Desktop directory
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:189
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:520
-#: ../applets/maintained/places/applet.c:341
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:215
+#: ../applets/maintained/places/applet.c:344
+#: ../applets/maintained/yama/yama.py:255
 msgid "Desktop"
 msgstr "Bureau"
 
-#. 
-#. TODO: check the trash and set to stock_trash_empty if trash is empty
-#. 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:193
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:221
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:223
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:610
+#: ../applets/maintained/file-browser-launcher/prefs.py:236
 msgid "Trash"
 msgstr "Corbeille"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:194
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:225
 msgid "File System"
 msgstr "Système de fichiers"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:315
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:565
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:356
+msgid "Removable Media"
+msgstr "Média amovible"
+
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:367
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
 msgid "Network"
 msgstr "Réseau"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:316
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:368
 msgid "Connect to Server"
 msgstr "Se connecter a un serveur"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:946
-#: ../applets/maintained/file-browser-launcher/prefs.py:243
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1034
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1048
+#: ../applets/maintained/file-browser-launcher/prefs.py:249
 #: ../applets/maintained/places/places.desktop.in.in.h:2
+#: ../applets/maintained/yama/yama.py:246
 msgid "Places"
 msgstr "Raccourcis"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:984
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1071
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1086
+#: ../applets/maintained/yama/yama.py:322
 msgid "Recent Documents"
 msgstr "Documents récents"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1029
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1117
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1128
 msgid "Session"
 msgstr "Session"
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1056
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1144
 msgid "Search\\u2026"
 msgstr "Rechercher\\u2026"
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1073
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1161
 msgid "Launch\\u2026"
 msgstr "Lancer\\u2026"
 
-#: ../applets/maintained/cairo-menu/misc.c:356
+#: ../applets/maintained/cairo-menu/misc.c:161
+#: ../applets/maintained/yama/yama.py:584
+#, c-format, python-format
+msgid "Unable to mount %s"
+msgstr "Impossible de monter %s"
+
+#: ../applets/maintained/cairo-menu/misc.c:407
+#: ../applets/maintained/yama/yama.py:563
+msgid "Clear the Recent Documents list?"
+msgstr "Voulez-vous effacer la liste des documents récents ?"
+
+#. Translators: This is taken from gnome-panel, when deleting the Recent Documents List.
+#. * Please use the same translation.
+#: ../applets/maintained/cairo-menu/misc.c:411
+msgid ""
+"If you clear the Recent Documents list, you clear the following:\n"
+"• All items from the Places → Recent Documents menu item.\n"
+"• All items from the recent documents list in all applications."
+msgstr ""
+"Si vous videz la liste des documents récents, vous videz ce qui suit :\n"
+"• Tous les éléments du sous-menu Raccourcis → Documents récents.\n"
+"• Tous les éléments de la liste des documents récents de toutes les "
+"applications."
+
+#: ../applets/maintained/cairo-menu/misc.c:423
+#: ../applets/maintained/cairo-menu/misc.c:532
+#: ../applets/maintained/yama/yama.py:336
+#: ../applets/maintained/yama/yama.py:568
 msgid "Clear Recent Documents"
 msgstr "Videz la liste des documents récents"
 
@@ -852,7 +1058,7 @@ msgid "Calendar Appearance"
 msgstr "Apparence du calendrier"
 
 #: ../applets/maintained/calendar/calendarprefs.py:121
-#: ../applets/maintained/dialect/dialect.ui.h:82
+#: ../applets/maintained/dialect/dialect.ui.h:19
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:32
 msgid "None"
 msgstr "Aucun"
@@ -879,10 +1085,14 @@ msgstr "Lien du calendrier"
 
 #. default title/tooltip to show on startup.
 #: ../applets/maintained/calendar/clockcal.py:51
-#: ../applets/maintained/calendar/clockcal.py:491
+#: ../applets/maintained/calendar/clockcal.py:494
 #: ../applets/maintained/digital-clock/digital-clock.vala:119
 msgid "Calendar"
 msgstr "Calendrier"
+
+#: ../applets/maintained/calendar/clockcal.py:110
+msgid "Forget Password"
+msgstr "Oublier le mot de passe"
 
 #: ../applets/maintained/calendar/clockcal.py:218
 msgid ""
@@ -894,17 +1104,34 @@ msgstr ""
 "choisissez d'effacer votre mot de passe, celui-ci vous sera redemandé "
 "lorsque vous vous reconnecterez à votre calendrier."
 
-#: ../applets/maintained/calendar/clockcal.py:497
+#: ../applets/maintained/calendar/clockcal.py:246
+msgid "Avant Calendar Applet"
+msgstr ""
+
+#: ../applets/maintained/calendar/clockcal.py:248
+msgid "A Calendar Applet for the Avant Window Navigator. Images by Deleket."
+msgstr ""
+
+#. Translators: This is a date/time format string. You can check the
+#. output in terminal with 'date +"%x %X"'. In most cases you don't have
+#. to change it. See 'date --help' for other formats, that might be more
+#. common in your locale.
+#: ../applets/maintained/calendar/clockcal.py:293
+#, no-python-format
+msgid "%x %X"
+msgstr "%x %X"
+
+#: ../applets/maintained/calendar/clockcal.py:500
 msgid "Open in "
 msgstr "Ouvrir dans "
 
-#: ../applets/maintained/calendar/clockcal.py:501
-#: ../applets/maintained/weather/forecast.py:169
+#: ../applets/maintained/calendar/clockcal.py:504
+#: ../applets/maintained/weather/forecast.py:171
 msgid "Today"
 msgstr "Aujourd'hui"
 
 #. print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
-#: ../applets/maintained/calendar/clockcal.py:549
+#: ../applets/maintained/calendar/clockcal.py:552
 msgid "Unable to read calendar data from external source."
 msgstr ""
 "Impossible de lire les données du calendrier depuis la source externe."
@@ -988,7 +1215,7 @@ msgid "Failed to remove <i>%s</i>."
 msgstr "Échec de la suppression de <i>%s</i>."
 
 #: ../applets/maintained/comics/comics_manage.py:125
-#: ../applets/maintained/feeds/feeds.py:388
+#: ../applets/maintained/feeds/feeds.py:391
 msgid "Error"
 msgstr "Erreur"
 
@@ -1087,12 +1314,30 @@ msgid "Index of processor."
 msgstr "Index du processeur."
 
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:1
+#: ../applets/maintained/cpufreq/cpufreq.py:40
 msgid "An applet to monitor and control the CPU frequency"
 msgstr "Un applet pour voir et contrôler la fréquence du processeur"
 
 #: ../applets/maintained/cpufreq/cpufreq.desktop.in.h:2
+#: ../applets/maintained/cpufreq/cpufreq.py:39
 msgid "CPU Frequency Monitor"
 msgstr "Moniteur de fréquence du processeur"
+
+#: ../applets/maintained/cpufreq/cpufreq.py:233
+msgid ""
+"<span size=\"large\"><b>Scaling unavailable</b></span>\n"
+"\n"
+"Frequency scaling is not\n"
+"available for the selected CPU."
+msgstr ""
+
+#: ../applets/maintained/cpufreq/cpufreq.py:261
+msgid "GHz"
+msgstr "GHz"
+
+#: ../applets/maintained/cpufreq/cpufreq.py:264
+msgid "MHz"
+msgstr "MHz"
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:1
 msgid "<b>Monitored CPU</b>"
@@ -1103,16 +1348,17 @@ msgid "_Processor:"
 msgstr "_Processeur :"
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:1
-msgid " 0.9)."
-msgstr " 0.9)."
-
-#: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:2
-msgid " none)."
-msgstr " aucun)."
-
-#: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:3
 msgid "Can change layout with scroll wheel."
 msgstr "Peu changer la disposition avec la molette."
+
+#: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:2
+msgid "Flag opacity (min: 0.0, max: 0.9)."
+msgstr "Opacité du drapeau (min : 0.0, max : 0.9)."
+
+#: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:3
+msgid "Flag size compared to icon (min: 0.1, max: 0.9)."
+msgstr ""
+"Taille du drapeau par rapport à celle de l'icône (min : 0.1, max : 0.9)."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:4
 msgid ""
@@ -1122,14 +1368,24 @@ msgstr ""
 "préférences pour les valeurs)."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:5
+msgid "Left click action (0: previous, 1: menu, 2: next, 3: none)."
+msgstr ""
+"Action du clique gauche (0 : précédent, 1 : menu, 2 : suivant, 3 : rien)."
+
+#: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:6
+msgid "Middle click action (0: previous, 1: menu, 2: next, 3: none)."
+msgstr ""
+"Action du clique milieu (0 : précédent, 1 : menu, 2 : suivant, 3 : rien)."
+
+#: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:7
 msgid "Overlay selected layout flag on icon."
 msgstr "Superposer le drapeau correspondant à l'agencement sur l'icône."
 
-#: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:6
+#: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:8
 msgid "User selected layouts."
 msgstr "Dispositions sélectionnées par l'utilisateur."
 
-#: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:7
+#: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:9
 msgid "User selected variants."
 msgstr "Variantes sélectionnées par l'utilisateur."
 
@@ -1142,479 +1398,114 @@ msgid "Change your keyboard input layout from Awn."
 msgstr "Changer l'agencement de votre clavier depuis Awn."
 
 #: ../applets/maintained/dialect/dialect.ui.h:1
-msgid ""
-"\n"
-"DIALECT APPLET v 09.12.09\n"
-"\n"
-"(C) 2009, Lachlan Turner (Denham 2010)\n"
-"\n"
-"This applet allows you to change your keyboard input language with just a "
-"click of the mouse.\n"
-"You can select any of the available input languages on your system, or from "
-"a list you most commonly use.\n"
-"\n"
-"See the Mouse Actions and Layout Lists tabs for configuration options.\n"
-"\n"
-"The applet depends on the python xklavier module (available from "
-"http://download.sugarlabs.org/sources/external/python-xklavier/python-"
-"xklavier-0.1.tar.gz).\n"
-"\n"
-"This applet is licensed under GPL2. The flag icons distributed with this "
-"applet are from the xfce4-xkb-plugin-0.5.3.3 panel applet, licensed under "
-"the 2-clause BSD license. See the About dialog for licensing details.\n"
+msgid "<b>Flag on Applet Icon</b>"
+msgstr "<b>Drapeau sur l'icône de l'applet</b>"
+
+#: ../applets/maintained/dialect/dialect.ui.h:2
+msgid "<b>Keyboard</b>"
+msgstr "<b>Clavier</b>"
+
+#: ../applets/maintained/dialect/dialect.ui.h:3
+msgid "<b>Mouse Actions</b>"
 msgstr ""
 
-#: ../applets/maintained/dialect/dialect.ui.h:15
-msgid ""
-"\n"
-"Left Click:\n"
-"\n"
-"\tNext Layout\t\tselects the next layout in your user list.\n"
-"\tPrevious Layout\tselects the previous layout in your user list.\n"
-"\tMenu\t\t\tselect a layout from a menu of your user list.\n"
-"\tNone\t\t\tbutton will have no action.\n"
-"\n"
-"Middle Click:\n"
-"\n"
-"\tNext Layout\t\tselects the next layout in your user list.\n"
-"\tPrevious Layout\tselects the previous layout in your user list.\n"
-"\tMenu\t\t\tselect a layout from a menu of your user list.\n"
-"\tNone\t\t\tbutton will have no action.\n"
-"\n"
-"Allow scroll wheel to change layout:\n"
-"\n"
-"\tIf selected, scrolling up or down with your mouse wheel will select\n"
-"\tthe next or previous layout in your user list.\n"
-msgstr ""
-"\n"
-"Clic gauche :\n"
-"\n"
-"\tAgencement suivant\t\tsélectionne l'agencement suivant dans votre liste.\n"
-"\tAgencement précédent\tsélectionne l'agencement précédent dans votre "
-"liste.\n"
-"\tMenu\t\t\tsélectionner un agencement depuis un menu de votre liste.\n"
-"\tAucun\t\t\tle bouton n'aura aucun effet.\n"
-"\n"
-"Clic milieu :\n"
-"\n"
-"\tAgencement suivant\t\tsélectionne l'agencement suivant dans votre liste.\n"
-"\tAgencement précédent\tsélectionne l'agencement précédent dans votre "
-"liste.\n"
-"\tMenu\t\t\t\t\tsélectionner un agencement depuis un menu de votre liste.\n"
-"\tAucun\t\t\t\t\tle bouton n'aura aucun effet.\n"
-"\n"
-"Autoriser la molette à changer l'agencement :\n"
-"\n"
-"\tSi activé, la molette de la souris permet de sélectionner\n"
-"\t l'agencement suivant ou précédent dans votre liste.\n"
+#: ../applets/maintained/dialect/dialect.ui.h:4
+msgid "<i><small>large</small></i>"
+msgstr "<i><small>gros</small></i>"
 
-#: ../applets/maintained/dialect/dialect.ui.h:35
-msgid ""
-"\n"
-"Overlay layout flag on applet icon:\n"
-"\n"
-"\tIf selected, the flag of your selected layout will overlay the applet "
-"icon.\n"
-"\n"
-"Flag Scale:\n"
-"\n"
-"\tThe size of the flag in relation to the applet icon.\n"
-"\tPossible values range from 0.1 to 0.9\n"
-"\n"
-"Flag Opacity:\n"
-"\n"
-"\tRanging from 0.0 (flag is not visible) to 0.9 (flag is almost opaque).\n"
-msgstr ""
+#: ../applets/maintained/dialect/dialect.ui.h:5
+msgid "<i><small>opaque</small></i>"
+msgstr "<i><small>opaque</small></i>"
 
-#: ../applets/maintained/dialect/dialect.ui.h:49
-msgid ""
-"\n"
-"System List:\n"
-"\n"
-"\tThe complete list of layouts and variants available.\n"
-"\tSelect an item and click the add button to include in your user list.\n"
-"\n"
-"User List:\n"
-"\n"
-"\tThe list of layouts you commonly use.\n"
-"\tThe maximum number of layouts is restricted by the X11 xkb system "
-"(currently 4).\n"
-"\tSelect an item and click the remove button to delete from your user list.\n"
-"\tYou can order the list by drag and drop.\n"
-"\n"
-"Keyboard Toggle:\n"
-"\tSelects the hot key combination used to change layouts.\n"
-msgstr ""
+#: ../applets/maintained/dialect/dialect.ui.h:6
+msgid "<i><small>small</small></i>"
+msgstr "<i><small>petit</small></i>"
 
-#: ../applets/maintained/dialect/dialect.ui.h:65
-msgid "(C) 2009, Lachlan Turner (Denham 2010)."
-msgstr "(C) 2009, Lachlan Turner (Denham 2010)."
+#: ../applets/maintained/dialect/dialect.ui.h:7
+msgid "<i><small>transparent</small></i>"
+msgstr "<i><small>transparent</small></i>"
 
-#: ../applets/maintained/dialect/dialect.ui.h:66
+#: ../applets/maintained/dialect/dialect.ui.h:8
 msgid "About Dialect Applet"
 msgstr "À propos de l'applet dialecte"
 
-#: ../applets/maintained/dialect/dialect.ui.h:67
-msgid "Allow scroll wheel to change layout"
-msgstr "Autoriser la molette pour changer l'agencement"
+#: ../applets/maintained/dialect/dialect.ui.h:9
+#: ../applets/maintained/digital-clock/dg-prefs.ui.h:5
+msgid "Appearance"
+msgstr "Apparence"
 
-#: ../applets/maintained/dialect/dialect.ui.h:68
+#: ../applets/maintained/dialect/dialect.ui.h:10
 msgid "Change your keyboard layout from Awn."
 msgstr "Changer l'agencement de votre clavier depuis Awn."
 
-#: ../applets/maintained/dialect/dialect.ui.h:69
-msgid "Dialect Applet Help"
-msgstr "Aide de l'applet dialecte"
+#: ../applets/maintained/dialect/dialect.ui.h:11
+msgid "Control"
+msgstr "Contrôle"
 
-#: ../applets/maintained/dialect/dialect.ui.h:70
+#: ../applets/maintained/dialect/dialect.ui.h:12
 msgid "Dialect Applet Preferences"
 msgstr "Préférences de l'applet dialecte"
 
-#: ../applets/maintained/dialect/dialect.ui.h:71
-msgid "Flag Opacity"
-msgstr "Opacité du drapeau"
+#: ../applets/maintained/dialect/dialect.ui.h:13
+msgid "Flag _Opacity:"
+msgstr "_Opacité du drapeau :"
 
-#: ../applets/maintained/dialect/dialect.ui.h:72
-msgid "Flag Overlay"
-msgstr "Superposition du drapeau"
+#: ../applets/maintained/dialect/dialect.ui.h:14
+msgid "Flag _Size:"
+msgstr "_Taille du drapeau :"
 
-#: ../applets/maintained/dialect/dialect.ui.h:73
-msgid "Flag Scale"
-msgstr "Taille du drapeau"
-
-#: ../applets/maintained/dialect/dialect.ui.h:75
-msgid "Keyboard Toggle"
-msgstr ""
-
-#: ../applets/maintained/dialect/dialect.ui.h:76
-msgid "Layout Lists"
-msgstr "Listes des dispositons"
-
-#: ../applets/maintained/dialect/dialect.ui.h:77
-#: ../applets/maintained/file-browser-launcher/prefs.py:318
-msgid "Left Click"
-msgstr "Clic gauche"
-
-#: ../applets/maintained/dialect/dialect.ui.h:78
-msgid "Menu"
-msgstr "Menu"
-
-#: ../applets/maintained/dialect/dialect.ui.h:79
-#: ../applets/maintained/file-browser-launcher/prefs.py:393
-msgid "Middle Click"
-msgstr "Clic milieu"
-
-#: ../applets/maintained/dialect/dialect.ui.h:80
-msgid "Mouse Actions"
-msgstr "Actions de la souris"
-
-#: ../applets/maintained/dialect/dialect.ui.h:81
-msgid "Next Layout"
-msgstr "Agencement suivant"
-
-#: ../applets/maintained/dialect/dialect.ui.h:83
-msgid "Overlay layout flag on applet icon"
-msgstr "Superposer le drapeau de l'agencement sur l'icône de l'applet"
-
-#: ../applets/maintained/dialect/dialect.ui.h:84
-msgid "Previous Layout"
-msgstr "Agencement précédent"
-
-#: ../applets/maintained/dialect/dialect.ui.h:85
-msgid "System List"
-msgstr "Liste du système"
-
-#: ../applets/maintained/dialect/dialect.ui.h:86
+#. A tooltip, layout = keyboard layout
+#: ../applets/maintained/dialect/dialect.ui.h:16
 msgid ""
-"This program is free software; you can redistribute it and/or modify it "
-"under the terms of the GNU General Public License as published by the Free "
-"Software Foundation; either version 2 of the License, or (at your option) "
-"any later version.\n"
-"\n"
-"This program is distributed in the hope that it will be useful, but WITHOUT "
-"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
-"FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
-"more details.\n"
-"\n"
-"You should have received a copy of the GNU General Public License along with "
-"this program; if not, write to the Free Software Foundation, Inc., 51 "
-"Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA\n"
-"\n"
-"\t\t    GNU GENERAL PUBLIC LICENSE\n"
-"\t\t       Version 2, June 1991\n"
-"\n"
-" Copyright (C) 1989, 1991 Free Software Foundation, Inc.,\n"
-" 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA\n"
-" Everyone is permitted to copy and distribute verbatim copies\n"
-" of this license document, but changing it is not allowed.\n"
-"\n"
-"\t\t\t    Preamble\n"
-"\n"
-"  The licenses for most software are designed to take away your freedom to "
-"share and change it.  By contrast, the GNU General Public License is "
-"intended to guarantee your freedom to share and change free software--to "
-"make sure the software is free for all its users.  This General Public "
-"License applies to most of the Free Software Foundation's software and to "
-"any other program whose authors commit to using it.  (Some other Free "
-"Software Foundation software is covered by the GNU Lesser General Public "
-"License instead.)  You can apply it to your programs, too.\n"
-"\n"
-"  When we speak of free software, we are referring to freedom, not price.  "
-"Our General Public Licenses are designed to make sure that you have the "
-"freedom to distribute copies of free software (and charge for this service "
-"if you wish), that you receive source code or can get it if you want it, "
-"that you can change the software or use pieces of it in new free programs; "
-"and that you know you can do these things.\n"
-"\n"
-"  To protect your rights, we need to make restrictions that forbid anyone to "
-"deny you these rights or to ask you to surrender the rights. These "
-"restrictions translate to certain responsibilities for you if you distribute "
-"copies of the software, or if you modify it.\n"
-"\n"
-"  For example, if you distribute copies of such a program, whether gratis or "
-"for a fee, you must give the recipients all the rights that you have.  You "
-"must make sure that they, too, receive or can get the source code.  And you "
-"must show them these terms so they know their rights.\n"
-"\n"
-"  We protect your rights with two steps: (1) copyright the software, and (2) "
-"offer you this license which gives you legal permission to copy, distribute "
-"and/or modify the software.\n"
-"\n"
-"  Also, for each author's protection and ours, we want to make certain that "
-"everyone understands that there is no warranty for this free software.  If "
-"the software is modified by someone else and passed on, we want its "
-"recipients to know that what they have is not the original, so that any "
-"problems introduced by others will not reflect on the original authors' "
-"reputations.\n"
-"\n"
-"  Finally, any free program is threatened constantly by software patents.  "
-"We wish to avoid the danger that redistributors of a free program will "
-"individually obtain patent licenses, in effect making the program "
-"proprietary.  To prevent this, we have made it clear that any patent must be "
-"licensed for everyone's free use or not licensed at all.\n"
-"\n"
-"  The precise terms and conditions for copying, distribution and "
-"modification follow.\n"
-"\n"
-"\t\t    GNU GENERAL PUBLIC LICENSE\n"
-"   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION\n"
-"\n"
-"  0. This License applies to any program or other work which contains a "
-"notice placed by the copyright holder saying it may be distributed under the "
-"terms of this General Public License.  The \"Program\", below, refers to any "
-"such program or work, and a \"work based on the Program\" means either the "
-"Program or any derivative work under copyright law: that is to say, a work "
-"containing the Program or a portion of it, either verbatim or with "
-"modifications and/or translated into another language.  (Hereinafter, "
-"translation is included without limitation in the term \"modification\".)  "
-"Each licensee is addressed as \"you\".\n"
-"\n"
-"Activities other than copying, distribution and modification are not covered "
-"by this License; they are outside its scope.  The act of running the Program "
-"is not restricted, and the output from the Program is covered only if its "
-"contents constitute a work based on the Program (independent of having been "
-"made by running the Program). Whether that is true depends on what the "
-"Program does.\n"
-"\n"
-"  1. You may copy and distribute verbatim copies of the Program's source "
-"code as you receive it, in any medium, provided that you conspicuously and "
-"appropriately publish on each copy an appropriate copyright notice and "
-"disclaimer of warranty; keep intact all the notices that refer to this "
-"License and to the absence of any warranty; and give any other recipients of "
-"the Program a copy of this License along with the Program.\n"
-"\n"
-"You may charge a fee for the physical act of transferring a copy, and you "
-"may at your option offer warranty protection in exchange for a fee.\n"
-"\n"
-"  2. You may modify your copy or copies of the Program or any portion of it, "
-"thus forming a work based on the Program, and copy and distribute such "
-"modifications or work under the terms of Section 1 above, provided that you "
-"also meet all of these conditions:\n"
-"\n"
-"    a) You must cause the modified files to carry prominent notices\n"
-"    stating that you changed the files and the date of any change.\n"
-"\n"
-"    b) You must cause any work that you distribute or publish, that in\n"
-"    whole or in part contains or is derived from the Program or any\n"
-"    part thereof, to be licensed as a whole at no charge to all third\n"
-"    parties under the terms of this License.\n"
-"\n"
-"    c) If the modified program normally reads commands interactively\n"
-"    when run, you must cause it, when started running for such\n"
-"    interactive use in the most ordinary way, to print or display an\n"
-"    announcement including an appropriate copyright notice and a\n"
-"    notice that there is no warranty (or else, saying that you provide\n"
-"    a warranty) and that users may redistribute the program under\n"
-"    these conditions, and telling the user how to view a copy of this\n"
-"    License.  (Exception: if the Program itself is interactive but\n"
-"    does not normally print such an announcement, your work based on\n"
-"    the Program is not required to print an announcement.)\n"
-"\n"
-"These requirements apply to the modified work as a whole.  If identifiable "
-"sections of that work are not derived from the Program, and can be "
-"reasonably considered independent and separate works in themselves, then "
-"this License, and its terms, do not apply to those sections when you "
-"distribute them as separate works.  But when you distribute the same "
-"sections as part of a whole which is a work based on the Program, the "
-"distribution of the whole must be on the terms of this License, whose "
-"permissions for other licensees extend to the entire whole, and thus to each "
-"and every part regardless of who wrote it.\n"
-"\n"
-"Thus, it is not the intent of this section to claim rights or contest your "
-"rights to work written entirely by you; rather, the intent is to exercise "
-"the right to control the distribution of derivative or collective works "
-"based on the Program.\n"
-"\n"
-"In addition, mere aggregation of another work not based on the Program with "
-"the Program (or with a work based on the Program) on a volume of a storage "
-"or distribution medium does not bring the other work under the scope of this "
-"License.\n"
-"\n"
-"  3. You may copy and distribute the Program (or a work based on it, under "
-"Section 2) in object code or executable form under the terms of Sections 1 "
-"and 2 above provided that you also do one of the following:\n"
-"\n"
-"    a) Accompany it with the complete corresponding machine-readable\n"
-"    source code, which must be distributed under the terms of Sections\n"
-"    1 and 2 above on a medium customarily used for software interchange; "
-"or,\n"
-"\n"
-"    b) Accompany it with a written offer, valid for at least three\n"
-"    years, to give any third party, for a charge no more than your\n"
-"    cost of physically performing source distribution, a complete\n"
-"    machine-readable copy of the corresponding source code, to be\n"
-"    distributed under the terms of Sections 1 and 2 above on a medium\n"
-"    customarily used for software interchange; or,\n"
-"\n"
-"    c) Accompany it with the information you received as to the offer\n"
-"    to distribute corresponding source code.  (This alternative is\n"
-"    allowed only for noncommercial distribution and only if you\n"
-"    received the program in object code or executable form with such\n"
-"    an offer, in accord with Subsection b above.)\n"
-"\n"
-"The source code for a work means the preferred form of the work for making "
-"modifications to it.  For an executable work, complete source code means all "
-"the source code for all modules it contains, plus any associated interface "
-"definition files, plus the scripts used to control compilation and "
-"installation of the executable.  However, as a special exception, the source "
-"code distributed need not include anything that is normally distributed (in "
-"either source or binary form) with the major components (compiler, kernel, "
-"and so on) of the operating system on which the executable runs, unless that "
-"component itself accompanies the executable.\n"
-"\n"
-"If distribution of executable or object code is made by offering access to "
-"copy from a designated place, then offering equivalent access to copy the "
-"source code from the same place counts as distribution of the source code, "
-"even though third parties are not compelled to copy the source along with "
-"the object code.\n"
-"\n"
-"  4. You may not copy, modify, sublicense, or distribute the Program except "
-"as expressly provided under this License.  Any attempt otherwise to copy, "
-"modify, sublicense or distribute the Program is void, and will automatically "
-"terminate your rights under this License. However, parties who have received "
-"copies, or rights, from you under this License will not have their licenses "
-"terminated so long as such parties remain in full compliance.\n"
-"\n"
-"  5. You are not required to accept this License, since you have not signed "
-"it.  However, nothing else grants you permission to modify or distribute the "
-"Program or its derivative works.  These actions are prohibited by law if you "
-"do not accept this License.  Therefore, by modifying or distributing the "
-"Program (or any work based on the Program), you indicate your acceptance of "
-"this License to do so, and all its terms and conditions for copying, "
-"distributing or modifying the Program or works based on it.\n"
-"\n"
-"  6. Each time you redistribute the Program (or any work based on the "
-"Program), the recipient automatically receives a license from the original "
-"licensor to copy, distribute or modify the Program subject to these terms "
-"and conditions.  You may not impose any further restrictions on the "
-"recipients' exercise of the rights granted herein. You are not responsible "
-"for enforcing compliance by third parties to this License.\n"
-"\n"
-"  7. If, as a consequence of a court judgment or allegation of patent "
-"infringement or for any other reason (not limited to patent issues), "
-"conditions are imposed on you (whether by court order, agreement or "
-"otherwise) that contradict the conditions of this License, they do not "
-"excuse you from the conditions of this License.  If you cannot distribute so "
-"as to satisfy simultaneously your obligations under this License and any "
-"other pertinent obligations, then as a consequence you may not distribute "
-"the Program at all.  For example, if a patent license would not permit "
-"royalty-free redistribution of the Program by all those who receive copies "
-"directly or indirectly through you, then the only way you could satisfy both "
-"it and this License would be to refrain entirely from distribution of the "
-"Program.\n"
-"\n"
-"If any portion of this section is held invalid or unenforceable under any "
-"particular circumstance, the balance of the section is intended to apply and "
-"the section as a whole is intended to apply in other circumstances.\n"
-"\n"
-"It is not the purpose of this section to induce you to infringe any patents "
-"or other property right claims or to contest validity of any such claims; "
-"this section has the sole purpose of protecting the integrity of the free "
-"software distribution system, which is implemented by public license "
-"practices.  Many people have made generous contributions to the wide range "
-"of software distributed through that system in reliance on consistent "
-"application of that system; it is up to the author/donor to decide if he or "
-"she is willing to distribute software through any other system and a "
-"licensee cannot impose that choice.\n"
-"\n"
-"This section is intended to make thoroughly clear what is believed to be a "
-"consequence of the rest of this License.\n"
-"\n"
-"  8. If the distribution and/or use of the Program is restricted in certain "
-"countries either by patents or by copyrighted interfaces, the original "
-"copyright holder who places the Program under this License may add an "
-"explicit geographical distribution limitation excluding those countries, so "
-"that distribution is permitted only in or among countries not thus excluded. "
-" In such case, this License incorporates the limitation as if written in the "
-"body of this License.\n"
-"\n"
-"  9. The Free Software Foundation may publish revised and/or new versions of "
-"the General Public License from time to time.  Such new versions will be "
-"similar in spirit to the present version, but may differ in detail to "
-"address new problems or concerns.\n"
-"\n"
-"Each version is given a distinguishing version number.  If the Program "
-"specifies a version number of this License which applies to it and \"any "
-"later version\", you have the option of following the terms and conditions "
-"either of that version or of any later version published by the Free "
-"Software Foundation.  If the Program does not specify a version number of "
-"this License, you may choose any version ever published by the Free Software "
-"Foundation.\n"
-"\n"
-"  10. If you wish to incorporate parts of the Program into other free "
-"programs whose distribution conditions are different, write to the author to "
-"ask for permission.  For software which is copyrighted by the Free Software "
-"Foundation, write to the Free Software Foundation; we sometimes make "
-"exceptions for this.  Our decision will be guided by the two goals of "
-"preserving the free status of all derivatives of our free software and of "
-"promoting the sharing and reuse of software generally.\n"
-"\n"
-"\t\t\t    NO WARRANTY\n"
-"\n"
-"  11. BECAUSE THE PROGRAM IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY "
-"FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW.  EXCEPT WHEN "
-"OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES "
-"PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED "
-"OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF "
-"MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS TO "
-"THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.  SHOULD THE PROGRAM "
-"PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR "
-"CORRECTION.\n"
-"\n"
-"  12. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING "
-"WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR "
-"REDISTRIBUTE THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, "
-"INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING "
-"OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO "
-"LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR "
-"THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER "
-"PROGRAMS), EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE "
-"POSSIBILITY OF SUCH DAMAGES."
+"If selected, scrolling up or down with your mouse wheel will select the next "
+"or previous layout in your user list"
 msgstr ""
 
-#: ../applets/maintained/dialect/dialect.ui.h:206
-msgid "User List"
-msgstr "Liste des utilisateurs"
+#. Keyboard layouts
+#: ../applets/maintained/dialect/dialect.ui.h:18
+msgid "Layouts"
+msgstr "Agencements"
+
+#. A tooltip, layouts = keyboard layouts
+#: ../applets/maintained/dialect/dialect.ui.h:21
+msgid "Selects the hot key combination used to change layouts"
+msgstr ""
+
+#: ../applets/maintained/dialect/dialect.ui.h:22
+msgid "Show _Flag"
+msgstr ""
+
+#: ../applets/maintained/dialect/dialect.ui.h:23
+msgid "Show menu with layouts"
+msgstr ""
+
+#: ../applets/maintained/dialect/dialect.ui.h:24
+msgid "Switch to next layout in list"
+msgstr ""
+
+#: ../applets/maintained/dialect/dialect.ui.h:25
+msgid "Switch to previous layout in list"
+msgstr ""
+
+#: ../applets/maintained/dialect/dialect.ui.h:26
+msgid "_Add"
+msgstr "_Ajouter"
+
+#: ../applets/maintained/dialect/dialect.ui.h:27
+msgid "_Allow scroll wheel to change layout"
+msgstr "_Autoriser le changement d'agencement avec la molette"
+
+#: ../applets/maintained/dialect/dialect.ui.h:28
+msgid "_Keyboard Toggle:"
+msgstr ""
+
+#: ../applets/maintained/dialect/dialect.ui.h:29
+msgid "_Left Click:"
+msgstr "Clique _gauche :"
+
+#: ../applets/maintained/dialect/dialect.ui.h:30
+msgid "_Middle Click:"
+msgstr "Clique _milieu :"
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:1
 msgid "Command to execute when a calendar day is double-clicked."
@@ -1656,10 +1547,6 @@ msgstr "Format 24 heures"
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:3
 msgid "<b>Clock Format</b>"
 msgstr "<b>Format de l'horloge</b>"
-
-#: ../applets/maintained/digital-clock/dg-prefs.ui.h:5
-msgid "Appearance"
-msgstr "Apparence"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:6
 msgid "Commands"
@@ -1719,84 +1606,92 @@ msgstr "Affiche une horloge digitale."
 
 #. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
 #: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:1
+msgid "Hide feeds which do not have any new items"
+msgstr ""
+
+#: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:2
+msgid "If false, all previous items will be marked as read when updating"
+msgstr ""
+
+#: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:3
 msgid "Notify if any feeds have new items"
 msgstr "Notifie au moindre nouvel élément dans un flux"
 
-#: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:2
+#: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:4
 msgid "Show each feed's website's icon in the dialog"
 msgstr "Montrer l'icône du site dans la boite de dialogue"
 
-#: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:3
+#: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:5
 msgid "The interval (in minutes) at which to update (3-60)"
 msgstr "Intervalle (en minutes) entre les mises-à-jour (3-60)"
 
-#: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:4
+#: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:6
 msgid "Update automatically at a configurable interval"
 msgstr ""
 "Se met à jour automatiquement avec un intervalle de temps configurable"
 
-#: ../applets/maintained/feeds/classes.py:328
+#: ../applets/maintained/feeds/classes.py:366
 msgid "Google"
 msgstr "Google"
 
-#: ../applets/maintained/feeds/classes.py:488
-#: ../applets/maintained/feeds/prefs.py:516
+#: ../applets/maintained/feeds/classes.py:532
+#: ../applets/maintained/feeds/prefs.py:535
 msgid "Google Reader"
 msgstr "Google Reader"
 
-#: ../applets/maintained/feeds/classes.py:533
+#: ../applets/maintained/feeds/classes.py:578
 msgid "Google Wave"
 msgstr "Google Wave"
 
-#: ../applets/maintained/feeds/classes.py:619
+#: ../applets/maintained/feeds/classes.py:664
 msgid "Reddit Inbox"
 msgstr "Reddit : boite de réception"
 
-#: ../applets/maintained/feeds/classes.py:720
+#: ../applets/maintained/feeds/classes.py:764
 #, python-format
 msgid "Comment reply from %s"
 msgstr "%s a répondu à un commentaire"
 
-#: ../applets/maintained/feeds/classes.py:723
+#: ../applets/maintained/feeds/classes.py:767
 #, python-format
 msgid "Post reply from %s"
 msgstr "%s a répondu à un message"
 
-#: ../applets/maintained/feeds/classes.py:765
-#: ../applets/maintained/feeds/prefs.py:410
+#: ../applets/maintained/feeds/classes.py:810
+#: ../applets/maintained/feeds/prefs.py:429
 msgid "Twitter"
 msgstr "Twitter"
 
-#: ../applets/maintained/feeds/classes.py:892
+#: ../applets/maintained/feeds/classes.py:937
 msgid "Untitled"
 msgstr "Sans titre"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:1
-#: ../applets/maintained/feeds/feeds.py:241
-#: ../applets/maintained/feeds/feeds.py:404
-#: ../applets/maintained/feeds/feeds.py:480
-#: ../applets/maintained/feeds/feeds.py:1031
+#: ../applets/maintained/feeds/feeds.py:243
+#: ../applets/maintained/feeds/feeds.py:409
+#: ../applets/maintained/feeds/feeds.py:493
+#: ../applets/maintained/feeds/feeds.py:1109
 msgid "Feeds Applet"
 msgstr "Applet flux"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
-#: ../applets/maintained/feeds/feeds.py:1036
+#: ../applets/maintained/feeds/feeds.py:1114
 msgid "Monitor Web Feeds"
 msgstr "Surveiller des flux sur Internet"
 
 #. "Loading feeds..." label
-#: ../applets/maintained/feeds/feeds.py:96
-#: ../applets/maintained/feeds/feeds.py:153
-#: ../applets/maintained/feeds/feeds.py:230
+#: ../applets/maintained/feeds/feeds.py:98
+#: ../applets/maintained/feeds/feeds.py:155
+#: ../applets/maintained/feeds/feeds.py:232
 msgid "Loading feeds..."
 msgstr "Chargement des flux..."
 
 #. No feeds label
-#: ../applets/maintained/feeds/feeds.py:160
+#: ../applets/maintained/feeds/feeds.py:162
 msgid "You don't have any feeds."
 msgstr "Vous n'avez aucun flux."
 
-#: ../applets/maintained/feeds/feeds.py:472
+#: ../applets/maintained/feeds/feeds.py:484
 #, python-format
 msgid ""
 "%s\n"
@@ -1809,182 +1704,194 @@ msgstr ""
 "  <a href='%s'>%s</a>\n"
 "(%s plus)\n"
 
-#: ../applets/maintained/feeds/feeds.py:481
+#: ../applets/maintained/feeds/feeds.py:494
 #, python-format
-msgid "%s New Item%s - Feeds Applet"
-msgstr "%s Nouveaux éléments%s - Applet flux"
+msgid "%s New Item - Feeds Applet"
+msgid_plural "%s New Items - Feeds Applet"
+msgstr[0] ""
+msgstr[1] ""
 
 #. +Add Feed button
-#: ../applets/maintained/feeds/feeds.py:518
+#: ../applets/maintained/feeds/feeds.py:532
 msgid "_Add Feed"
 msgstr "_Ajouter un flux"
 
-#: ../applets/maintained/feeds/feeds.py:567
+#: ../applets/maintained/feeds/feeds.py:581
 msgid "Open this feed's website"
 msgstr "Aller sur le site de ce flux"
 
-#: ../applets/maintained/feeds/feeds.py:576
-#: ../applets/maintained/feeds/prefs.py:257
+#: ../applets/maintained/feeds/feeds.py:590
+#: ../applets/maintained/feeds/prefs.py:276
 msgid "Loading..."
 msgstr "Chargement…"
 
-#: ../applets/maintained/feeds/feeds.py:614
-#: ../applets/maintained/feeds/feeds.py:773
+#: ../applets/maintained/feeds/feeds.py:628
+#: ../applets/maintained/feeds/feeds.py:787
 msgid "Show this feed's items"
 msgstr "Montrer les éléments de ce flux"
 
-#: ../applets/maintained/feeds/feeds.py:763
+#: ../applets/maintained/feeds/feeds.py:777
 msgid "Hide this feed's items"
 msgstr "Cacher les éléments de ce flux"
 
 #. Create the items
-#: ../applets/maintained/feeds/feeds.py:991
-#: ../applets/maintained/feeds/prefs.py:341
+#: ../applets/maintained/feeds/feeds.py:1033
+#: ../applets/maintained/feeds/prefs.py:360
 msgid "Add Feed"
 msgstr "Ajouter un flux"
 
-#: ../applets/maintained/feeds/feeds.py:1079
+#: ../applets/maintained/feeds/feeds.py:1035
+msgid "Show Only _New Feeds"
+msgstr ""
+
+#: ../applets/maintained/feeds/feeds.py:1157
 msgid "OPML Import"
 msgstr "Import OPML"
 
-#: ../applets/maintained/feeds/feeds.py:1083
-msgid "Do you want to add this feed?"
-msgstr "Voulez vous ajouter ce flux ?"
-
-#: ../applets/maintained/feeds/feeds.py:1086
+#: ../applets/maintained/feeds/feeds.py:1160
 #, python-format
-msgid "Do you want to add these %s feeds?"
-msgstr "Voulez vous ajouter ces %s flux ?"
+msgid "Do you want to add %d feed?"
+msgid_plural "Do you want to add %d feeds?"
+msgstr[0] ""
+msgstr[1] ""
 
-#: ../applets/maintained/feeds/prefs.py:58
+#: ../applets/maintained/feeds/prefs.py:59
 msgid "Feeds Applet Preferences"
 msgstr "Préférences de l'applet flux"
 
-#: ../applets/maintained/feeds/prefs.py:68
+#: ../applets/maintained/feeds/prefs.py:69
 msgid "Feeds"
 msgstr "Flux"
 
-#: ../applets/maintained/feeds/prefs.py:69
+#: ../applets/maintained/feeds/prefs.py:70
 msgid "Updating"
 msgstr "Mise à jour en cours"
 
-#: ../applets/maintained/feeds/prefs.py:108
+#: ../applets/maintained/feeds/prefs.py:109
 msgid "_Show website icons"
 msgstr "_Montrer les icônes des sites"
 
+#: ../applets/maintained/feeds/prefs.py:114
+msgid "Show _only new feeds"
+msgstr ""
+
 #. TODO: this position is a little ugly, but I don't know how to do it better.
 #. Import and export buttons (OPML)
-#: ../applets/maintained/feeds/prefs.py:115
+#: ../applets/maintained/feeds/prefs.py:121
 msgid "Import"
 msgstr "Importer"
 
-#: ../applets/maintained/feeds/prefs.py:118
+#: ../applets/maintained/feeds/prefs.py:124
 msgid "Export"
 msgstr "Exporter"
 
 #. Updating section (enable/disable automatically updating and change how often)
 #. Checkbox: Notify for updated feeds
-#: ../applets/maintained/feeds/prefs.py:144
+#: ../applets/maintained/feeds/prefs.py:151
 msgid "_Notify for updated feeds"
 msgstr "_Notifier les flux mis à jour"
 
 #. Checkbox: Update automatically
-#: ../applets/maintained/feeds/prefs.py:150
+#: ../applets/maintained/feeds/prefs.py:157
 msgid "_Update automatically"
 msgstr "_Mettre à jour automatiquement"
 
 #. Update every [SpinButton] minutes
-#: ../applets/maintained/feeds/prefs.py:156
+#: ../applets/maintained/feeds/prefs.py:163
 msgid "Update every "
 msgstr "Mettre à jour toutes les "
 
-#: ../applets/maintained/feeds/prefs.py:157
+#: ../applets/maintained/feeds/prefs.py:164
 msgid " minutes"
 msgstr " minutes"
 
-#: ../applets/maintained/feeds/prefs.py:264
+#: ../applets/maintained/feeds/prefs.py:176
+msgid "Keep items unread when updating"
+msgstr ""
+
+#: ../applets/maintained/feeds/prefs.py:283
 msgid "Open OPML File"
 msgstr "Ouvrir un fichier OPML"
 
-#: ../applets/maintained/feeds/prefs.py:278
+#: ../applets/maintained/feeds/prefs.py:297
 msgid "Save OPML File"
 msgstr "Sauvegarder un fichier OPML"
 
 #. Note: the following string is used as an exmaple filename
-#: ../applets/maintained/feeds/prefs.py:284
+#: ../applets/maintained/feeds/prefs.py:303
 msgid "feeds.opml"
 msgstr "flux.opml"
 
-#: ../applets/maintained/feeds/prefs.py:295
+#: ../applets/maintained/feeds/prefs.py:314
 msgid "Awn Feeds Applet Items"
 msgstr "Éléments de l'applet flux de Awn"
 
 #. Source: label and radio buttons
-#: ../applets/maintained/feeds/prefs.py:345
+#: ../applets/maintained/feeds/prefs.py:364
 msgid "Source:"
 msgstr "Source :"
 
-#: ../applets/maintained/feeds/prefs.py:355
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:594
-#: ../applets/maintained/tomboy-applet/tomboy-applet.py:157
+#: ../applets/maintained/feeds/prefs.py:374
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:151
 msgid "Search"
 msgstr "Rechercher"
 
-#: ../applets/maintained/feeds/prefs.py:358
+#: ../applets/maintained/feeds/prefs.py:377
 msgid "You must sign in to a Google service to search for feeds."
 msgstr "Vous devez vous inscrire à un service Google pour chercher des flux."
 
-#: ../applets/maintained/feeds/prefs.py:367
+#: ../applets/maintained/feeds/prefs.py:386
 msgid "RSS/Atom"
 msgstr "RSS/Atom"
 
-#: ../applets/maintained/feeds/prefs.py:412
+#: ../applets/maintained/feeds/prefs.py:431
 msgid "Timeline"
 msgstr "Chronologie"
 
-#: ../applets/maintained/feeds/prefs.py:417
+#: ../applets/maintained/feeds/prefs.py:436
 msgid "Replies"
 msgstr "Réponses"
 
 #. "Search for" label and entry
-#: ../applets/maintained/feeds/prefs.py:446
+#: ../applets/maintained/feeds/prefs.py:465
 msgid "Search for"
 msgstr "Rechercher"
 
 #. URL: label and entry
-#: ../applets/maintained/feeds/prefs.py:460
+#: ../applets/maintained/feeds/prefs.py:479
 #: ../applets/maintained/webapplet/applet.c:276
 msgid "URL:"
 msgstr "Lien :"
 
 #. Username: label and entry
-#: ../applets/maintained/feeds/prefs.py:474
-#: ../applets/maintained/mail/mail.py:393
-#: ../applets/maintained/mail/mail.py:630
-#: ../applets/maintained/mail/mail.py:758
-#: ../applets/maintained/mail/mail.py:851
+#: ../applets/maintained/feeds/prefs.py:493
+#: ../applets/maintained/mail/mail.py:384
+#: ../applets/maintained/mail/mail.py:643
+#: ../applets/maintained/mail/mail.py:796
+#: ../applets/maintained/mail/mail.py:890
 msgid "Username:"
-msgstr "Identifiant:"
+msgstr "Identifiant :"
 
 #. Password: label and entry
-#: ../applets/maintained/feeds/prefs.py:488
-#: ../applets/maintained/mail/mail.py:397
-#: ../applets/maintained/mail/mail.py:633
-#: ../applets/maintained/mail/mail.py:761
-#: ../applets/maintained/mail/mail.py:854
+#: ../applets/maintained/feeds/prefs.py:507
+#: ../applets/maintained/mail/mail.py:388
+#: ../applets/maintained/mail/mail.py:646
+#: ../applets/maintained/mail/mail.py:799
+#: ../applets/maintained/mail/mail.py:893
 msgid "Password:"
-msgstr "Mot de passe:"
+msgstr "Mot de passe :"
 
-#: ../applets/maintained/feeds/prefs.py:515
+#: ../applets/maintained/feeds/prefs.py:534
 msgid "Feed search by "
 msgstr "Rechercher les flux par "
 
 #. If signed in to Google Reader
-#: ../applets/maintained/feeds/prefs.py:553
+#: ../applets/maintained/feeds/prefs.py:572
 msgid "_Search"
 msgstr "_Recherche"
 
-#: ../applets/maintained/feeds/prefs.py:760
+#: ../applets/maintained/feeds/prefs.py:776
 msgid ""
 "There was an error while searching.\n"
 "Please try again later."
@@ -1992,7 +1899,7 @@ msgstr ""
 "Une erreur est survenue lors de la recherche.\n"
 "Veuillez réessayer plus tard."
 
-#: ../applets/maintained/feeds/prefs.py:810
+#: ../applets/maintained/feeds/prefs.py:826
 msgid ""
 "No results found.\n"
 "Try checking your spelling or using different search terms."
@@ -2011,8 +1918,10 @@ msgid "A customizable launcher for browsing your files."
 msgstr "Un lanceur personnalisable pour explorer vos fichiers."
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:1
-msgid " persistent docklet"
-msgstr " docklet persistant"
+msgid ""
+"0: one icon with dialog; 1: one icon with docklet on click; 2: persistent "
+"docklet"
+msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:2
 msgid "The action to perform on left click"
@@ -2055,14 +1964,22 @@ msgid "Whether or not to display the Filesystem"
 msgstr "Afficher (ou non) le système de fichier"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:12
+msgid "Whether or not to display the Trash"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:13
+msgid "Whether or not to display the computer"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:14
 msgid "Whether or not to display the home folder"
 msgstr "Afficher (ou non) le dossier personnel"
 
-#: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:13
+#: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:15
 msgid "Whether or not to focus the location text box"
 msgstr "Donner (ou non) le focus à la zone de recherche"
 
-#: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:14
+#: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:16
 msgid "Whether or not to open the place when clicked"
 msgstr "Ouvrir (ou non) l'emplacement lors du clic"
 
@@ -2070,160 +1987,157 @@ msgstr "Ouvrir (ou non) l'emplacement lors du clic"
 msgid "A launcher for your file manager"
 msgstr "Lanceur pour votre navigateur de fichier"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:346
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:385
+#: ../applets/maintained/yama/yama.py:253
 msgid "Home Folder"
 msgstr "Dossier personnel"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:350
-#: ../applets/maintained/file-browser-launcher/prefs.py:223
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:389
+#: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Filesystem"
 msgstr "Système de Fichiers"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:473
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:518
+#: ../applets/maintained/yama/yama.py:306
 msgid "Connect to Server..."
 msgstr "Se connecter à un serveur…"
 
-#. Documents
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:524
-msgid "Documents"
-msgstr "Documents"
-
-#. Downloads
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:528
-msgid "Downloads"
-msgstr "Téléchargements"
-
-#. Music
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:532
-msgid "Music"
-msgstr "Musique"
-
-#. Pictures
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:536
-#: ../applets/maintained/slickswitcher/prefs.py:347
-msgid "Pictures"
-msgstr "Images"
-
-#. Public
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:540
-msgid "Public"
-msgstr "Public"
-
-#. Templates
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:544
-msgid "Templates"
-msgstr "Modèles"
-
-#. Videos
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:548
-msgid "Videos"
-msgstr "Vidéos"
-
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:597
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:594
 msgid "CD/DVD Burner"
 msgstr "Graveur de CD/DVD"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:600
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:597
 msgid "Fonts"
 msgstr "Polices de caractères"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:604
-#: ../applets/maintained/file-browser-launcher/prefs.py:289
-#: ../applets/maintained/file-browser-launcher/prefs.py:364
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:601
+#: ../applets/maintained/file-browser-launcher/prefs.py:295
+#: ../applets/maintained/file-browser-launcher/prefs.py:370
 msgid "Folder"
 msgstr "Répertoire"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:709
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:607
+#, python-format
+msgid "Trash (%d)"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:717
 msgid "DVD Drive"
 msgstr "Lecteur DVD"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:713
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:721
 msgid "CD Drive"
 msgstr "Lecteur CD"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1017
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1064
 msgid "Eject"
 msgstr "Éjecter"
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1072
+msgid "Empty Trash"
+msgstr "Vider la corbeille"
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1095
+msgid "Confirm deletion"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1103
+msgid ""
+"<big><b>Are you sure you want to delete\n"
+"every item from the trash?</b></big>"
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1105
+msgid "This action cannot be undone."
+msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:44
 msgid "File Browser Launcher Preferences"
 msgstr "Préférences du lanceur du navigateur de fichiers"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:93
+#: ../applets/maintained/file-browser-launcher/prefs.py:101
 msgid "File Browser"
 msgstr "Navigateur de fichiers"
 
 #. xdg-open (aka system default)
-#: ../applets/maintained/file-browser-launcher/prefs.py:103
+#: ../applets/maintained/file-browser-launcher/prefs.py:111
 msgid "System Default"
 msgstr "Paramètres par défaut"
 
 #. Last option: custom with an entry for the app name
-#: ../applets/maintained/file-browser-launcher/prefs.py:127
+#: ../applets/maintained/file-browser-launcher/prefs.py:135
 msgid "Other"
 msgstr "Autres"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:163
+#: ../applets/maintained/file-browser-launcher/prefs.py:171
 msgid "One icon with dialog"
 msgstr "Une icône avec boite de dialogue"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:168
+#: ../applets/maintained/file-browser-launcher/prefs.py:176
 msgid "One icon with docklet"
 msgstr "Une icône avec docklet"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:175
+#: ../applets/maintained/file-browser-launcher/prefs.py:183
 msgid "Multiple icons"
 msgstr "Icônes multiples"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:182
+#: ../applets/maintained/file-browser-launcher/prefs.py:190
 msgid "Focus text entry"
 msgstr "Focus au champ de recherche"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:191
+#: ../applets/maintained/file-browser-launcher/prefs.py:199
 msgid "Open place when clicked"
 msgstr "Ouvrir l'emplacement lors du clic"
 
 #. Show all places
-#: ../applets/maintained/file-browser-launcher/prefs.py:211
+#: ../applets/maintained/file-browser-launcher/prefs.py:219
 msgid "Show all places"
 msgstr "Montrer tout les emplacements"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:223
+#: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Home folder"
 msgstr "Dossier personnel"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:224
+#: ../applets/maintained/file-browser-launcher/prefs.py:235
 msgid "Mounted local drives"
 msgstr "Disques locaux montés"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:224
+#: ../applets/maintained/file-browser-launcher/prefs.py:235
 msgid "Mounted network drives"
 msgstr "Disques réseaux montés"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:225
+#: ../applets/maintained/file-browser-launcher/prefs.py:236
 msgid "Connect to server"
 msgstr "Se connecter à un serveur"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:225
+#: ../applets/maintained/file-browser-launcher/prefs.py:236
 msgid "Bookmarks"
 msgstr "Signets"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:264
-#: ../applets/maintained/file-browser-launcher/prefs.py:339
+#: ../applets/maintained/file-browser-launcher/prefs.py:270
+#: ../applets/maintained/file-browser-launcher/prefs.py:345
 msgid "Display dialog/docklet"
 msgstr "Afficher la boite dialogue ou le docklet"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:264
-#: ../applets/maintained/file-browser-launcher/prefs.py:339
+#: ../applets/maintained/file-browser-launcher/prefs.py:270
+#: ../applets/maintained/file-browser-launcher/prefs.py:345
 msgid "Open the folder"
 msgstr "Ouvrir le dossier"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:265
-#: ../applets/maintained/file-browser-launcher/prefs.py:340
+#: ../applets/maintained/file-browser-launcher/prefs.py:271
+#: ../applets/maintained/file-browser-launcher/prefs.py:346
 msgid "Nothing"
 msgstr "Rien"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:540
+#: ../applets/maintained/file-browser-launcher/prefs.py:324
+msgid "Left Click"
+msgstr "Clic gauche"
+
+#: ../applets/maintained/file-browser-launcher/prefs.py:399
+msgid "Middle Click"
+msgstr "Clic milieu"
+
+#: ../applets/maintained/file-browser-launcher/prefs.py:552
 msgid "Choose a folder"
 msgstr "Choisissez un dossier"
 
@@ -2278,8 +2192,9 @@ msgstr "Afficher le nombre d'éléments contenu dans la corbeille sur l'icône."
 msgid "A lightweight, cross-desktop trash applet"
 msgstr "Un applet corbeille léger et multi-environnements"
 
-#: ../applets/maintained/garbage/prefs.vala:32
-#, c-format
+#. This is a window title, %s is an applet's name.
+#: ../applets/maintained/garbage/prefs.vala:32 ../shared/python/awnlib.py:404
+#, c-format, python-format
 msgid "%s Preferences"
 msgstr "%s Préférences"
 
@@ -2314,41 +2229,40 @@ msgstr ""
 msgid "In what row of dialog is the sensor shown."
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:7
+#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:6
 msgid "Low value limit (at which alarm triggers) for each sensor."
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:8
+#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:7
 msgid "Sensor ids."
-msgstr ""
+msgstr "Identifiant des capteurs"
 
-#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:9
+#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:8
 msgid "Sensor labels."
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:10
-msgid "The color (RGBA) of the meter hand/needle."
+#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:9
+msgid "Size of value overlay in the icon (0: small, 1: medium, 2: large)."
 msgstr ""
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:11
-msgid "Timeout between two value updates (in seconds)."
+msgid "The color (RGBA) of the meter hand/needle."
 msgstr ""
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:12
+msgid "Timeout between two value updates (in seconds)."
+msgstr "Attente entre deux mises à jour des valeur (en secondes)."
+
+#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:13
 msgid "Whether alarm should trigger at high value limit or not."
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:13
+#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:14
 msgid "Whether alarm should trigger at low value limit or not."
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:14
-msgid "Whether to show a sensor in applet icon or not."
-msgstr ""
-
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:15
-#: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:8
-msgid "large)."
+msgid "Whether to show a sensor in applet icon or not."
 msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:1
@@ -2356,52 +2270,76 @@ msgid "Applet to show the hw sensors readouts"
 msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:2
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:48
 msgid "Hardware Sensors"
-msgstr ""
+msgstr "Capteurs matériels"
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:49
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:50
 msgid "Applet to show the hardware sensors readouts"
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:83
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:61
+#: ../applets/maintained/weather/weather.ui.h:13
+msgid "Small"
+msgstr "Petite"
+
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:61
+#: ../applets/maintained/weather/weather.ui.h:11
+msgid "Medium"
+msgstr "Moyenne"
+
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:61
+#: ../applets/maintained/weather/weather.ui.h:9
+msgid "Large"
+msgstr "Grande"
+
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:84
+msgid "Warning from Hardware Sensors: No sensors found"
+msgstr ""
+
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:85
 msgid ""
-"Warning: No sensors found. Install one or more of ACPI, HDDTemp, LM-Sensors "
+"Install one or more of ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock "
 "and restart the applet."
 msgstr ""
 
 #. == Dialog == #
 #. Create main applet dialog showing selected sensors.
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:117
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:119
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:14
 msgid "Sensors"
-msgstr ""
+msgstr "Capteurs"
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:470
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:471
+msgid "Interface"
+msgstr "Interface"
+
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:473
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:472
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:475
 msgid "Label"
 msgstr ""
 
 #. Set the cell "active" attribute to column_show - retrieve the state
 #. of the toggle button from that column in liststore
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:476
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:479
 msgid "In dialog"
 msgstr ""
 
 #. Add treeview-column to treeview
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:514
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:517
 msgid "Sensors displayed in icon"
 msgstr ""
 
-#: ../applets/maintained/hardware-sensors/hardware-sensors.py:532
+#: ../applets/maintained/hardware-sensors/hardware-sensors.py:535
 msgid "properties"
-msgstr ""
+msgstr "propriétés"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:1
 msgid "<b>Alarms</b>"
-msgstr ""
+msgstr "<b>Alertes</b>"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:3
 msgid "<b>Sensor value limits</b>"
@@ -2410,11 +2348,11 @@ msgstr ""
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:4
 #: ../applets/maintained/mail/mail.ui.h:3
 msgid "<b>Update</b>"
-msgstr ""
+msgstr "<b>Mise à jour</b>"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:5
 msgid "Add"
-msgstr ""
+msgstr "Ajouter"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:6
 msgid "Enable high alarm"
@@ -2426,7 +2364,7 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:8
 msgid "Font size:"
-msgstr ""
+msgstr "Taille de la police :"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:10
 msgid "Meter hand color:"
@@ -2434,7 +2372,7 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:11
 msgid "Remove"
-msgstr ""
+msgstr "Retirer"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:12
 msgid "Sensor high value"
@@ -2446,50 +2384,164 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:15
 msgid "Show value in icon"
-msgstr ""
+msgstr "Afficher la valeur sur l'icône"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:16
 msgid "Temperature unit:"
-msgstr ""
+msgstr "Unité de température :"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:17
 msgid "Theme:"
-msgstr ""
+msgstr "Thème :"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:18
-#: ../applets/maintained/mail/mail.ui.h:4
 msgid "Update interval:"
-msgstr ""
+msgstr "Intervalle de mise à jour :"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:19
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:45
 msgid "seconds"
-msgstr ""
-
-#. Unit long strings
-#: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
-msgid "Celsius"
-msgstr ""
+msgstr "secondes"
 
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "Volt"
-msgstr ""
+msgstr "Volt"
 
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
 msgid "rpm"
+msgstr "tours/min"
+
+#: ../applets/maintained/indicator-applet/applet.c:89
+#: ../applets/maintained/indicator-applet/applet.c:182
+#: ../applets/maintained/indicator-applet/applet.c:784
+#: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.h:2
+#: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.in.h:2
+msgid "Indicator Applet"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:92
+#: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.h:1
+#: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.in.h:1
+msgid "An applet to hold all of the system indicators"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:170
+msgid "Indicator Applet Preferences"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:177
+msgid "Enabled Entries"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:184
+msgid "Indicator Applet Session (Quit)"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:186
+msgid "Me Menu"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:188
+msgid "Messaging Menu"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:190
+msgid "Network Menu"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:192
+msgid "Sound Control Menu"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:194
+msgid "Other Menus"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:204
+msgid "Options"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:212
+msgid "Number of rows:"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:216
+msgid "Number of columns:"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:228
+msgid "Enable Applet Icon mode"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:764
+msgid "Me menu"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:768
+msgid "Messaging menu"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:772
+msgid "Network menu"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:776
+msgid "Indicator Applet Session"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/applet.c:780
+msgid "Sound Menu"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:1
+msgid "If true, show any other menus"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:2
+msgid "If true, show the Me menu (chat, microblogging, etc)"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:3
+msgid "If true, show the Messaging icon"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:4
+msgid "If true, show the Network menu"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:5
+msgid "If true, show the Sound control menu"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:6
+msgid "If true, show the indicator applet icons"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:7
+msgid ""
+"If true, show the indicator applet session icon (lock screen, switch users, "
+"etc)"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:8
+msgid "If true, use an Awn applet icon instead"
+msgstr ""
+
+#: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:9
+msgid "The number of rows (top and bottom edge) or columns (side edges)"
 msgstr ""
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:1
 msgid "Display any network errors"
-msgstr ""
+msgstr "Afficher toute erreur réseau"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:2
 msgid "Hide the icon if there is no new mail"
-msgstr ""
+msgstr "Cacher l'icône s'il n'y a pas de nouveau mail"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:3
 msgid "The Desktop Email client to use"
-msgstr ""
+msgstr "Le client mail à utiliser"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:4
 msgid "The Email backend to use"
@@ -2497,7 +2549,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:5
 msgid "The theme to use for the icon"
-msgstr ""
+msgstr "Thème à utiliser pour l'icône"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:6
 msgid "Timeout between two value updates (in minutes)."
@@ -2509,171 +2561,197 @@ msgstr ""
 
 #: ../applets/maintained/mail/mail.desktop.in.h:1
 msgid "Check Your Email from AWN"
-msgstr ""
+msgstr "Surveillez vos courriels depuis Awn"
 
 #: ../applets/maintained/mail/mail.desktop.in.h:2
-#: ../applets/maintained/mail/mail.py:134
-#: ../applets/maintained/mail/mail.py:903
+#: ../applets/maintained/mail/mail.py:136
+#: ../applets/maintained/mail/mail.py:942
 msgid "Mail Applet"
 msgstr "Applet Email"
 
-#: ../applets/maintained/mail/mail.py:37
+#: ../applets/maintained/mail/mail.py:39
 #, python-format
 msgid "You have %d new message"
 msgid_plural "You have %d new messages"
 msgstr[0] "Vous avez %d nouveau message"
 msgstr[1] "Vous avez %d nouveaux messages"
 
-#: ../applets/maintained/mail/mail.py:41
+#: ../applets/maintained/mail/mail.py:43
 #, python-format
 msgid "%d unread message"
 msgid_plural "%d unread messages"
 msgstr[0] "%d message non lu"
 msgstr[1] "%d messages non lus"
 
-#: ../applets/maintained/mail/mail.py:74
+#: ../applets/maintained/mail/mail.py:76
 msgid "Mail Applet (Click to Log In)"
-msgstr "Applet Email (Cliquez ici pour vous connecter)"
+msgstr "Applet Email (Cliquez pour vous connecter)"
 
-#: ../applets/maintained/mail/mail.py:135
+#: ../applets/maintained/mail/mail.py:137
 #, python-format
 msgid "Logging in as %s"
 msgstr "Connecté en tant que: %s"
 
-#: ../applets/maintained/mail/mail.py:165
-msgid "New Mail - Mail Applet"
-msgstr "Nouvel Email - Applet Email"
+#: ../applets/maintained/mail/mail.py:161
+msgid "Network error - Mail Applet"
+msgstr "Erreur réseau - Applet Email"
 
-#: ../applets/maintained/mail/mail.py:283
+#: ../applets/maintained/mail/mail.py:170
+msgid "New Mail - Mail Applet"
+msgstr "Nouveau courriel - Applet Email"
+
+#: ../applets/maintained/mail/mail.py:274
 msgid "Mail"
-msgstr ""
+msgstr "Courriel"
+
+#: ../applets/maintained/mail/mail.py:310
+msgid "Open Web Mail"
+msgstr "Ouvrir le web-mail"
 
 #: ../applets/maintained/mail/mail.py:319
-msgid "Open Web Mail"
-msgstr ""
+msgid "Open Desktop Client"
+msgstr "Ouvrir le client mail"
 
 #: ../applets/maintained/mail/mail.py:328
-msgid "Open Desktop Client"
-msgstr ""
+msgid "Refresh"
+msgstr "Actualiser"
 
 #: ../applets/maintained/mail/mail.py:337
-msgid "Refresh"
-msgstr ""
-
-#: ../applets/maintained/mail/mail.py:346
+#: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:47
+#: ../applets/maintained/quit/quit.py:58
+#: ../applets/maintained/quit/quit.py:267
 msgid "Log Out"
 msgstr "Se déconnecter"
 
-#: ../applets/maintained/mail/mail.py:376
+#: ../applets/maintained/mail/mail.py:367
 msgid "No unread messages"
-msgstr ""
+msgstr "Aucun message non lus"
 
-#: ../applets/maintained/mail/mail.py:378
+#: ../applets/maintained/mail/mail.py:369
 msgid "No new messages"
 msgstr "Pas de nouveaux messages"
 
-#: ../applets/maintained/mail/mail.py:417
+#: ../applets/maintained/mail/mail.py:408
 msgid "Wrong username or password"
-msgstr ""
+msgstr "Nom d'utilisateur ou mot de passe incorrect"
 
-#: ../applets/maintained/mail/mail.py:425
-#: ../applets/maintained/mail/mail.py:486
+#: ../applets/maintained/mail/mail.py:416
+#: ../applets/maintained/mail/mail.py:477
 msgid "Log In"
 msgstr "Connexion"
 
-#: ../applets/maintained/mail/mail.py:462
+#: ../applets/maintained/mail/mail.py:453
 msgid "Type:"
 msgstr "Type :"
 
-#: ../applets/maintained/mail/mail.py:467
+#: ../applets/maintained/mail/mail.py:458
 msgid "Backend"
 msgstr "Backend"
 
-#: ../applets/maintained/mail/mail.py:525
-#: ../applets/maintained/mail/mail.py:584
-msgid ""
-"There seem to be problems with our                     connection to your "
-"account. Your best bet is probably                     to log out and try "
-"again."
+#: ../applets/maintained/mail/mail.py:514
+#: ../applets/maintained/mail/mail.py:742
+msgid "Could not log in: No username"
 msgstr ""
-"Il semble y avoir des problèmes avec la connexion à votre compte. Vous "
-"devriez peut-être vous déconnecter et réessayer."
 
-#: ../applets/maintained/mail/mail.py:547
-#: ../applets/maintained/mail/mail.py:606
+#: ../applets/maintained/mail/mail.py:522
+#: ../applets/maintained/mail/mail.py:592
+msgid ""
+"There seem to be problems with our connection to your account. Your best bet "
+"is probably to log out and try again."
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:533
+#: ../applets/maintained/mail/mail.py:549
+#: ../applets/maintained/mail/mail.py:603
+#: ../applets/maintained/mail/mail.py:619
+#: ../applets/maintained/mail/mail.py:687
+#: ../applets/maintained/mail/mail.py:781
 msgid "[No Subject]"
 msgstr "[Pas d'Objet]"
 
-#: ../applets/maintained/mail/mail.py:569
+#: ../applets/maintained/mail/mail.py:535
+#: ../applets/maintained/mail/mail.py:605
+msgid "[Unknown]"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:571
 msgid "Google Apps"
 msgstr "Google Apps"
 
-#: ../applets/maintained/mail/mail.py:637
+#: ../applets/maintained/mail/mail.py:583
+msgid "Could not log in: No username or domain"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:650
 msgid "Domain:"
 msgstr "Domaine:"
 
-#: ../applets/maintained/mail/mail.py:659
+#: ../applets/maintained/mail/mail.py:673
 msgid "Unix Spool"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:681
+#: ../applets/maintained/mail/mail.py:695
 msgid "Spool Path:"
 msgstr "Chemin du Spool"
 
-#: ../applets/maintained/mail/mail.py:714
-#: ../applets/maintained/mail/mail.py:716
+#: ../applets/maintained/mail/mail.py:736
+#: ../applets/maintained/mail/mail.py:738
 msgid "Could not log in: "
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:723
+#: ../applets/maintained/mail/mail.py:747
 msgid "Could not log in: Username or password incorrect"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:765
-#: ../applets/maintained/mail/mail.py:858
+#: ../applets/maintained/mail/mail.py:803
+#: ../applets/maintained/mail/mail.py:897
 msgid "Server:"
 msgstr "Serveur:"
 
-#: ../applets/maintained/mail/mail.py:768
-#: ../applets/maintained/mail/mail.py:861
+#: ../applets/maintained/mail/mail.py:806
+#: ../applets/maintained/mail/mail.py:900
 msgid "Use SSL encryption"
-msgstr "Utiliser le cryptage SSL"
+msgstr "Utiliser le chiffrement SSL"
 
-#: ../applets/maintained/mail/mail.py:804
+#: ../applets/maintained/mail/mail.py:843
 msgid "Could not log in"
 msgstr "Impossible de se connecter"
 
-#: ../applets/maintained/mail/mail.py:810
+#: ../applets/maintained/mail/mail.py:849
 msgid "Folder does not exst"
 msgstr "Le dossier n'existe pas"
 
-#: ../applets/maintained/mail/mail.py:864
+#: ../applets/maintained/mail/mail.py:903
 msgid "Get messages from only one folder"
 msgstr "Obtenir les messages d'un seul dossier"
 
-#: ../applets/maintained/mail/mail.py:871
+#: ../applets/maintained/mail/mail.py:907
 msgid "Folder:"
 msgstr "Dossier :"
 
-#: ../applets/maintained/mail/mail.py:906
+#: ../applets/maintained/mail/mail.py:945
 msgid "An applet to check one's email"
-msgstr "Un Applet qui notifie la réception de nouveaux Mails"
+msgstr "Un Applet surveillant l'arrivée de nouveaux courriels."
 
 #: ../applets/maintained/mail/mail.ui.h:2
 msgid "<b>Mail</b>"
+msgstr "<b>Courriel</b>"
+
+#: ../applets/maintained/mail/mail.ui.h:4
+msgid "Update _interval:"
 msgstr ""
 
 #: ../applets/maintained/mail/mail.ui.h:5
 msgid "_Alert on network errors"
-msgstr ""
+msgstr "_Alarme en cas d'erreurs réseau"
 
 #: ../applets/maintained/mail/mail.ui.h:6
 msgid "_Email client:"
-msgstr ""
+msgstr "Client _Email :"
 
 #: ../applets/maintained/mail/mail.ui.h:7
 msgid "_Hide applet if no new messages"
-msgstr ""
+msgstr "Cacher l'applet s'il n'y a pas de nouveau messages"
 
 #: ../applets/maintained/mail/mail.ui.h:9
 msgid "minutes"
@@ -2685,7 +2763,7 @@ msgstr ""
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:2
 msgid "Display album art if available."
-msgstr ""
+msgstr "Afficher la jaquette si disponible."
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:3
 msgid "Display docklet instead of standard applet dialog."
@@ -2693,27 +2771,46 @@ msgstr ""
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:4
 msgid "Size of the album art."
-msgstr ""
+msgstr "Taille de la jaquette."
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:5
 msgid "Tooltip format to use."
-msgstr ""
+msgstr "Format d'infobulle à utiliser."
 
 #: ../applets/maintained/media-control/media-control.desktop.in.h:1
 msgid "Control your music player"
-msgstr ""
+msgstr "Contrôler votre lecteur de musique"
 
 #: ../applets/maintained/media-control/media-control.desktop.in.h:2
 msgid "Media Control"
+msgstr "Contrôleur multimédia"
+
+#: ../applets/maintained/media-control/media_control.py:51
+#: ../applets/maintained/media-control/media_control.py:653
+msgid "Media Control Applet"
 msgstr ""
 
-#: ../applets/maintained/media-control/media_control.py:612
+#. Used in this sentence: Title by Artist from Album
+#: ../applets/maintained/media-control/media_control.py:509
+msgid "by"
+msgstr ""
+
+#. Used in this sentence: Title by Artist from Album
+#: ../applets/maintained/media-control/media_control.py:512
+msgid "from"
+msgstr ""
+
+#: ../applets/maintained/media-control/media_control.py:613
 msgid "Title - Artist"
 msgstr "Titre - Artiste"
 
-#: ../applets/maintained/media-control/media_control.py:612
+#: ../applets/maintained/media-control/media_control.py:613
 msgid "Artist - Title"
 msgstr "Artiste - Morceau"
+
+#: ../applets/maintained/media-control/media_control.py:656
+msgid "Controls your favourite music player."
+msgstr ""
 
 #: ../applets/maintained/media-control/media-control.ui.h:2
 msgid "Close docklet when mouse leaves it"
@@ -2725,19 +2822,19 @@ msgstr ""
 
 #: ../applets/maintained/media-control/media-control.ui.h:4
 msgid "Media-control preferences"
-msgstr ""
+msgstr "Préférences du contrôleur multimédia"
 
 #: ../applets/maintained/media-control/media-control.ui.h:5
 msgid "Show _album art when available"
-msgstr ""
+msgstr "_Affiche la jaquette lorsqu'elle est disponible"
 
 #: ../applets/maintained/media-control/media-control.ui.h:6
 msgid "_Size of the album art:"
-msgstr ""
+msgstr "_Taille de la jaquette :"
 
 #: ../applets/maintained/media-control/media-control.ui.h:7
 msgid "_Tooltip format:"
-msgstr ""
+msgstr "Taille de l'_infobulle :"
 
 #: ../applets/maintained/media-control/media-control.ui.h:8
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:8
@@ -2750,7 +2847,7 @@ msgstr "pixels"
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:68
 msgid "A media-control applet (Next Track)"
-msgstr ""
+msgstr "Un applet de contrôle multimédia (Piste suivante)"
 
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:74
@@ -2760,7 +2857,7 @@ msgstr ""
 #: ../applets/maintained/media-icons/media-icon-previous.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:69
 msgid "A media-control applet (Previous Track)"
-msgstr ""
+msgstr "Un applet de contrôle multimédia (Piste précédante)"
 
 #: ../applets/maintained/media-icons/media-icon-previous.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:75
@@ -2770,7 +2867,7 @@ msgstr ""
 #: ../applets/maintained/media-icons/media-icons.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:70
 msgid "A media-control applet (Play/Pause)"
-msgstr ""
+msgstr "Un applet de contrôle multimédia (Lecture/Pause)"
 
 #: ../applets/maintained/media-icons/media-icons.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:76
@@ -2779,11 +2876,11 @@ msgstr ""
 
 #: ../applets/maintained/media-icons/media-icons.py:57
 msgid "Next"
-msgstr ""
+msgstr "Suivant"
 
 #: ../applets/maintained/media-icons/media-icons.py:58
 msgid "Previous"
-msgstr ""
+msgstr "Précédent"
 
 #: ../applets/maintained/media-icons/media-icons.py:59
 msgid "Play/Pause"
@@ -2795,7 +2892,7 @@ msgstr ""
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:2
 msgid "Height of the video window."
-msgstr ""
+msgstr "Hauteur de la fenêtre vidéo."
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:3
 msgid "List of recently played URLs."
@@ -2807,27 +2904,48 @@ msgstr ""
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:5
 msgid "Width of the video window."
-msgstr ""
+msgstr "Largeur de la fenêtre vidéo."
 
 #: ../applets/maintained/media-player/media-player.desktop.in.h:1
 msgid "Media Player"
-msgstr ""
+msgstr "Lecteur multimédia"
 
 #: ../applets/maintained/media-player/media-player.desktop.in.h:2
 msgid "Plays any media files you drop on the applet"
 msgstr ""
 
+#. PyGObject doesn't have BOXED support implemented
+#. recent_items = gobject.property(type=gobject.TYPE_BOXED,
+#. nick='Recent Items')
+#: ../applets/maintained/media-player/media_player.py:50
+#: ../applets/maintained/media-player/media_player.py:423
+msgid "Media Player Applet"
+msgstr ""
+
+#. Popup menu
+#: ../applets/maintained/media-player/media_player.py:78
+msgid "Recent items"
+msgstr ""
+
+#: ../applets/maintained/media-player/media_player.py:406
+msgid "Please restart the applet to apply changes to sinks."
+msgstr ""
+
+#: ../applets/maintained/media-player/media_player.py:426
+msgid "Plays any media files you drop on the applet."
+msgstr ""
+
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:1
 msgid "<b>GStreamer properties</b>"
-msgstr ""
+msgstr "<b>Propriétés GStreamer</b>"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:2
 msgid "<b>Video size</b>"
-msgstr ""
+msgstr "<b>Taille de la vidéo</b>"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:3
 msgid "Media Player Preferences"
-msgstr ""
+msgstr "Préférences de Lecteur multimédia"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:4
 msgid "_Audiosink:"
@@ -2835,7 +2953,7 @@ msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:5
 msgid "_Height:"
-msgstr ""
+msgstr "_Hauteur :"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:6
 msgid "_Videosink:"
@@ -2843,23 +2961,26 @@ msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:7
 msgid "_Width:"
-msgstr ""
+msgstr "_Largeur :"
 
 #: ../applets/maintained/mount/awn-applet-mount.schema-ini.in.h:1
 msgid "Command to execute after mounting a mountpoint."
-msgstr ""
+msgstr "Commande à exécuter après le montage sur un point de montage."
 
 #: ../applets/maintained/mount/awn-applet-mount.schema-ini.in.h:2
 msgid "List of mountpoints that should remain hidden in the UI."
 msgstr ""
+"Liste des points de montage qui doivent rester cacher dans l'interface."
 
 #: ../applets/maintained/mount/mount.desktop.in.h:1
+#: ../applets/maintained/mount/mount.py:31
 msgid "An applet to (un)mount devices"
-msgstr ""
+msgstr "Un applet pour (dé)monter des périphériques"
 
 #: ../applets/maintained/mount/mount.desktop.in.h:2
+#: ../applets/maintained/mount/mount.py:30
 msgid "Mount Applet"
-msgstr ""
+msgstr "Applet montage"
 
 #: ../applets/maintained/mount/mount.ui.h:2
 #, no-c-format
@@ -2868,7 +2989,7 @@ msgstr ""
 
 #: ../applets/maintained/mount/mount.ui.h:3
 msgid "List of hidden mountpoints, separated by a space"
-msgstr ""
+msgstr "Liste des points de montage cachés, séparés par un espace"
 
 #: ../applets/maintained/mount/mount.ui.h:4
 msgid "_Execute command after successful mount:"
@@ -2876,11 +2997,11 @@ msgstr ""
 
 #: ../applets/maintained/mount/mount.ui.h:5
 msgid "_Hidden mountpoints:"
-msgstr ""
+msgstr "Points de montage cac_hés :"
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:1
 msgid "Extra offset from the panel's egde."
-msgstr ""
+msgstr "Décalage supplémentaire par rapport au bord de la barre."
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:2
 msgid ""
@@ -2890,7 +3011,7 @@ msgstr ""
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:3
 msgid "Size of the icons (in percent of applet size)."
-msgstr ""
+msgstr "Taille des icônes (en pourcentage de la taille de l'applet)."
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:4
 msgid "The background color of the notification-area."
@@ -2898,12 +3019,14 @@ msgstr "Couleur d'arrière-plan de la zone de notification."
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:5
 msgid "The border color of the notification-area."
-msgstr ""
+msgstr "Couleur de la bordure de la zone de notification."
 
 #: ../applets/maintained/notification-area/egg-tray-child.c:170
 #, c-format
 msgid "tray icon has requested a size of (%i x %i), resizing to (%i x %i)"
 msgstr ""
+"L'icône de notification a spécifié une taille de (%i x %i), "
+"redimensionnement à (%i x %i)"
 
 #: ../applets/maintained/notification-area/eggtraymanager.c:148
 msgid "Orientation"
@@ -2917,7 +3040,7 @@ msgstr "Orientation de la zone de notification."
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:2
 #, no-c-format
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:3
 msgid "<b>Background Color</b>"
@@ -2925,15 +3048,15 @@ msgstr "<b>Couleur d'arrière-plan</b>"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:4
 msgid "<b>Border Color</b>"
-msgstr ""
+msgstr "<b>Couleur de la bordure</b>"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:6
 msgid "Automatic"
-msgstr ""
+msgstr "Automatique"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:7
 msgid "Custom:"
-msgstr ""
+msgstr "Personnalisée :"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:8
 msgid "Extra _offset:"
@@ -2953,10 +3076,19 @@ msgstr ""
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:1
 msgid "A Notification Area (systray)"
-msgstr ""
+msgstr "Une zone de notification"
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:2
 msgid "Notification Area"
+msgstr "Zone de notification"
+
+#: ../applets/maintained/notification-area/notification-area.vala:638
+msgid "There is already another notification area running on this screen!"
+msgstr ""
+
+#: ../applets/maintained/notification-area/notification-area.vala:642
+msgid ""
+"Please remove the existing notification area and then restart the applet."
 msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:1
@@ -3008,7 +3140,7 @@ msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:9
 msgid "Sound."
-msgstr ""
+msgstr "Son."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:10
 msgid ""
@@ -3021,6 +3153,9 @@ msgid ""
 "The default sound file used unless a notification supplies the 'sound-file' "
 "or 'suppress-sound' hint. Leave empty for no default sound."
 msgstr ""
+"Fichier sonore utilisé tant qu'une notification ne précise pas un fichier "
+"son ou la suppression du son. Laissez-le vide pour ne pas définir de fichier "
+"sonore par défaut."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:12
 msgid ""
@@ -3031,7 +3166,7 @@ msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:13
 msgid "Use bold text."
-msgstr ""
+msgstr "Mettre le texte en gras."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:14
 msgid "Whether to attempt to kill any running notification-daemons."
@@ -3045,10 +3180,22 @@ msgstr ""
 msgid "Whether to the use configured awn theme color values for xxxx."
 msgstr ""
 
-#: ../applets/maintained/notification-daemon/daemon.c:1422
+#: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.in.h:1
+#: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.h:1
+msgid ""
+"A replacement for the standard notification daemon and notify-osd. This will "
+"disable existing notification daemons while the applet is active."
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.in.h:2
+#: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.h:2
+msgid "Notification Daemon"
+msgstr ""
+
+#: ../applets/maintained/notification-daemon/daemon.c:1421
 #, c-format
 msgid "%u is not a valid notification ID"
-msgstr ""
+msgstr "%u n'est pas un ID de notification valide"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:35
 msgid "Whether to show tooltips when hovering over a place.);"
@@ -3056,11 +3203,11 @@ msgstr ""
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:33
 msgid "The width of the menu's border.);"
-msgstr ""
+msgstr "Largeur de la bordure du menu.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:31
 msgid "The size of the text in the menu, in pixels.);"
-msgstr ""
+msgstr "Taille du texte dans le menu, en pixels.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:29
 msgid "The icon theme name of the applet's icon.);"
@@ -3078,7 +3225,7 @@ msgstr ""
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:23
 msgid "The colour (RGBA) of the text in the menu.);"
-msgstr ""
+msgstr "Couleur (RGBA) du texte dans le menu.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:21
 msgid ""
@@ -3094,13 +3241,15 @@ msgstr ""
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:17
 msgid "The color (RGBA) of the text in the menu.);"
-msgstr ""
+msgstr "Couleur (RGBA) du texte dans le menu.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:15
 msgid ""
 "The color (RGBA) of the menu's border, if the border width is greater than "
 "zero.);"
 msgstr ""
+"Couleur (RGBA) de la bordure du menu, si cette bordure n'est pas de largeur "
+"nulle.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:13
 msgid "The background colour (RGBA) of the menu.);"
@@ -3152,94 +3301,151 @@ msgstr ""
 
 #: ../applets/maintained/places/places.desktop.in.in.h:1
 msgid "Launch your folder bookmarks"
-msgstr ""
+msgstr "Lance les signets de votre dossier"
 
 #: ../applets/maintained/python-test/python-test.desktop.in.h:1
 msgid "A simple applet to test python support"
-msgstr ""
+msgstr "Un applet simple pour tester le support python"
 
 #: ../applets/maintained/python-test/python-test.desktop.in.h:2
 msgid "Test Python Applet"
-msgstr ""
+msgstr "Applet de test python"
 
 #: ../applets/maintained/quit/awn-applet-quit.schema-ini.in.h:1
 msgid "Action to perform when left clicking on the icon."
-msgstr ""
+msgstr "Action à effectuer lors d'un clic gauche sur l'icône."
 
 #: ../applets/maintained/quit/awn-applet-quit.schema-ini.in.h:2
 msgid "Command to execute if org.gnome.ScreenSaver is not available."
-msgstr ""
+msgstr "Commande à exécuter si org.gnome.ScreenSaver n'est pas disponible."
 
 #: ../applets/maintained/quit/awn-applet-quit.schema-ini.in.h:3
 msgid "Command to execute if org.gnome.SessionManager is not available."
 msgstr ""
+"Commande à exécuter si org.gnome.SessionManager n'est pas disponible."
 
 #: ../applets/maintained/quit/quit.desktop.in.h:1
 msgid "An applet to exit or log out of your session"
-msgstr ""
+msgstr "Un applet pour quitter ou fermer votre session"
 
 #: ../applets/maintained/quit/quit.desktop.in.h:2
 msgid "Quit-Log Out applet"
-msgstr ""
+msgstr "Applet Quitter/Déconnecter"
 
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:2
+#: ../applets/maintained/yama/yama.py:153
 msgid "Protect your computer from unauthorized use"
-msgstr ""
+msgstr "Interdit les utilisations non désirées de votre ordinateur"
 
 #: ../applets/maintained/quit/quit-log-out.desktop.in.h:1
 msgid "Log Out..."
-msgstr ""
+msgstr "Se déconnecter..."
 
 #: ../applets/maintained/quit/quit-log-out.desktop.in.h:2
 msgid "Log out of this session to log in as a different user"
 msgstr ""
+"Se déconnecte de cette session afin de se reconnecter sous un autre "
+"identifiant"
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:1
+#: ../applets/maintained/quit/quit.py:48
+#: ../applets/maintained/yama/yama.py:175
 msgid "Shut Down..."
-msgstr ""
+msgstr "Éteindre..."
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:2
+#: ../applets/maintained/yama/yama.py:175
 msgid "Shut down the system"
+msgstr "Termine votre session et éteint l'ordinateur"
+
+#: ../applets/maintained/quit/quit.py:33
+msgid "Quit-Log Out"
+msgstr ""
+
+#: ../applets/maintained/quit/quit.py:34
+msgid ""
+"An applet to lock your screen, log out of your session, or shut down the "
+"system"
+msgstr ""
+
+#: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:52
+#: ../applets/maintained/quit/quit.py:104
+#: ../applets/maintained/quit/quit.py:114
+#: ../applets/maintained/quit/quit.py:231
+#: ../applets/maintained/quit/quit.py:263
+msgid "Show Docklet"
+msgstr ""
+
+#: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:48
+#: ../applets/maintained/quit/quit.py:59 ../applets/maintained/quit/quit.py:89
+#: ../applets/maintained/quit/quit.py:90
+#: ../applets/maintained/quit/quit.py:233
+#: ../applets/maintained/quit/quit.py:269
+msgid "Shut Down"
+msgstr ""
+
+#. Translators: %s is a username
+#. Translators: %s is a user name.
+#: ../applets/maintained/quit/quit.py:43
+#: ../applets/maintained/yama/yama.py:171
+#, python-format
+msgid "Log Out %s..."
+msgstr ""
+
+#: ../applets/maintained/quit/quit.py:247
+msgid "Left click _action:"
+msgstr ""
+
+#: ../applets/maintained/related/related.desktop.in.h:1
+#: ../applets/maintained/related/related.desktop.in.in.h:1
+msgid "Applet displaying related items by talking to Zeitgeist"
+msgstr ""
+
+#: ../applets/maintained/related/related.desktop.in.h:2
+#: ../applets/maintained/related/related.desktop.in.in.h:2
+msgid "Related applet"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:1
 msgid " The color (RGBA) applet border."
-msgstr ""
+msgstr " Couleur (RGBA) de la bordure de l'applet."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:2
 msgid " The color of the desktop (RGBA) if grab_wallpaper is FALSE."
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:3
-msgid " gdk."
-msgstr ""
-
-#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:4
 msgid "0... centre  1 NW    2 NE   3 SE  4 SW\t"
 msgstr ""
 
-#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:5
-msgid "1"
-msgstr ""
-
-#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:6
+#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:4
 msgid "Alpha to apply to icon overlayed on active window."
 msgstr ""
 
-#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:7
+#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:5
 msgid "Alpha to apply to icon overlayed on inactive window."
 msgstr ""
 
-#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:8
+#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:6
 msgid "Alpha value to apply to active workspace background."
 msgstr "Valeur de l'alpha à appliquer à l'espace de travail actif."
 
-#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:9
+#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:7
 msgid "Alpha value to apply to inactive workspace background."
 msgstr "Valeur de l'alpha à appliquer aux espaces de travail inactifs."
 
-#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:10
+#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:8
 msgid "Applet border width.  0 indicates no border."
+msgstr "Largeur de la bordure de l'applet. 0 indique l'absence de bordure."
+
+#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:9
+msgid ""
+"Factor to scale icons as specified by scale_icon_mode.  range greater 0, "
+"less or equal 1"
+msgstr ""
+
+#: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:10
+msgid "Method to grab windows.  0...gdk."
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:11
@@ -3268,7 +3474,7 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:15
 msgid "The colour (RGBA) of the applet border."
-msgstr ""
+msgstr "Couleur (RGBA) de la bordure de l'applet."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:16
 msgid "The colour of the desktop (RGBA) if grab_wallpaper is FALSE."
@@ -3314,7 +3520,7 @@ msgstr "<b>Arrière-plan</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:6
 msgid "<b>Icon transparency</b>"
-msgstr ""
+msgstr "<b>Transparence de l'icône</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:7
 msgid "<b>Timers</b>"
@@ -3326,19 +3532,19 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:9
 msgid "<b>Windows</b>"
-msgstr ""
+msgstr "<b>Fenêtres</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:10
 msgid "Active window:"
-msgstr ""
+msgstr "Fenêtre active :"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:11
 msgid "Active workspace"
-msgstr ""
+msgstr "Espace de travail actif"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:12
 msgid "Active workspace:"
-msgstr ""
+msgstr "Espace de travail actif :"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:13
 msgid "All window"
@@ -3346,7 +3552,7 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:14
 msgid "All windows"
-msgstr ""
+msgstr "Toutes les fenêtres"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:15
 msgid "B_order color:"
@@ -3362,15 +3568,15 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:19
 msgid "Cache expiration:"
-msgstr ""
+msgstr "Expiration du cache :"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:20
 msgid "Center"
-msgstr ""
+msgstr "Centré"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:21
 msgid "Co_lumns:"
-msgstr ""
+msgstr "Co_lonnes :"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:22
 msgid "Icon _display:"
@@ -3382,39 +3588,39 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:24
 msgid "Inactive window:"
-msgstr ""
+msgstr "Fenêtres inactives :"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:25
 msgid "Inactive windows"
-msgstr ""
+msgstr "Fenêtres inactives"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:26
 msgid "Inactive workspace:"
-msgstr ""
+msgstr "Espace de travail inactif :"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:27
 msgid "Inactive workspaces"
-msgstr ""
+msgstr "Espaces de travail inactifs"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:28
 msgid "Look"
-msgstr ""
+msgstr "Apparence"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:29
 msgid "Lower left"
-msgstr ""
+msgstr "En bas à gauche"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:30
 msgid "Lower right"
-msgstr ""
+msgstr "En bas à droite"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:31
 msgid "Never"
-msgstr ""
+msgstr "Jamais"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:33
 msgid "Only active window"
-msgstr ""
+msgstr "Fenêtre active uniquement"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:34
 msgid "Render update:"
@@ -3434,11 +3640,11 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:38
 msgid "Upper left"
-msgstr ""
+msgstr "En haut à gauche"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:39
 msgid "Upper right"
-msgstr ""
+msgstr "En haut à droite"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:40
 msgid "Use _desktop background"
@@ -3446,34 +3652,50 @@ msgstr "Utiliser l'arrière-plan du _bureau"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:41
 msgid "_Applet size:"
-msgstr ""
+msgstr "Taille de l'applet :"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:42
 msgid "_Rows:"
-msgstr ""
+msgstr "_Lignes :"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:43
 msgid "_Thumbnailing:"
+msgstr "Miniatures :"
+
+#: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:1
+msgid "A prettier desktop switcher"
+msgstr ""
+
+#: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:2
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2438
+msgid "Shiny Switcher"
+msgstr ""
+
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:642
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:735
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1945
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2012
+msgid "Applet Preferences"
 msgstr ""
 
 #: ../applets/maintained/showdesktop/applet.vala:40
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:2
 msgid "Show Desktop"
-msgstr ""
+msgstr "Afficher le bureau"
 
 #. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
 #: ../applets/maintained/showdesktop/applet.vala:78
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:1
 msgid "Hides your windows and shows your desktop."
-msgstr ""
+msgstr "Masque vos fenêtres et affiche votre bureau."
 
 #: ../applets/maintained/showdesktop/applet.vala:93
 msgid "Show hidden windows"
-msgstr ""
+msgstr "Affiche les fenêtres masquées"
 
 #: ../applets/maintained/showdesktop/applet.vala:98
 msgid "Hide windows and show desktop"
-msgstr ""
+msgstr "Masquer les fenêtres et afficher le bureau"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:1
 msgid "The background color of the dialog"
@@ -3485,7 +3707,7 @@ msgstr ""
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:3
 msgid "The border color of the dialog"
-msgstr ""
+msgstr "La couleur de la bordure de la boite de dialogue"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:4
 msgid "The bottom part of the shiny gradient"
@@ -3513,7 +3735,7 @@ msgstr ""
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:10
 msgid "The icon's border color"
-msgstr ""
+msgstr "Couleur de la bordure de l'icône"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:11
 msgid "The main color of a drawn window"
@@ -3559,12 +3781,12 @@ msgstr ""
 #. Border Colors
 #: ../applets/maintained/slickswitcher/prefs.py:94
 msgid "Border Colors"
-msgstr ""
+msgstr "Couleurs des bordures"
 
 #. Icon Border
 #: ../applets/maintained/slickswitcher/prefs.py:100
 msgid "Icon border:"
-msgstr ""
+msgstr "Bordure de l'icône :"
 
 #. Normal Border
 #: ../applets/maintained/slickswitcher/prefs.py:103
@@ -3591,7 +3813,7 @@ msgstr ""
 #: ../applets/maintained/slickswitcher/prefs.py:118
 #: ../applets/maintained/slickswitcher/prefs.py:137
 msgid "Border color:"
-msgstr ""
+msgstr "Couleur de la bordure :"
 
 #. Dialog Colors
 #: ../applets/maintained/slickswitcher/prefs.py:121
@@ -3602,7 +3824,7 @@ msgstr ""
 #: ../applets/maintained/slickswitcher/prefs.py:127
 #: ../applets/maintained/slickswitcher/prefs.py:193
 msgid "Use custom colors"
-msgstr ""
+msgstr "Utiliser des couleurs personnalisées"
 
 #. Background Color
 #: ../applets/maintained/slickswitcher/prefs.py:134
@@ -3611,7 +3833,7 @@ msgstr "Couleur de l'arrière plan :"
 
 #: ../applets/maintained/slickswitcher/prefs.py:183
 msgid "Colors"
-msgstr ""
+msgstr "Couleurs"
 
 #. Other colors: text and shine
 #. Number Colors
@@ -3632,12 +3854,12 @@ msgstr "Couleurs brillantes"
 #. Top Color
 #: ../applets/maintained/slickswitcher/prefs.py:212
 msgid "Top color:"
-msgstr ""
+msgstr "Couleur du haut :"
 
 #. Bottom Color
 #: ../applets/maintained/slickswitcher/prefs.py:215
 msgid "Bottom color:"
-msgstr ""
+msgstr "Couleur du bas :"
 
 #. Hover Top Color
 #: ../applets/maintained/slickswitcher/prefs.py:218
@@ -3665,7 +3887,7 @@ msgstr "Hauteur :"
 
 #: ../applets/maintained/slickswitcher/prefs.py:299
 msgid "Workspace Size"
-msgstr ""
+msgstr "Taille d'un espace de travail"
 
 #. Mode
 #: ../applets/maintained/slickswitcher/prefs.py:315
@@ -3678,7 +3900,7 @@ msgstr "GNOME"
 
 #: ../applets/maintained/slickswitcher/prefs.py:319
 msgid "Compiz Wallpaper Plugin"
-msgstr ""
+msgstr "Greffon « Fond d'écran » de Compiz"
 
 #: ../applets/maintained/slickswitcher/prefs.py:320
 msgid "File"
@@ -3691,7 +3913,11 @@ msgstr "Fichier :"
 
 #: ../applets/maintained/slickswitcher/prefs.py:341
 msgid "Choose a Background Image"
-msgstr "Choisir une image de fond"
+msgstr "Choisir une image d'arrière plan"
+
+#: ../applets/maintained/slickswitcher/prefs.py:347
+msgid "Pictures"
+msgstr "Images"
 
 #: ../applets/maintained/slickswitcher/prefs.py:367
 #: ../applets/maintained/to-do/prefs.py:445
@@ -3700,18 +3926,18 @@ msgstr "Arrière-plan"
 
 #: ../applets/maintained/slickswitcher/prefs.py:379
 msgid "Advanced"
-msgstr ""
+msgstr "Avancé"
 
 #: ../applets/maintained/slickswitcher/slickswitcher.desktop.in.h:1
 #: ../applets/maintained/slickswitcher/slickswitcher.py:281
 msgid "A visual workspace switcher"
-msgstr ""
+msgstr "Un changeur d'espace de travail visuel"
 
 #: ../applets/maintained/slickswitcher/slickswitcher.desktop.in.h:2
 #: ../applets/maintained/slickswitcher/slickswitcher.py:63
 #: ../applets/maintained/slickswitcher/slickswitcher.py:272
 msgid "SlickSwitcher"
-msgstr ""
+msgstr "SlickSwitcher"
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:1
 msgid ""
@@ -3735,6 +3961,61 @@ msgstr ""
 msgid "Render background."
 msgstr "S'occuper du rendu de l'arrière-plan."
 
+#. Translators: %2.0lf is a number, %% is a percent sign, do not change them
+#: ../applets/maintained/sysmon/cpuicon.c:161
+#: ../applets/maintained/sysmon/cpuicon.c:204
+#, c-format
+msgid "CPU: %2.0lf%%"
+msgstr ""
+
+#: ../applets/maintained/sysmon/cpuicon.c:353
+#: ../applets/maintained/sysmon/cpu-dialog.c:256
+msgid "CPU"
+msgstr ""
+
+#: ../applets/maintained/sysmon/cpuicon.c:580
+msgid "Graph Type"
+msgstr ""
+
+#. Translators: refers to a graph type
+#: ../applets/maintained/sysmon/cpuicon.c:587
+msgid "Area"
+msgstr ""
+
+#: ../applets/maintained/sysmon/cpuicon.c:590
+msgid "Circle"
+msgstr ""
+
+#: ../applets/maintained/sysmon/cpuicon.c:593
+msgid "Bars"
+msgstr ""
+
+#: ../applets/maintained/sysmon/cpuicon.c:596
+msgid "Default"
+msgstr ""
+
+#. item = gtk_menu_item_new_with_label ("Add Icon");
+#. gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
+#. submenu = gtk_menu_new ();
+#. gtk_menu_item_set_submenu (GTK_MENU_ITEM(item),submenu);
+#. item = gtk_menu_item_new_with_label ("CPU");
+#. gtk_menu_shell_append(GTK_MENU_SHELL(submenu), item);
+#. 
+#. item = gtk_menu_item_new_with_label ("Remove Icon");
+#. gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
+#. 
+#: ../applets/maintained/sysmon/cpuicon.c:610
+msgid "Render Background"
+msgstr ""
+
+#: ../applets/maintained/sysmon/cpu-dialog.c:240
+msgid "PID"
+msgstr ""
+
+#: ../applets/maintained/sysmon/cpu-dialog.c:248
+msgid "Process Name"
+msgstr ""
+
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:1
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:2
 msgid "Manage system activity"
@@ -3742,14 +4023,30 @@ msgstr ""
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:2
 msgid "System Monitor"
-msgstr ""
+msgstr "Moniteur système"
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:1
+#: ../applets/maintained/thinkhdaps/thinkhdaps.py:35
 msgid "Applet that shows the shock protection status of your disks"
 msgstr ""
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:2
+#: ../applets/maintained/thinkhdaps/thinkhdaps.py:34
 msgid "ThinkHDAPS"
+msgstr ""
+
+#: ../applets/maintained/thinkhdaps/thinkhdaps.py:40
+#, python-format
+msgid "%s protected from shocks"
+msgstr ""
+
+#: ../applets/maintained/thinkhdaps/thinkhdaps.py:41
+#, python-format
+msgid "%s not protected from shocks"
+msgstr ""
+
+#: ../applets/maintained/thinkhdaps/thinkhdaps.py:153
+msgid "No hard disk found"
 msgstr ""
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:1
@@ -3822,7 +4119,7 @@ msgstr ""
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:18
 msgid "The title to display"
-msgstr ""
+msgstr "Titre à afiicher"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:19
 msgid "What type of icon to display (progress, progress-items, items)"
@@ -3993,78 +4290,78 @@ msgstr "Type d'icône"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:1
 msgid "Manage a simple To-Do list"
-msgstr ""
+msgstr "Gère une simple liste de choses à faire"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:2
-#: ../applets/maintained/to-do/to-do.py:68
-#: ../applets/maintained/to-do/to-do.py:217
-#: ../applets/maintained/to-do/to-do.py:269
-#: ../applets/maintained/to-do/to-do.py:907
+#: ../applets/maintained/to-do/to-do.py:69
+#: ../applets/maintained/to-do/to-do.py:218
+#: ../applets/maintained/to-do/to-do.py:270
+#: ../applets/maintained/to-do/to-do.py:908
 msgid "To-Do List"
 msgstr "Liste des tâches à faire"
 
-#: ../applets/maintained/to-do/to-do.py:220
+#: ../applets/maintained/to-do/to-do.py:221
 msgid "A simple To-Do List"
 msgstr "Une simple liste des tâches à faire"
 
-#: ../applets/maintained/to-do/to-do.py:299
+#: ../applets/maintained/to-do/to-do.py:300
 msgid "Remove item"
 msgstr "Supprimer cet élément"
 
-#: ../applets/maintained/to-do/to-do.py:381
+#: ../applets/maintained/to-do/to-do.py:382
 msgid "Remove category"
 msgstr "Supprimer la catégorie"
 
-#: ../applets/maintained/to-do/to-do.py:405
+#: ../applets/maintained/to-do/to-do.py:406
 msgid "View/Edit details"
 msgstr "Voir/Modifier les détails"
 
 #. Make the RadioButtons for each category
 #. First category: No category! (Uncategorized)
-#: ../applets/maintained/to-do/to-do.py:525
+#: ../applets/maintained/to-do/to-do.py:526
 msgid "_Uncategorized"
 msgstr "_Sans catégorie"
 
 #. First RadioButton - ( )Category
-#: ../applets/maintained/to-do/to-do.py:549
+#: ../applets/maintained/to-do/to-do.py:550
 msgid "_Category"
 msgstr "_Catégorie"
 
 #. Second RadioButton - (-)To-Do item
 #. TODO: better text than "To-Do item"?
-#: ../applets/maintained/to-do/to-do.py:556
+#: ../applets/maintained/to-do/to-do.py:557
 msgid "_To-Do item"
 msgstr "_Tâche"
 
 #. Label: Priority:
-#: ../applets/maintained/to-do/to-do.py:641
+#: ../applets/maintained/to-do/to-do.py:642
 msgid "Priority: "
 msgstr "Priorité : "
 
 #. Neutral, Low, Medium, and High priority RadioButtons
-#: ../applets/maintained/to-do/to-do.py:644
+#: ../applets/maintained/to-do/to-do.py:645
 msgid "_Neutral"
 msgstr "_Neutre"
 
-#: ../applets/maintained/to-do/to-do.py:646
+#: ../applets/maintained/to-do/to-do.py:647
 msgid "_Low"
 msgstr "_Faible"
 
-#: ../applets/maintained/to-do/to-do.py:648
+#: ../applets/maintained/to-do/to-do.py:649
 msgid "_Medium"
 msgstr "_Moyenne"
 
-#: ../applets/maintained/to-do/to-do.py:650
+#: ../applets/maintained/to-do/to-do.py:651
 msgid "_High"
 msgstr "_Haute"
 
 #. Label: Progress(%):
-#: ../applets/maintained/to-do/to-do.py:678
+#: ../applets/maintained/to-do/to-do.py:679
 msgid "Progress(%): "
 msgstr "Avancement(%) : "
 
 #. Make Label
-#: ../applets/maintained/to-do/to-do.py:1130
+#: ../applets/maintained/to-do/to-do.py:1131
 #, python-format
 msgid ""
 "Are you sure you want to remove the category \"%s?\"\n"
@@ -4074,93 +4371,129 @@ msgstr ""
 "Tout son contenu et ses élements seront supprimés."
 
 #. Make CheckButton
-#: ../applets/maintained/to-do/to-do.py:1134
-#: ../applets/maintained/to-do/to-do.py:1170
+#: ../applets/maintained/to-do/to-do.py:1135
+#: ../applets/maintained/to-do/to-do.py:1171
 msgid "Don't show this again."
 msgstr "Ne plus afficher ce message."
 
 #. Make Label
-#: ../applets/maintained/to-do/to-do.py:1167
+#: ../applets/maintained/to-do/to-do.py:1168
 msgid "Are you sure you want to remove this item?"
 msgstr "Êtes vous sûr de vouloir supprimer cet élément ?"
 
+#. Set the tooltip: X% done
+#. Translators: %d is a number, %% is a percent sign, please don't change them,
+#. but you may add a space character between them, e.g. in German: %d %% erledigt
 #. Reset the tooltip
-#: ../applets/maintained/to-do/to-do.py:1366
+#. Translators: %d is a number, %% is a percent sign, please don't change them,
+#. but you may add a space character between them, e.g. in German: %d %% erledigt
+#: ../applets/maintained/to-do/to-do.py:1360
+#: ../applets/maintained/to-do/to-do.py:1371
 #, python-format
-msgid "% done"
-msgstr "% done"
+msgid "%d%% done"
+msgstr ""
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:1
-#: ../applets/maintained/tomboy-applet/tomboy-applet.py:34
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:31
 msgid "Control Tomboy with D-Bus"
-msgstr ""
+msgstr "Contrôler Tomboy avec D-bus"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:2
-#: ../applets/maintained/tomboy-applet/tomboy-applet.py:33
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:30
 msgid "Tomboy Applet"
-msgstr ""
+msgstr "Applet Tomboy"
+
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:108
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:130
+msgid "Select a tag:"
+msgstr "Sélectionnez un tag :"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:114
-#: ../applets/maintained/tomboy-applet/tomboy-applet.py:136
-msgid "Select a tag:"
-msgstr ""
-
-#: ../applets/maintained/tomboy-applet/tomboy-applet.py:120
 msgid "No tags were created yet"
-msgstr ""
+msgstr "Aucun tag n'a pour l'instant été créé"
 
-#: ../applets/maintained/tomboy-applet/tomboy-applet.py:125
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:119
 msgid "Select a note:"
-msgstr ""
+msgstr "Sélectionnez une note :"
 
-#: ../applets/maintained/tomboy-applet/tomboy-applet.py:155
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:149
 #, python-format
 msgid "Version: %s"
-msgstr ""
+msgstr "Version : %s"
 
-#: ../applets/maintained/tomboy-applet/tomboy-applet.py:161
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:155
 msgid "New Note"
 msgstr "Nouvelle note"
 
-#: ../applets/maintained/tomboy-applet/tomboy-applet.py:165
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:159
 msgid "New Tagged Note"
-msgstr ""
+msgstr "Nouvelle note taguée"
 
-#: ../applets/maintained/tomboy-applet/tomboy-applet.py:169
+#: ../applets/maintained/tomboy-applet/tomboy-applet.py:163
 msgid "View Tagged Note"
-msgstr ""
+msgstr "Voir les notes taguée"
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:1
 msgid "A simple applet to test vala support"
-msgstr ""
+msgstr "Un simple applet pour tester le support de Vala"
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:2
 msgid "Test Vala Applet"
-msgstr ""
+msgstr "Applet de test pour Vala"
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:1
 msgid "Name of the device."
-msgstr ""
+msgstr "Nom du service."
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:2
 msgid "Name of the mixer track."
-msgstr ""
+msgstr "Nom de la piste du mixeur."
 
 #: ../applets/maintained/volume-control/volume-control.desktop.in.h:1
 msgid "Control your computer's volume"
-msgstr ""
+msgstr "Contrôler le volume de votre ordinateur"
 
 #: ../applets/maintained/volume-control/volume-control.desktop.in.h:2
+#: ../applets/maintained/volume-control/volume-control.py:43
 msgid "Volume Control"
 msgstr "Contrôleur de volume"
 
-#: ../applets/maintained/volume-control/volume-control.ui.h:1
-msgid "+"
-msgstr "+"
+#: ../applets/maintained/volume-control/volume-control.py:44
+msgid "Applet to control your computer's volume"
+msgstr ""
+
+#: ../applets/maintained/volume-control/volume-control.py:49
+#: ../applets/maintained/weather/weather.py:62
+msgid "System theme"
+msgstr ""
+
+#: ../applets/maintained/volume-control/volume-control.py:67
+#, python-format
+msgid ""
+"Install the appropriate plug-ins for one or more of the following GStreamer "
+"elements: %s."
+msgstr ""
+
+#: ../applets/maintained/volume-control/volume-control.py:68
+msgid "Could not find any devices."
+msgstr ""
+
+#: ../applets/maintained/volume-control/volume-control.py:184
+msgid "_Open Volume Control"
+msgstr ""
+
+#: ../applets/maintained/volume-control/volume-control.py:379
+msgid "No GStreamer mixer found"
+msgstr ""
+
+#: ../applets/maintained/volume-control/volume-control.py:385
+msgid "No devices found"
+msgstr ""
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:2
-msgid "-"
-msgstr "-"
+#, no-c-format
+msgid "100%"
+msgstr ""
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:3
 msgid "<b>Audio Options</b>"
@@ -4168,147 +4501,500 @@ msgstr "<b>Options audio</b>"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:5
 msgid "_Device:"
-msgstr ""
+msgstr "_Périphérique :"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:6
 msgid "_Mixer track:"
+msgstr "Piste du _mixeur :"
+
+#: ../applets/maintained/volume-control/volume-control.ui.h:7
+msgid "_Mute"
 msgstr ""
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:1
 msgid "City, and country of the weather location."
-msgstr ""
+msgstr "Ville et pays de l'emplacement météorologique."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:2
 msgid "Code that identifies the weather location."
-msgstr ""
+msgstr "Code identifiant l'emplacement météorologique."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:3
-msgid "Fahrenheit)."
-msgstr ""
+msgid "If enabled, show the temperature as an overlay in the icon."
+msgstr "Si activé, montre la température en superposition sur l'icône."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:4
-msgid "If enabled, show the temperature as an overlay in the icon."
-msgstr ""
+msgid "Maximum width of map in pixels."
+msgstr "Largeur maximale de la carte (en pixels)."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:5
-msgid "Maximum width of map in pixels."
+msgid "Show days of forecast in a transparent, curved dialog."
 msgstr ""
+"Montre les jours des prévisions dans un affichage transparent et incurvé."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:6
-msgid "Show days of forecast in a transparent, curved dialog."
+msgid ""
+"Size of the temperature overlay in the icon (0: small, 1: medium, 2: large)."
+msgstr ""
+
+#: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:7
+msgid "Temperature unit (0: Celsius, 1: Fahrenheit)."
 msgstr ""
 
 #: ../applets/maintained/weather/forecast.py:54
-#: ../applets/maintained/weather/forecast.py:82
+#: ../applets/maintained/weather/forecast.py:84
 msgid "Forecast"
 msgstr "Prévisions"
 
 #: ../applets/maintained/weather/forecast.py:54
-#: ../applets/maintained/weather/forecast.py:82
+#: ../applets/maintained/weather/forecast.py:84
 msgid "for"
 msgstr "pour"
 
-#: ../applets/maintained/weather/forecast.py:167
+#: ../applets/maintained/weather/forecast.py:169
 msgid "WEEKDAY"
 msgstr "Jour de la semaine"
 
-#: ../applets/maintained/weather/forecast.py:171
+#: ../applets/maintained/weather/forecast.py:173
 msgid "Tomorrow"
 msgstr "Demain"
 
 #. Weather condition
-#: ../applets/maintained/weather/forecast.py:197
-#: ../applets/maintained/weather/weather.py:452
+#: ../applets/maintained/weather/forecast.py:199
+#: ../applets/maintained/weather/weather.py:475
 msgid "DESCRIPTION"
 msgstr "DESCRIPTION"
 
-#: ../applets/maintained/weather/forecast.py:249
+#: ../applets/maintained/weather/forecast.py:251
 msgid "Weather data provided by weather.com"
-msgstr "Données météo fournies par weather.com"
+msgstr "Donnés météorologiques fournies par weather.com"
+
+#: ../applets/maintained/weather/weathertext.py:38
+msgid "Blowing Snow"
+msgstr "Tempête de neige"
+
+#: ../applets/maintained/weather/weathertext.py:39
+msgid "Blustery"
+msgstr "Bourrasques"
+
+#: ../applets/maintained/weather/weathertext.py:40
+msgid "Clear"
+msgstr "Dégagé"
+
+#: ../applets/maintained/weather/weathertext.py:41
+msgid "Cloudy"
+msgstr "Nuageux"
+
+#: ../applets/maintained/weather/weathertext.py:42
+msgid "Cold"
+msgstr "Froid"
+
+#: ../applets/maintained/weather/weathertext.py:43
+msgid "Drizzle"
+msgstr "Bruine"
+
+#: ../applets/maintained/weather/weathertext.py:44
+msgid "Dust"
+msgstr "Poussières"
+
+#: ../applets/maintained/weather/weathertext.py:45
+msgid "Fair"
+msgstr "Beau temps"
+
+#: ../applets/maintained/weather/weathertext.py:46
+msgid "Fog"
+msgstr "Brouillard"
+
+#: ../applets/maintained/weather/weathertext.py:47
+msgid "Freezing Drizzle"
+msgstr "Bruine givrante"
+
+#: ../applets/maintained/weather/weathertext.py:48
+msgid "Freezing Rain"
+msgstr "Pluie givrante"
+
+#: ../applets/maintained/weather/weathertext.py:49
+msgid "Hail"
+msgstr "Grêle"
+
+#: ../applets/maintained/weather/weathertext.py:50
+msgid "Haze"
+msgstr "Brume"
+
+#: ../applets/maintained/weather/weathertext.py:51
+msgid "Heavy Snow"
+msgstr "Fortes chutes de neige"
+
+#: ../applets/maintained/weather/weathertext.py:52
+msgid "Hot"
+msgstr "Chaud"
+
+#: ../applets/maintained/weather/weathertext.py:53
+msgid "Hurricane"
+msgstr "Ouragan"
+
+#: ../applets/maintained/weather/weathertext.py:54
+msgid "Isolated Thunderstorms"
+msgstr "Orages isolés"
+
+#: ../applets/maintained/weather/weathertext.py:55
+msgid "Light Rain Shower"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:56
+msgid "Light Rain with Thunder"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:57
+msgid "Light Snow Showers"
+msgstr "Légères averses de neige"
+
+#: ../applets/maintained/weather/weathertext.py:58
+msgid "Mixed Precipitation"
+msgstr "Précipitations"
+
+#: ../applets/maintained/weather/weathertext.py:59
+msgid "Mixed Rain and Hail"
+msgstr "Pluie et grêle"
+
+#: ../applets/maintained/weather/weathertext.py:60
+msgid "Mixed Rain and Sleet"
+msgstr "Pluie et neige fondue"
+
+#: ../applets/maintained/weather/weathertext.py:61
+msgid "Mixed Rain and Snow"
+msgstr "Pluie et neige"
+
+#: ../applets/maintained/weather/weathertext.py:62
+msgid "Mostly Cloudy"
+msgstr "Très nuageux"
+
+#: ../applets/maintained/weather/weathertext.py:63
+msgid "N/A"
+msgstr "Indisponible"
+
+#: ../applets/maintained/weather/weathertext.py:64
+msgid "Partly Cloudy"
+msgstr "Peu nuageux"
+
+#: ../applets/maintained/weather/weathertext.py:65
+msgid "Scattered Showers"
+msgstr "Averses clairsemées"
+
+#: ../applets/maintained/weather/weathertext.py:66
+msgid "Scattered Snow Showers"
+msgstr "Averses de neige clairsemées"
+
+#: ../applets/maintained/weather/weathertext.py:67
+msgid "Scattered Thunderstorms"
+msgstr "Orages clairesemés"
+
+#: ../applets/maintained/weather/weathertext.py:68
+msgid "Severe Thunderstorms"
+msgstr "Orages violents"
+
+#: ../applets/maintained/weather/weathertext.py:69
+msgid "Showers"
+msgstr "Averse"
+
+#: ../applets/maintained/weather/weathertext.py:70
+msgid "Sleet"
+msgstr "Neige fondue"
+
+#: ../applets/maintained/weather/weathertext.py:71
+msgid "Smoke"
+msgstr "Fumée"
+
+#: ../applets/maintained/weather/weathertext.py:72
+msgid "Snow"
+msgstr "Neige"
+
+#: ../applets/maintained/weather/weathertext.py:73
+msgid "Snow Flurries"
+msgstr "Bourrasque de neige"
+
+#: ../applets/maintained/weather/weathertext.py:74
+msgid "Snow Showers"
+msgstr "Averses de neige"
+
+#: ../applets/maintained/weather/weathertext.py:75
+msgid "Thunder Showers"
+msgstr "Pluie orageuse"
+
+#: ../applets/maintained/weather/weathertext.py:76
+msgid "Thunderstorms"
+msgstr "Orages"
+
+#: ../applets/maintained/weather/weathertext.py:77
+msgid "Tornado"
+msgstr "Tornade"
+
+#: ../applets/maintained/weather/weathertext.py:78
+msgid "Tropical Storm"
+msgstr "Tempête tropicale"
+
+#: ../applets/maintained/weather/weathertext.py:79
+msgid "Windy"
+msgstr "Vent"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:84
+msgid "AM Clouds / PM Sun"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:86
+msgid "AM Drizzle / Wind"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:88
+msgid "AM Fog / PM Sun"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:90
+msgid "AM Light Rain"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:92
+msgid "AM Rain / Wind"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:94
+msgid "AM Showers"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#. T-Showers = Thunder Showers
+#: ../applets/maintained/weather/weathertext.py:97
+msgid "AM T-Showers"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#. T-Storms = Thunderstorms
+#: ../applets/maintained/weather/weathertext.py:100
+msgid "AM T-Storms"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:102
+msgid "Few Showers"
+msgstr "Ondées"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:104
+msgid "Heavy Rain"
+msgstr "Forte pluie"
+
+#. Please keep translation short, approx. 12 characters
+#. T-Storms = Thunderstorms
+#: ../applets/maintained/weather/weathertext.py:107
+msgid "Isolated T-Storms"
+msgstr "Orages isolés"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:109
+msgid "Light Rain"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:111
+msgid "Mostly Sunny"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:113
+msgid "Partly Cloudy / Wind"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:115
+msgid "PM Light Rain"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:117
+msgid "PM Showers"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#. T-Showers = Thunder Showers
+#: ../applets/maintained/weather/weathertext.py:120
+msgid "PM T-Showers"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#. T-Storms = Thunderstorms
+#: ../applets/maintained/weather/weathertext.py:123
+msgid "PM T-Storms"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:125
+msgid "Rain"
+msgstr "Pluie"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:127
+msgid "Rain / Wind"
+msgstr "Pluie / vent"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:129
+msgid "Rain / Thunder"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:131
+msgid "Scattered Showers / Wind"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#. T-Storms = Thunderstorms
+#: ../applets/maintained/weather/weathertext.py:134
+msgid "Scattered T-Storms"
+msgstr "Orages épars"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:136
+msgid "Sunny"
+msgstr "Ensoleillé"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:138
+msgid "Sunny / Wind"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#. T-Showers = Thunder Showers
+#: ../applets/maintained/weather/weathertext.py:141
+msgid "T-Showers"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:145
+msgid "Monday"
+msgstr "Lundi"
+
+#: ../applets/maintained/weather/weathertext.py:146
+msgid "Tuesday"
+msgstr "Mardi"
+
+#: ../applets/maintained/weather/weathertext.py:147
+msgid "Wednesday"
+msgstr "Mercredi"
+
+#: ../applets/maintained/weather/weathertext.py:148
+msgid "Thursday"
+msgstr "Jeudi"
+
+#: ../applets/maintained/weather/weathertext.py:149
+msgid "Friday"
+msgstr "Vendredi"
+
+#: ../applets/maintained/weather/weathertext.py:150
+msgid "Saturday"
+msgstr "Samedi"
+
+#: ../applets/maintained/weather/weathertext.py:151
+msgid "Sunday"
+msgstr "Dimanche"
 
 #: ../applets/maintained/weather/weather.desktop.in.h:1
 msgid "Display the local weather"
-msgstr "Afficher la météo locale"
+msgstr "Affiche la météo locale"
 
 #: ../applets/maintained/weather/weather.desktop.in.h:2
 msgid "Weather Applet"
 msgstr "Applet météo"
 
-#: ../applets/maintained/weather/weather.py:215
+#: ../applets/maintained/weather/weather.py:41
+msgid "Weather"
+msgstr "Météo"
+
+#: ../applets/maintained/weather/weather.py:42
+msgid "Applet to display current weather and forecast"
+msgstr "Applet affichant la météo actuelle et les prévisions"
+
+#: ../applets/maintained/weather/weather.py:71
+msgid ""
+"Could not retrieve weather data. You may be experiencing connectivity issues."
+msgstr ""
+"Échec de la récupération des données météorologiques. Vous avez peut-être un "
+"problème avec votre connexion Internet."
+
+#: ../applets/maintained/weather/weather.py:205
+msgid "Network error in Weather"
+msgstr "Erreur réseau dans l'applet météo"
+
+#: ../applets/maintained/weather/weather.py:213
+#: ../applets/maintained/weather/weather.py:255
 msgid "Fetching conditions for"
 msgstr "Récupération les prévisions pour"
 
-#: ../applets/maintained/weather/weather.py:254
+#: ../applets/maintained/weather/weather.py:273
 msgid "Show _Map"
-msgstr ""
+msgstr "Afficher la _carte"
 
-#: ../applets/maintained/weather/weather.py:302
-#: ../applets/maintained/weather/weather.py:380
+#: ../applets/maintained/weather/weather.py:322
+#: ../applets/maintained/weather/weather.py:400
 msgid "No records found"
-msgstr ""
+msgstr "Aucun résultat"
 
-#: ../applets/maintained/weather/weather.py:371
+#: ../applets/maintained/weather/weather.py:391
 msgid "Searching..."
 msgstr "Recherche en cours..."
 
 #: ../applets/maintained/weather/weather.ui.h:4
 msgid "<b>Icon Display</b>"
-msgstr ""
+msgstr "<b>Affichage des icônes</b>"
 
 #: ../applets/maintained/weather/weather.ui.h:5
 msgid ""
 "<i><b>Examples:</b> Boston; Portland, ME, Amsterdam; or Osaka, Japan.</i>"
 msgstr ""
+"<i><b>Exemples :</b> Paris, Bruxelles, Toronto, Amsterdam, Osaka...</i>"
 
 #: ../applets/maintained/weather/weather.ui.h:6
 msgid "Current _location:"
-msgstr ""
+msgstr "Emplacement :"
 
 #: ../applets/maintained/weather/weather.ui.h:7
 msgid ""
 "If enabled, the dialog will be transparent, and the five days of the "
 "forecast will be curved"
 msgstr ""
+"Si activé, l'affichage des prévisions à 5 jours sera transparent et incurvé"
 
 #: ../applets/maintained/weather/weather.ui.h:8
 msgid "If enabled, the temperature will be displayed in the icon"
-msgstr ""
-
-#: ../applets/maintained/weather/weather.ui.h:9
-msgid "Large"
-msgstr ""
+msgstr "Si activé, la température sera affichée dans l'icône"
 
 #: ../applets/maintained/weather/weather.ui.h:10
 msgid "Maximum _map width:"
-msgstr ""
-
-#: ../applets/maintained/weather/weather.ui.h:11
-msgid "Medium"
-msgstr ""
+msgstr "Largeur maximale de la _carte :"
 
 #: ../applets/maintained/weather/weather.ui.h:12
 msgid "Show temperature in _icon"
 msgstr ""
 
-#: ../applets/maintained/weather/weather.ui.h:13
-msgid "Small"
-msgstr ""
-
 #: ../applets/maintained/weather/weather.ui.h:14
 msgid "Temperature _unit:"
-msgstr ""
+msgstr "_Unité de température :"
 
 #: ../applets/maintained/weather/weather.ui.h:15
 msgid "Temperature font _size:"
-msgstr ""
+msgstr "Taille de la _police de la température :"
 
 #: ../applets/maintained/weather/weather.ui.h:16
 msgid "Use transparent/curved _forecast dialog"
-msgstr ""
+msgstr "Utiliser un affichage des prévisions transparent et _incurvé"
 
 #: ../applets/maintained/weather/weather.ui.h:17
 msgid "_Location Name:"
-msgstr ""
+msgstr "Nom du _lieu :"
 
 #. Make the dialog
 #: ../applets/maintained/webapplet/applet.c:262
@@ -4370,11 +5056,58 @@ msgid "Wobbly Zini"
 msgstr ""
 
 #: ../applets/maintained/yama/yama.desktop.in.h:1
+#: ../applets/maintained/yama/yama.py:46
 msgid "Main menu with places and recent documents"
 msgstr ""
 
 #: ../applets/maintained/yama/yama.desktop.in.h:2
 msgid "Yet Another Menu Applet"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.py:45
+msgid "YAMA"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.py:171
+#, python-format
+msgid "Log out %s of this session to log in as a different user"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.py:189
+msgid "_Edit Menus"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.py:253
+msgid "Open your personal folder"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.py:255
+msgid "Open the contents of your desktop in a folder"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.py:306
+msgid "Connect to a remote computer or shared disk"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.py:336
+msgid "Clear all items from the recent documents list"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.py:375
+#, python-format
+msgid "Open '%s'"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.py:417
+#, python-format
+msgid "Mount %s"
+msgstr ""
+
+#: ../applets/maintained/yama/yama.py:569
+msgid ""
+"Clearing the Recent Documents list will clear the following:\n"
+"* All items from the Places > Recent Documents menu item.\n"
+"* All items from the recent documents list in all applications."
 msgstr ""
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:1
@@ -4405,18 +5138,14 @@ msgstr ""
 msgid "The pixel width of the applet border."
 msgstr ""
 
-#: ../applets/unmaintained/main-menu/applet.c:394
+#: ../applets/unmaintained/main-menu/applet.c:393
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:2
 msgid "Awn Main Menu"
 msgstr "Menu principal de Awn"
 
-#: ../applets/unmaintained/main-menu/applet.c:395
+#: ../applets/unmaintained/main-menu/applet.c:394
 msgid "Displays a list of all your applications"
 msgstr "Affiche une liste de toutes vos applications"
-
-#: ../applets/unmaintained/main-menu/applet.c:453
-msgid "Main Menu"
-msgstr "Menu principal"
 
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:1
 msgid "A main menu for Awn"
@@ -4434,160 +5163,28 @@ msgstr "Écouter la radio internet Pandora"
 msgid "Pandora Radio"
 msgstr "Radio Pandora"
 
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:1
-msgid " sort by date)."
-msgstr " trier par date)."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:2
-msgid ""
-"Backend type for this applet (0 - file, 1 - folder, 2 - plugger, 3 - "
-"trasher, 4 - recent files)."
+#: ../shared/python/awnlib.py:125
+#, python-format
+msgid "_About %s"
 msgstr ""
 
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:3
-msgid "Close dialog on focusout."
-msgstr ""
+#~ msgid ""
+#~ "There seem to be problems with our                     connection to your "
+#~ "account. Your best bet is probably                     to log out and try "
+#~ "again."
+#~ msgstr ""
+#~ "Il semble y avoir des problèmes avec la connexion à votre compte. Vous "
+#~ "devriez peut-être vous déconnecter et réessayer."
 
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:4
-msgid "Display number of items in the stack."
-msgstr ""
+#, python-format
+#~ msgid "% done"
+#~ msgstr "% done"
 
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:5
-msgid "File operation to use."
-msgstr ""
+#~ msgid " Upload/Download"
+#~ msgstr " Envoi/Réception"
 
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:6
-msgid "Hoverbox background color 1."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:7
-msgid "Hoverbox background color 2."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:8
-msgid "Hoverbox border color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:9
-msgid "Icon to use for empty stack."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:10
-msgid "Icon to use for full stack."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:11
-msgid "Label background color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:12
-msgid "Label border color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:13
-msgid "Label hover background color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:14
-msgid "Label hover border color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:15
-msgid "Label length."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:16
-msgid "Label text color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:17
-msgid "Label text hover color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:18
-msgid "Layout direction."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:19
-msgid "Layout interval."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:20
-msgid "Layout radius."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:21
-msgid "Number of columns to use."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:22
-msgid "Number of rows to use."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:23
-msgid "Size of the icons inside stack."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:24
-msgid "Sort direction of the items."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:25
-msgid "Sort folders before files."
-msgstr "Trier les dossiers avant les fichiers."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:26
-msgid "Stack tooltip description."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:27
-msgid "Stacks backend file/directory."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:28
-msgid "Tooltip background color 1."
-msgstr "Couleur 1 de l'arrière-plan des infobulles."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:29
-msgid "Tooltip background color 2."
-msgstr "Couleur 2 de l'arrière-plan des infobulles."
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:30
-msgid "Tooltip border color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:31
-msgid "Tooltip font name."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:32
-msgid "Tooltip text color."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:33
-msgid "Type of UI used for the stack."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:34
-msgid "Use Awn's tooltip font."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:35
-msgid "Whether hoverbox contains label."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:36
-msgid "Whether to browse stack contents."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:37
-msgid ""
-"Whether to combine icons of the files inside the stacks with its icon."
-msgstr ""
-
-#: ../applets/unmaintained/stacks/awn-applet-stacks.schema-ini.in.h:38
-msgid "Whether tooltips are enabled."
-msgstr ""
+#~ msgid " bytes)"
+#~ msgstr " octets)"
 
 #~ msgid "Fetching weather data."
 #~ msgstr "Acquisition des données météo."
@@ -4605,3 +5202,216 @@ msgstr ""
 
 #~ msgid "Upper Center"
 #~ msgstr "Centrées en haut"
+
+#~ msgid "Statistics calculation requires read access to /proc/net/dev"
+#~ msgstr ""
+#~ "Le calcul des statistiques nécessite l'accès en lecture à /proc/net/dev"
+
+#~ msgid "Sent"
+#~ msgstr "Envoyé"
+
+#~ msgid "Received"
+#~ msgstr "Reçu"
+
+#~ msgid "Sending"
+#~ msgstr "Envoi"
+
+#~ msgid "Receiving"
+#~ msgstr "Réception"
+
+#~ msgid "No"
+#~ msgstr "Non"
+
+#~ msgid " 0.9)."
+#~ msgstr " 0.9)."
+
+#~ msgid "Sort folders before files."
+#~ msgstr "Trier les dossiers avant les fichiers."
+
+#~ msgid " sort by date)."
+#~ msgstr " trier par date)."
+
+#~ msgid "Do not display the speed as text, only draw the graph"
+#~ msgstr ""
+#~ "Ne pas représenter la vitesse par du texte, dessiner seulement le graphe"
+
+#~ msgid "Display the sum of upload and download"
+#~ msgstr "Afficher la somme des réceptions et des envois"
+
+#~ msgid ""
+#~ "If this is checked the applet border will use the selected color. If "
+#~ "unchecked, border will be transparent"
+#~ msgstr ""
+#~ "Si activé, la bordure de l'applet utilisera la couleur sélectionnée. Sinon, "
+#~ "la bordure sera transparente."
+
+#~ msgid ""
+#~ "If enabled, this will draw a line at the bottom of the graph even if the "
+#~ "value is 0. If unchecked, values below 1 are not drawn in the graph."
+#~ msgstr ""
+#~ "Si activé, une ligne sera dessinée en bas du graphe même si la valeur est 0. "
+#~ "Sinon, les valeurs inférieures à 1 ne seront pas dessinées."
+
+#~ msgid "Beaufort)."
+#~ msgstr "Beaufort)."
+
+#~ msgid "Kelvin)."
+#~ msgstr "Kelvin)."
+
+#~ msgid "Celcius"
+#~ msgstr "Celcius"
+
+#~ msgid " none)."
+#~ msgstr " aucun)."
+
+#~ msgid "(C) 2009, Lachlan Turner (Denham 2010)."
+#~ msgstr "(C) 2009, Lachlan Turner (Denham 2010)."
+
+#~ msgid "Layout Lists"
+#~ msgstr "Listes des dispositons"
+
+#~ msgid "Dialect Applet Help"
+#~ msgstr "Aide de l'applet dialecte"
+
+#~ msgid "User List"
+#~ msgstr "Liste des utilisateurs"
+
+#~ msgid "Previous Layout"
+#~ msgstr "Agencement précédent"
+
+#~ msgid "Next Layout"
+#~ msgstr "Agencement suivant"
+
+#~ msgid "Menu"
+#~ msgstr "Menu"
+
+#~ msgid "Do you want to add this feed?"
+#~ msgstr "Voulez vous ajouter ce flux ?"
+
+#, python-format
+#~ msgid "%s New Item%s - Feeds Applet"
+#~ msgstr "%s Nouveaux éléments%s - Applet flux"
+
+#~ msgid ""
+#~ "If this is checked the applet background will use the selected color. If "
+#~ "unchecked, background will be transparent"
+#~ msgstr ""
+#~ "Si activé, l'arrière-plan de l'applet utilisera la couleur sélectionnée. "
+#~ "Sinon, l'arrière-plan sera transparent."
+
+#~ msgid "Tooltip background color 2."
+#~ msgstr "Couleur 2 de l'arrière-plan des infobulles."
+
+#~ msgid "Tooltip background color 1."
+#~ msgstr "Couleur 1 de l'arrière-plan des infobulles."
+
+#~ msgid "Unable to caclulate statistics"
+#~ msgstr "Incapable de calculer les statistiques"
+
+#~ msgid "System List"
+#~ msgstr "Liste du système"
+
+#, python-format
+#~ msgid "Do you want to add these %s feeds?"
+#~ msgstr "Voulez vous ajouter ces %s flux ?"
+
+#~ msgid "Templates"
+#~ msgstr "Modèles"
+
+#~ msgid "Public"
+#~ msgstr "Public"
+
+#~ msgid "Videos"
+#~ msgstr "Vidéos"
+
+#~ msgid "Downloads"
+#~ msgstr "Téléchargements"
+
+#~ msgid "Documents"
+#~ msgstr "Documents"
+
+#~ msgid "Music"
+#~ msgstr "Musique"
+
+#~ msgid ""
+#~ "\n"
+#~ "Left Click:\n"
+#~ "\n"
+#~ "\tNext Layout\t\tselects the next layout in your user list.\n"
+#~ "\tPrevious Layout\tselects the previous layout in your user list.\n"
+#~ "\tMenu\t\t\tselect a layout from a menu of your user list.\n"
+#~ "\tNone\t\t\tbutton will have no action.\n"
+#~ "\n"
+#~ "Middle Click:\n"
+#~ "\n"
+#~ "\tNext Layout\t\tselects the next layout in your user list.\n"
+#~ "\tPrevious Layout\tselects the previous layout in your user list.\n"
+#~ "\tMenu\t\t\tselect a layout from a menu of your user list.\n"
+#~ "\tNone\t\t\tbutton will have no action.\n"
+#~ "\n"
+#~ "Allow scroll wheel to change layout:\n"
+#~ "\n"
+#~ "\tIf selected, scrolling up or down with your mouse wheel will select\n"
+#~ "\tthe next or previous layout in your user list.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Clic gauche :\n"
+#~ "\n"
+#~ "\tAgencement suivant\t\tsélectionne l'agencement suivant dans votre liste.\n"
+#~ "\tAgencement précédent\tsélectionne l'agencement précédent dans votre "
+#~ "liste.\n"
+#~ "\tMenu\t\t\tsélectionner un agencement depuis un menu de votre liste.\n"
+#~ "\tAucun\t\t\tle bouton n'aura aucun effet.\n"
+#~ "\n"
+#~ "Clic milieu :\n"
+#~ "\n"
+#~ "\tAgencement suivant\t\tsélectionne l'agencement suivant dans votre liste.\n"
+#~ "\tAgencement précédent\tsélectionne l'agencement précédent dans votre "
+#~ "liste.\n"
+#~ "\tMenu\t\t\t\t\tsélectionner un agencement depuis un menu de votre liste.\n"
+#~ "\tAucun\t\t\t\t\tle bouton n'aura aucun effet.\n"
+#~ "\n"
+#~ "Autoriser la molette à changer l'agencement :\n"
+#~ "\n"
+#~ "\tSi activé, la molette de la souris permet de sélectionner\n"
+#~ "\t l'agencement suivant ou précédent dans votre liste.\n"
+
+#~ msgid "Display upload and download text representation of speed"
+#~ msgstr ""
+#~ "Afficher une représentation textuelle des vitesses d'émission et de réception"
+
+#~ msgid ""
+#~ "Sets the minimum threshold for scaling to not show large spikes for small "
+#~ "amounts of traffic. e.g.: Setting to 32.0 KBps will cause the graph to only "
+#~ "draw if throughput exceeds 32.0 KBps"
+#~ msgstr ""
+#~ "Défini le seuil minimum de l'échelle pour ne pas afficher de grands piques "
+#~ "pour un trafic faible. ex : En définissant 32.0Ko/s, seul les débits de plus "
+#~ "de 32.0Ko/s seront affichés."
+
+#~ msgid "Flag Scale"
+#~ msgstr "Taille du drapeau"
+
+#~ msgid "Flag Overlay"
+#~ msgstr "Superposition du drapeau"
+
+#~ msgid "Overlay layout flag on applet icon"
+#~ msgstr "Superposer le drapeau de l'agencement sur l'icône de l'applet"
+
+#~ msgid "Flag Opacity"
+#~ msgstr "Opacité du drapeau"
+
+#~ msgid "Allow scroll wheel to change layout"
+#~ msgstr "Autoriser la molette pour changer l'agencement"
+
+#~ msgid "Mouse Actions"
+#~ msgstr "Actions de la souris"
+
+#~ msgid "+"
+#~ msgstr "+"
+
+#~ msgid "-"
+#~ msgstr "-"
+
+#~ msgid " persistent docklet"
+#~ msgstr " docklet persistant"

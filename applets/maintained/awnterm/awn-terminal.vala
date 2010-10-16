@@ -97,7 +97,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
         {
           this.model.set (iter, 1,
             this._keybinding != null && this._keybinding.size () > 0 ?
-              this._keybinding : _ ("Disabled"));
+              this._keybinding : Gettext._ ("Disabled"));
         }
       }
     }
@@ -409,7 +409,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     }
 
     this.prefs_window = new Gtk.Window (Gtk.WindowType.TOPLEVEL);
-    this.prefs_window.set_title (_ ("Preferences"));
+    this.prefs_window.set_title (Gettext._ ("Preferences"));
     this.prefs_window.set_default_icon_name ("terminal");
     this.prefs_window.set_border_width (6);
 
@@ -424,7 +424,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     this.prefs_window.add (box);
 
     Gtk.Widget widget = new Gtk.Label ("");
-    (widget as Gtk.Label).set_markup ("<b>%s</b>".printf (_ ("Behavior")));
+    (widget as Gtk.Label).set_markup ("<b>%s</b>".printf (Gettext._ ("Behavior")));
     (widget as Gtk.Label).set_alignment (0.0f, 0.5f);
     box.pack_start (widget, false, false, 0);
 
@@ -436,7 +436,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     align.add (box2);
 
     // focus out behavior checkbox
-    widget = new Gtk.CheckButton.with_label (_ ("Hide when focus is lost"));
+    widget = new Gtk.CheckButton.with_label (Gettext._ ("Hide when focus is lost"));
     (widget as CheckButton).set_active (this.hide_on_unfocus);
     (widget as CheckButton).toggled.connect ((w) =>
     {
@@ -455,7 +455,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     treeview.set_model (this.model);
 
     ren = new CellRendererText ();
-    col = new TreeViewColumn.with_attributes (_ ("Action"), ren, "text", 0);
+    col = new TreeViewColumn.with_attributes (Gettext._ ("Action"), ren, "text", 0);
     treeview.append_column (col);
 
     ren = new CellRendererAccel ();
@@ -475,13 +475,13 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     {
       this.keybinding = "";
     });
-    col = new TreeViewColumn.with_attributes (_ ("Shortcut"), ren, "text",1);
+    col = new TreeViewColumn.with_attributes (Gettext._ ("Shortcut"), ren, "text",1);
     treeview.append_column (col);
 
     // add the actual item
     Gtk.TreeIter iter;
     this.model.append (out iter);
-    this.model.set (iter, 0, _ ("Activate"));
+    this.model.set (iter, 0, Gettext._ ("Activate"));
     // this will set the keybinding in the model
     this.keybinding = this._keybinding;
 
@@ -490,7 +490,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     box.pack_start (section_box, false, false, 0);
 
     widget = new Gtk.Label ("");
-    (widget as Gtk.Label).set_markup ("<b>%s</b>".printf (_ ("Background image")));
+    (widget as Gtk.Label).set_markup ("<b>%s</b>".printf (Gettext._ ("Background image")));
     (widget as Gtk.Label).set_alignment (0.0f, 0.5f);
     section_box.pack_start (widget, false, false, 0);
 
@@ -502,7 +502,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     align.add (box2);
 
     this.preview_image = new Gtk.Image ();
-    this.chooser = new Gtk.FileChooserButton (_ ("Select a file"),
+    this.chooser = new Gtk.FileChooserButton (Gettext._ ("Select a file"),
                                         Gtk.FileChooserAction.OPEN);
     this.chooser.set_filename (this.background_image);
     this.chooser.set_preview_widget (this.preview_image);
@@ -544,7 +544,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     box.pack_start (section_box, false, false, 0);
 
     widget = new Gtk.Label ("");
-    (widget as Gtk.Label).set_markup ("<b>%s</b>".printf (_ ("Terminal opacity")));
+    (widget as Gtk.Label).set_markup ("<b>%s</b>".printf (Gettext._ ("Terminal opacity")));
     (widget as Gtk.Label).set_alignment (0.0f, 0.5f);
     section_box.pack_start (widget, false, false, 3);
 
@@ -571,7 +571,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     box.pack_start (section_box, false, false, 0);
 
     widget = new Gtk.Label ("");
-    (widget as Gtk.Label).set_markup ("<b>%s</b>".printf (_ ("External Terminal")));
+    (widget as Gtk.Label).set_markup ("<b>%s</b>".printf (Gettext._ ("External Terminal")));
     (widget as Gtk.Label).set_alignment (0.0f, 0.5f);
     section_box.pack_start (widget, false, false, 3);
 

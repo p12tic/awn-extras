@@ -64,7 +64,7 @@ volume_step = 4
 
 mixer_names = ("pulsemixer", "oss4mixer", "alsamixer")
 
-no_mixer_message = _("Install one or more of the following GStreamer elements: %s.")
+no_mixer_message = _("Install the appropriate plug-ins for one or more of the following GStreamer elements: %s.")
 no_devices_message = _("Could not find any devices.")
 
 gtk_add_mark_ok = awnlib.is_required_version(gtk.gtk_version, (2, 16, 0)) \
@@ -376,8 +376,8 @@ class GStreamerBackend:
         useable_mixers = [i for i in mixer_names if i in found_mixers]
 
         if len(useable_mixers) == 0:
-            parent.applet.errors.general((_("No mixer found"), no_mixer_message % ", ".join(mixer_names)))
-            raise BackendError("No mixer found")
+            parent.applet.errors.general((_("No GStreamer mixer found"), no_mixer_message % ", ".join(mixer_names)))
+            raise BackendError("No GStreamer mixer found")
 
         mixer_devices = self.find_mixer_and_devices(useable_mixers)
 

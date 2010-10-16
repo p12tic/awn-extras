@@ -171,7 +171,7 @@ class RelatedApplet : AppletSimple
   private async void update_star (string desktop_file)
   {
     var ptr_array = new PtrArray ();
-    unowned string actor = desktop_file.rchr (-1, '/').offset (1);
+    string actor = Path.get_basename (desktop_file);
 
     var event = new Event ();
     var helper_event_list = new List<Event> ();
@@ -223,11 +223,19 @@ class RelatedApplet : AppletSimple
       ptr_array.add (event);
     }
 
-    var events = yield zg_log.find_events (new TimeRange.to_now (),
-                                           (owned) ptr_array,
-                                           StorageState.ANY, 16,
-                                           ResultType.MOST_RECENT_SUBJECTS,
-                                           null);
+    ResultSet events;
+    try
+    {
+      events = yield zg_log.find_events (new TimeRange.to_now (),
+                                         (owned) ptr_array,
+                                         StorageState.ANY, 16,
+                                         ResultType.MOST_RECENT_SUBJECTS,
+                                         null);
+    }
+    catch (GLib.Error err)
+    {
+      return false;
+    }
 
     int results_pushed = 0;
     foreach (unowned Event e in events)
@@ -249,11 +257,20 @@ class RelatedApplet : AppletSimple
     var event = new Event ();
     if (actor != null) event.set_actor ("application://" + actor);
     ptr_array.add (event);
-    var events = yield zg_log.find_events (new TimeRange.to_now (),
-                                           (owned) ptr_array,
-                                           StorageState.ANY, 16,
-                                           ResultType.MOST_POPULAR_SUBJECTS,
-                                           null);
+
+    ResultSet events;
+    try
+    {
+      events = yield zg_log.find_events (new TimeRange.to_now (),
+                                         (owned) ptr_array,
+                                         StorageState.ANY, 16,
+                                         ResultType.MOST_POPULAR_SUBJECTS,
+                                         null);
+    }
+    catch (GLib.Error err)
+    {
+      return false;
+    }
 
     int results_pushed = 0;
     foreach (unowned Event e in events)
@@ -300,8 +317,8 @@ class RelatedApplet : AppletSimple
     if (found1) vbox.add (new Gtk.HSeparator ());
 
     // get items by app
-    unowned string actor = null;
-    if (desktop_file != null) actor = desktop_file.rchr (-1, '/').offset (1);
+    string? actor = null;
+    if (desktop_file != null) actor = Path.get_basename (desktop_file);
     found2 = yield get_events_for_actor (actor);
 
     if (desktop_file != null && !found1 && !found2)

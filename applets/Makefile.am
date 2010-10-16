@@ -7,7 +7,9 @@ if MAINTAINER_MODE
 CONDITIONAL_APPLETS += maintained/vala-test
 endif
 if HAVE_LIBZG
-CONDITIONAL_APPLETS += maintained/related
+CONDITIONAL_APPLETS += \
+	maintained/related \
+	$(NULL)
 endif
 CONDITIONAL_APPLETS += \
 	maintained/garbage \

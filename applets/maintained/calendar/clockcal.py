@@ -285,7 +285,12 @@ class Calendar(awn.AppletSimple):
                 self.set_icon_context(self.ct)
             result = True
         now = datetime.datetime.now()
-        self.title_text = now.strftime('%x %X')
+        # Translators: This is a date/time format string. You can check the
+        # output in terminal with 'date +"%x %X"'. In most cases you don't have
+        # to change it. See 'date --help' for other formats, that might be more
+        # common in your locale.
+        # xgettext:no-python-format
+        self.title_text = now.strftime(_('%x %X'))
         self.set_tooltip_text(self.title_text)
         self.previous_minute = current_minute
         self.previous_day = current_day

@@ -40,7 +40,8 @@ except ImportError:
 import gio
 import glib
 import gmenu
-from xdg import BaseDirectory
+
+xdg_data_dirs = [os.path.expanduser("~/.local/share")] + os.environ["XDG_DATA_DIRS"].split(":")
 
 applet_name = _("YAMA")
 applet_description = _("Main menu with places and recent documents")
@@ -115,18 +116,20 @@ class YamaApplet:
 
         """ Applications """
         tree = gmenu.lookup_tree("applications.menu")
-        self.append_directory(tree.root, self.menu, item_list=self.applications_items)
         tree.add_monitor(self.menu_changed_cb, self.applications_items)
+        if tree.root is not None:
+            self.append_directory(tree.root, self.menu, item_list=self.applications_items)
 
-        self.menu.append(gtk.SeparatorMenuItem())
+            self.menu.append(gtk.SeparatorMenuItem())
 
         """ Places """
         self.create_places_submenu(self.menu)
 
         """ System """
         tree = gmenu.lookup_tree("settings.menu")
-        self.append_directory(tree.root, self.menu, item_list=self.settings_items)
         tree.add_monitor(self.menu_changed_cb, self.settings_items)
+        if tree.root is not None:
+            self.append_directory(tree.root, self.menu, item_list=self.settings_items)
 
         """ Session actions """
         if dbus is not None:
@@ -201,15 +204,16 @@ class YamaApplet:
 
     def menu_changed_cb(self, menu_tree, menu_items):
         def refresh_menu(tree, items):
-            with self.__rebuild_lock:
-                # Delete old items
-                for i in xrange(len(items)):
-                    items.pop().destroy()
-
-                index = len(self.applications_items) + 2 if items is self.settings_items else 0  # + 2 = separator + Places
-                self.append_directory(tree.root, self.menu, index=index, item_list=items)
-                # Refresh menu to re-initialize the widget
-                self.menu.show_all()
+            if tree.root is not None:
+                with self.__rebuild_lock:
+                    # Delete old items
+                    for i in xrange(len(items)):
+                        items.pop().destroy()
+    
+                    index = len(self.applications_items) + 2 if items is self.settings_items else 0  # + 2 = separator + Places
+                    self.append_directory(tree.root, self.menu, index=index, item_list=items)
+                    # Refresh menu to re-initialize the widget
+                    self.menu.show_all()
             return False
         with self.__schedule_lock:
             file = menu_tree.menu_file
@@ -358,11 +362,12 @@ class YamaApplet:
                     uri, name = (url_name[0], url_name[1])
 
                     if uri.startswith("file://"):
-                        if not vfs.File.for_uri(uri).exists():
+                        file = vfs.File.for_uri(uri)
+
+                        if not file.exists():
                             continue
-                        file = gio.File(uri)
-                        info = file.query_info(gio.FILE_ATTRIBUTE_STANDARD_ICON, gio.FILE_QUERY_INFO_NONE)
-                        icon = self.get_icon_name(info.get_attribute_object(gio.FILE_ATTRIBUTE_STANDARD_ICON))
+
+                        icon = self.get_first_existing_icon(file.get_icon_names())
                         display_uri = uri[7:]
                     else:
                         icon = "folder-remote"
@@ -393,7 +398,8 @@ class YamaApplet:
             return icon.get_file().get_path()
 
     def get_first_existing_icon(self, icons):
-        return filter(self.icon_theme.has_icon, icons)[0]
+        existing_icons = filter(self.icon_theme.has_icon, icons)
+        return existing_icons[0] if len(existing_icons) > 0 else "image-missing"
 
     def append_volumes(self):
         # Delete old items
@@ -514,7 +520,7 @@ class YamaApplet:
         selection_data.set_uris(["file://" + path])
 
     def append_awn_desktop(self, menu, desktop_name):
-        for dir in BaseDirectory.xdg_data_dirs:
+        for dir in xdg_data_dirs:
             path = os.path.join(dir, "applications", desktop_name + ".desktop")
             file = vfs.File.for_path(path)
 
@@ -546,7 +552,7 @@ class YamaApplet:
             self.icon_theme.handler_block_by_func(self.theme_changed_cb)
             return self.icon_theme.load_icon(icon_name, 24, gtk.ICON_LOOKUP_FORCE_SIZE)
         except:
-            for dir in BaseDirectory.xdg_data_dirs:
+            for dir in xdg_data_dirs:
                 for i in ("pixmaps", "icons"):
                     path = os.path.join(dir, i, icon_value)
                     if os.path.isfile(path):

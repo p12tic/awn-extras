@@ -960,6 +960,20 @@ class WebFeed(FeedSource, StandardNew):
         self.get_favicon()
 
 
+class ErrorDialog(gtk.MessageDialog):
+
+    def __init__(self, parent, primary_msg, secondary_msg):
+        gtk.MessageDialog.__init__(self, type=gtk.MESSAGE_ERROR,
+                                   buttons=gtk.BUTTONS_CLOSE,
+                                   message_format=primary_msg)
+
+        self.format_secondary_markup(str(secondary_msg))
+        self.__parent = parent
+        self.set_skip_taskbar_hint(False)
+
+        self.run()
+        self.destroy()
+
 def get_16x16(pb):
     if pb.get_width() != 16 or pb.get_height() != 16:
         pb2 = pb.scale_simple(16, 16, gtk.gdk.INTERP_BILINEAR)

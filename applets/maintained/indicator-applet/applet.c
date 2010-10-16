@@ -841,46 +841,6 @@ update_icon_mode(IndicatorApplet *iapplet)
 }
 
 /* AwnIcon-related code ... */
-static void
-icon_menu_position(GtkMenu *menu, gint *x, gint *y, gboolean *move, IndicatorApplet *iapplet)
-{
-  GtkWidget *icon = GTK_WIDGET(g_list_nth_data(iapplet->awnicons, iapplet->popup_num));
-  GtkPositionType pos_type = awn_applet_get_pos_type(iapplet->applet);
-  gint size = awn_applet_get_size(iapplet->applet);
-  gint offset = awn_applet_get_offset(iapplet->applet);
-
-  gint mw = GTK_WIDGET(menu)->requisition.width;
-  gint mh = GTK_WIDGET(menu)->requisition.height;
-  gint aw = icon->allocation.width;
-  gint ah = icon->allocation.height;
-
-  GdkScreen *screen = gtk_widget_get_screen(icon);
-  gint sw = gdk_screen_get_width(screen);
-  gint sh = gdk_screen_get_height(screen);
-
-  switch (pos_type)
-  {
-    case GTK_POS_LEFT:
-      *x = offset + size * 1.1;
-      gdk_window_get_origin(icon->window, NULL, y);
-      break;  
-    case GTK_POS_RIGHT:
-      *x = sw - offset - size * 1.1 - mw;
-      gdk_window_get_origin(icon->window, NULL, y);
-      break;
-    case GTK_POS_TOP:
-      gdk_window_get_origin(icon->window, x, NULL);
-      *y = offset + size * 1.1;
-      break;
-    default:
-      gdk_window_get_origin(icon->window, x, NULL);
-      *y = sh - offset - size * 1.1 - mh;
-      break;
-  }
-
-  *move = TRUE;
-}
-
 static gboolean
 icon_button_press(AwnIcon *icon, GdkEventButton *event, IndicatorApplet *iapplet)
 {
@@ -932,41 +892,6 @@ icon_scroll(AwnIcon *icon, GdkEventScroll *event, IndicatorApplet *iapplet)
 }
 
 /* DrawingArea-related code ... */
-static void
-da_menu_position(GtkMenu *menu, gint *x, gint *y, gboolean *move, IndicatorApplet *iapplet)
-{
-  AwnApplet *applet = AWN_APPLET(iapplet->applet);
-  GtkPositionType pos = awn_applet_get_pos_type(applet);
-  gint size = awn_applet_get_size(applet);
-  gint offset = awn_applet_get_offset(applet);
-  gint mwidth = GTK_WIDGET(menu)->requisition.width;
-  gint mheight = GTK_WIDGET(menu)->requisition.height;
-  gint rc = iapplet->config_rows_cols;
-  gint pb_size = size * 1.1 / rc;
-
-  switch (pos)
-  {
-    case GTK_POS_BOTTOM:
-      *x -= iapplet->dx;
-      *y -= iapplet->dy + mheight;
-      break;
-    case GTK_POS_TOP:
-      *x -= iapplet->dx;
-      *y += pb_size - iapplet->dy;
-      break;
-    case GTK_POS_LEFT:
-      *x += pb_size - iapplet->dx;
-      *y -= iapplet->dy;
-      break;
-    default:
-      *x -= iapplet->dx + mwidth;
-      *y -= iapplet->dy;
-      break;
-  }
-
-  *move = TRUE;
-}
-
 static gboolean
 da_button_press(GtkWidget *widget, GdkEventButton *event, IndicatorApplet *iapplet)
 {
@@ -1000,7 +925,7 @@ da_button_press(GtkWidget *widget, GdkEventButton *event, IndicatorApplet *iappl
   }
 
   gtk_menu_popup(GTK_MENU(g_list_nth_data(iapplet->shown_menus, iapplet->popup_num)), NULL, NULL,
-    (GtkMenuPositionFunc)da_menu_position, (gpointer)iapplet, event->button, event->time);
+    (GtkMenuPositionFunc)awn_utils_menu_set_position_widget_relative, (gpointer)iapplet->applet, event->button, event->time);
 
   return FALSE;
 }

@@ -400,7 +400,7 @@ entry_added(IndicatorObject *io, IndicatorObjectEntry *entry, IndicatorApplet *i
   iapplet->menus = g_list_append(iapplet->menus, entry->menu);
   iapplet->num++;
 
-  gint handler = g_signal_connect(G_OBJECT(entry->image), "notify::pixbuf",
+  gulong handler = g_signal_connect(G_OBJECT(entry->image), "notify::pixbuf",
                                   G_CALLBACK(pixbuf_changed), (gpointer)iapplet);
   g_object_set_data(G_OBJECT(entry->image), "pixbufhandler", (gpointer)handler);
 
@@ -420,7 +420,7 @@ entry_removed(IndicatorObject *io, IndicatorObjectEntry *entry, IndicatorApplet 
   iapplet->menus = g_list_remove(iapplet->menus, entry->menu);
   iapplet->num--;
 
-  gint handler = (gint)g_object_get_data(G_OBJECT(entry->image), "pixbufhandler");
+  gulong handler = (gulong)g_object_get_data(G_OBJECT(entry->image), "pixbufhandler");
 
   if (g_signal_handler_is_connected(G_OBJECT(entry->image), handler))
   {
@@ -724,7 +724,7 @@ update_icon_mode(IndicatorApplet *iapplet)
   GtkIconInfo *icon_info;
 
   gint nshown = g_list_length(iapplet->shown_images);
-  gint i;
+  gulong i;
   for (i = 0; i < nshown; i++)
   {
     image = GTK_IMAGE(g_list_nth_data(iapplet->shown_images, i));
@@ -849,7 +849,7 @@ icon_button_press(AwnIcon *icon, GdkEventButton *event, IndicatorApplet *iapplet
     return FALSE;
   }
 
-  iapplet->popup_num = (gint)g_object_get_data(G_OBJECT(icon), "num");
+  iapplet->popup_num = (gulong)g_object_get_data(G_OBJECT(icon), "num");
 
   awn_icon_popup_gtk_menu (icon, GTK_WIDGET (g_list_nth_data(iapplet->shown_menus, iapplet->popup_num)), 1, event->time);
 
@@ -882,7 +882,7 @@ icon_right_click(AwnIcon *icon, GdkEventButton *event, IndicatorApplet *iapplet)
 static gboolean
 icon_scroll(AwnIcon *icon, GdkEventScroll *event, IndicatorApplet *iapplet)
 {
-  gint num = (gint)g_object_get_data(G_OBJECT(icon), "num");
+  gulong num = (gulong)g_object_get_data(G_OBJECT(icon), "num");
 
   GtkWidget *image = g_list_nth_data(iapplet->shown_images, num);
   IndicatorObject *io = g_object_get_data(G_OBJECT(image), "indicator");

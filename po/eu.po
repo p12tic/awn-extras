@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-02 00:09+0200\n"
-"PO-Revision-Date: 2010-10-11 23:32+0000\n"
-"Last-Translator: Michal Hruby <michal.mhr@gmail.com>\n"
+"POT-Creation-Date: 2010-10-15 20:22+0200\n"
+"PO-Revision-Date: 2010-10-16 23:14+0000\n"
+"Last-Translator: Asier Sarasua Garmendia <Unknown>\n"
 "Language-Team: Basque <eu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-10-13 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-10-17 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -627,6 +627,32 @@ msgstr "_Gaia:"
 msgid "_Warn when charge level drops to:"
 msgstr "_Abisatu karga-maila hona jaisten denean:"
 
+#: ../applets/maintained/battery/messagehandler.py:73
+msgid "Battery is running low"
+msgstr "Bateria gutxi geratzen da"
+
+#: ../applets/maintained/battery/messagehandler.py:99
+#, python-format
+msgid "You have approximately <b>%s</b> of remaining battery power (%d%%)."
+msgstr "Gutxi gora-behera <b>%s</b> bateria geratzen zaizu (%d%%)."
+
+#: ../applets/maintained/battery/messagehandler.py:130
+msgid "Battery is critically low"
+msgstr "Bateriaren maila oso baxua da"
+
+#: ../applets/maintained/battery/messagehandler.py:151
+msgid "Battery is charged"
+msgstr "Bateria kargatu da"
+
+#: ../applets/maintained/battery/messagehandler.py:172
+msgid "Your battery is fully charged."
+msgstr "Bateria erabat kargatu da"
+
+#: ../applets/maintained/battery/messagehandler.py:174
+#, python-format
+msgid "Your battery is charged to <b>%d%%</b>."
+msgstr "Zure bateria <b>%d%%</b> mailaraino kargatu da."
+
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:1
 msgid "A custom time format (strftime()), used if not empty."
 msgstr ""
@@ -853,7 +879,7 @@ msgstr "Amaitu saioa"
 #: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:46
 #: ../applets/maintained/quit/quit.py:57
 #: ../applets/maintained/quit/quit.py:265
-#: ../applets/maintained/yama/yama.py:153
+#: ../applets/maintained/yama/yama.py:154
 msgid "Lock Screen"
 msgstr "Blokeatu pantaila"
 
@@ -886,7 +912,7 @@ msgstr "Etxea"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:215
 #: ../applets/maintained/places/applet.c:344
-#: ../applets/maintained/yama/yama.py:255
+#: ../applets/maintained/yama/yama.py:256
 msgid "Desktop"
 msgstr "Mahaigaina"
 
@@ -918,13 +944,13 @@ msgstr "Konektatu zerbitzarira"
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1048
 #: ../applets/maintained/file-browser-launcher/prefs.py:249
 #: ../applets/maintained/places/places.desktop.in.in.h:2
-#: ../applets/maintained/yama/yama.py:246
+#: ../applets/maintained/yama/yama.py:247
 msgid "Places"
 msgstr "Lekuak"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1071
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1086
-#: ../applets/maintained/yama/yama.py:322
+#: ../applets/maintained/yama/yama.py:323
 msgid "Recent Documents"
 msgstr "Azken dokumentuak"
 
@@ -944,13 +970,13 @@ msgid "Launch\\u2026"
 msgstr "Abiarazi\\u2026"
 
 #: ../applets/maintained/cairo-menu/misc.c:161
-#: ../applets/maintained/yama/yama.py:584
+#: ../applets/maintained/yama/yama.py:587
 #, c-format, python-format
 msgid "Unable to mount %s"
 msgstr "Ezin da %s muntatu"
 
 #: ../applets/maintained/cairo-menu/misc.c:407
-#: ../applets/maintained/yama/yama.py:563
+#: ../applets/maintained/yama/yama.py:566
 msgid "Clear the Recent Documents list?"
 msgstr "Garbitu azken dokumentuen zerrenda?"
 
@@ -968,8 +994,8 @@ msgstr ""
 
 #: ../applets/maintained/cairo-menu/misc.c:423
 #: ../applets/maintained/cairo-menu/misc.c:532
-#: ../applets/maintained/yama/yama.py:336
-#: ../applets/maintained/yama/yama.py:568
+#: ../applets/maintained/yama/yama.py:337
+#: ../applets/maintained/yama/yama.py:571
 msgid "Clear Recent Documents"
 msgstr "Garbitu azken dokumentuak"
 
@@ -1154,7 +1180,7 @@ msgid "Open in "
 msgstr "Ireki hemen: "
 
 #: ../applets/maintained/calendar/clockcal.py:504
-#: ../applets/maintained/weather/forecast.py:171
+#: ../applets/maintained/weather/forecast.py:174
 msgid "Today"
 msgstr "Gaur"
 
@@ -1239,7 +1265,7 @@ msgid "Failed to remove <i>%s</i>."
 msgstr "Ezin izan da <i>%s</i> kendu."
 
 #: ../applets/maintained/comics/comics_manage.py:125
-#: ../applets/maintained/feeds/feeds.py:391
+#: ../applets/maintained/feeds/feeds.py:389
 msgid "Error"
 msgstr "Errorea"
 
@@ -1332,6 +1358,25 @@ msgstr "Tamaina"
 msgid "Unknown command sent: %s"
 msgstr "Agindu ezezaguna bidali da: %s"
 
+#: ../applets/maintained/common-folder/common-folder.desktop.in.h:1
+#: ../applets/maintained/common-folder/common-folder.py:32
+msgid "Common Folder Launcher"
+msgstr "Karpeta komunen abiarazlea"
+
+#: ../applets/maintained/common-folder/common-folder.desktop.in.h:2
+msgid "Launcher for common folders and bookmarks"
+msgstr "Karpeta eta laster-marka komunen abiarazlea"
+
+#: ../applets/maintained/common-folder/common-folder.py:33
+msgid "Applet to launch common folders and bookmarks"
+msgstr "Karpeta eta laster-marka komunak abiarazteko appleta"
+
+#: ../applets/maintained/common-folder/common-folder.py:93
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:385
+#: ../applets/maintained/yama/yama.py:254
+msgid "Home Folder"
+msgstr "Karpeta nagusia"
+
 #: ../applets/maintained/cpufreq/awn-applet-cpufreq.schema-ini.in.h:1
 msgid "Index of processor."
 msgstr "Prozesadorearen indizea."
@@ -1346,7 +1391,7 @@ msgstr "PUZaren maiztasuna gainbegiratu eta kontrolatzeko appleta"
 msgid "CPU Frequency Monitor"
 msgstr "PUZ maiztasunaren monitorea"
 
-#: ../applets/maintained/cpufreq/cpufreq.py:233
+#: ../applets/maintained/cpufreq/cpufreq.py:234
 msgid ""
 "<span size=\"large\"><b>Scaling unavailable</b></span>\n"
 "\n"
@@ -1358,11 +1403,11 @@ msgstr ""
 "Maiztasunaren eskalatzea ezin da\n"
 "eskuratu hautatutako PUZerako."
 
-#: ../applets/maintained/cpufreq/cpufreq.py:261
+#: ../applets/maintained/cpufreq/cpufreq.py:262
 msgid "GHz"
 msgstr "GHz"
 
-#: ../applets/maintained/cpufreq/cpufreq.py:264
+#: ../applets/maintained/cpufreq/cpufreq.py:265
 msgid "MHz"
 msgstr "MHz"
 
@@ -1424,6 +1469,14 @@ msgstr " Dialektoen appleta"
 #: ../applets/maintained/dialect/dialect.desktop.in.h:2
 msgid "Change your keyboard input layout from Awn."
 msgstr "Aldatu zure teklatu-diseinua Awn-tik."
+
+#: ../applets/maintained/dialect/dialect.py:68
+msgid "Dialect Applet"
+msgstr "Dialektoen appleta"
+
+#: ../applets/maintained/dialect/dialect.py:197
+msgid "<b>User List:</b> The list of "
+msgstr "<b>Erabiltzaile-zerrenda:</b> Honen zerrenda: "
 
 #: ../applets/maintained/dialect/dialect.ui.h:1
 msgid "<b>Flag on Applet Icon</b>"
@@ -1664,68 +1717,68 @@ msgstr "Denbora-tartea (minututan) eguneraketetarako (3-60)"
 msgid "Update automatically at a configurable interval"
 msgstr "Eguneratu automatikoki denbora-tarte jakinetan"
 
-#: ../applets/maintained/feeds/classes.py:366
+#: ../applets/maintained/feeds/classes.py:365
 msgid "Google"
 msgstr "Google"
 
-#: ../applets/maintained/feeds/classes.py:532
-#: ../applets/maintained/feeds/prefs.py:535
+#: ../applets/maintained/feeds/classes.py:531
+#: ../applets/maintained/feeds/prefs.py:527
 msgid "Google Reader"
 msgstr "Google Reader"
 
-#: ../applets/maintained/feeds/classes.py:578
+#: ../applets/maintained/feeds/classes.py:577
 msgid "Google Wave"
 msgstr "Google Wave"
 
-#: ../applets/maintained/feeds/classes.py:664
+#: ../applets/maintained/feeds/classes.py:663
 msgid "Reddit Inbox"
 msgstr "Reddit Inbox"
 
-#: ../applets/maintained/feeds/classes.py:764
+#: ../applets/maintained/feeds/classes.py:763
 #, python-format
 msgid "Comment reply from %s"
 msgstr "Iruzkindu %s-(e)ko erantzuna"
 
-#: ../applets/maintained/feeds/classes.py:767
+#: ../applets/maintained/feeds/classes.py:766
 #, python-format
 msgid "Post reply from %s"
 msgstr "Bidali erantzuna %s-(e)tik"
 
-#: ../applets/maintained/feeds/classes.py:810
-#: ../applets/maintained/feeds/prefs.py:429
+#: ../applets/maintained/feeds/classes.py:809
+#: ../applets/maintained/feeds/prefs.py:421
 msgid "Twitter"
 msgstr "Twitter"
 
-#: ../applets/maintained/feeds/classes.py:937
+#: ../applets/maintained/feeds/classes.py:936
 msgid "Untitled"
 msgstr "Izengabea"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:1
-#: ../applets/maintained/feeds/feeds.py:243
-#: ../applets/maintained/feeds/feeds.py:409
-#: ../applets/maintained/feeds/feeds.py:493
-#: ../applets/maintained/feeds/feeds.py:1109
+#: ../applets/maintained/feeds/feeds.py:241
+#: ../applets/maintained/feeds/feeds.py:407
+#: ../applets/maintained/feeds/feeds.py:491
+#: ../applets/maintained/feeds/feeds.py:1036
+#: ../applets/maintained/feeds/feeds.py:1110
 msgid "Feeds Applet"
 msgstr "Jarioen appleta"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
-#: ../applets/maintained/feeds/feeds.py:1114
-msgid "Monitor Web Feeds"
-msgstr "Monitorizatu web jarioak"
+msgid "Monitor web feeds"
+msgstr "Web jarioen monitorea"
 
 #. "Loading feeds..." label
-#: ../applets/maintained/feeds/feeds.py:98
-#: ../applets/maintained/feeds/feeds.py:155
-#: ../applets/maintained/feeds/feeds.py:232
+#: ../applets/maintained/feeds/feeds.py:96
+#: ../applets/maintained/feeds/feeds.py:153
+#: ../applets/maintained/feeds/feeds.py:230
 msgid "Loading feeds..."
 msgstr "Jarioak kargatzen..."
 
 #. No feeds label
-#: ../applets/maintained/feeds/feeds.py:162
+#: ../applets/maintained/feeds/feeds.py:160
 msgid "You don't have any feeds."
 msgstr "Ez daukazu jariorik."
 
-#: ../applets/maintained/feeds/feeds.py:484
+#: ../applets/maintained/feeds/feeds.py:482
 #, python-format
 msgid ""
 "%s\n"
@@ -1738,7 +1791,7 @@ msgstr ""
 "  <a href='%s'>%s</a>\n"
 "(%s More)\n"
 
-#: ../applets/maintained/feeds/feeds.py:494
+#: ../applets/maintained/feeds/feeds.py:492
 #, python-format
 msgid "%s New Item - Feeds Applet"
 msgid_plural "%s New Items - Feeds Applet"
@@ -1746,160 +1799,169 @@ msgstr[0] "Elementu berri %s - Jarioen appleta"
 msgstr[1] "%s elementu berri - Jarioen appleta"
 
 #. +Add Feed button
-#: ../applets/maintained/feeds/feeds.py:532
+#: ../applets/maintained/feeds/feeds.py:530
 msgid "_Add Feed"
 msgstr "_Gehitu jarioa"
 
-#: ../applets/maintained/feeds/feeds.py:581
+#: ../applets/maintained/feeds/feeds.py:579
 msgid "Open this feed's website"
 msgstr "Ireki jario honen webgunea"
 
-#: ../applets/maintained/feeds/feeds.py:590
-#: ../applets/maintained/feeds/prefs.py:276
+#: ../applets/maintained/feeds/feeds.py:588
+#: ../applets/maintained/feeds/prefs.py:268
 msgid "Loading..."
 msgstr "Kargatzen..."
 
-#: ../applets/maintained/feeds/feeds.py:628
-#: ../applets/maintained/feeds/feeds.py:787
+#: ../applets/maintained/feeds/feeds.py:626
+#: ../applets/maintained/feeds/feeds.py:785
 msgid "Show this feed's items"
 msgstr "Erakutsi jario honen elementuak"
 
-#: ../applets/maintained/feeds/feeds.py:777
+#: ../applets/maintained/feeds/feeds.py:775
 msgid "Hide this feed's items"
 msgstr "Ezkutatu jario honen elementuak"
 
 #. Create the items
-#: ../applets/maintained/feeds/feeds.py:1033
-#: ../applets/maintained/feeds/prefs.py:360
+#: ../applets/maintained/feeds/feeds.py:1031
+#: ../applets/maintained/feeds/prefs.py:352
 msgid "Add Feed"
 msgstr "Gehitu jarioa"
 
-#: ../applets/maintained/feeds/feeds.py:1035
+#: ../applets/maintained/feeds/feeds.py:1033
 msgid "Show Only _New Feeds"
 msgstr "Erakutsi jario _berriak soilik"
 
-#: ../applets/maintained/feeds/feeds.py:1157
+#: ../applets/maintained/feeds/feeds.py:1036 ../shared/python/awnlib.py:125
+#, python-format
+msgid "_About %s"
+msgstr "%s-(e)i buruz"
+
+#: ../applets/maintained/feeds/feeds.py:1115
+msgid "Applet to monitor web feeds"
+msgstr "Web jarioak monitorizatzeko appleta"
+
+#: ../applets/maintained/feeds/feeds.py:1158
 msgid "OPML Import"
 msgstr "OPML inportazioa"
 
-#: ../applets/maintained/feeds/feeds.py:1160
+#: ../applets/maintained/feeds/feeds.py:1161
 #, python-format
 msgid "Do you want to add %d feed?"
 msgid_plural "Do you want to add %d feeds?"
 msgstr[0] "Jario %d gehitu nahi duzu?"
 msgstr[1] "%d jario gehitu nahi dituzu?"
 
-#: ../applets/maintained/feeds/prefs.py:59
+#: ../applets/maintained/feeds/prefs.py:51
 msgid "Feeds Applet Preferences"
 msgstr "Jarioen appletaren hobespenak"
 
-#: ../applets/maintained/feeds/prefs.py:69
+#: ../applets/maintained/feeds/prefs.py:61
 msgid "Feeds"
 msgstr "Jarioak"
 
-#: ../applets/maintained/feeds/prefs.py:70
+#: ../applets/maintained/feeds/prefs.py:62
 msgid "Updating"
 msgstr "Eguneratzen"
 
-#: ../applets/maintained/feeds/prefs.py:109
+#: ../applets/maintained/feeds/prefs.py:101
 msgid "_Show website icons"
 msgstr "_Erakutsi webgunearen ikonoak"
 
-#: ../applets/maintained/feeds/prefs.py:114
+#: ../applets/maintained/feeds/prefs.py:106
 msgid "Show _only new feeds"
 msgstr "Erakutsi jario berriak _soilik"
 
 #. TODO: this position is a little ugly, but I don't know how to do it better.
 #. Import and export buttons (OPML)
-#: ../applets/maintained/feeds/prefs.py:121
+#: ../applets/maintained/feeds/prefs.py:113
 msgid "Import"
 msgstr "Inportatu"
 
-#: ../applets/maintained/feeds/prefs.py:124
+#: ../applets/maintained/feeds/prefs.py:116
 msgid "Export"
 msgstr "Esportatu"
 
 #. Updating section (enable/disable automatically updating and change how often)
 #. Checkbox: Notify for updated feeds
-#: ../applets/maintained/feeds/prefs.py:151
+#: ../applets/maintained/feeds/prefs.py:143
 msgid "_Notify for updated feeds"
 msgstr "_Jakinarazi jarioen eguneraketak"
 
 #. Checkbox: Update automatically
-#: ../applets/maintained/feeds/prefs.py:157
+#: ../applets/maintained/feeds/prefs.py:149
 msgid "_Update automatically"
 msgstr "E_guneratu automatikoki"
 
 #. Update every [SpinButton] minutes
-#: ../applets/maintained/feeds/prefs.py:163
+#: ../applets/maintained/feeds/prefs.py:155
 msgid "Update every "
 msgstr "Eguneratu "
 
-#: ../applets/maintained/feeds/prefs.py:164
+#: ../applets/maintained/feeds/prefs.py:156
 msgid " minutes"
 msgstr " minututik behin"
 
-#: ../applets/maintained/feeds/prefs.py:176
+#: ../applets/maintained/feeds/prefs.py:168
 msgid "Keep items unread when updating"
 msgstr "Utzi elementuak irakurri gabe eguneraketa egitean"
 
-#: ../applets/maintained/feeds/prefs.py:283
+#: ../applets/maintained/feeds/prefs.py:275
 msgid "Open OPML File"
 msgstr "Ireki OPML fitxategia"
 
-#: ../applets/maintained/feeds/prefs.py:297
+#: ../applets/maintained/feeds/prefs.py:289
 msgid "Save OPML File"
 msgstr "Gorde OPML fitxategia"
 
 #. Note: the following string is used as an exmaple filename
-#: ../applets/maintained/feeds/prefs.py:303
+#: ../applets/maintained/feeds/prefs.py:295
 msgid "feeds.opml"
 msgstr "feeds.opml"
 
-#: ../applets/maintained/feeds/prefs.py:314
+#: ../applets/maintained/feeds/prefs.py:306
 msgid "Awn Feeds Applet Items"
 msgstr "Awn-ren jarioen appletaren elementuak"
 
 #. Source: label and radio buttons
-#: ../applets/maintained/feeds/prefs.py:364
+#: ../applets/maintained/feeds/prefs.py:356
 msgid "Source:"
 msgstr "Iturburua:"
 
-#: ../applets/maintained/feeds/prefs.py:374
+#: ../applets/maintained/feeds/prefs.py:366
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:151
 msgid "Search"
 msgstr "Bilatu"
 
-#: ../applets/maintained/feeds/prefs.py:377
+#: ../applets/maintained/feeds/prefs.py:369
 msgid "You must sign in to a Google service to search for feeds."
 msgstr "Google-n zerbitzu batean izena eman behar duzu jarioak bilatzeko."
 
-#: ../applets/maintained/feeds/prefs.py:386
+#: ../applets/maintained/feeds/prefs.py:378
 msgid "RSS/Atom"
 msgstr "RSS/Atom"
 
-#: ../applets/maintained/feeds/prefs.py:431
+#: ../applets/maintained/feeds/prefs.py:423
 msgid "Timeline"
 msgstr "Denbora-lerroa"
 
-#: ../applets/maintained/feeds/prefs.py:436
+#: ../applets/maintained/feeds/prefs.py:428
 msgid "Replies"
 msgstr "Erantzunak"
 
 #. "Search for" label and entry
-#: ../applets/maintained/feeds/prefs.py:465
+#: ../applets/maintained/feeds/prefs.py:457
 msgid "Search for"
 msgstr "Bilatu hau:"
 
 #. URL: label and entry
-#: ../applets/maintained/feeds/prefs.py:479
+#: ../applets/maintained/feeds/prefs.py:471
 #: ../applets/maintained/webapplet/applet.c:276
 msgid "URL:"
 msgstr "URL:"
 
 #. Username: label and entry
-#: ../applets/maintained/feeds/prefs.py:493
+#: ../applets/maintained/feeds/prefs.py:485
 #: ../applets/maintained/mail/mail.py:384
 #: ../applets/maintained/mail/mail.py:643
 #: ../applets/maintained/mail/mail.py:796
@@ -1908,7 +1970,7 @@ msgid "Username:"
 msgstr "Erabiltzaile-izena:"
 
 #. Password: label and entry
-#: ../applets/maintained/feeds/prefs.py:507
+#: ../applets/maintained/feeds/prefs.py:499
 #: ../applets/maintained/mail/mail.py:388
 #: ../applets/maintained/mail/mail.py:646
 #: ../applets/maintained/mail/mail.py:799
@@ -1916,16 +1978,16 @@ msgstr "Erabiltzaile-izena:"
 msgid "Password:"
 msgstr "Pasahitza:"
 
-#: ../applets/maintained/feeds/prefs.py:534
+#: ../applets/maintained/feeds/prefs.py:526
 msgid "Feed search by "
 msgstr "Jarioen bilaketa: "
 
 #. If signed in to Google Reader
-#: ../applets/maintained/feeds/prefs.py:572
+#: ../applets/maintained/feeds/prefs.py:564
 msgid "_Search"
 msgstr "_Bilatu"
 
-#: ../applets/maintained/feeds/prefs.py:776
+#: ../applets/maintained/feeds/prefs.py:768
 msgid ""
 "There was an error while searching.\n"
 "Please try again later."
@@ -1933,7 +1995,7 @@ msgstr ""
 "Errore bat gertatu da bilaketa egitean.\n"
 "Saiatu berriro geroago."
 
-#: ../applets/maintained/feeds/prefs.py:826
+#: ../applets/maintained/feeds/prefs.py:818
 msgid ""
 "No results found.\n"
 "Try checking your spelling or using different search terms."
@@ -2023,18 +2085,13 @@ msgstr "Klik egitean lekua irekiko den ala ez"
 msgid "A launcher for your file manager"
 msgstr "Abiarazlea zure fitxategi-arakatzailerako"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:385
-#: ../applets/maintained/yama/yama.py:253
-msgid "Home Folder"
-msgstr "Karpeta nagusia"
-
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:389
 #: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Filesystem"
 msgstr "Fitxategi-sistema"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:518
-#: ../applets/maintained/yama/yama.py:306
+#: ../applets/maintained/yama/yama.py:307
 msgid "Connect to Server..."
 msgstr "Zerbitzarira konektatzen..."
 
@@ -2179,37 +2236,42 @@ msgstr "Erdiko klik-a"
 msgid "Choose a folder"
 msgstr "Hautatu karpeta"
 
-#: ../applets/maintained/garbage/applet.vala:57
+#: ../applets/maintained/garbage/applet.vala:60
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:2
 msgid "Garbage"
 msgstr "Zakarrontzia"
 
 #. set the title as well
 #. $display_name: $count item(s)
-#: ../applets/maintained/garbage/applet.vala:174
+#: ../applets/maintained/garbage/applet.vala:179
 #, c-format
-msgid "%s: %u item"
-msgid_plural "%s: %u items"
-msgstr[0] "%s: elementu %u"
-msgstr[1] "%s: %u elementu"
+msgid "%u item"
+msgid_plural "%u items"
+msgstr[0] "elementu %u"
+msgstr[1] "%u elementu"
 
-#: ../applets/maintained/garbage/applet.vala:194
+#: ../applets/maintained/garbage/applet.vala:199
 #, c-format
 msgid "Could not open the trash folder with your file manager: %s"
 msgstr "Ezin izan da zakarrontzia ireki zure fitxategi-arakatzailearekin: %s"
 
-#: ../applets/maintained/garbage/applet.vala:209
+#: ../applets/maintained/garbage/applet.vala:215
 msgid "_Empty Trash"
 msgstr "_Hustu zakarrontzia"
 
-#: ../applets/maintained/garbage/applet.vala:235
+#: ../applets/maintained/garbage/applet.vala:232
+#: ../applets/maintained/garbage/garbage.desktop.in.in.h:1
+msgid "A lightweight, cross-desktop trash applet"
+msgstr "Zakarrontzi appleta, mahaigain anitza eta arina"
+
+#: ../applets/maintained/garbage/applet.vala:247
 #, c-format
 msgid ""
 "Are you sure you want to empty your trash? It currently contains %u item(s)."
 msgstr ""
 "Seguru zaude zakarrontzia hustu nahi duzula? Une honetan %u elementu ditu."
 
-#: ../applets/maintained/garbage/applet.vala:344
+#: ../applets/maintained/garbage/applet.vala:356
 #, c-format
 msgid "Could not send the dragged file(s) to the trash: %s"
 msgstr ""
@@ -2225,10 +2287,6 @@ msgstr "Gaitu baieztatze-koadroa zakarrontzia husterakoan."
 msgid "Show the number of items in the trash on top of the icon."
 msgstr "Erakutsi zakarrontzian dagoen elementu-kopurua ikonoaren gainean."
 
-#: ../applets/maintained/garbage/garbage.desktop.in.in.h:1
-msgid "A lightweight, cross-desktop trash applet"
-msgstr "Zakarrontzi appleta, mahaigain anitza eta arina"
-
 #. This is a window title, %s is an applet's name.
 #: ../applets/maintained/garbage/prefs.vala:32 ../shared/python/awnlib.py:404
 #, c-format, python-format
@@ -2236,12 +2294,12 @@ msgid "%s Preferences"
 msgstr "%s hobespenak"
 
 #: ../applets/maintained/garbage/prefs.vala:47
-msgid "Confirm when emptying the trash"
-msgstr "Baieztatu zakarrontzia hustean"
+msgid "Confirm when _emptying the trash"
+msgstr "Baieztatu zakarrontzia _hustean"
 
 #: ../applets/maintained/garbage/prefs.vala:52
-msgid "Show the item count on the icon"
-msgstr "Erakutsi elementu-kopurua ikonoan"
+msgid "Show the _item count on the icon"
+msgstr "Erakutsi _elementu-kopurua ikonoan"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:1
@@ -2454,13 +2512,11 @@ msgstr "rpm"
 #: ../applets/maintained/indicator-applet/applet.c:89
 #: ../applets/maintained/indicator-applet/applet.c:182
 #: ../applets/maintained/indicator-applet/applet.c:784
-#: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.h:2
 #: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.in.h:2
 msgid "Indicator Applet"
 msgstr "Adierazle appleta"
 
 #: ../applets/maintained/indicator-applet/applet.c:92
-#: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.h:1
 #: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.in.h:1
 msgid "An applet to hold all of the system indicators"
 msgstr "Sistema-adierazle guztiak erakusten dituen appleta"
@@ -3251,7 +3307,6 @@ msgstr ""
 "Awn-ren gaiaren kolore-balio konfiguratuak erabiliko diren ala ez xxxx-rako."
 
 #: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.in.h:1
-#: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.h:1
 msgid ""
 "A replacement for the standard notification daemon and notify-osd. This will "
 "disable existing notification daemons while the applet is active."
@@ -3261,7 +3316,6 @@ msgstr ""
 "dagoenean."
 
 #: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.in.h:2
-#: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.h:2
 msgid "Notification Daemon"
 msgstr "Jakinarazpen-deabrua"
 
@@ -3417,7 +3471,7 @@ msgid "Quit-Log Out applet"
 msgstr "Irten-Saioa amaitu appleta"
 
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:2
-#: ../applets/maintained/yama/yama.py:153
+#: ../applets/maintained/yama/yama.py:154
 msgid "Protect your computer from unauthorized use"
 msgstr "Babestu zure ordenagailua baimentik gabeko erabileratik"
 
@@ -3431,12 +3485,12 @@ msgstr "Amaitu saio hau beste erabiltzaile batekin saioa hasteko"
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:1
 #: ../applets/maintained/quit/quit.py:48
-#: ../applets/maintained/yama/yama.py:175
+#: ../applets/maintained/yama/yama.py:176
 msgid "Shut Down..."
 msgstr "Itzali..."
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:2
-#: ../applets/maintained/yama/yama.py:175
+#: ../applets/maintained/yama/yama.py:176
 msgid "Shut down the system"
 msgstr "Itzali sistema"
 
@@ -3470,7 +3524,7 @@ msgstr "Itzali"
 #. Translators: %s is a username
 #. Translators: %s is a user name.
 #: ../applets/maintained/quit/quit.py:43
-#: ../applets/maintained/yama/yama.py:171
+#: ../applets/maintained/yama/yama.py:172
 #, python-format
 msgid "Log Out %s..."
 msgstr "Amaitu %s(r)en saioa..."
@@ -3479,13 +3533,11 @@ msgstr "Amaitu %s(r)en saioa..."
 msgid "Left click _action:"
 msgstr "Ezkerreko klikaren _ekintza:"
 
-#: ../applets/maintained/related/related.desktop.in.h:1
 #: ../applets/maintained/related/related.desktop.in.in.h:1
 msgid "Applet displaying related items by talking to Zeitgeist"
 msgstr ""
 "Erlazionatutako elementuak erakusten dituen appleta Zeitgeist-en oinarrituta"
 
-#: ../applets/maintained/related/related.desktop.in.h:2
 #: ../applets/maintained/related/related.desktop.in.in.h:2
 msgid "Related applet"
 msgstr "Erlazionatutako elementuen appleta"
@@ -4031,13 +4083,13 @@ msgid "Advanced"
 msgstr "Aurreratua"
 
 #: ../applets/maintained/slickswitcher/slickswitcher.desktop.in.h:1
-#: ../applets/maintained/slickswitcher/slickswitcher.py:281
+#: ../applets/maintained/slickswitcher/slickswitcher.py:279
 msgid "A visual workspace switcher"
 msgstr "Laneko areen aldatzaile bisuala"
 
 #: ../applets/maintained/slickswitcher/slickswitcher.desktop.in.h:2
 #: ../applets/maintained/slickswitcher/slickswitcher.py:63
-#: ../applets/maintained/slickswitcher/slickswitcher.py:272
+#: ../applets/maintained/slickswitcher/slickswitcher.py:270
 msgid "SlickSwitcher"
 msgstr "SlickSwitcher"
 
@@ -4660,21 +4712,21 @@ msgstr "Iragarpena"
 msgid "for"
 msgstr "hiri honetarako:"
 
-#: ../applets/maintained/weather/forecast.py:169
+#: ../applets/maintained/weather/forecast.py:172
 msgid "WEEKDAY"
 msgstr "ASTEGUNA"
 
-#: ../applets/maintained/weather/forecast.py:173
+#: ../applets/maintained/weather/forecast.py:176
 msgid "Tomorrow"
 msgstr "Bihar"
 
 #. Weather condition
-#: ../applets/maintained/weather/forecast.py:199
+#: ../applets/maintained/weather/forecast.py:202
 #: ../applets/maintained/weather/weather.py:475
 msgid "DESCRIPTION"
 msgstr "DESKRIBAPENA"
 
-#: ../applets/maintained/weather/forecast.py:251
+#: ../applets/maintained/weather/forecast.py:254
 msgid "Weather data provided by weather.com"
 msgstr "weather.com-ek eskainitako eguraldi-datuak"
 
@@ -4747,267 +4799,285 @@ msgid "Isolated Thunderstorms"
 msgstr "Ekaitz isolatuak"
 
 #: ../applets/maintained/weather/weathertext.py:55
+msgid "Light Drizzle"
+msgstr "Zirimiri arina"
+
+#: ../applets/maintained/weather/weathertext.py:56
 msgid "Light Rain Shower"
 msgstr "Euri-zaparrada arinak"
 
-#: ../applets/maintained/weather/weathertext.py:56
+#: ../applets/maintained/weather/weathertext.py:57
 msgid "Light Rain with Thunder"
 msgstr "Euri arina trumoiarekin"
 
-#: ../applets/maintained/weather/weathertext.py:57
+#: ../applets/maintained/weather/weathertext.py:58
 msgid "Light Snow Showers"
 msgstr "Elur-zaparrada arinak"
 
-#: ../applets/maintained/weather/weathertext.py:58
+#: ../applets/maintained/weather/weathertext.py:59
+msgid "Mist"
+msgstr "Lanbroa"
+
+#: ../applets/maintained/weather/weathertext.py:60
 msgid "Mixed Precipitation"
 msgstr "Prezipitazio nahasiak"
 
-#: ../applets/maintained/weather/weathertext.py:59
+#: ../applets/maintained/weather/weathertext.py:61
 msgid "Mixed Rain and Hail"
 msgstr "Euri eta kazkabar nahasia"
 
-#: ../applets/maintained/weather/weathertext.py:60
+#: ../applets/maintained/weather/weathertext.py:62
 msgid "Mixed Rain and Sleet"
 msgstr "Euri eta elurbusti nahasia"
 
-#: ../applets/maintained/weather/weathertext.py:61
+#: ../applets/maintained/weather/weathertext.py:63
 msgid "Mixed Rain and Snow"
 msgstr "Euri eta elur nahasia"
 
-#: ../applets/maintained/weather/weathertext.py:62
+#: ../applets/maintained/weather/weathertext.py:64
 msgid "Mostly Cloudy"
 msgstr "Oso hodeitsu"
 
-#: ../applets/maintained/weather/weathertext.py:63
+#: ../applets/maintained/weather/weathertext.py:65
 msgid "N/A"
 msgstr "E/E"
 
-#: ../applets/maintained/weather/weathertext.py:64
+#: ../applets/maintained/weather/weathertext.py:66
 msgid "Partly Cloudy"
 msgstr "Pixka bat hodeitsu"
 
-#: ../applets/maintained/weather/weathertext.py:65
+#: ../applets/maintained/weather/weathertext.py:67
 msgid "Scattered Showers"
 msgstr "Zaparrada sakabanatuak"
 
-#: ../applets/maintained/weather/weathertext.py:66
+#: ../applets/maintained/weather/weathertext.py:68
 msgid "Scattered Snow Showers"
 msgstr "Elur-zaparra sakabanatuak"
 
-#: ../applets/maintained/weather/weathertext.py:67
+#: ../applets/maintained/weather/weathertext.py:69
 msgid "Scattered Thunderstorms"
 msgstr "Ekaitz sakabanatuak"
 
-#: ../applets/maintained/weather/weathertext.py:68
+#: ../applets/maintained/weather/weathertext.py:70
 msgid "Severe Thunderstorms"
 msgstr "Ekaitz larriak"
 
-#: ../applets/maintained/weather/weathertext.py:69
+#: ../applets/maintained/weather/weathertext.py:71
 msgid "Showers"
 msgstr "Zaparradak"
 
-#: ../applets/maintained/weather/weathertext.py:70
+#: ../applets/maintained/weather/weathertext.py:72
 msgid "Sleet"
 msgstr "Elurbustia"
 
-#: ../applets/maintained/weather/weathertext.py:71
+#: ../applets/maintained/weather/weathertext.py:73
 msgid "Smoke"
 msgstr "Lainoa"
 
-#: ../applets/maintained/weather/weathertext.py:72
+#: ../applets/maintained/weather/weathertext.py:74
 msgid "Snow"
 msgstr "Elurra"
 
-#: ../applets/maintained/weather/weathertext.py:73
+#: ../applets/maintained/weather/weathertext.py:75
 msgid "Snow Flurries"
 msgstr "Elur-boladak"
 
-#: ../applets/maintained/weather/weathertext.py:74
+#: ../applets/maintained/weather/weathertext.py:76
 msgid "Snow Showers"
 msgstr "Elur-zaparradak"
 
-#: ../applets/maintained/weather/weathertext.py:75
+#: ../applets/maintained/weather/weathertext.py:77
 msgid "Thunder Showers"
 msgstr "Ekaitz-zaparradak"
 
-#: ../applets/maintained/weather/weathertext.py:76
+#: ../applets/maintained/weather/weathertext.py:78
 msgid "Thunderstorms"
 msgstr "Trumoi-ekaitzak"
 
-#: ../applets/maintained/weather/weathertext.py:77
+#: ../applets/maintained/weather/weathertext.py:79
 msgid "Tornado"
 msgstr "Tornadoa"
 
-#: ../applets/maintained/weather/weathertext.py:78
+#: ../applets/maintained/weather/weathertext.py:80
 msgid "Tropical Storm"
 msgstr "Ekaitz tropikala"
 
-#: ../applets/maintained/weather/weathertext.py:79
+#: ../applets/maintained/weather/weathertext.py:81
 msgid "Windy"
 msgstr "Haizetsu"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:84
+#: ../applets/maintained/weather/weathertext.py:86
 msgid "AM Clouds / PM Sun"
 msgstr "Hodeiak goizean / eguzkia arratsean"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:86
+#: ../applets/maintained/weather/weathertext.py:88
+msgid "AM Drizzle"
+msgstr "Zirimiria goizean"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:90
 msgid "AM Drizzle / Wind"
 msgstr "Zirimiria goizean / haizea"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:88
+#: ../applets/maintained/weather/weathertext.py:92
 msgid "AM Fog / PM Sun"
 msgstr "Lainoa goizean / eguzkia arratsean"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:90
+#: ../applets/maintained/weather/weathertext.py:94
 msgid "AM Light Rain"
 msgstr "Euri arina goizean"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:92
+#: ../applets/maintained/weather/weathertext.py:96
 msgid "AM Rain / Wind"
 msgstr "Euria goizean / haizea"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:94
+#: ../applets/maintained/weather/weathertext.py:98
 msgid "AM Showers"
 msgstr "Zaparradak goizean"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
-#: ../applets/maintained/weather/weathertext.py:97
+#: ../applets/maintained/weather/weathertext.py:101
 msgid "AM T-Showers"
 msgstr "Ekaitz-zaparradak goizean"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
-#: ../applets/maintained/weather/weathertext.py:100
+#: ../applets/maintained/weather/weathertext.py:104
 msgid "AM T-Storms"
 msgstr "Ekaitzak goizean"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:102
+#: ../applets/maintained/weather/weathertext.py:106
 msgid "Few Showers"
 msgstr "Zaparrada gutxi"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:104
+#: ../applets/maintained/weather/weathertext.py:108
 msgid "Heavy Rain"
 msgstr "Euri asko"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
-#: ../applets/maintained/weather/weathertext.py:107
+#: ../applets/maintained/weather/weathertext.py:111
 msgid "Isolated T-Storms"
 msgstr "Ekaitz isolatuak"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:109
+#: ../applets/maintained/weather/weathertext.py:113
 msgid "Light Rain"
 msgstr "Euri arina"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:111
+#: ../applets/maintained/weather/weathertext.py:115
 msgid "Mostly Sunny"
 msgstr "Nahiko eguzkitsu"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:113
+#: ../applets/maintained/weather/weathertext.py:117
 msgid "Partly Cloudy / Wind"
 msgstr "Hodeitsu samar / haizea"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:115
+#: ../applets/maintained/weather/weathertext.py:119
 msgid "PM Light Rain"
 msgstr "Euri arina arratsean"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:117
+#: ../applets/maintained/weather/weathertext.py:121
 msgid "PM Showers"
 msgstr "Zaparradak arratsean"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
-#: ../applets/maintained/weather/weathertext.py:120
+#: ../applets/maintained/weather/weathertext.py:124
 msgid "PM T-Showers"
 msgstr "Ekaitz-zaparradak arratsean"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
-#: ../applets/maintained/weather/weathertext.py:123
+#: ../applets/maintained/weather/weathertext.py:127
 msgid "PM T-Storms"
 msgstr "Ekaitzak arratsean"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:125
+#: ../applets/maintained/weather/weathertext.py:129
 msgid "Rain"
 msgstr "Euria"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:127
-msgid "Rain / Wind"
-msgstr "Euria / haizea"
+#: ../applets/maintained/weather/weathertext.py:131
+msgid "Rain / Snow Showers"
+msgstr "Euri- / elur-zaparradak"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:129
+#: ../applets/maintained/weather/weathertext.py:133
 msgid "Rain / Thunder"
 msgstr "Euria / trumoia"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:131
+#: ../applets/maintained/weather/weathertext.py:135
+msgid "Rain / Wind"
+msgstr "Euria / haizea"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:137
 msgid "Scattered Showers / Wind"
 msgstr "Zaparrada isolatuak / haizea"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
-#: ../applets/maintained/weather/weathertext.py:134
+#: ../applets/maintained/weather/weathertext.py:140
 msgid "Scattered T-Storms"
 msgstr "Ekaitz sakabanatuak"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:136
+#: ../applets/maintained/weather/weathertext.py:142
 msgid "Sunny"
 msgstr "Eguzkitsu"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:138
+#: ../applets/maintained/weather/weathertext.py:144
 msgid "Sunny / Wind"
 msgstr "Eguzkitsu / haizea"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
-#: ../applets/maintained/weather/weathertext.py:141
+#: ../applets/maintained/weather/weathertext.py:147
 msgid "T-Showers"
 msgstr "Ekaitz-zaparradak"
 
-#: ../applets/maintained/weather/weathertext.py:145
+#: ../applets/maintained/weather/weathertext.py:151
 msgid "Monday"
 msgstr "Astelehena"
 
-#: ../applets/maintained/weather/weathertext.py:146
+#: ../applets/maintained/weather/weathertext.py:152
 msgid "Tuesday"
 msgstr "Asteartea"
 
-#: ../applets/maintained/weather/weathertext.py:147
+#: ../applets/maintained/weather/weathertext.py:153
 msgid "Wednesday"
 msgstr "Asteazkena"
 
-#: ../applets/maintained/weather/weathertext.py:148
+#: ../applets/maintained/weather/weathertext.py:154
 msgid "Thursday"
 msgstr "Osteguna"
 
-#: ../applets/maintained/weather/weathertext.py:149
+#: ../applets/maintained/weather/weathertext.py:155
 msgid "Friday"
 msgstr "Ostirala"
 
-#: ../applets/maintained/weather/weathertext.py:150
+#: ../applets/maintained/weather/weathertext.py:156
 msgid "Saturday"
 msgstr "Larunbata"
 
-#: ../applets/maintained/weather/weathertext.py:151
+#: ../applets/maintained/weather/weathertext.py:157
 msgid "Sunday"
 msgstr "Igandea"
 
@@ -5168,7 +5238,7 @@ msgid "Wobbly Zini"
 msgstr "Wobbly Zini"
 
 #: ../applets/maintained/yama/yama.desktop.in.h:1
-#: ../applets/maintained/yama/yama.py:46
+#: ../applets/maintained/yama/yama.py:47
 msgid "Main menu with places and recent documents"
 msgstr "Menu nagusia lekuekin eta azken dokumentuekin"
 
@@ -5176,46 +5246,46 @@ msgstr "Menu nagusia lekuekin eta azken dokumentuekin"
 msgid "Yet Another Menu Applet"
 msgstr "Beste menu-applet bat"
 
-#: ../applets/maintained/yama/yama.py:45
+#: ../applets/maintained/yama/yama.py:46
 msgid "YAMA"
 msgstr "YAMA"
 
-#: ../applets/maintained/yama/yama.py:171
+#: ../applets/maintained/yama/yama.py:172
 #, python-format
 msgid "Log out %s of this session to log in as a different user"
 msgstr "Atera %s saiotik beste erabiltzaile-izen batekin sartzeko"
 
-#: ../applets/maintained/yama/yama.py:189
+#: ../applets/maintained/yama/yama.py:190
 msgid "_Edit Menus"
 msgstr "_Editatu menuak"
 
-#: ../applets/maintained/yama/yama.py:253
+#: ../applets/maintained/yama/yama.py:254
 msgid "Open your personal folder"
 msgstr "Ireki karpeta pertsonala"
 
-#: ../applets/maintained/yama/yama.py:255
+#: ../applets/maintained/yama/yama.py:256
 msgid "Open the contents of your desktop in a folder"
 msgstr "Ireki mahaigaineko edukia karpeta batean"
 
-#: ../applets/maintained/yama/yama.py:306
+#: ../applets/maintained/yama/yama.py:307
 msgid "Connect to a remote computer or shared disk"
 msgstr "Konektatu urruneko ordenagailura edo partekatutako diskora"
 
-#: ../applets/maintained/yama/yama.py:336
+#: ../applets/maintained/yama/yama.py:337
 msgid "Clear all items from the recent documents list"
 msgstr "Garbitu azken dokumentuen zerrendako elementu guztiak"
 
-#: ../applets/maintained/yama/yama.py:375
+#: ../applets/maintained/yama/yama.py:377
 #, python-format
 msgid "Open '%s'"
 msgstr "Ireki '%s'"
 
-#: ../applets/maintained/yama/yama.py:417
+#: ../applets/maintained/yama/yama.py:420
 #, python-format
 msgid "Mount %s"
 msgstr "Muntatu %s"
 
-#: ../applets/maintained/yama/yama.py:569
+#: ../applets/maintained/yama/yama.py:572
 msgid ""
 "Clearing the Recent Documents list will clear the following:\n"
 "* All items from the Places > Recent Documents menu item.\n"
@@ -5280,7 +5350,17 @@ msgstr "Entzun Pandora Internet Radio"
 msgid "Pandora Radio"
 msgstr "Pandora Radio"
 
-#: ../shared/python/awnlib.py:125
-#, python-format
-msgid "_About %s"
-msgstr "%s-(e)i buruz"
+#~ msgid "Monitor Web Feeds"
+#~ msgstr "Monitorizatu web jarioak"
+
+#, c-format
+#~ msgid "%s: %u item"
+#~ msgid_plural "%s: %u items"
+#~ msgstr[0] "%s: elementu %u"
+#~ msgstr[1] "%s: %u elementu"
+
+#~ msgid "Confirm when emptying the trash"
+#~ msgstr "Baieztatu zakarrontzia hustean"
+
+#~ msgid "Show the item count on the icon"
+#~ msgstr "Erakutsi elementu-kopurua ikonoan"

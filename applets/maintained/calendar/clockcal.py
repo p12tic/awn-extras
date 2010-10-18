@@ -127,7 +127,6 @@ class Calendar(awn.AppletSimple):
         self.login_window.set_destroy_with_parent(True)
 
     def on_size_changed(self, applet, size):
-        self.props.size = size
         self.surface = None
         self.repaint()
 

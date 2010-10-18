@@ -2,7 +2,7 @@
 # -*- coding: iso-8859-15 -*-
 #
 # Copyright (c) 2007 Mike (mosburger) Desjardins <desjardinsmike@gmail.com>
-#     Please do not email the above person for support. The 
+#     Please do not email the above person for support. The
 #     email address is only there for license/copyright purposes.
 #
 # This is a calendar applet for Avant Window Navigator.
@@ -80,6 +80,13 @@ class Calendar(awn.AppletSimple):
         super(Calendar, self).__init__('calendar', uid, panel_id)
 
         self.set_tooltip_text(self.title_text)
+
+        # Workaround taken from digital-clock.vala: AwnIcon does not like
+        # not having icon set, so we give it 1x1 transparent pixbuf
+        pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, True, 8, 1, 1)
+        pixbuf.fill(0)
+        self.set_icon_pixbuf(pixbuf)
+
         self.connect('size-changed', self.on_size_changed)
 
         self.connect("button-press-event", self.button_press_callback)
@@ -168,7 +175,7 @@ class Calendar(awn.AppletSimple):
         self.client.set_string(config.GROUP_DEFAULT, key, val)
 
     def get_config(self, key_change=None):
-        self.previous_minute = -1 # forces a full repaint
+        self.previous_minute = -1  # forces a full repaint
         self.twelve_hour_clock = self.get_boolean_config("twelve_hour_clock",
                                                          True)
         self.blinky_colon = self.get_boolean_config("blinking_colon", False)
@@ -263,7 +270,7 @@ class Calendar(awn.AppletSimple):
         if self.dialog != None and (self.dialog.flags() & gtk.VISIBLE) != 0:
             self.dialog.hide()
         else:
-            if event.button == 3: # right click
+            if event.button == 3:  # right click
                 self.get_icon().popup_gtk_menu(self.popup_menu, event.button, event.time)
             else:
                 self.build_calendar_dialog()
@@ -301,13 +308,12 @@ class Calendar(awn.AppletSimple):
     def month_changed_callback(self, widget):
         self.cal.clear_marks()
         cal_sel_date = self.cal.get_date()
-        cal_date = (cal_sel_date[0], cal_sel_date[1]+1, cal_sel_date[2])
+        cal_date = (cal_sel_date[0], cal_sel_date[1] + 1, cal_sel_date[2])
         if self.thread.check_cache(cal_date):
             year, month, day = cal_date
             busy = self.thread.get_days(year, month)
             for day in busy:
                 self.cal.mark_day(day)
-
 
     ###########################################################################
     # Drawing.
@@ -371,14 +377,14 @@ class Calendar(awn.AppletSimple):
             if hour[0] == "0":
                 shorten = True
                 hour = hour[1]
-                if hour == "0": #is this 12AM?
+                if hour == "0":  # is this 12AM?
                     hour = "12"
                 else:
                     shorten = True
             elif self.twelve_hour_clock and int(hour) > 12:
                 if int(hour) < 22:
                     shorten = True
-                hour = str(int(hour)-12)
+                hour = str(int(hour) - 12)
             #
             #
             #self.ct.move_to(37,240)
@@ -389,7 +395,7 @@ class Calendar(awn.AppletSimple):
             if self.twelve_hour_clock:
                 t = hour + ":" + minute
             text, width = self.get_text_width(self.ct, t, 250)
-            x = (256 - width)/2
+            x = (256 - width) / 2
             self.ct.move_to(x, 240)
             self.ct.show_text(t)
             #
@@ -445,9 +451,9 @@ class Calendar(awn.AppletSimple):
             hours = hours - 12
         # For twelve-hour clocks, don't draw the leading zeros.
         if not self.twelve_hour_clock or hours > 9:
-            led.draw(hours/10, context, xpos, ypos, xpos+width, ypos+height)
+            led.draw(hours / 10, context, xpos, ypos, xpos + width, ypos + height)
         xpos = xpos + 30
-        led.draw(hours%10, context, xpos, ypos, xpos+width, ypos+height)
+        led.draw(hours % 10, context, xpos, ypos, xpos + width, ypos + height)
         # draw the separator (hard-code to a colon for now)
         xpos = xpos + 35
         if not self.blinky_colon or seconds % 2 == 0:
@@ -458,9 +464,9 @@ class Calendar(awn.AppletSimple):
             #context.move_to(xpos, ypos+height)
             #context.rel_line_to(0, -4)
         xpos = xpos + 15
-        led.draw(minutes/10, context, xpos, ypos, xpos+width, ypos+height)
+        led.draw(minutes / 10, context, xpos, ypos, xpos + width, ypos + height)
         xpos = xpos + 30
-        led.draw(minutes%10, context, xpos, ypos, xpos+width, ypos+height)
+        led.draw(minutes % 10, context, xpos, ypos, xpos + width, ypos + height)
 
     def draw_colon(self, context, xpos, ypos, height):
         seconds = time.localtime()[5]
@@ -474,9 +480,9 @@ class Calendar(awn.AppletSimple):
         context.set_source_rgba(red, green, blue, alpha)
         (xpos, ypos, height) = (123, 202, 30)
         context.save()
-        context.move_to(xpos, ypos+(height/2)-2)
+        context.move_to(xpos, ypos + (height / 2) - 2)
         context.rel_line_to(0, 4)
-        context.move_to(xpos, ypos+height)
+        context.move_to(xpos, ypos + height)
         context.rel_line_to(0, -4)
         context.stroke()
         context.restore()
@@ -583,7 +589,7 @@ class Calendar(awn.AppletSimple):
                 s += chr((ord(sequence[i]) + r * sign) % 128)
         return s
 
-    def draw_rounded_rect(self, context, x, y, w, h, r = 10):
+    def draw_rounded_rect(self, context, x, y, w, h, r=10):
         #   A****BQ
         #  H      C
         #  *      *

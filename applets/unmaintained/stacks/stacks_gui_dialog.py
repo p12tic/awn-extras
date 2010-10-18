@@ -79,6 +79,7 @@ class StacksGuiDialog:
         
     def _destroy_cb(self, widget):
         for id in self.signal_ids: self.applet.disconnect(id)
+        del self.signal_ids[:]
         if self.dialog: self.dialog.destroy()
 
     def _stacks_gui_hide_cb(self, widget = None):

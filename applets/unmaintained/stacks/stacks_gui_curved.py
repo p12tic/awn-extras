@@ -513,6 +513,7 @@ class StacksGuiCurved(gtk.Window):
 
     def _destroy_cb(self, widget):
         for id in self.signal_ids: self.applet.disconnect(id)
+        del self.signal_ids[:]
 
     def _stacks_gui_request_hide(self, widget = None):
     	if self.hide_timer == None:
@@ -1317,7 +1318,7 @@ class CurvedStacksConfig(GladeWindow):
     	
     	#save configuration
     	#save label configuration
-    	client.set_int(GROUP_CURVED, "label_length", self.widgets['label_length_box'].get_value())
+    	client.set_int(GROUP_CURVED, "label_length", int(round(self.widgets['label_length_box'].get_value())))
     	saveColor(client, "label_text_color",self.widgets['label_text_color'].get_color(),self.widgets['label_text_color'].get_alpha())
     	saveColor(client, "label_text_hover_color",self.widgets['label_text_hover_color'].get_color(),self.widgets['label_text_hover_color'].get_alpha())
     	saveColor(client, "label_background_color",self.widgets['label_background_color'].get_color(),self.widgets['label_background_color'].get_alpha())
@@ -1328,9 +1329,9 @@ class CurvedStacksConfig(GladeWindow):
     	client.set_string(GROUP_CURVED, "label_font",self.widgets['font_selector'].get_font_name())
     
         #save layout configuration
-        client.set_int(GROUP_CURVED, "layout_radius",self.widgets['layout_radius'].get_value())
-        client.set_int(GROUP_CURVED, "layout_interval",self.widgets['layout_interval'].get_value())
-        client.set_int(GROUP_CURVED, "layout_direction",self.widgets['layout_direction'].get_active())
+        client.set_int(GROUP_CURVED, "layout_radius", int(round(self.widgets['layout_radius'].get_value())))
+        client.set_int(GROUP_CURVED, "layout_interval", int(round(self.widgets['layout_interval'].get_value())))
+        client.set_int(GROUP_CURVED, "layout_direction", int(round(self.widgets['layout_direction'].get_active())))
         #save tooltip configuration
         client.set_bool(GROUP_CURVED, "tooltips_enabled",self.widgets['tooltips_enabled_checkButton'].get_active())
     	saveColor(client, "tooltip_bg_color1",self.widgets['tooltip_bg_color1'].get_color(),self.widgets['tooltip_bg_color1'].get_alpha())

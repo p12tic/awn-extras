@@ -8,7 +8,7 @@
     <property name="resizable">False</property>
     <property name="window_position">GTK_WIN_POS_CENTER</property>
     <property name="destroy_with_parent">True</property>
-    <property name="icon">stacks-full.svg</property>
+    <property name="icon">icons/stacks-full.svg</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <child>
       <widget class="GtkVBox" id="vbox1">
@@ -71,7 +71,7 @@
                             <property name="can_focus">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                             <property name="max_length">3</property>
-                            <property name="adjustment">70 70 700 1 10 10</property>
+                            <property name="adjustment">70 70 700 1 10 0</property>
                             <property name="climb_rate">1</property>
                             <property name="snap_to_ticks">True</property>
                             <property name="numeric">True</property>
@@ -511,7 +511,7 @@
                             <property name="can_focus">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                             <property name="max_length">3</property>
-                            <property name="adjustment">85 10 500 1 10 10</property>
+                            <property name="adjustment">85 10 500 1 10 0</property>
                             <property name="climb_rate">1</property>
                             <property name="snap_to_ticks">True</property>
                             <property name="numeric">True</property>
@@ -532,7 +532,7 @@
                             <property name="can_focus">True</property>
                             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
                             <property name="max_length">5</property>
-                            <property name="adjustment">5000 2000 29999 1 10 10</property>
+                            <property name="adjustment">5000 2000 29999 1 10 0</property>
                             <property name="climb_rate">1</property>
                             <property name="snap_to_ticks">True</property>
                             <property name="numeric">True</property>

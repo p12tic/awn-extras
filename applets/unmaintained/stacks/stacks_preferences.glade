@@ -8,7 +8,7 @@
     <property name="resizable">False</property>
     <property name="window_position">GTK_WIN_POS_CENTER</property>
     <property name="destroy_with_parent">True</property>
-    <property name="icon">stacks-full.svg</property>
+    <property name="icon">icons/stacks-full.svg</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <child>
       <widget class="GtkVBox" id="main_vbox">
@@ -38,7 +38,7 @@
                         <property name="response_id">0</property>
                         <property name="active">True</property>
                         <property name="draw_indicator">True</property>
-                        <property name="group">folder_backend_button</property>
+                        <property name="group"></property>
                         <signal name="group_changed" handler="on_backend_group_changed"/>
                       </widget>
                       <packing>
@@ -653,7 +653,7 @@ Trasher gui
                                   <widget class="GtkSpinButton" id="iconsize_spin">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
-                                    <property name="adjustment">48 24 128 2 2 2</property>
+                                    <property name="adjustment">48 24 128 2 2 0</property>
                                     <property name="climb_rate">1</property>
                                     <property name="snap_to_ticks">True</property>
                                     <property name="numeric">True</property>

@@ -302,7 +302,13 @@ class DigitalClock : AppletSimple
     }
 
     full_date[2] = cur_time.format ("%a");
-    full_date[3] = cur_time.format ("%b %d");
+    // Translators: This is a date string. You can check the output with
+    // 'date +"%b %d"'. %b is the abbreviated name of the month, %d is the
+    // day of the month. If it better suites your locale, rearrange them or
+    // make the appropriate (slight) changes without making the string much
+    // longer, e.g. "%d. %b"
+    // xgettext:no-c-format
+    full_date[3] = cur_time.format (_ ("%b %d"));
 
     return full_date;
   }

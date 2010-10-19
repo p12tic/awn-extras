@@ -568,11 +568,11 @@ class App(awn.Applet):
             if os.path.isdir(path):
               #If the user did not rename the bookmark - get the name from
               #the folder name (/media/Lexar -> Lexar)
+              if name is None and path == '/':
+                name = _("Filesystem")
               if name is None:
                 try: name = path.split('/')[-1]
                 except: name = path
-                if name == '':
-                  name = '/'
 
               self.place(self.try_to_get_custom_icon_for_path(path), name, path)
 

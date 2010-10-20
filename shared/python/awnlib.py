@@ -302,23 +302,11 @@ class Dialogs:
                 self.update_logo_icon()
                 parent.connect_size_changed(self.update_logo_icon)
             elif "theme" in parent.meta:
-                if parent.meta.has_option("multiple-icons"):
-                    self._logo_icon = awn.ThemedIcon()
-                    self._logo_icon.set_info_simple(parent.meta["short"], \
-                        parent.get_uid(), parent.meta["theme"])
-
-                    self.update_theme_icons()
-                    parent.connect_size_changed(self.update_theme_icons)
-                else:
-                    self.update_theme_icon()
-                    parent.connect_size_changed(self.update_theme_icon)
+                self.set_icon_name(parent.meta["theme"])
 
             # Connect some signals to be able to hide the window
             self.connect("response", self.response_event)
-            self.connect("delete_event", self.delete_event)
-
-        def delete_event(self, widget, event):
-            return True
+            self.connect("delete_event", gtk.Widget.hide_on_delete)
 
         def response_event(self, widget, response):
             if response < 0:
@@ -328,23 +316,7 @@ class Dialogs:
             """Update the logo to be of the same height as the panel.
 
             """
-            size = self.__parent.get_size()
-            self.set_icon(gtk.gdk.pixbuf_new_from_file_at_size( \
-                self.__parent.meta["logo"], size, size))
-
-        def update_theme_icon(self):
-            """Updates the logo to be of the same height as the panel.
-
-            """
-            self.set_icon(self.__parent.get_icon() \
-                .get_icon_at_size(self.__parent.get_size()))
-
-        def update_theme_icons(self):
-            """Updates the logo to be of the same height as the panel.
-
-            """
-            self.set_icon(self._logo_icon \
-                .get_icon_at_size(self.__parent.get_size()))
+            self.set_icon_from_file(self.__parent.meta["logo"])
 
     class AboutDialog(BaseDialog, gtk.AboutDialog):
 
@@ -375,14 +347,9 @@ class Dialogs:
 
             if "logo" in parent.meta:
                 self.set_logo(gtk.gdk.pixbuf_new_from_file_at_size( \
-                        parent.meta["logo"], 48, 48))
+                    parent.meta["logo"], 48, 48))
             elif "theme" in parent.meta:
-                # It is assumed that the C{awn.Icons}
-                # object has been set via set_awn_icon() in C{Icon}
-                if parent.meta.has_option("multiple-icons"):
-                    self.set_logo(self._logo_icon.get_icon_at_size(48))
-                else:
-                    self.set_logo(parent.get_icon().get_icon_at_size(48))
+                self.set_logo_icon_name(parent.meta["theme"])
 
     class PreferencesDialog(BaseDialog, gtk.Dialog):
 

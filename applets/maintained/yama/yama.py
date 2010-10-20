@@ -235,9 +235,19 @@ class YamaApplet:
     def open_uri(self, uri):
         file = vfs.File.for_uri(uri)
 
-        if file is not None and (not uri.startswith("file://") or file.exists()):
+        if file is not None and (not file.is_native() or file.exists()):
             try:
-                file.launch()
+                if not file.is_native() and not file.exists():
+                    def mount_result(gio_file2, result):
+                        try:
+                            if gio_file2.mount_enclosing_volume_finish(result):
+                                file.launch()
+                        except gio.Error, e:
+                            print "Error when mounting remote location: %s" % e
+                    gio_file = gio.File(file.props.uri)
+                    gio_file.mount_enclosing_volume(gtk.MountOperation(), mount_result)
+                else:
+                    file.launch()
             except glib.GError, e:
                 print "Error when opening: %s" % e
         else:

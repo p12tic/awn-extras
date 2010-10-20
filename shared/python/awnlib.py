@@ -215,6 +215,9 @@ class Dialogs:
         if dialog in self.__special_dialogs:
             raise RuntimeError("Unregistering special dialog '%s' is forbidden" % dialog)
 
+        if dialog == self.__current:
+            self.__register[dialog].hide()
+            self.__current = None
         del self.__register[dialog]
 
     def toggle(self, dialog, force="", once=False, event=None):

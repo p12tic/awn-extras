@@ -235,13 +235,21 @@ class YamaApplet:
     def open_uri(self, uri):
         file = vfs.File.for_uri(uri)
 
-        if file is not None and (not uri.startswith("file://") or file.exists()):
+        if file is not None:
             try:
                 file.launch()
             except glib.GError, e:
-                print "Error when opening: %s" % e
-        else:
-            print "File at URI not found (%s)" % uri
+                if file.is_native():
+                    print "Error while launching: %s" % e
+                else:
+                    def mount_result(gio_file2, result):
+                        try:
+                            if gio_file2.mount_enclosing_volume_finish(result):
+                                file.launch()
+                        except glib.GError, e:
+                            print "Error while launching remote location: %s" % e
+                    gio_file = gio.File(file.props.uri)
+                    gio_file.mount_enclosing_volume(gtk.MountOperation(), mount_result)
 
     def create_places_submenu(self, parent_menu):
         item = self.append_menu_item(parent_menu, _("Places"), "folder", None)

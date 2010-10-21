@@ -110,17 +110,9 @@ class CommonFolderApplet:
                         self.add_url_name(*url_name)
 
     def add_url_name(self, uri, name=None):
-        if name is None:
-            match = url_pattern.match(uri)
-            if match is not None:
-                name = "/%s on %s" % (match.group(2), match.group(1))
-            else:
-                basename = glib.filename_display_basename(uri)
-                name = unquote(str(basename))
+        file = vfs.File.for_uri(uri)
 
-        if uri.startswith("file://"):
-            file = vfs.File.for_uri(uri)
-
+        if file.is_native():
             monitor = file.monitor()
             self.__monitors.append(monitor)
             monitor.connect("changed", self.file_changed_cb)
@@ -133,6 +125,18 @@ class CommonFolderApplet:
         else:
             icon = "folder-remote"
 
+        if name is None:
+            match = url_pattern.match(uri)
+            if match is not None:
+                name = "/%s on %s" % (match.group(2), match.group(1))
+            else:
+                if file.is_native():
+                    filename = os.path.abspath(file.props.path)
+                    name = glib.filename_display_basename(filename)
+                else:
+                    name = uri
+                name = unquote(str(name))
+
         self.add_folder_icon(name, icon, uri)
 
     def add_folder_icon(self, label, icon_name, uri):
@@ -142,13 +146,21 @@ class CommonFolderApplet:
     def icon_clicked_cb(self, widget, uri):
         file = vfs.File.for_uri(uri)
 
-        if file is not None and (not file.is_native() or file.exists()):
+        if file is not None:
             try:
                 file.launch()
             except glib.GError, e:
-                print "Error when opening: %s" % e
-        else:
-            print "File at URI not found (%s)" % uri
+                if file.is_native():
+                    print "Error while launching: %s" % e
+                else:
+                    def mount_result(gio_file2, result):
+                        try:
+                            if gio_file2.mount_enclosing_volume_finish(result):
+                                file.launch()
+                        except glib.GError, e:
+                            print "Error while launching remote location: %s" % e
+                    gio_file = gio.File(file.props.uri)
+                    gio_file.mount_enclosing_volume(gtk.MountOperation(), mount_result)
 
     def file_changed_cb(self, monitor, file, other_file, event):
         if event in (vfs.FILE_MONITOR_EVENT_CREATED, vfs.FILE_MONITOR_EVENT_DELETED):

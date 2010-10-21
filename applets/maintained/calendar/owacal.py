@@ -97,5 +97,6 @@ class OwaCal:
 
     def open_integrated_calendar(self, when, url):
         dat = "&d=%02d&m=%02d&y=%04d" % (when[2], (when[1] + 1), when[0])
-        url = url + "/exchange/calendar/?Cmd=contents&view=daily" + dat
+        url = url + "/exchange/" + self.applet.username + \
+              "/calendar/?Cmd=contents&view=daily" + dat
         webbrowser.open_new_tab(url)

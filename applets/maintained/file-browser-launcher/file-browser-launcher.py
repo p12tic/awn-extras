@@ -35,7 +35,7 @@ import gettext
 from desktopagnostic.config import GROUP_DEFAULT as group
 from desktopagnostic import vfs
 import awn
-from awn.extras import _
+from awn.extras import _, __version__
 gettext.bindtextdomain('xdg-user-dirs', '/usr/share/locale')
 
 try:
@@ -571,8 +571,10 @@ class App(awn.Applet):
               if name is None and path == '/':
                 name = _("Filesystem")
               if name is None:
-                try: name = path.split('/')[-1]
-                except: name = path
+                try:
+                    name = path.split('/')[-1]
+                except:
+                    name = path
 
               self.place(self.try_to_get_custom_icon_for_path(path), name, path)
 
@@ -1267,7 +1269,6 @@ class App(awn.Applet):
 
   #Show the preferences window
   def open_prefs(self, widget):
-    #Import the prefs file from the same directory
     import prefs
 
     #Show the prefs window - see prefs.py
@@ -1276,11 +1277,21 @@ class App(awn.Applet):
 
   #Show the about window
   def open_about(self, widget):
-    #Import the about file from the same directory
-    import about
-
-    #Show the about window - see about.py
-    about.About()
+    win = gtk.AboutDialog()
+    win.set_name(_("File Browser Launcher"))
+    win.set_copyright('Copyright 2009, 2010 sharkbaitbobby')
+    win.set_authors(['sharkbaitbobby <sharkbaitbobby+awn@gmail.com>'])
+    win.set_comments(_("A customizable launcher for browsing your files."))
+    win.set_license('This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA.')
+    win.set_wrap_license(True)
+    win.set_documenters(["sharkbaitbobby <sharkbaitbobby+awn@gmail.com>"])
+    win.set_website('http://wiki.awn-project.org/File_Browser_Launcher')
+    win.set_website_label('wiki.awn-project.org')
+    win.set_logo_icon_name('stock_folder')
+    win.set_icon_name('stock_folder')
+    win.set_version(__version__)
+    win.run()
+    win.destroy()
 
 if __name__ == '__main__':
   awn.init(sys.argv[1:])

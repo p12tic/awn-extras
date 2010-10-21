@@ -5,6 +5,5 @@ include $(top_srcdir)/Makefile.python-applet
 include $(top_srcdir)/Makefile.schemas
 
 dist_applet_DATA =			\
-	about.py			\
 	prefs.py			\
 	$(NULL)

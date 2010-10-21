@@ -110,14 +110,6 @@ class CommonFolderApplet:
                         self.add_url_name(*url_name)
 
     def add_url_name(self, uri, name=None):
-        if name is None:
-            match = url_pattern.match(uri)
-            if match is not None:
-                name = "/%s on %s" % (match.group(2), match.group(1))
-            else:
-                basename = glib.filename_display_basename(uri)
-                name = unquote(str(basename))
-
         file = vfs.File.for_uri(uri)
 
         if file.is_native():
@@ -132,6 +124,18 @@ class CommonFolderApplet:
             icon = existing_icons[0] if len(existing_icons) > 0 else "image-missing"
         else:
             icon = "folder-remote"
+
+        if name is None:
+            match = url_pattern.match(uri)
+            if match is not None:
+                name = "/%s on %s" % (match.group(2), match.group(1))
+            else:
+                if file.is_native():
+                    filename = os.path.abspath(file.props.path)
+                    name = glib.filename_display_basename(filename)
+                else:
+                    name = uri
+                name = unquote(str(name))
 
         self.add_folder_icon(name, icon, uri)
 

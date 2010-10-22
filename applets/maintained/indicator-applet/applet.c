@@ -892,6 +892,61 @@ icon_scroll(AwnIcon *icon, GdkEventScroll *event, IndicatorApplet *iapplet)
 }
 
 /* DrawingArea-related code ... */
+static void
+da_menu_position(GtkMenu *menu, gint *x, gint *y, gboolean *move, IndicatorApplet *iapplet)
+{
+  AwnApplet *applet = AWN_APPLET(iapplet->applet);
+  GtkPositionType pos = awn_applet_get_pos_type(applet);
+  gint size = awn_applet_get_size(applet);
+  gint offset = awn_applet_get_offset(applet);
+  gint mwidth = GTK_WIDGET(menu)->requisition.width;
+  gint mheight = GTK_WIDGET(menu)->requisition.height;
+  gint rc = iapplet->config_rows_cols;
+  gint pb_size = size * 1.1 / rc;
+
+  switch (pos)
+  {
+    case GTK_POS_BOTTOM:
+      *x -= iapplet->dx;
+      *y -= iapplet->dy + mheight;
+      break;
+    case GTK_POS_TOP:
+      *x -= iapplet->dx;
+      *y += pb_size - iapplet->dy;
+      break;
+    case GTK_POS_LEFT:
+      *x += pb_size - iapplet->dx;
+      *y -= iapplet->dy;
+      break;
+    default:
+      *x -= iapplet->dx + mwidth;
+      *y -= iapplet->dy;
+      break;
+  }
+
+  /* fits to screen? */
+  GdkScreen *screen = NULL;
+  if (gtk_widget_has_screen (GTK_WIDGET (menu)))
+  {
+    screen = gtk_widget_get_screen (GTK_WIDGET (menu));
+  }
+  else
+  {
+    screen = gdk_screen_get_default ();
+  }
+  if (screen)
+  {
+    gint screen_w = gdk_screen_get_width (screen);
+    gint screen_h = gdk_screen_get_height (screen);
+    *x = MIN (*x, screen_w - mwidth);
+    *y = MIN (*y, screen_h - mheight);
+    if (*x < 0) *x = 0;
+    if (*y < 0) *y = 0;
+  }
+
+  *move = TRUE;
+}
+
 static gboolean
 da_button_press(GtkWidget *widget, GdkEventButton *event, IndicatorApplet *iapplet)
 {
@@ -925,7 +980,7 @@ da_button_press(GtkWidget *widget, GdkEventButton *event, IndicatorApplet *iappl
   }
 
   gtk_menu_popup(GTK_MENU(g_list_nth_data(iapplet->shown_menus, iapplet->popup_num)), NULL, NULL,
-    (GtkMenuPositionFunc)awn_utils_menu_set_position_widget_relative, (gpointer)iapplet->applet, event->button, event->time);
+    (GtkMenuPositionFunc)da_menu_position, (gpointer)iapplet, event->button, event->time);
 
   return FALSE;
 }

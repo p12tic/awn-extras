@@ -601,7 +601,7 @@ class App(awn.Applet):
     if self.show_trash:
       count = self.trash.props.file_count
       if count > 0:
-        self.place('user-trash-full', _("Trash (%d)" % count), 'trash:///')
+        self.place('user-trash-full', _("Trash (%d)") % count, 'trash:///')
 
       else:
         self.place('user-trash', _("Trash"), 'trash:///')

@@ -65,7 +65,6 @@ applets/maintained/feeds/classes.py
 applets/maintained/feeds/feeds.desktop.in
 applets/maintained/feeds/feeds.py
 applets/maintained/feeds/prefs.py
-applets/maintained/file-browser-launcher/about.py
 [type: gettext/ini]applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in
 applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in
 applets/maintained/file-browser-launcher/file-browser-launcher.py

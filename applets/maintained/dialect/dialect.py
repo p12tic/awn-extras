@@ -41,13 +41,13 @@ class Dialect(awn.AppletSimple):
 # INITIALISE
 
     # PREFERENCES properties
-    left = gobject.property(type = int, default = 2)
-    middle = gobject.property(type = int, default = 1)
-    scroll = gobject.property(type = bool, default = False)
-    overlay = gobject.property(type = bool, default = True)
-    scale = gobject.property(type = float, default = 0.5)
-    opacity = gobject.property(type = float, default = 0.9)
-    toggle = gobject.property(type = int, default = 0)
+    left = gobject.property(type=int, default=2)
+    middle = gobject.property(type=int, default=1)
+    scroll = gobject.property(type=bool, default=False)
+    overlay = gobject.property(type=bool, default=True)
+    scale = gobject.property(type=float, default=0.5)
+    opacity = gobject.property(type=float, default=0.9)
+    toggle = gobject.property(type=int, default=0)
 
     # GLOBAL Variables
     layout = []
@@ -119,7 +119,7 @@ class Dialect(awn.AppletSimple):
 
         # COMPLETE initialisation
         self.init = False
-        
+
         # Set timer to monitor HOTKEY changes
         gobject.timeout_add(500, self.external_config)
 
@@ -148,7 +148,7 @@ class Dialect(awn.AppletSimple):
         variants = self.server.get_variants()
         length = len(variants)
         if length != len(layouts):
-            for item in range(len(layouts)-length):
+            for item in range(len(layouts) - length):
                 variants.append('')
         return variants
 
@@ -159,7 +159,8 @@ class Dialect(awn.AppletSimple):
         index = -1
         if len(options) > 0:
             for item in options:
-                if len(item) == 0: continue
+                if len(item) == 0:
+                    continue
                 option, value = item.split(':')
                 if option == 'grp':
                     index = options.index(item)
@@ -194,14 +195,22 @@ class Dialect(awn.AppletSimple):
             self.gtk['umenu'].append(self.gtk[item])
             self.gtk[item].connect('activate', self.on_umenu, item)
         layout_info = builder.get_object('layout_info')
-        layout_info.set_tooltip_markup(_('<b>User List:</b> The list of ' +\
-            'layouts you commonly use. The maximum number of layouts is ' +\
-            'restricted by the X11 xkb system (currently 4). Select an item ' +\
-            'and click the remove button to delete from your user list. You ' +\
-            'can order the list by drag and drop.\n' +\
-            '<b>System List:</b> The complete list of layouts and variants ' +\
-            'available. Select an item and click the add button to include ' +\
+        layout_info.set_tooltip_markup(_('<b>User List:</b> The list of '
+            'layouts you commonly use. The maximum number of layouts is '
+            'restricted by the X11 xkb system (currently 4). Select an item '
+            'and click the remove button to delete from your user list. You '
+            'can order the list by drag and drop.\n'
+            '<b>System List:</b> The complete list of layouts and variants '
+            'available. Select an item and click the add button to include '
             'in your user list.'))  # glade3 doesn't support translatable markup
+        label_small = builder.get_object('label_small')
+        label_small.set_markup('<i><small>%s</small></i>' % _('small'))
+        label_small = builder.get_object('label_large')
+        label_small.set_markup('<i><small>%s</small></i>' % _('large'))
+        label_small = builder.get_object('label_transparent')
+        label_small.set_markup('<i><small>%s</small></i>' % _('transparent'))
+        label_small = builder.get_object('label_opaque')
+        label_small.set_markup('<i><small>%s</small></i>' % _('opaque'))
 
     # Create CONTEXT menu
     def context_init(self):
@@ -231,6 +240,7 @@ class Dialect(awn.AppletSimple):
             self.vlist = {}
             self.registry.foreach_layout_variant(layout, iter_variants)
             self.variants[layout] = self.vlist.copy()
+
         def iter_options(registry, item):
             option = item.get_name()
             desc = item.get_description()
@@ -315,8 +325,8 @@ class Dialect(awn.AppletSimple):
                     variant = ' - ' + \
                       self.variants[self.layout[item]][self.variant[item]]
                 self.gtk[item].set_label(layout + variant)
-                self.gtk[item].set_image(gtk.image_new_from_pixbuf\
-                  (self.load_icon(self.layout[item], gtk.ICON_SIZE_MENU)))
+                self.gtk[item].set_image(gtk.image_new_from_pixbuf(
+                     self.load_icon(self.layout[item], gtk.ICON_SIZE_MENU)))
                 self.gtk[item].show()
             else:
                 self.gtk[item].hide()
@@ -508,7 +518,7 @@ class Dialect(awn.AppletSimple):
                     self.on_order()
 
     # USER list order changed
-    def on_order(self, obj = None, data = None, iter = None):
+    def on_order(self, obj=None, data=None, iter=None):
         if not self.init:
             if not iter:
                 self.layout = []
@@ -533,9 +543,9 @@ class Dialect(awn.AppletSimple):
             self.current = -1
             self.set_umenu()
             self.get_layout(False)
-        
+
     # CLICKED on applet icon
-    def on_click(self, obj, event = None):
+    def on_click(self, obj, event=None):
         if not event:
             event = gtk.get_current_event()
         if event.button < 3:
@@ -544,12 +554,12 @@ class Dialect(awn.AppletSimple):
                 if event.button == 2:
                     button = self.middle
                 if button == 1:
-                    self.popup_gtk_menu (self.gtk['umenu'], 0, event.time)
+                    self.popup_gtk_menu(self.gtk['umenu'], 0, event.time)
                     return True
                 elif button < 3:
                     self.change_group(button - 1)
         else:
-            self.popup_gtk_menu (self.cmenu, 0, event.time)
+            self.popup_gtk_menu(self.cmenu, 0, event.time)
             return True
         return False
 

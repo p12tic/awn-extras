@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-15 20:22+0200\n"
+"POT-Creation-Date: 2010-10-22 18:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -225,6 +225,57 @@ msgstr ""
 msgid "Network Bandwidth monitor"
 msgstr ""
 
+#. Reset the Sum Interface records to zero
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:56
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:126
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:127
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:128
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:129
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:195
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:196
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:197
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:198
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:240
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:241
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:242
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:243
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:244
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:245
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:247
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:51
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:251
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:390
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:690
+msgid "Sum Interface"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:61
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:62
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:81
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:82
+msgid "n/a"
+msgstr ""
+
+#. Reset the Multi Interface records to zero
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:76
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:133
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:134
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:135
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:136
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:202
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:203
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:204
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:205
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:248
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:783
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:50
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:248
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:393
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:411
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:708
+msgid "Multi Interface"
+msgstr ""
+
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:329
 msgid "Scanning"
 msgstr ""
@@ -235,6 +286,7 @@ msgstr ""
 
 #. kilobytes per second
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:356
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:21
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:81
 msgid "KBps"
@@ -242,15 +294,20 @@ msgstr ""
 
 #. kilobits per second
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:360
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:84
 msgid "Kbps"
 msgstr ""
 
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:394
+msgid "Use KBps instead of Kbps"
+msgstr ""
+
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:408
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:20
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:585
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:588
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:609
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:597
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:600
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:621
 msgid "Interfaces"
 msgstr ""
 
@@ -264,13 +321,45 @@ msgid "Total Sent: %s - Total Received: %s (All Interfaces)"
 msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:838
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:457
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:469
 msgid "No Device"
 msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:839
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:458
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:470
 msgid "Please select a valid device"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
+msgid "Bps"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
+msgid "MBps"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
+msgid "GBps"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
+msgid "TBps"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
+msgid "bps"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
+msgid "Mbps"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
+msgid "Gbps"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
+msgid "Tbps"
 msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:1
@@ -373,8 +462,10 @@ msgstr ""
 msgid "Signal Scale"
 msgstr ""
 
+#. Translators: short for "Sum Interface"
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:24
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:226
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:392
 msgid "Sum"
 msgstr ""
 
@@ -386,7 +477,9 @@ msgstr ""
 msgid "Device"
 msgstr ""
 
+#. Translators: short for "Multi Interface"
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:232
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:395
 msgid "Multi"
 msgstr ""
 
@@ -411,34 +504,77 @@ msgstr ""
 msgid "%s %s Color"
 msgstr ""
 
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:579
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:589
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:619
+#. Translators: do not translate, just add spacing before colon,
+#. if your locale requires it
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:208
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:212
+msgid "SSID:"
+msgstr ""
+
+#. Translators: do not translate, just add spacing before colon,
+#. if your locale requires it
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:284
+msgid "TX:"
+msgstr ""
+
+#. Translators: do not translate, just add spacing before colon,
+#. if your locale requires it
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:289
+msgid "RX:"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:591
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:601
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:631
 msgid "Options/Info"
 msgstr ""
 
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:581
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:584
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:593
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:596
 msgid "Back to Graph"
 msgstr ""
 
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:614
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:626
 msgid "Change Unit"
 msgstr ""
 
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:658
-msgid "Status"
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:670
+msgid "Status:"
 msgstr ""
 
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:658
-msgid "IP Address"
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:670
+msgid "IP Address:"
 msgstr ""
 
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:658
-msgid "Subnet Mask"
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:670
+msgid "Subnet Mask:"
 msgstr ""
 
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:738
+#. Translators: status of a network interface
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:678
+msgid "UP"
+msgstr ""
+
+#. Translators: status of a network interface
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:682
+msgid "RUNNING"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:699
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:717
+#: ../applets/maintained/calendar/calendarprefs.py:121
+#: ../applets/maintained/dialect/dialect.ui.h:15
+#: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:32
+msgid "None"
+msgstr ""
+
+#. Translators: members = interfaces included in the "Sum Interface"
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:704
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:721
+msgid "Members:"
+msgstr ""
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:753
 msgid "Wireless graph type"
 msgstr ""
 
@@ -850,7 +986,7 @@ msgstr ""
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:213
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:381
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:585
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:582
 #: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Computer"
 msgstr ""
@@ -861,13 +997,13 @@ msgstr ""
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:215
 #: ../applets/maintained/places/applet.c:344
-#: ../applets/maintained/yama/yama.py:256
+#: ../applets/maintained/yama/yama.py:264
 msgid "Desktop"
 msgstr ""
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:221
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:223
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:610
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:607
 #: ../applets/maintained/file-browser-launcher/prefs.py:236
 msgid "Trash"
 msgstr ""
@@ -881,7 +1017,7 @@ msgid "Removable Media"
 msgstr ""
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:367
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:585
 msgid "Network"
 msgstr ""
 
@@ -893,13 +1029,13 @@ msgstr ""
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1048
 #: ../applets/maintained/file-browser-launcher/prefs.py:249
 #: ../applets/maintained/places/places.desktop.in.in.h:2
-#: ../applets/maintained/yama/yama.py:247
+#: ../applets/maintained/yama/yama.py:255
 msgid "Places"
 msgstr ""
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1071
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1086
-#: ../applets/maintained/yama/yama.py:323
+#: ../applets/maintained/yama/yama.py:331
 msgid "Recent Documents"
 msgstr ""
 
@@ -919,13 +1055,13 @@ msgid "Launch\\u2026"
 msgstr ""
 
 #: ../applets/maintained/cairo-menu/misc.c:161
-#: ../applets/maintained/yama/yama.py:587
+#: ../applets/maintained/yama/yama.py:595
 #, c-format, python-format
 msgid "Unable to mount %s"
 msgstr ""
 
 #: ../applets/maintained/cairo-menu/misc.c:407
-#: ../applets/maintained/yama/yama.py:566
+#: ../applets/maintained/yama/yama.py:574
 msgid "Clear the Recent Documents list?"
 msgstr ""
 
@@ -940,8 +1076,8 @@ msgstr ""
 
 #: ../applets/maintained/cairo-menu/misc.c:423
 #: ../applets/maintained/cairo-menu/misc.c:532
-#: ../applets/maintained/yama/yama.py:337
-#: ../applets/maintained/yama/yama.py:571
+#: ../applets/maintained/yama/yama.py:345
+#: ../applets/maintained/yama/yama.py:579
 msgid "Clear Recent Documents"
 msgstr ""
 
@@ -1053,12 +1189,6 @@ msgstr ""
 msgid "Calendar Appearance"
 msgstr ""
 
-#: ../applets/maintained/calendar/calendarprefs.py:121
-#: ../applets/maintained/dialect/dialect.ui.h:19
-#: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:32
-msgid "None"
-msgstr ""
-
 #: ../applets/maintained/calendar/calendarprefs.py:122
 msgid "Evolution"
 msgstr ""
@@ -1081,27 +1211,27 @@ msgstr ""
 
 #. default title/tooltip to show on startup.
 #: ../applets/maintained/calendar/clockcal.py:51
-#: ../applets/maintained/calendar/clockcal.py:494
+#: ../applets/maintained/calendar/clockcal.py:499
 #: ../applets/maintained/digital-clock/digital-clock.vala:119
 msgid "Calendar"
 msgstr ""
 
-#: ../applets/maintained/calendar/clockcal.py:110
+#: ../applets/maintained/calendar/clockcal.py:117
 msgid "Forget Password"
 msgstr ""
 
-#: ../applets/maintained/calendar/clockcal.py:218
+#: ../applets/maintained/calendar/clockcal.py:224
 msgid ""
 "Do you want to erase your calendar password from the calendar applet?  If "
 "you choose to clear your password, you will be prompted again for your "
 "calendar login credentials."
 msgstr ""
 
-#: ../applets/maintained/calendar/clockcal.py:246
+#: ../applets/maintained/calendar/clockcal.py:252
 msgid "Avant Calendar Applet"
 msgstr ""
 
-#: ../applets/maintained/calendar/clockcal.py:248
+#: ../applets/maintained/calendar/clockcal.py:254
 msgid "A Calendar Applet for the Avant Window Navigator. Images by Deleket."
 msgstr ""
 
@@ -1109,22 +1239,22 @@ msgstr ""
 #. output in terminal with 'date +"%x %X"'. In most cases you don't have
 #. to change it. See 'date --help' for other formats, that might be more
 #. common in your locale.
-#: ../applets/maintained/calendar/clockcal.py:293
+#: ../applets/maintained/calendar/clockcal.py:299
 #, no-python-format
 msgid "%x %X"
 msgstr ""
 
-#: ../applets/maintained/calendar/clockcal.py:500
+#: ../applets/maintained/calendar/clockcal.py:505
 msgid "Open in "
 msgstr ""
 
-#: ../applets/maintained/calendar/clockcal.py:504
+#: ../applets/maintained/calendar/clockcal.py:509
 #: ../applets/maintained/weather/forecast.py:174
 msgid "Today"
 msgstr ""
 
 #. print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
-#: ../applets/maintained/calendar/clockcal.py:552
+#: ../applets/maintained/calendar/clockcal.py:557
 msgid "Unable to read calendar data from external source."
 msgstr ""
 
@@ -1298,7 +1428,7 @@ msgstr ""
 
 #: ../applets/maintained/common-folder/common-folder.py:93
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:385
-#: ../applets/maintained/yama/yama.py:254
+#: ../applets/maintained/yama/yama.py:262
 msgid "Home Folder"
 msgstr ""
 
@@ -1389,8 +1519,30 @@ msgstr ""
 msgid "Dialect Applet"
 msgstr ""
 
-#: ../applets/maintained/dialect/dialect.py:197
-msgid "<b>User List:</b> The list of "
+#: ../applets/maintained/dialect/dialect.py:198
+msgid ""
+"<b>User List:</b> The list of layouts you commonly use. The maximum number "
+"of layouts is restricted by the X11 xkb system (currently 4). Select an item "
+"and click the remove button to delete from your user list. You can order the "
+"list by drag and drop.\n"
+"<b>System List:</b> The complete list of layouts and variants available. "
+"Select an item and click the add button to include in your user list."
+msgstr ""
+
+#: ../applets/maintained/dialect/dialect.py:207
+msgid "small"
+msgstr ""
+
+#: ../applets/maintained/dialect/dialect.py:209
+msgid "large"
+msgstr ""
+
+#: ../applets/maintained/dialect/dialect.py:211
+msgid "transparent"
+msgstr ""
+
+#: ../applets/maintained/dialect/dialect.py:213
+msgid "opaque"
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:1
@@ -1406,100 +1558,84 @@ msgid "<b>Mouse Actions</b>"
 msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:4
-msgid "<i><small>large</small></i>"
-msgstr ""
-
-#: ../applets/maintained/dialect/dialect.ui.h:5
-msgid "<i><small>opaque</small></i>"
-msgstr ""
-
-#: ../applets/maintained/dialect/dialect.ui.h:6
-msgid "<i><small>small</small></i>"
-msgstr ""
-
-#: ../applets/maintained/dialect/dialect.ui.h:7
-msgid "<i><small>transparent</small></i>"
-msgstr ""
-
-#: ../applets/maintained/dialect/dialect.ui.h:8
 msgid "About Dialect Applet"
 msgstr ""
 
-#: ../applets/maintained/dialect/dialect.ui.h:9
+#: ../applets/maintained/dialect/dialect.ui.h:5
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:5
 msgid "Appearance"
 msgstr ""
 
-#: ../applets/maintained/dialect/dialect.ui.h:10
+#: ../applets/maintained/dialect/dialect.ui.h:6
 msgid "Change your keyboard layout from Awn."
 msgstr ""
 
-#: ../applets/maintained/dialect/dialect.ui.h:11
+#: ../applets/maintained/dialect/dialect.ui.h:7
 msgid "Control"
 msgstr ""
 
-#: ../applets/maintained/dialect/dialect.ui.h:12
+#: ../applets/maintained/dialect/dialect.ui.h:8
 msgid "Dialect Applet Preferences"
 msgstr ""
 
-#: ../applets/maintained/dialect/dialect.ui.h:13
+#: ../applets/maintained/dialect/dialect.ui.h:9
 msgid "Flag _Opacity:"
 msgstr ""
 
-#: ../applets/maintained/dialect/dialect.ui.h:14
+#: ../applets/maintained/dialect/dialect.ui.h:10
 msgid "Flag _Size:"
 msgstr ""
 
 #. A tooltip, layout = keyboard layout
-#: ../applets/maintained/dialect/dialect.ui.h:16
+#: ../applets/maintained/dialect/dialect.ui.h:12
 msgid ""
 "If selected, scrolling up or down with your mouse wheel will select the next "
 "or previous layout in your user list"
 msgstr ""
 
 #. Keyboard layouts
-#: ../applets/maintained/dialect/dialect.ui.h:18
+#: ../applets/maintained/dialect/dialect.ui.h:14
 msgid "Layouts"
 msgstr ""
 
 #. A tooltip, layouts = keyboard layouts
-#: ../applets/maintained/dialect/dialect.ui.h:21
+#: ../applets/maintained/dialect/dialect.ui.h:17
 msgid "Selects the hot key combination used to change layouts"
 msgstr ""
 
-#: ../applets/maintained/dialect/dialect.ui.h:22
+#: ../applets/maintained/dialect/dialect.ui.h:18
 msgid "Show _Flag"
 msgstr ""
 
-#: ../applets/maintained/dialect/dialect.ui.h:23
+#: ../applets/maintained/dialect/dialect.ui.h:19
 msgid "Show menu with layouts"
 msgstr ""
 
-#: ../applets/maintained/dialect/dialect.ui.h:24
+#: ../applets/maintained/dialect/dialect.ui.h:20
 msgid "Switch to next layout in list"
 msgstr ""
 
-#: ../applets/maintained/dialect/dialect.ui.h:25
+#: ../applets/maintained/dialect/dialect.ui.h:21
 msgid "Switch to previous layout in list"
 msgstr ""
 
-#: ../applets/maintained/dialect/dialect.ui.h:26
+#: ../applets/maintained/dialect/dialect.ui.h:22
 msgid "_Add"
 msgstr ""
 
-#: ../applets/maintained/dialect/dialect.ui.h:27
+#: ../applets/maintained/dialect/dialect.ui.h:23
 msgid "_Allow scroll wheel to change layout"
 msgstr ""
 
-#: ../applets/maintained/dialect/dialect.ui.h:28
+#: ../applets/maintained/dialect/dialect.ui.h:24
 msgid "_Keyboard Toggle:"
 msgstr ""
 
-#: ../applets/maintained/dialect/dialect.ui.h:29
+#: ../applets/maintained/dialect/dialect.ui.h:25
 msgid "_Left Click:"
 msgstr ""
 
-#: ../applets/maintained/dialect/dialect.ui.h:30
+#: ../applets/maintained/dialect/dialect.ui.h:26
 msgid "_Middle Click:"
 msgstr ""
 
@@ -1831,7 +1967,7 @@ msgid "Source:"
 msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:366
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:151
 msgid "Search"
 msgstr ""
@@ -1900,16 +2036,6 @@ msgstr ""
 msgid ""
 "No results found.\n"
 "Try checking your spelling or using different search terms."
-msgstr ""
-
-#: ../applets/maintained/file-browser-launcher/about.py:39
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:2
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:63
-msgid "File Browser Launcher"
-msgstr ""
-
-#: ../applets/maintained/file-browser-launcher/about.py:42
-msgid "A customizable launcher for browsing your files."
 msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:1
@@ -1982,63 +2108,73 @@ msgstr ""
 msgid "A launcher for your file manager"
 msgstr ""
 
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:2
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:63
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1279
+msgid "File Browser Launcher"
+msgstr ""
+
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:389
 #: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Filesystem"
 msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:518
-#: ../applets/maintained/yama/yama.py:307
+#: ../applets/maintained/yama/yama.py:315
 msgid "Connect to Server..."
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:594
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
 msgid "CD/DVD Burner"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:597
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:594
 msgid "Fonts"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:601
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:598
 #: ../applets/maintained/file-browser-launcher/prefs.py:295
 #: ../applets/maintained/file-browser-launcher/prefs.py:370
 msgid "Folder"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:607
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:604
 #, python-format
 msgid "Trash (%d)"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:717
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:714
 msgid "DVD Drive"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:721
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:718
 msgid "CD Drive"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1064
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1061
 msgid "Eject"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1072
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1069
 msgid "Empty Trash"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1095
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1092
 msgid "Confirm deletion"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1103
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1100
 msgid ""
 "<big><b>Are you sure you want to delete\n"
 "every item from the trash?</b></big>"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1105
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1102
 msgid "This action cannot be undone."
+msgstr ""
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1282
+msgid "A customizable launcher for browsing your files."
 msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:44
@@ -2180,7 +2316,7 @@ msgid "Show the number of items in the trash on top of the icon."
 msgstr ""
 
 #. This is a window title, %s is an applet's name.
-#: ../applets/maintained/garbage/prefs.vala:32 ../shared/python/awnlib.py:404
+#: ../applets/maintained/garbage/prefs.vala:32 ../shared/python/awnlib.py:374
 #, c-format, python-format
 msgid "%s Preferences"
 msgstr ""
@@ -5047,33 +5183,33 @@ msgstr ""
 msgid "_Edit Menus"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:254
+#: ../applets/maintained/yama/yama.py:262
 msgid "Open your personal folder"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:256
+#: ../applets/maintained/yama/yama.py:264
 msgid "Open the contents of your desktop in a folder"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:307
+#: ../applets/maintained/yama/yama.py:315
 msgid "Connect to a remote computer or shared disk"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:337
+#: ../applets/maintained/yama/yama.py:345
 msgid "Clear all items from the recent documents list"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:377
+#: ../applets/maintained/yama/yama.py:385
 #, python-format
 msgid "Open '%s'"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:420
+#: ../applets/maintained/yama/yama.py:428
 #, python-format
 msgid "Mount %s"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:572
+#: ../applets/maintained/yama/yama.py:580
 msgid ""
 "Clearing the Recent Documents list will clear the following:\n"
 "* All items from the Places > Recent Documents menu item.\n"

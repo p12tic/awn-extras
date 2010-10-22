@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-15 20:22+0200\n"
-"PO-Revision-Date: 2010-10-20 16:28+0000\n"
+"PO-Revision-Date: 2010-10-21 18:23+0000\n"
 "Last-Translator: David Bengtsson <Unknown>\n"
 "Language-Team: Launchpad Swedish Translators <lp-l10n-"
 "sv@lists.launchpad.net>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-10-21 04:58+0000\n"
+"X-Launchpad-Export-Date: 2010-10-22 04:37+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Language: Swedish\n"
 
@@ -39,7 +39,7 @@ msgstr "Global snabbtangent för att aktivera terminalen."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:2
 msgid "Set whether the applet should hide itself when it loses focus."
-msgstr "Ställ in huruvida miniprogrammet ska döljas vid förlorad fokus."
+msgstr "Ställ in huruvida miniprogrammet ska döljas när det förlorar fokus."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:3
 msgid "The applet's background image."
@@ -391,7 +391,7 @@ msgstr "Textstorlek på ikonen"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:19
 msgid "If this is checked, the common display unit will be Bytes"
-msgstr "Om aktiverat kommer den gemensamma enheten som visas att vara byte."
+msgstr "Om markerad kommer den gemensamma enheten som visas att vara byte"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:22
 msgid "Minimum Scaling threshold"
@@ -596,11 +596,11 @@ msgid ""
 "If enabled, shows a notification when the charge level reaches a certain "
 "percentage"
 msgstr ""
-"Om aktiverat visas en notifiering när laddningsnivån uppnår en viss procent."
+"Om markerad visas en notifiering när laddningsnivån uppnår en viss procent"
 
 #: ../applets/maintained/battery/battery.ui.h:5
 msgid "If enabled, shows a notification when the charge levels drops too low"
-msgstr "Om aktiverat visas en notifiering när laddningsnivån blir för låg."
+msgstr "Om markerad visas en notifiering när laddningsnivån blir för låg"
 
 #: ../applets/maintained/battery/battery.ui.h:8
 msgid "_Battery:"
@@ -691,7 +691,7 @@ msgstr "Namnet på temat för den analoga klockan."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:10
 msgid "Wind speed unit (0: m/s, 1: km/h, 2: mph, 3: knots, 4: Beaufort)."
-msgstr "Vindhastighetsenhet; 0. m/s, 1. km/h, 2. mph, 3. knop 4. beaufort."
+msgstr "Vindhastighetsenhet; 0. m/s, 1. km/h, 2. mph, 3. knop, 4. beaufort."
 
 #: ../applets/maintained/cairo-clock/cairo-clock.desktop.in.h:1
 #: ../applets/maintained/cairo-clock/cairo-clock.py:29
@@ -761,23 +761,23 @@ msgstr "Sök _nästa"
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:11
 msgid ""
 "If enabled, besides hours and minutes, the seconds will be visible too"
-msgstr "Om aktiverat visas även sekunder utöver timmar och minuter"
+msgstr "Om markerad visas även sekunder utöver timmar och minuter"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:12
 msgid "If enabled, the date will be shown in the title"
-msgstr "Om aktiverat visas datumet i titeln"
+msgstr "Om markerad visas datumet i titeln"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:13
 msgid "If enabled, the seconds hand will be visible in the clock"
-msgstr "Om aktiverat visas sekundvisaren i klockan"
+msgstr "Om markerad visas sekundvisaren i klockan"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:14
 msgid "If enabled, time will be shown like 1:23 AM"
-msgstr "Om aktiverat visas tiden som 1:23 AM"
+msgstr "Om markerad visas tiden som 1:23 AM"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:15
 msgid "If enabled, time will be shown like 23:45"
-msgstr "Om aktiverat visas tiden som 23:45"
+msgstr "Om markerad visas tiden som 23:45"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:16
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:35
@@ -1599,7 +1599,7 @@ msgstr "Typsnittet för klocktexten."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:6
 msgid "The shadow color of the clock text."
-msgstr "Skuggfärgen för klocktexten"
+msgstr "Skuggfärgen för klocktexten."
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:7
 msgid "Toggle 12-hour mode."
@@ -1671,7 +1671,7 @@ msgstr "Justera datum och tid"
 
 #: ../applets/maintained/digital-clock/digital-clock.vala:412
 msgid "Displays digital clock."
-msgstr "Visar digital klocka."
+msgstr "Visar digital tid"
 
 #. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
 #: ../applets/maintained/feeds/awn-applet-feeds.schema-ini.in.h:1
@@ -2121,7 +2121,7 @@ msgid ""
 "every item from the trash?</b></big>"
 msgstr ""
 "<big><b>Är du säker på att du vill ta bort\n"
-"alla objekt från papperskorgen?</b></big>"
+"alla objekt i papperskorgen?</b></big>"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1105
 msgid "This action cannot be undone."
@@ -2251,8 +2251,8 @@ msgstr ""
 msgid ""
 "Are you sure you want to empty your trash? It currently contains %u item(s)."
 msgstr ""
-"Är du säker på att du vill tömma din papperskorg? Den innehåller för "
-"tillfället %u objekt."
+"Är du säker på att du vill tömma papperskorgen? Den innehåller %u objekt för "
+"närvarande."
 
 #: ../applets/maintained/garbage/applet.vala:356
 #, c-format
@@ -2327,7 +2327,7 @@ msgstr "RGBA-färgen för mätarvisaren/-nålen."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:12
 msgid "Timeout between two value updates (in seconds)."
-msgstr "Tidsgräns mellan två värdeuppdateringar, i sekunder."
+msgstr "Paus mellan två värdeuppdateringar, i sekunder."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:13
 msgid "Whether alarm should trigger at high value limit or not."
@@ -2576,7 +2576,7 @@ msgstr "Om aktiverat visas alla andra menyer."
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:2
 msgid "If true, show the Me menu (chat, microblogging, etc)"
 msgstr ""
-"Om aktiverat visas mig-menyn som innehåller chatt, mikrobloggning etc."
+"Om aktiverat visas Mig-menyn som innehåller chatt, mikrobloggning etc."
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:3
 msgid "If true, show the Messaging icon"
@@ -3554,7 +3554,7 @@ msgstr "Alfakanalsvärde att tillämpa på bakgrunden för inaktiv arbetsyta."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:8
 msgid "Applet border width.  0 indicates no border."
-msgstr "Miniprogrammets rambredd. 0 indikerar ingen ram."
+msgstr "Miniprogrammets rambredd. 0 indikerar att ingen ram ska visas."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:9
 msgid ""
@@ -3573,8 +3573,8 @@ msgid ""
 "Mousewheel  0. off. 1 up left, down right. 2 Opposite direction of 1. 3 Same "
 "as 1 no wrap. 4 opposite direction of 3."
 msgstr ""
-"Mushjulet; 0. Av, 1. Upp vänster, ned höger, 2. Motsatt riktning av 1, 3. "
-"Samma som 1, utan insvepning, 4. Motsatt riktning av 3."
+"Mushjulet; 0. Av, 1. Upp vänster, ned höger, 2. Motsatt riktning mot 1, 3. "
+"Samma som 1, utan insvepning, 4. Motsatt riktning mot 3."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:12
 msgid ""
@@ -3635,15 +3635,15 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:21
 msgid "Whether to grab wallpaper."
-msgstr "Huruvida bakgrundsbilden ska fångas."
+msgstr "Huruvida bakgrundsbilden ska visas."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:22
 msgid ""
 "Win grabs:  0...none\t1...all (grab method may override) 2..active ws (and "
 "sticky)  3...active win"
 msgstr ""
-"Fönsterfångster; 0. Inga, 1. Alla (fångstmetod kan åsidosättas), 2. Aktiv "
-"arbetsyta (och klistrad), 3. Aktivt fönster."
+"Fönstervisningar; 0. Inga, 1. Alla, fångstmetod kan åsidosättas, 2. Aktiv "
+"arbetsyta, och klistrad, 3. Aktivt fönster."
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:3
 msgid "<b>Background transparency</b>"
@@ -4200,7 +4200,7 @@ msgstr "Bakgrundsfärg för lågt prioriterade objekt."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:3
 msgid "Background color for medium priority items"
-msgstr "Bakgrundsfärg för medelhögt prioriterade objekt."
+msgstr "Bakgrundsfärg för objekt med medelhög prioritet."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:4
 msgid "List of colors to use for the custom color"
@@ -4232,7 +4232,7 @@ msgstr "Textfärg för lågt prioriterade objekt."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:11
 msgid "Text color for medium priority items"
-msgstr "Textfärg för medelhögt prioriterade objekt."
+msgstr "Textfärg för objekt med medelhög prioritet."
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:12
 msgid "The color to use for the icon"
@@ -5125,12 +5125,12 @@ msgid ""
 "If enabled, the dialog will be transparent, and the five days of the "
 "forecast will be curved"
 msgstr ""
-"Om aktiverat kommer dialogrutan att vara genomskinlig och de fem "
+"Om markerad kommer dialogrutan att vara genomskinlig och de fem "
 "prognosdagarna kurvformade"
 
 #: ../applets/maintained/weather/weather.ui.h:8
 msgid "If enabled, the temperature will be displayed in the icon"
-msgstr "Om aktiverat visas temperaturen på ikonen"
+msgstr "Om markerad visas temperaturen på ikonen"
 
 #: ../applets/maintained/weather/weather.ui.h:10
 msgid "Maximum _map width:"
@@ -5320,7 +5320,7 @@ msgstr "En huvudmeny för Awn"
 
 #: ../applets/unmaintained/pandora/awn-applet-pandora.schema-ini.in.h:1
 msgid "The url of the Pandora mini flash player."
-msgstr "Webadressen till Pandoras miniflashspelare"
+msgstr "Webbadressen till Pandoras miniflashspelare."
 
 #: ../applets/unmaintained/pandora/pandora.desktop.in.h:1
 msgid "Listen to Pandora Internet Radio"

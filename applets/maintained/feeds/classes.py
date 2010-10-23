@@ -971,9 +971,6 @@ class ErrorDialog(gtk.MessageDialog):
         self.__parent = parent
         self.set_skip_taskbar_hint(False)
 
-        self.run()
-        self.destroy()
-
 def get_16x16(pb):
     if pb.get_width() != 16 or pb.get_height() != 16:
         pb2 = pb.scale_simple(16, 16, gtk.gdk.INTERP_BILINEAR)

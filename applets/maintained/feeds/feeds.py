@@ -17,6 +17,8 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+from __future__ import with_statement
+
 import sys
 import os
 import urllib2
@@ -1183,11 +1185,12 @@ class App(awn.AppletSimple):
     #Actually add each feed
     def add_opml(self, urls):
         try:
-            fp = open(config_path, 'r')
-            f = fp.read()
-            fp.close()
+            with open(config_path, 'r') as fp:
+                f = fp.read()
         except IOError, e:
-            classes.ErrorDialog(self, _("Could not open '%s'") % config_path, e)
+            dialog = classes.ErrorDialog(self, _("Could not open '%s'") % config_path, e)
+            dialog.run()
+            dialog.destroy()
             return
 
         for url in urls:
@@ -1195,11 +1198,12 @@ class App(awn.AppletSimple):
             self.written_urls.append(url)
 
         try:
-            fp = open(config_path, 'w')
-            fp.write(f)
-            fp.close()
+            with open(config_path, 'w') as fp:
+                f = fp.write()
         except IOError, e:
-            classes.ErrorDialog(self, _("Could not save '%s'") % config_path, e)
+            dialog = classes.ErrorDialog(self, _("Could not save '%s'") % config_path, e)
+            dialog.run()
+            dialog.destroy()
             return
 
         for url in urls:
@@ -1209,11 +1213,12 @@ class App(awn.AppletSimple):
 
     def load_opml(self, uri):
         try:
-            fp = open(uri)
-            f = fp.read()
-            fp.close()
+            with open(uri, 'r') as fp:
+                f = fp.read()
         except IOError, e:
-            classes.ErrorDialog(self, _("Could not open '%s'") % uri, e)
+            dialog = classes.ErrorDialog(self, _("Could not open '%s'") % uri, e)
+            dialog.run()
+            dialog.destroy()
             return
 
         urls = parse_opml(f, self.urls)

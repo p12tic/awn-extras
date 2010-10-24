@@ -325,7 +325,7 @@ class Prefs(gtk.Window):
             with open(filename, 'w+') as fp:
                 fp.write('\n'.join(initial_text + feeds_text + end_text))
         except IOError, e:
-            dialog = classes.ErrorDialog(self, _("Could not save '%s'") % config_path, e)
+            dialog = classes.ErrorDialog(self, _("Could not save '%s'") % filename, e)
             dialog.run()
             dialog.destroy()
 

@@ -34,6 +34,7 @@ class DigitalClock : AppletSimple
 
   private Gtk.Menu _menu;
   private Awn.Dialog dialog;
+  private Gtk.Calendar calendar;
   private OverlayText time_overlay;
   private OverlayText am_pm_overlay;
   private OverlayText day_overlay;
@@ -110,14 +111,14 @@ class DigitalClock : AppletSimple
     this.dialog = new Awn.Dialog.for_widget (this);
     this.dialog.hide_on_unfocus = true;
 
-    Gtk.Calendar calendar = new Gtk.Calendar ();
-    calendar.set_display_options (Gtk.CalendarDisplayOptions.SHOW_HEADING |
-                                  Gtk.CalendarDisplayOptions.SHOW_DAY_NAMES |
-                                  Gtk.CalendarDisplayOptions.SHOW_WEEK_NUMBERS);
-    calendar.day_selected_double_click.connect (this.start_external_calendar);
+    this.calendar = new Gtk.Calendar ();
+    this.calendar.set_display_options (Gtk.CalendarDisplayOptions.SHOW_HEADING |
+                                       Gtk.CalendarDisplayOptions.SHOW_DAY_NAMES |
+                                       Gtk.CalendarDisplayOptions.SHOW_WEEK_NUMBERS);
+    this.calendar.day_selected_double_click.connect (this.start_external_calendar);
 
     this.dialog.set_title (_ ("Calendar"));
-    this.dialog.add (calendar);
+    this.dialog.add (this.calendar);
   }
 
   private void
@@ -301,7 +302,13 @@ class DigitalClock : AppletSimple
     }
 
     full_date[2] = cur_time.format ("%a");
-    full_date[3] = cur_time.format ("%b %d");
+    // Translators: This is a date string. You can check the output with
+    // 'date +"%b %d"'. %b is the abbreviated name of the month, %d is the
+    // day of the month. If it better suites your locale, rearrange them or
+    // make the appropriate (slight) changes without making the string much
+    // longer, e.g. "%d. %b"
+    // xgettext:no-c-format
+    full_date[3] = cur_time.format (_ ("%b %d"));
 
     return full_date;
   }
@@ -312,6 +319,10 @@ class DigitalClock : AppletSimple
     Gtk.WidgetFlags flags = this.dialog.get_flags () & Gtk.WidgetFlags.VISIBLE;
     if (flags != Gtk.WidgetFlags.VISIBLE)
     {
+      time_t cur_time_t = time_t ();
+      Time today = Time.local (cur_time_t);
+      this.calendar.select_month (today.month, today.year + 1900);
+      this.calendar.select_day (today.day);
       this.dialog.show_all ();
     }
     else

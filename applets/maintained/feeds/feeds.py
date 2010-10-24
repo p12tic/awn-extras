@@ -17,6 +17,8 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+from __future__ import with_statement
+
 import sys
 import os
 import urllib2
@@ -1182,17 +1184,27 @@ class App(awn.AppletSimple):
 
     #Actually add each feed
     def add_opml(self, urls):
-        fp = open(config_path, 'r')
-        f = fp.read()
-        fp.close()
+        try:
+            with open(config_path, 'r') as fp:
+                f = fp.read()
+        except IOError, e:
+            dialog = classes.ErrorDialog(self, _("Could not open '%s'") % config_path, e)
+            dialog.run()
+            dialog.destroy()
+            return
 
         for url in urls:
             f += '\n' + url
             self.written_urls.append(url)
 
-        fp = open(config_path, 'w')
-        fp.write(f)
-        fp.close()
+        try:
+            with open(config_path, 'w') as fp:
+                f = fp.write()
+        except IOError, e:
+            dialog = classes.ErrorDialog(self, _("Could not save '%s'") % config_path, e)
+            dialog.run()
+            dialog.destroy()
+            return
 
         for url in urls:
             self.add_feed(url)
@@ -1200,9 +1212,14 @@ class App(awn.AppletSimple):
         self.written_urls = []
 
     def load_opml(self, uri):
-        fp = open(uri)
-        f = fp.read()
-        fp.close()
+        try:
+            with open(uri, 'r') as fp:
+                f = fp.read()
+        except IOError, e:
+            dialog = classes.ErrorDialog(self, _("Could not open '%s'") % uri, e)
+            dialog.run()
+            dialog.destroy()
+            return
 
         urls = parse_opml(f, self.urls)
 

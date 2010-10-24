@@ -400,7 +400,7 @@ entry_added(IndicatorObject *io, IndicatorObjectEntry *entry, IndicatorApplet *i
   iapplet->menus = g_list_append(iapplet->menus, entry->menu);
   iapplet->num++;
 
-  gint handler = g_signal_connect(G_OBJECT(entry->image), "notify::pixbuf",
+  gulong handler = g_signal_connect(G_OBJECT(entry->image), "notify::pixbuf",
                                   G_CALLBACK(pixbuf_changed), (gpointer)iapplet);
   g_object_set_data(G_OBJECT(entry->image), "pixbufhandler", (gpointer)handler);
 
@@ -420,7 +420,7 @@ entry_removed(IndicatorObject *io, IndicatorObjectEntry *entry, IndicatorApplet 
   iapplet->menus = g_list_remove(iapplet->menus, entry->menu);
   iapplet->num--;
 
-  gint handler = (gint)g_object_get_data(G_OBJECT(entry->image), "pixbufhandler");
+  gulong handler = (gulong)g_object_get_data(G_OBJECT(entry->image), "pixbufhandler");
 
   if (g_signal_handler_is_connected(G_OBJECT(entry->image), handler))
   {
@@ -724,7 +724,7 @@ update_icon_mode(IndicatorApplet *iapplet)
   GtkIconInfo *icon_info;
 
   gint nshown = g_list_length(iapplet->shown_images);
-  gint i;
+  gulong i;
   for (i = 0; i < nshown; i++)
   {
     image = GTK_IMAGE(g_list_nth_data(iapplet->shown_images, i));
@@ -841,46 +841,6 @@ update_icon_mode(IndicatorApplet *iapplet)
 }
 
 /* AwnIcon-related code ... */
-static void
-icon_menu_position(GtkMenu *menu, gint *x, gint *y, gboolean *move, IndicatorApplet *iapplet)
-{
-  GtkWidget *icon = GTK_WIDGET(g_list_nth_data(iapplet->awnicons, iapplet->popup_num));
-  GtkPositionType pos_type = awn_applet_get_pos_type(iapplet->applet);
-  gint size = awn_applet_get_size(iapplet->applet);
-  gint offset = awn_applet_get_offset(iapplet->applet);
-
-  gint mw = GTK_WIDGET(menu)->requisition.width;
-  gint mh = GTK_WIDGET(menu)->requisition.height;
-  gint aw = icon->allocation.width;
-  gint ah = icon->allocation.height;
-
-  GdkScreen *screen = gtk_widget_get_screen(icon);
-  gint sw = gdk_screen_get_width(screen);
-  gint sh = gdk_screen_get_height(screen);
-
-  switch (pos_type)
-  {
-    case GTK_POS_LEFT:
-      *x = offset + size * 1.1;
-      gdk_window_get_origin(icon->window, NULL, y);
-      break;  
-    case GTK_POS_RIGHT:
-      *x = sw - offset - size * 1.1 - mw;
-      gdk_window_get_origin(icon->window, NULL, y);
-      break;
-    case GTK_POS_TOP:
-      gdk_window_get_origin(icon->window, x, NULL);
-      *y = offset + size * 1.1;
-      break;
-    default:
-      gdk_window_get_origin(icon->window, x, NULL);
-      *y = sh - offset - size * 1.1 - mh;
-      break;
-  }
-
-  *move = TRUE;
-}
-
 static gboolean
 icon_button_press(AwnIcon *icon, GdkEventButton *event, IndicatorApplet *iapplet)
 {
@@ -889,7 +849,7 @@ icon_button_press(AwnIcon *icon, GdkEventButton *event, IndicatorApplet *iapplet
     return FALSE;
   }
 
-  iapplet->popup_num = (gint)g_object_get_data(G_OBJECT(icon), "num");
+  iapplet->popup_num = (gulong)g_object_get_data(G_OBJECT(icon), "num");
 
   awn_icon_popup_gtk_menu (icon, GTK_WIDGET (g_list_nth_data(iapplet->shown_menus, iapplet->popup_num)), 1, event->time);
 
@@ -922,7 +882,7 @@ icon_right_click(AwnIcon *icon, GdkEventButton *event, IndicatorApplet *iapplet)
 static gboolean
 icon_scroll(AwnIcon *icon, GdkEventScroll *event, IndicatorApplet *iapplet)
 {
-  gint num = (gint)g_object_get_data(G_OBJECT(icon), "num");
+  gulong num = (gulong)g_object_get_data(G_OBJECT(icon), "num");
 
   GtkWidget *image = g_list_nth_data(iapplet->shown_images, num);
   IndicatorObject *io = g_object_get_data(G_OBJECT(image), "indicator");
@@ -962,6 +922,26 @@ da_menu_position(GtkMenu *menu, gint *x, gint *y, gboolean *move, IndicatorApple
       *x -= iapplet->dx + mwidth;
       *y -= iapplet->dy;
       break;
+  }
+
+  /* fits to screen? */
+  GdkScreen *screen = NULL;
+  if (gtk_widget_has_screen (GTK_WIDGET (menu)))
+  {
+    screen = gtk_widget_get_screen (GTK_WIDGET (menu));
+  }
+  else
+  {
+    screen = gdk_screen_get_default ();
+  }
+  if (screen)
+  {
+    gint screen_w = gdk_screen_get_width (screen);
+    gint screen_h = gdk_screen_get_height (screen);
+    *x = MIN (*x, screen_w - mwidth);
+    *y = MIN (*y, screen_h - mheight);
+    if (*x < 0) *x = 0;
+    if (*y < 0) *y = 0;
   }
 
   *move = TRUE;

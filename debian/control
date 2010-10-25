@@ -97,8 +97,6 @@ Recommends: 	awn-settings-trunk (>= 0.3.8),
 		python-rsvg | python-gnome2-desktop,
 # animal-farm
 		fortune,
-# battery
-		hal,
 # comics, battery
 		python-notify,
 # thinkhdaps

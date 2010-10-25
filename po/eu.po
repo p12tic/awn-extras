@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-15 20:22+0200\n"
-"PO-Revision-Date: 2010-10-16 23:14+0000\n"
+"POT-Creation-Date: 2010-10-22 18:50+0200\n"
+"PO-Revision-Date: 2010-10-24 17:52+0000\n"
 "Last-Translator: Asier Sarasua Garmendia <Unknown>\n"
 "Language-Team: Basque <eu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-10-18 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-10-25 04:37+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -250,6 +250,57 @@ msgstr "Banda-zabaleraren monitorea"
 msgid "Network Bandwidth monitor"
 msgstr "Sarearen banda-zabaleraren monitorea"
 
+#. Reset the Sum Interface records to zero
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:56
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:126
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:127
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:128
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:129
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:195
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:196
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:197
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:198
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:240
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:241
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:242
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:243
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:244
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:245
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:247
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:51
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:251
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:390
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:690
+msgid "Sum Interface"
+msgstr "Batuketa-interfazea"
+
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:61
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:62
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:81
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:82
+msgid "n/a"
+msgstr "e/e"
+
+#. Reset the Multi Interface records to zero
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:76
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:133
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:134
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:135
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:136
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:202
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:203
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:204
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:205
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:248
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:783
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:50
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:248
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:393
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:411
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:708
+msgid "Multi Interface"
+msgstr "Interfaze anitza"
+
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:329
 msgid "Scanning"
 msgstr "Eskaneatzea"
@@ -260,6 +311,7 @@ msgstr "Gailuak"
 
 #. kilobytes per second
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:356
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:21
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:81
 msgid "KBps"
@@ -267,15 +319,20 @@ msgstr "KBps"
 
 #. kilobits per second
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:360
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:84
 msgid "Kbps"
 msgstr "Kbps"
 
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:394
+msgid "Use KBps instead of Kbps"
+msgstr "Erabili KBps, ez Kbps"
+
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:408
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:20
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:585
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:588
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:609
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:597
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:600
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:621
 msgid "Interfaces"
 msgstr "Interfazeak"
 
@@ -289,14 +346,46 @@ msgid "Total Sent: %s - Total Received: %s (All Interfaces)"
 msgstr "Bidalia guztira: %s - Jasoa guztira: %s (interfaze guztiak)"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:838
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:457
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:469
 msgid "No Device"
 msgstr "Gailurik ez"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:839
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:458
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:470
 msgid "Please select a valid device"
 msgstr "Hautatu baliozko gailua"
+
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
+msgid "Bps"
+msgstr "Bps"
+
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
+msgid "MBps"
+msgstr "MBps"
+
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
+msgid "GBps"
+msgstr "GBps"
+
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
+msgid "TBps"
+msgstr "TBps"
+
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
+msgid "bps"
+msgstr "bps"
+
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
+msgid "Mbps"
+msgstr "Mbps"
+
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
+msgid "Gbps"
+msgstr "Gbps"
+
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
+msgid "Tbps"
+msgstr "Tbps"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:1
 msgid "A Network Bandwidth monitor for AWN"
@@ -400,8 +489,10 @@ msgstr "Gutxieneko eskalatze-atalasea"
 msgid "Signal Scale"
 msgstr "Seinalearen eskala"
 
+#. Translators: short for "Sum Interface"
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:24
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:226
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:392
 msgid "Sum"
 msgstr "Batuketa"
 
@@ -413,7 +504,9 @@ msgstr "Trafikoaren eskala"
 msgid "Device"
 msgstr "Gailua"
 
+#. Translators: short for "Multi Interface"
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:232
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:395
 msgid "Multi"
 msgstr "Anitza"
 
@@ -438,34 +531,77 @@ msgstr "Deskarga"
 msgid "%s %s Color"
 msgstr "%s %s Kolorea"
 
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:579
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:589
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:619
+#. Translators: do not translate, just add spacing before colon,
+#. if your locale requires it
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:208
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:212
+msgid "SSID:"
+msgstr "SSID:"
+
+#. Translators: do not translate, just add spacing before colon,
+#. if your locale requires it
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:284
+msgid "TX:"
+msgstr "TX:"
+
+#. Translators: do not translate, just add spacing before colon,
+#. if your locale requires it
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:289
+msgid "RX:"
+msgstr "RX:"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:591
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:601
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:631
 msgid "Options/Info"
 msgstr "Aukerak/Info"
 
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:581
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:584
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:593
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:596
 msgid "Back to Graph"
 msgstr "Itzuli grafikora"
 
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:614
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:626
 msgid "Change Unit"
 msgstr "Aldaketa-unitatea"
 
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:658
-msgid "Status"
-msgstr "Egoera"
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:670
+msgid "Status:"
+msgstr "Egoera:"
 
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:658
-msgid "IP Address"
-msgstr "IP helbidea"
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:670
+msgid "IP Address:"
+msgstr "IP helbidea:"
 
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:658
-msgid "Subnet Mask"
-msgstr "Azpisare-maskara"
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:670
+msgid "Subnet Mask:"
+msgstr "Azpisare-maskara:"
 
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:738
+#. Translators: status of a network interface
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:678
+msgid "UP"
+msgstr "UP"
+
+#. Translators: status of a network interface
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:682
+msgid "RUNNING"
+msgstr "ABIAN"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:699
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:717
+#: ../applets/maintained/calendar/calendarprefs.py:121
+#: ../applets/maintained/dialect/dialect.ui.h:15
+#: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:32
+msgid "None"
+msgstr "Bat ere ez"
+
+#. Translators: members = interfaces included in the "Sum Interface"
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:704
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:721
+msgid "Members:"
+msgstr "Kideak:"
+
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:753
 msgid "Wireless graph type"
 msgstr "Haririk gabeko grafiko-mota"
 
@@ -901,7 +1037,7 @@ msgstr "Itzali"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:213
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:381
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:585
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:582
 #: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Computer"
 msgstr "Ordenagailua"
@@ -912,13 +1048,13 @@ msgstr "Etxea"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:215
 #: ../applets/maintained/places/applet.c:344
-#: ../applets/maintained/yama/yama.py:256
+#: ../applets/maintained/yama/yama.py:264
 msgid "Desktop"
 msgstr "Mahaigaina"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:221
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:223
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:610
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:607
 #: ../applets/maintained/file-browser-launcher/prefs.py:236
 msgid "Trash"
 msgstr "Zakarrontzia"
@@ -932,7 +1068,7 @@ msgid "Removable Media"
 msgstr "Euskarri aldagarria"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:367
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:585
 msgid "Network"
 msgstr "Sarea"
 
@@ -944,13 +1080,13 @@ msgstr "Konektatu zerbitzarira"
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1048
 #: ../applets/maintained/file-browser-launcher/prefs.py:249
 #: ../applets/maintained/places/places.desktop.in.in.h:2
-#: ../applets/maintained/yama/yama.py:247
+#: ../applets/maintained/yama/yama.py:255
 msgid "Places"
 msgstr "Lekuak"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1071
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1086
-#: ../applets/maintained/yama/yama.py:323
+#: ../applets/maintained/yama/yama.py:331
 msgid "Recent Documents"
 msgstr "Azken dokumentuak"
 
@@ -970,13 +1106,13 @@ msgid "Launch\\u2026"
 msgstr "Abiarazi\\u2026"
 
 #: ../applets/maintained/cairo-menu/misc.c:161
-#: ../applets/maintained/yama/yama.py:587
+#: ../applets/maintained/yama/yama.py:595
 #, c-format, python-format
 msgid "Unable to mount %s"
 msgstr "Ezin da %s muntatu"
 
 #: ../applets/maintained/cairo-menu/misc.c:407
-#: ../applets/maintained/yama/yama.py:566
+#: ../applets/maintained/yama/yama.py:574
 msgid "Clear the Recent Documents list?"
 msgstr "Garbitu azken dokumentuen zerrenda?"
 
@@ -994,8 +1130,8 @@ msgstr ""
 
 #: ../applets/maintained/cairo-menu/misc.c:423
 #: ../applets/maintained/cairo-menu/misc.c:532
-#: ../applets/maintained/yama/yama.py:337
-#: ../applets/maintained/yama/yama.py:571
+#: ../applets/maintained/yama/yama.py:345
+#: ../applets/maintained/yama/yama.py:579
 msgid "Clear Recent Documents"
 msgstr "Garbitu azken dokumentuak"
 
@@ -1111,12 +1247,6 @@ msgstr "Ordulariaren itxura"
 msgid "Calendar Appearance"
 msgstr "Egutegiaren itxura"
 
-#: ../applets/maintained/calendar/calendarprefs.py:121
-#: ../applets/maintained/dialect/dialect.ui.h:19
-#: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:32
-msgid "None"
-msgstr "Bat ere ez"
-
 #: ../applets/maintained/calendar/calendarprefs.py:122
 msgid "Evolution"
 msgstr "Evolution"
@@ -1139,16 +1269,16 @@ msgstr "Egutegiaren URLa"
 
 #. default title/tooltip to show on startup.
 #: ../applets/maintained/calendar/clockcal.py:51
-#: ../applets/maintained/calendar/clockcal.py:494
+#: ../applets/maintained/calendar/clockcal.py:499
 #: ../applets/maintained/digital-clock/digital-clock.vala:119
 msgid "Calendar"
 msgstr "Egutegia"
 
-#: ../applets/maintained/calendar/clockcal.py:110
+#: ../applets/maintained/calendar/clockcal.py:117
 msgid "Forget Password"
 msgstr "Ahaztu pasahitza"
 
-#: ../applets/maintained/calendar/clockcal.py:218
+#: ../applets/maintained/calendar/clockcal.py:224
 msgid ""
 "Do you want to erase your calendar password from the calendar applet?  If "
 "you choose to clear your password, you will be prompted again for your "
@@ -1158,11 +1288,11 @@ msgstr ""
 "pasahitza ezabatzea aukeratzen baduzu, egutegian sartzeko kredentzialak "
 "eskatuko zaizkizu berriro."
 
-#: ../applets/maintained/calendar/clockcal.py:246
+#: ../applets/maintained/calendar/clockcal.py:252
 msgid "Avant Calendar Applet"
 msgstr "Avant egutegi-appleta"
 
-#: ../applets/maintained/calendar/clockcal.py:248
+#: ../applets/maintained/calendar/clockcal.py:254
 msgid "A Calendar Applet for the Avant Window Navigator. Images by Deleket."
 msgstr "Avant Window Navigator-entzako egutegi-appleta. Irudiak: Deleket."
 
@@ -1170,22 +1300,22 @@ msgstr "Avant Window Navigator-entzako egutegi-appleta. Irudiak: Deleket."
 #. output in terminal with 'date +"%x %X"'. In most cases you don't have
 #. to change it. See 'date --help' for other formats, that might be more
 #. common in your locale.
-#: ../applets/maintained/calendar/clockcal.py:293
+#: ../applets/maintained/calendar/clockcal.py:299
 #, no-python-format
 msgid "%x %X"
 msgstr "%x %X"
 
-#: ../applets/maintained/calendar/clockcal.py:500
+#: ../applets/maintained/calendar/clockcal.py:505
 msgid "Open in "
 msgstr "Ireki hemen: "
 
-#: ../applets/maintained/calendar/clockcal.py:504
+#: ../applets/maintained/calendar/clockcal.py:509
 #: ../applets/maintained/weather/forecast.py:174
 msgid "Today"
 msgstr "Gaur"
 
 #. print "Login error: ", sys.exc_info()[0], sys.exc_info()[1]
-#: ../applets/maintained/calendar/clockcal.py:552
+#: ../applets/maintained/calendar/clockcal.py:557
 msgid "Unable to read calendar data from external source."
 msgstr "Ezin izan dira egutegiaren datuak irakurri kanpoko iturburutik."
 
@@ -1373,7 +1503,7 @@ msgstr "Karpeta eta laster-marka komunak abiarazteko appleta"
 
 #: ../applets/maintained/common-folder/common-folder.py:93
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:385
-#: ../applets/maintained/yama/yama.py:254
+#: ../applets/maintained/yama/yama.py:262
 msgid "Home Folder"
 msgstr "Karpeta nagusia"
 
@@ -1474,9 +1604,31 @@ msgstr "Aldatu zure teklatu-diseinua Awn-tik."
 msgid "Dialect Applet"
 msgstr "Dialektoen appleta"
 
-#: ../applets/maintained/dialect/dialect.py:197
-msgid "<b>User List:</b> The list of "
-msgstr "<b>Erabiltzaile-zerrenda:</b> Honen zerrenda: "
+#: ../applets/maintained/dialect/dialect.py:198
+msgid ""
+"<b>User List:</b> The list of layouts you commonly use. The maximum number "
+"of layouts is restricted by the X11 xkb system (currently 4). Select an item "
+"and click the remove button to delete from your user list. You can order the "
+"list by drag and drop.\n"
+"<b>System List:</b> The complete list of layouts and variants available. "
+"Select an item and click the add button to include in your user list."
+msgstr ""
+
+#: ../applets/maintained/dialect/dialect.py:207
+msgid "small"
+msgstr "txikia"
+
+#: ../applets/maintained/dialect/dialect.py:209
+msgid "large"
+msgstr "handia"
+
+#: ../applets/maintained/dialect/dialect.py:211
+msgid "transparent"
+msgstr "gardena"
+
+#: ../applets/maintained/dialect/dialect.py:213
+msgid "opaque"
+msgstr "opakua"
 
 #: ../applets/maintained/dialect/dialect.ui.h:1
 msgid "<b>Flag on Applet Icon</b>"
@@ -1491,52 +1643,36 @@ msgid "<b>Mouse Actions</b>"
 msgstr "<b>Sagu-ekintzak</b>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:4
-msgid "<i><small>large</small></i>"
-msgstr "<i><small>handia</small></i>"
-
-#: ../applets/maintained/dialect/dialect.ui.h:5
-msgid "<i><small>opaque</small></i>"
-msgstr "<i><small>opakua</small></i>"
-
-#: ../applets/maintained/dialect/dialect.ui.h:6
-msgid "<i><small>small</small></i>"
-msgstr "<i><small>Txikia</small></i>"
-
-#: ../applets/maintained/dialect/dialect.ui.h:7
-msgid "<i><small>transparent</small></i>"
-msgstr "<i><small>gardena</small></i>"
-
-#: ../applets/maintained/dialect/dialect.ui.h:8
 msgid "About Dialect Applet"
 msgstr "Dialektoen appletari buruz"
 
-#: ../applets/maintained/dialect/dialect.ui.h:9
+#: ../applets/maintained/dialect/dialect.ui.h:5
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:5
 msgid "Appearance"
 msgstr "Itxura"
 
-#: ../applets/maintained/dialect/dialect.ui.h:10
+#: ../applets/maintained/dialect/dialect.ui.h:6
 msgid "Change your keyboard layout from Awn."
 msgstr "Aldatu zure teklatuaren diseinua Awn-tik."
 
-#: ../applets/maintained/dialect/dialect.ui.h:11
+#: ../applets/maintained/dialect/dialect.ui.h:7
 msgid "Control"
 msgstr "Kontrola"
 
-#: ../applets/maintained/dialect/dialect.ui.h:12
+#: ../applets/maintained/dialect/dialect.ui.h:8
 msgid "Dialect Applet Preferences"
 msgstr "Dialektoen appletaren hobespenak"
 
-#: ../applets/maintained/dialect/dialect.ui.h:13
+#: ../applets/maintained/dialect/dialect.ui.h:9
 msgid "Flag _Opacity:"
 msgstr "Banderaren _opakutasuna"
 
-#: ../applets/maintained/dialect/dialect.ui.h:14
+#: ../applets/maintained/dialect/dialect.ui.h:10
 msgid "Flag _Size:"
 msgstr "Banderaren _tamaina"
 
 #. A tooltip, layout = keyboard layout
-#: ../applets/maintained/dialect/dialect.ui.h:16
+#: ../applets/maintained/dialect/dialect.ui.h:12
 msgid ""
 "If selected, scrolling up or down with your mouse wheel will select the next "
 "or previous layout in your user list"
@@ -1545,50 +1681,50 @@ msgstr ""
 "erabiltzaile-zerrendako aurreko edo hurrengo teklatu-diseinua hautatuko da"
 
 #. Keyboard layouts
-#: ../applets/maintained/dialect/dialect.ui.h:18
+#: ../applets/maintained/dialect/dialect.ui.h:14
 msgid "Layouts"
 msgstr "Teklatu-diseinuak"
 
 #. A tooltip, layouts = keyboard layouts
-#: ../applets/maintained/dialect/dialect.ui.h:21
+#: ../applets/maintained/dialect/dialect.ui.h:17
 msgid "Selects the hot key combination used to change layouts"
 msgstr ""
 "Teklatu-diseinuak aldatzeko erabiliko den laster-teklen konbinazioa "
 "hautatzen du"
 
-#: ../applets/maintained/dialect/dialect.ui.h:22
+#: ../applets/maintained/dialect/dialect.ui.h:18
 msgid "Show _Flag"
 msgstr "Erakutsi _bandera"
 
-#: ../applets/maintained/dialect/dialect.ui.h:23
+#: ../applets/maintained/dialect/dialect.ui.h:19
 msgid "Show menu with layouts"
 msgstr "Erakutsi menua teklatu-diseinuekin"
 
-#: ../applets/maintained/dialect/dialect.ui.h:24
+#: ../applets/maintained/dialect/dialect.ui.h:20
 msgid "Switch to next layout in list"
 msgstr "Joan zerrendako hurrengo teklatu-diseinura"
 
-#: ../applets/maintained/dialect/dialect.ui.h:25
+#: ../applets/maintained/dialect/dialect.ui.h:21
 msgid "Switch to previous layout in list"
 msgstr "Joan zerrendako aurreko teklatu-diseinura"
 
-#: ../applets/maintained/dialect/dialect.ui.h:26
+#: ../applets/maintained/dialect/dialect.ui.h:22
 msgid "_Add"
 msgstr "_Gehitu"
 
-#: ../applets/maintained/dialect/dialect.ui.h:27
+#: ../applets/maintained/dialect/dialect.ui.h:23
 msgid "_Allow scroll wheel to change layout"
 msgstr "_Onartu korritze-gurpilarekin diseinua aldatzea"
 
-#: ../applets/maintained/dialect/dialect.ui.h:28
+#: ../applets/maintained/dialect/dialect.ui.h:24
 msgid "_Keyboard Toggle:"
 msgstr "Teklatuaren txandakatzea:"
 
-#: ../applets/maintained/dialect/dialect.ui.h:29
+#: ../applets/maintained/dialect/dialect.ui.h:25
 msgid "_Left Click:"
 msgstr "_Ezkerreko klik-a:"
 
-#: ../applets/maintained/dialect/dialect.ui.h:30
+#: ../applets/maintained/dialect/dialect.ui.h:26
 msgid "_Middle Click:"
 msgstr "_Erdiko klik-a:"
 
@@ -1928,7 +2064,7 @@ msgid "Source:"
 msgstr "Iturburua:"
 
 #: ../applets/maintained/feeds/prefs.py:366
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:151
 msgid "Search"
 msgstr "Bilatu"
@@ -2003,16 +2139,6 @@ msgstr ""
 "Ez dago emaitzarik.\n"
 "Saiatu ortografia egiaztatzen edo beste bilaketa-hitz batzuk erabiltzen."
 
-#: ../applets/maintained/file-browser-launcher/about.py:39
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:2
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:63
-msgid "File Browser Launcher"
-msgstr "Fitxategi-arakatzailearen abiarazlea"
-
-#: ../applets/maintained/file-browser-launcher/about.py:42
-msgid "A customizable launcher for browsing your files."
-msgstr "Zure fitxategietan arakatzeko abiarazle pertsonalizagarria"
-
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:1
 msgid ""
 "0: one icon with dialog; 1: one icon with docklet on click; 2: persistent "
@@ -2085,56 +2211,62 @@ msgstr "Klik egitean lekua irekiko den ala ez"
 msgid "A launcher for your file manager"
 msgstr "Abiarazlea zure fitxategi-arakatzailerako"
 
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:2
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:63
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1279
+msgid "File Browser Launcher"
+msgstr "Fitxategi-arakatzailearen abiarazlea"
+
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:389
 #: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Filesystem"
 msgstr "Fitxategi-sistema"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:518
-#: ../applets/maintained/yama/yama.py:307
+#: ../applets/maintained/yama/yama.py:315
 msgid "Connect to Server..."
 msgstr "Zerbitzarira konektatzen..."
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:594
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
 msgid "CD/DVD Burner"
 msgstr "CD/DVD grabagailua"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:597
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:594
 msgid "Fonts"
 msgstr "Letra-tipoak"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:601
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:598
 #: ../applets/maintained/file-browser-launcher/prefs.py:295
 #: ../applets/maintained/file-browser-launcher/prefs.py:370
 msgid "Folder"
 msgstr "Karpeta"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:607
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:604
 #, python-format
 msgid "Trash (%d)"
 msgstr "Zakarrontzia (%d)"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:717
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:714
 msgid "DVD Drive"
 msgstr "DVD unitatea"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:721
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:718
 msgid "CD Drive"
 msgstr "CD unitatea"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1064
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1061
 msgid "Eject"
 msgstr "Egotzi"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1072
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1069
 msgid "Empty Trash"
 msgstr "Hustu zakarrontzia"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1095
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1092
 msgid "Confirm deletion"
 msgstr "Baieztatu ezabaketa"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1103
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1100
 msgid ""
 "<big><b>Are you sure you want to delete\n"
 "every item from the trash?</b></big>"
@@ -2142,9 +2274,13 @@ msgstr ""
 "<big><b>Seguru zaude zakarrontziko\n"
 "elementuak ezabatu nahi dituzula?</b></big>"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1105
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1102
 msgid "This action cannot be undone."
 msgstr "Ekintza hau ezin da desegin."
+
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1282
+msgid "A customizable launcher for browsing your files."
+msgstr "Zure fitxategietan arakatzeko abiarazle pertsonalizagarria"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:44
 msgid "File Browser Launcher Preferences"
@@ -2288,7 +2424,7 @@ msgid "Show the number of items in the trash on top of the icon."
 msgstr "Erakutsi zakarrontzian dagoen elementu-kopurua ikonoaren gainean."
 
 #. This is a window title, %s is an applet's name.
-#: ../applets/maintained/garbage/prefs.vala:32 ../shared/python/awnlib.py:404
+#: ../applets/maintained/garbage/prefs.vala:32 ../shared/python/awnlib.py:374
 #, c-format, python-format
 msgid "%s Preferences"
 msgstr "%s hobespenak"
@@ -5259,33 +5395,33 @@ msgstr "Atera %s saiotik beste erabiltzaile-izen batekin sartzeko"
 msgid "_Edit Menus"
 msgstr "_Editatu menuak"
 
-#: ../applets/maintained/yama/yama.py:254
+#: ../applets/maintained/yama/yama.py:262
 msgid "Open your personal folder"
 msgstr "Ireki karpeta pertsonala"
 
-#: ../applets/maintained/yama/yama.py:256
+#: ../applets/maintained/yama/yama.py:264
 msgid "Open the contents of your desktop in a folder"
 msgstr "Ireki mahaigaineko edukia karpeta batean"
 
-#: ../applets/maintained/yama/yama.py:307
+#: ../applets/maintained/yama/yama.py:315
 msgid "Connect to a remote computer or shared disk"
 msgstr "Konektatu urruneko ordenagailura edo partekatutako diskora"
 
-#: ../applets/maintained/yama/yama.py:337
+#: ../applets/maintained/yama/yama.py:345
 msgid "Clear all items from the recent documents list"
 msgstr "Garbitu azken dokumentuen zerrendako elementu guztiak"
 
-#: ../applets/maintained/yama/yama.py:377
+#: ../applets/maintained/yama/yama.py:385
 #, python-format
 msgid "Open '%s'"
 msgstr "Ireki '%s'"
 
-#: ../applets/maintained/yama/yama.py:420
+#: ../applets/maintained/yama/yama.py:428
 #, python-format
 msgid "Mount %s"
 msgstr "Muntatu %s"
 
-#: ../applets/maintained/yama/yama.py:572
+#: ../applets/maintained/yama/yama.py:580
 msgid ""
 "Clearing the Recent Documents list will clear the following:\n"
 "* All items from the Places > Recent Documents menu item.\n"
@@ -5364,3 +5500,24 @@ msgstr "Pandora Radio"
 
 #~ msgid "Show the item count on the icon"
 #~ msgstr "Erakutsi elementu-kopurua ikonoan"
+
+#~ msgid "IP Address"
+#~ msgstr "IP helbidea"
+
+#~ msgid "Status"
+#~ msgstr "Egoera"
+
+#~ msgid "Subnet Mask"
+#~ msgstr "Azpisare-maskara"
+
+#~ msgid "<i><small>large</small></i>"
+#~ msgstr "<i><small>handia</small></i>"
+
+#~ msgid "<i><small>opaque</small></i>"
+#~ msgstr "<i><small>opakua</small></i>"
+
+#~ msgid "<i><small>small</small></i>"
+#~ msgstr "<i><small>Txikia</small></i>"
+
+#~ msgid "<i><small>transparent</small></i>"
+#~ msgstr "<i><small>gardena</small></i>"

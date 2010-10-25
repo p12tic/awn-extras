@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-22 18:50+0200\n"
-"PO-Revision-Date: 2010-10-23 12:08+0000\n"
+"PO-Revision-Date: 2010-10-24 13:31+0000\n"
 "Last-Translator: David Bengtsson <Unknown>\n"
 "Language-Team: Launchpad Swedish Translators <lp-l10n-"
 "sv@lists.launchpad.net>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-10-24 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-10-25 04:37+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Language: Swedish\n"
 
@@ -3006,16 +3006,16 @@ msgstr "Format för verktygstips att använda."
 
 #: ../applets/maintained/media-control/media-control.desktop.in.h:1
 msgid "Control your music player"
-msgstr "Kontrollera din mediaspelare"
+msgstr "Kontrollera din musikspelare"
 
 #: ../applets/maintained/media-control/media-control.desktop.in.h:2
 msgid "Media Control"
-msgstr "Mediakontrollerare"
+msgstr "Mediakontroll"
 
 #: ../applets/maintained/media-control/media_control.py:51
 #: ../applets/maintained/media-control/media_control.py:653
 msgid "Media Control Applet"
-msgstr "Mediakontrollerare"
+msgstr "Mediakontroll"
 
 #. Used in this sentence: Title by Artist from Album
 #: ../applets/maintained/media-control/media_control.py:509
@@ -3049,7 +3049,7 @@ msgstr "Visa _docklet istället för dialogruta"
 
 #: ../applets/maintained/media-control/media-control.ui.h:4
 msgid "Media-control preferences"
-msgstr "Inställningar för Mediakontrollerare"
+msgstr "Inställningar för Mediakontroll"
 
 #: ../applets/maintained/media-control/media-control.ui.h:5
 msgid "Show _album art when available"
@@ -3074,32 +3074,32 @@ msgstr "bildpunkter"
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:68
 msgid "A media-control applet (Next Track)"
-msgstr "Ett miniprogram för mediakontrollering (nästa spår)"
+msgstr "Ett miniprogram för kontrollering av musikspelare"
 
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:74
 msgid "Media Icons Next"
-msgstr "Mediaikon, nästa"
+msgstr "Mediaikon för nästa spår"
 
 #: ../applets/maintained/media-icons/media-icon-previous.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:69
 msgid "A media-control applet (Previous Track)"
-msgstr "Ett miniprogram för mediakontrollering (föregående spår)"
+msgstr "Ett miniprogram för kontrollering av musikspelare"
 
 #: ../applets/maintained/media-icons/media-icon-previous.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:75
 msgid "Media Icons Previous"
-msgstr "Mediaikon, föregående"
+msgstr "Mediaikon för föregående spår"
 
 #: ../applets/maintained/media-icons/media-icons.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:70
 msgid "A media-control applet (Play/Pause)"
-msgstr "Ett miniprogram för mediakontrollering (spela upp/gör paus)"
+msgstr "Ett miniprogram för kontrollering av musikspelare"
 
 #: ../applets/maintained/media-icons/media-icons.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:76
 msgid "Media Icons Play/Pause"
-msgstr "Mediaikon, spela upp/gör paus"
+msgstr "Mediaikon för uppspelning/pausning"
 
 #: ../applets/maintained/media-icons/media-icons.py:57
 msgid "Next"
@@ -3139,7 +3139,7 @@ msgstr "Mediaspelare"
 
 #: ../applets/maintained/media-player/media-player.desktop.in.h:2
 msgid "Plays any media files you drop on the applet"
-msgstr "Spelar upp mediafiler som du släpper på miniprogrammet"
+msgstr "Spelar upp de mediafiler du släpper på miniprogrammet"
 
 #. PyGObject doesn't have BOXED support implemented
 #. recent_items = gobject.property(type=gobject.TYPE_BOXED,
@@ -3160,7 +3160,7 @@ msgstr "Starta om miniprogrammet för att tillämpa sink-ändringar."
 
 #: ../applets/maintained/media-player/media_player.py:426
 msgid "Plays any media files you drop on the applet."
-msgstr "Spelar upp mediafiler som du släpper på miniprogrammet"
+msgstr "Spelar upp de mediafiler du släpper på miniprogrammet"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:1
 msgid "<b>GStreamer properties</b>"
@@ -4741,7 +4741,7 @@ msgstr "Kontrollera din dators volym"
 #: ../applets/maintained/volume-control/volume-control.desktop.in.h:2
 #: ../applets/maintained/volume-control/volume-control.py:43
 msgid "Volume Control"
-msgstr "Volymkontrollerare"
+msgstr "Volymkontroll"
 
 #: ../applets/maintained/volume-control/volume-control.py:44
 msgid "Applet to control your computer's volume"

@@ -360,33 +360,44 @@ class YamaApplet:
         if os.path.isfile(bookmarks_file):
             with open(bookmarks_file) as f:
                 for url_name in (i.rstrip().split(" ", 1) for i in f):
-                    if len(url_name) == 1:
-                        match = url_pattern.match(url_name[0])
-                        if match is not None:
-                            url_name.append("/%s on %s" % (match.group(2), match.group(1)))
-                        else:
-                            basename = glib.filename_display_basename(url_name[0])
-                            url_name.append(unquote(str(basename)))
-                    uri, name = (url_name[0], url_name[1])
+                    item = self.get_url_name_item(*url_name)
+                    if item is not None:
+                        self.places_menu.insert(item, index)
+                        index += 1
+                        self.bookmarks_items.append(item)
 
-                    if uri.startswith("file://"):
-                        file = vfs.File.for_uri(uri)
+    def get_url_name_item(self, uri, name=None):
+        if not uri:
+            return
 
-                        if not file.exists():
-                            continue
+        file = vfs.File.for_uri(uri)
 
-                        icon = self.get_first_existing_icon(file.get_icon_names())
-                        display_uri = uri[7:]
-                    else:
-                        icon = "folder-remote"
-                        display_uri = uri
-                    display_uri = unquote(display_uri)
+        if file.is_native():
+            if not file.exists():
+                return
 
-                    item = self.create_menu_item(name, icon, _("Open '%s'") % display_uri)
-                    self.places_menu.insert(item, index)
-                    item.connect("activate", self.open_folder_cb, uri)
-                    index += 1
-                    self.bookmarks_items.append(item)
+            icon = self.get_first_existing_icon(file.get_icon_names())
+            display_uri = uri[7:]
+        else:
+            icon = "folder-remote"
+            display_uri = uri
+        display_uri = unquote(display_uri)
+
+        if name is None:
+            match = url_pattern.match(uri)
+            if match is not None:
+                name = "/%s on %s" % (match.group(2), match.group(1))
+            else:
+                if file.is_native():
+                    filename = os.path.abspath(file.props.path)
+                    name = glib.filename_display_basename(filename)
+                else:
+                    name = uri
+                name = unquote(str(name))
+
+        item = self.create_menu_item(name, icon, _("Open '%s'") % display_uri)
+        item.connect("activate", self.open_folder_cb, uri)
+        return item
 
     def refresh_volumes_mounts_cb(self, monitor, volume_mount):
         with self.__rebuild_lock:

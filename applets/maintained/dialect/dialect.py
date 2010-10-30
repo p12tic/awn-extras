@@ -194,6 +194,8 @@ class Dialect(awn.AppletSimple):
             self.gtk[item] = gtk.ImageMenuItem(str(item))
             self.gtk['umenu'].append(self.gtk[item])
             self.gtk[item].connect('activate', self.on_umenu, item)
+        # glade-3 does not support translation of the following elements or
+        # without markup, therefore coded here
         layout_info = builder.get_object('layout_info')
         layout_info.set_tooltip_markup(_('<b>User List:</b> The list of '
             'layouts you commonly use. The maximum number of layouts is '
@@ -202,7 +204,7 @@ class Dialect(awn.AppletSimple):
             'can order the list by drag and drop.\n'
             '<b>System List:</b> The complete list of layouts and variants '
             'available. Select an item and click the add button to include '
-            'in your user list.'))  # glade3 doesn't support translatable markup
+            'in your user list.'))
         label_small = builder.get_object('label_small')
         label_small.set_markup('<i><small>%s</small></i>' % _('small'))
         label_small = builder.get_object('label_large')
@@ -211,6 +213,10 @@ class Dialect(awn.AppletSimple):
         label_small.set_markup('<i><small>%s</small></i>' % _('transparent'))
         label_small = builder.get_object('label_opaque')
         label_small.set_markup('<i><small>%s</small></i>' % _('opaque'))
+        sys_name_col = builder.get_object('sys_name_col')
+        sys_name_col.set_title(_('System List'))
+        user_name_col = builder.get_object('user_name_col')
+        user_name_col.set_title(_('User List'))
 
     # Create CONTEXT menu
     def context_init(self):

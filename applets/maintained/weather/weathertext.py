@@ -69,6 +69,7 @@ conditions = [
     N_("Scattered Thunderstorms"),
     N_("Severe Thunderstorms"),
     N_("Showers"),
+    N_("Showers in the Vicinity"),
     N_("Sleet"),
     N_("Smoke"),
     N_("Snow"),
@@ -93,6 +94,10 @@ forecast = [
     # Please keep translation short, approx. 12 characters
     N_("AM Light Rain"),
     # Please keep translation short, approx. 12 characters
+    N_("AM Light Snow"),
+    # Please keep translation short, approx. 12 characters
+    N_("AM Rain / Snow"),
+    # Please keep translation short, approx. 12 characters
     N_("AM Rain / Wind"),
     # Please keep translation short, approx. 12 characters
     N_("AM Showers"), 
@@ -111,6 +116,10 @@ forecast = [
     N_("Isolated T-Storms"),
     # Please keep translation short, approx. 12 characters
     N_("Light Rain"),
+    # Please keep translation short, approx. 12 characters
+    N_("Light Rain / Wind"),
+    # Please keep translation short, approx. 12 characters
+    N_("Light Snow / Fog"),
     # Please keep translation short, approx. 12 characters
     N_("Mostly Sunny"),
     # Please keep translation short, approx. 12 characters
@@ -138,6 +147,8 @@ forecast = [
     # Please keep translation short, approx. 12 characters
     # T-Storms = Thunderstorms
     N_("Scattered T-Storms"),
+    # Please keep translation short, approx. 12 characters
+    N_("Showers / Wind"),
     # Please keep translation short, approx. 12 characters
     N_("Sunny"),
     # Please keep translation short, approx. 12 characters

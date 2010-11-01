@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-22 18:50+0200\n"
-"PO-Revision-Date: 2010-10-24 13:31+0000\n"
+"POT-Creation-Date: 2010-10-30 22:29+0200\n"
+"PO-Revision-Date: 2010-10-31 18:19+0000\n"
 "Last-Translator: David Bengtsson <Unknown>\n"
 "Language-Team: Launchpad Swedish Translators <lp-l10n-"
 "sv@lists.launchpad.net>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-10-25 04:37+0000\n"
+"X-Launchpad-Export-Date: 2010-11-01 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Language: Swedish\n"
 
@@ -492,7 +492,7 @@ msgstr "Signalskala"
 
 #. Translators: short for "Sum Interface"
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:24
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:226
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:234
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:392
 msgid "Sum"
 msgstr "Summerat"
@@ -501,33 +501,33 @@ msgstr "Summerat"
 msgid "Traffic Scale"
 msgstr "Trafikskala"
 
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:221
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:229
 msgid "Device"
 msgstr "Enhet"
 
 #. Translators: short for "Multi Interface"
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:232
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:240
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:395
 msgid "Multi"
 msgstr "Multi"
 
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:240
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:248
 msgid "Upload Color"
 msgstr "Sändningsfärg"
 
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:251
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:259
 msgid "Download Color"
 msgstr "Hämtningsfärg"
 
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:327
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:335
 msgid "Upload"
 msgstr "sändning"
 
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:329
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:337
 msgid "Download"
 msgstr "hämtning"
 
-#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:331
+#: ../applets/maintained/bandwidth-monitor/bwmprefs.py:339
 #, python-format
 msgid "%s %s Color"
 msgstr "%s-%ssfärg"
@@ -1025,10 +1025,10 @@ msgstr "Stäng av"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:213
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:381
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:582
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:584
 #: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Computer"
-msgstr "Dator"
+msgstr "Datorn"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:214
 msgid "Home"
@@ -1038,25 +1038,25 @@ msgstr "Hemmapp"
 #: ../applets/maintained/places/applet.c:344
 #: ../applets/maintained/yama/yama.py:264
 msgid "Desktop"
-msgstr "Skrivbord"
+msgstr "Skrivbordet"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:221
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:223
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:607
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:609
 #: ../applets/maintained/file-browser-launcher/prefs.py:236
 msgid "Trash"
-msgstr "Papperskorg"
+msgstr "Papperskorgen"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:225
 msgid "File System"
-msgstr "Filsystem"
+msgstr "Filsystemet"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:356
 msgid "Removable Media"
 msgstr "Flyttbara media"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:367
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:585
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:587
 msgid "Network"
 msgstr "Nätverk"
 
@@ -1094,13 +1094,13 @@ msgid "Launch\\u2026"
 msgstr "Starta\\u2026"
 
 #: ../applets/maintained/cairo-menu/misc.c:161
-#: ../applets/maintained/yama/yama.py:595
+#: ../applets/maintained/yama/yama.py:606
 #, c-format, python-format
 msgid "Unable to mount %s"
 msgstr "Kan inte montera %s"
 
 #: ../applets/maintained/cairo-menu/misc.c:407
-#: ../applets/maintained/yama/yama.py:574
+#: ../applets/maintained/yama/yama.py:585
 msgid "Clear the Recent Documents list?"
 msgstr "Rensa Senaste dokument-listan?"
 
@@ -1119,7 +1119,7 @@ msgstr ""
 #: ../applets/maintained/cairo-menu/misc.c:423
 #: ../applets/maintained/cairo-menu/misc.c:532
 #: ../applets/maintained/yama/yama.py:345
-#: ../applets/maintained/yama/yama.py:579
+#: ../applets/maintained/yama/yama.py:590
 msgid "Clear Recent Documents"
 msgstr "Rensa senaste dokument"
 
@@ -1258,7 +1258,7 @@ msgstr "Webbadress för kalender"
 #. default title/tooltip to show on startup.
 #: ../applets/maintained/calendar/clockcal.py:51
 #: ../applets/maintained/calendar/clockcal.py:499
-#: ../applets/maintained/digital-clock/digital-clock.vala:119
+#: ../applets/maintained/digital-clock/digital-clock.vala:120
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -1387,7 +1387,7 @@ msgstr "Misslyckades med att ta bort <i>%s</i>."
 
 # Message box caption
 #: ../applets/maintained/comics/comics_manage.py:125
-#: ../applets/maintained/feeds/feeds.py:389
+#: ../applets/maintained/feeds/feeds.py:391
 msgid "Error"
 msgstr "Fel"
 
@@ -1591,7 +1591,7 @@ msgstr "Ändra din layout för tangentbordsinmatningen från Awn"
 msgid "Dialect Applet"
 msgstr "Dialect Applet"
 
-#: ../applets/maintained/dialect/dialect.py:198
+#: ../applets/maintained/dialect/dialect.py:200
 msgid ""
 "<b>User List:</b> The list of layouts you commonly use. The maximum number "
 "of layouts is restricted by the X11 xkb system (currently 4). Select an item "
@@ -1609,21 +1609,29 @@ msgstr ""
 "varianter. Välj ett objekt och klicka på Lägg till-knappen för att inkludera "
 "det i din användarlista."
 
-#: ../applets/maintained/dialect/dialect.py:207
+#: ../applets/maintained/dialect/dialect.py:209
 msgid "small"
 msgstr "liten"
 
-#: ../applets/maintained/dialect/dialect.py:209
+#: ../applets/maintained/dialect/dialect.py:211
 msgid "large"
 msgstr "stor"
 
-#: ../applets/maintained/dialect/dialect.py:211
+#: ../applets/maintained/dialect/dialect.py:213
 msgid "transparent"
 msgstr "genomskinlig"
 
-#: ../applets/maintained/dialect/dialect.py:213
+#: ../applets/maintained/dialect/dialect.py:215
 msgid "opaque"
 msgstr "opak"
+
+#: ../applets/maintained/dialect/dialect.py:217
+msgid "System List"
+msgstr "Systemlista"
+
+#: ../applets/maintained/dialect/dialect.py:219
+msgid "User List"
+msgstr "Användarlista"
 
 #: ../applets/maintained/dialect/dialect.ui.h:1
 msgid "<b>Flag on Applet Icon</b>"
@@ -1794,26 +1802,36 @@ msgid "A clock and calendar in one."
 msgstr "En klocka och kalender i ett"
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:2
-#: ../applets/maintained/digital-clock/digital-clock.vala:57
+#: ../applets/maintained/digital-clock/digital-clock.vala:58
 msgid "Digital Clock"
 msgstr "Digital klocka"
 
+#. Translators: This is a date string. You can check the output with
+#. 'date +"%b %d"'. %b is the abbreviated name of the month, %d is the
+#. day of the month. If it better suites your locale, rearrange them or
+#. make the appropriate (slight) changes without making the string much
+#. longer, e.g. "%d. %b"
+#: ../applets/maintained/digital-clock/digital-clock.vala:311
+#, no-c-format
+msgid "%b %d"
+msgstr "%d %b"
+
 #. "Copy Time" menu item
-#: ../applets/maintained/digital-clock/digital-clock.vala:335
+#: ../applets/maintained/digital-clock/digital-clock.vala:346
 msgid "Copy Time"
 msgstr "Kopiera tiden"
 
 #. "Copy Date" menu item
-#: ../applets/maintained/digital-clock/digital-clock.vala:354
+#: ../applets/maintained/digital-clock/digital-clock.vala:365
 msgid "Copy Date"
 msgstr "Kopiera datumet"
 
 #. "Adjust Date & Time" menu item
-#: ../applets/maintained/digital-clock/digital-clock.vala:366
+#: ../applets/maintained/digital-clock/digital-clock.vala:377
 msgid "Adjust Date & Time"
 msgstr "Justera datum och tid"
 
-#: ../applets/maintained/digital-clock/digital-clock.vala:412
+#: ../applets/maintained/digital-clock/digital-clock.vala:423
 msgid "Displays digital clock."
 msgstr "Visar digital tid"
 
@@ -1848,7 +1866,7 @@ msgid "Google"
 msgstr "Google"
 
 #: ../applets/maintained/feeds/classes.py:531
-#: ../applets/maintained/feeds/prefs.py:527
+#: ../applets/maintained/feeds/prefs.py:534
 msgid "Google Reader"
 msgstr "Google Reader"
 
@@ -1871,7 +1889,7 @@ msgid "Post reply from %s"
 msgstr "Posta svar från %s"
 
 #: ../applets/maintained/feeds/classes.py:809
-#: ../applets/maintained/feeds/prefs.py:421
+#: ../applets/maintained/feeds/prefs.py:428
 msgid "Twitter"
 msgstr "Twitter"
 
@@ -1880,11 +1898,11 @@ msgid "Untitled"
 msgstr "Namnlös"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:1
-#: ../applets/maintained/feeds/feeds.py:241
-#: ../applets/maintained/feeds/feeds.py:407
-#: ../applets/maintained/feeds/feeds.py:491
-#: ../applets/maintained/feeds/feeds.py:1036
-#: ../applets/maintained/feeds/feeds.py:1110
+#: ../applets/maintained/feeds/feeds.py:243
+#: ../applets/maintained/feeds/feeds.py:409
+#: ../applets/maintained/feeds/feeds.py:493
+#: ../applets/maintained/feeds/feeds.py:1038
+#: ../applets/maintained/feeds/feeds.py:1112
 msgid "Feeds Applet"
 msgstr "Flödesprogram"
 
@@ -1893,18 +1911,18 @@ msgid "Monitor web feeds"
 msgstr "Övervaka webbflöden"
 
 #. "Loading feeds..." label
-#: ../applets/maintained/feeds/feeds.py:96
-#: ../applets/maintained/feeds/feeds.py:153
-#: ../applets/maintained/feeds/feeds.py:230
+#: ../applets/maintained/feeds/feeds.py:98
+#: ../applets/maintained/feeds/feeds.py:155
+#: ../applets/maintained/feeds/feeds.py:232
 msgid "Loading feeds..."
 msgstr "Läser in flöden..."
 
 #. No feeds label
-#: ../applets/maintained/feeds/feeds.py:160
+#: ../applets/maintained/feeds/feeds.py:162
 msgid "You don't have any feeds."
 msgstr "Du har inga flöden."
 
-#: ../applets/maintained/feeds/feeds.py:482
+#: ../applets/maintained/feeds/feeds.py:484
 #, python-format
 msgid ""
 "%s\n"
@@ -1917,7 +1935,7 @@ msgstr ""
 "  <a href='%s'>%s</a>\n"
 "(%s fler)\n"
 
-#: ../applets/maintained/feeds/feeds.py:492
+#: ../applets/maintained/feeds/feeds.py:494
 #, python-format
 msgid "%s New Item - Feeds Applet"
 msgid_plural "%s New Items - Feeds Applet"
@@ -1925,169 +1943,181 @@ msgstr[0] "%s nytt flödesobjekt"
 msgstr[1] "%s nya flödesobjekt"
 
 #. +Add Feed button
-#: ../applets/maintained/feeds/feeds.py:530
+#: ../applets/maintained/feeds/feeds.py:532
 msgid "_Add Feed"
 msgstr "_Lägg till flöde"
 
-#: ../applets/maintained/feeds/feeds.py:579
+#: ../applets/maintained/feeds/feeds.py:581
 msgid "Open this feed's website"
 msgstr "Öppna webbplatsen för detta flöde"
 
-#: ../applets/maintained/feeds/feeds.py:588
-#: ../applets/maintained/feeds/prefs.py:268
+#: ../applets/maintained/feeds/feeds.py:590
+#: ../applets/maintained/feeds/prefs.py:270
 msgid "Loading..."
 msgstr "Läser in..."
 
-#: ../applets/maintained/feeds/feeds.py:626
-#: ../applets/maintained/feeds/feeds.py:785
+#: ../applets/maintained/feeds/feeds.py:628
+#: ../applets/maintained/feeds/feeds.py:787
 msgid "Show this feed's items"
 msgstr "Visa objekt för detta flöde"
 
-#: ../applets/maintained/feeds/feeds.py:775
+#: ../applets/maintained/feeds/feeds.py:777
 msgid "Hide this feed's items"
 msgstr "Dölj objekt för detta flöde"
 
 #. Create the items
-#: ../applets/maintained/feeds/feeds.py:1031
-#: ../applets/maintained/feeds/prefs.py:352
+#: ../applets/maintained/feeds/feeds.py:1033
+#: ../applets/maintained/feeds/prefs.py:359
 msgid "Add Feed"
 msgstr "Lägg till flöde"
 
-#: ../applets/maintained/feeds/feeds.py:1033
+#: ../applets/maintained/feeds/feeds.py:1035
 msgid "Show Only _New Feeds"
 msgstr "Visa endast _nya flöden"
 
-#: ../applets/maintained/feeds/feeds.py:1036 ../shared/python/awnlib.py:125
+#: ../applets/maintained/feeds/feeds.py:1038 ../shared/python/awnlib.py:125
 #, python-format
 msgid "_About %s"
 msgstr "_Om %s"
 
-#: ../applets/maintained/feeds/feeds.py:1115
+#: ../applets/maintained/feeds/feeds.py:1117
 msgid "Applet to monitor web feeds"
 msgstr "Miniprogram för att övervaka webbflöden"
 
-#: ../applets/maintained/feeds/feeds.py:1158
+#: ../applets/maintained/feeds/feeds.py:1160
 msgid "OPML Import"
 msgstr "OPML-importering"
 
-#: ../applets/maintained/feeds/feeds.py:1161
+#: ../applets/maintained/feeds/feeds.py:1163
 #, python-format
 msgid "Do you want to add %d feed?"
 msgid_plural "Do you want to add %d feeds?"
 msgstr[0] "Vill du lägga till %d flöde?"
 msgstr[1] "Vill du lägga till %d flöden?"
 
-#: ../applets/maintained/feeds/prefs.py:51
+#: ../applets/maintained/feeds/feeds.py:1191
+#: ../applets/maintained/feeds/feeds.py:1219
+#, python-format
+msgid "Could not open '%s'"
+msgstr "Kunde inte öppna \"%s\""
+
+#: ../applets/maintained/feeds/feeds.py:1204
+#: ../applets/maintained/feeds/prefs.py:328
+#, python-format
+msgid "Could not save '%s'"
+msgstr "Kunde inte spara \"%s\""
+
+#: ../applets/maintained/feeds/prefs.py:53
 msgid "Feeds Applet Preferences"
 msgstr "Inställningar för Flödesprogram"
 
-#: ../applets/maintained/feeds/prefs.py:61
+#: ../applets/maintained/feeds/prefs.py:63
 msgid "Feeds"
 msgstr "Flöden"
 
-#: ../applets/maintained/feeds/prefs.py:62
+#: ../applets/maintained/feeds/prefs.py:64
 msgid "Updating"
 msgstr "Uppdatering"
 
-#: ../applets/maintained/feeds/prefs.py:101
+#: ../applets/maintained/feeds/prefs.py:103
 msgid "_Show website icons"
 msgstr "_Visa webbplatsikoner"
 
-#: ../applets/maintained/feeds/prefs.py:106
+#: ../applets/maintained/feeds/prefs.py:108
 msgid "Show _only new feeds"
 msgstr "Visa _endast nya flöden"
 
 #. TODO: this position is a little ugly, but I don't know how to do it better.
 #. Import and export buttons (OPML)
-#: ../applets/maintained/feeds/prefs.py:113
+#: ../applets/maintained/feeds/prefs.py:115
 msgid "Import"
 msgstr "Importera"
 
-#: ../applets/maintained/feeds/prefs.py:116
+#: ../applets/maintained/feeds/prefs.py:118
 msgid "Export"
 msgstr "Exportera"
 
 #. Updating section (enable/disable automatically updating and change how often)
 #. Checkbox: Notify for updated feeds
-#: ../applets/maintained/feeds/prefs.py:143
+#: ../applets/maintained/feeds/prefs.py:145
 msgid "_Notify for updated feeds"
 msgstr "_Notifiera för uppdaterade flöden"
 
 #. Checkbox: Update automatically
-#: ../applets/maintained/feeds/prefs.py:149
+#: ../applets/maintained/feeds/prefs.py:151
 msgid "_Update automatically"
 msgstr "_Uppdatera automatiskt"
 
 #. Update every [SpinButton] minutes
-#: ../applets/maintained/feeds/prefs.py:155
+#: ../applets/maintained/feeds/prefs.py:157
 msgid "Update every "
 msgstr "Uppdatera var "
 
-#: ../applets/maintained/feeds/prefs.py:156
+#: ../applets/maintained/feeds/prefs.py:158
 msgid " minutes"
 msgstr " minut"
 
-#: ../applets/maintained/feeds/prefs.py:168
+#: ../applets/maintained/feeds/prefs.py:170
 msgid "Keep items unread when updating"
 msgstr "Behåll objekt olästa vid uppdatering"
 
-#: ../applets/maintained/feeds/prefs.py:275
+#: ../applets/maintained/feeds/prefs.py:277
 msgid "Open OPML File"
 msgstr "Öppna OPML-fil"
 
-#: ../applets/maintained/feeds/prefs.py:289
+#: ../applets/maintained/feeds/prefs.py:291
 msgid "Save OPML File"
 msgstr "Spara OPML-fil"
 
 #. Note: the following string is used as an exmaple filename
-#: ../applets/maintained/feeds/prefs.py:295
+#: ../applets/maintained/feeds/prefs.py:297
 msgid "feeds.opml"
 msgstr "flöden.opml"
 
-#: ../applets/maintained/feeds/prefs.py:306
+#: ../applets/maintained/feeds/prefs.py:308
 msgid "Awn Feeds Applet Items"
 msgstr "Flödesobjekt för Awn"
 
 #. Source: label and radio buttons
-#: ../applets/maintained/feeds/prefs.py:356
+#: ../applets/maintained/feeds/prefs.py:363
 msgid "Source:"
 msgstr "Källa:"
 
-#: ../applets/maintained/feeds/prefs.py:366
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:588
+#: ../applets/maintained/feeds/prefs.py:373
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:590
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:151
 msgid "Search"
 msgstr "Sök"
 
-#: ../applets/maintained/feeds/prefs.py:369
+#: ../applets/maintained/feeds/prefs.py:376
 msgid "You must sign in to a Google service to search for feeds."
 msgstr "Du måste logga in på en Google-tjänst för att söka efter flöden."
 
-#: ../applets/maintained/feeds/prefs.py:378
+#: ../applets/maintained/feeds/prefs.py:385
 msgid "RSS/Atom"
 msgstr "RSS/Atom"
 
-#: ../applets/maintained/feeds/prefs.py:423
+#: ../applets/maintained/feeds/prefs.py:430
 msgid "Timeline"
 msgstr "Tidslinje"
 
-#: ../applets/maintained/feeds/prefs.py:428
+#: ../applets/maintained/feeds/prefs.py:435
 msgid "Replies"
 msgstr "Svar"
 
 #. "Search for" label and entry
-#: ../applets/maintained/feeds/prefs.py:457
+#: ../applets/maintained/feeds/prefs.py:464
 msgid "Search for"
 msgstr "Sök efter"
 
 #. URL: label and entry
-#: ../applets/maintained/feeds/prefs.py:471
+#: ../applets/maintained/feeds/prefs.py:478
 #: ../applets/maintained/webapplet/applet.c:276
 msgid "URL:"
 msgstr "Webbadress:"
 
 #. Username: label and entry
-#: ../applets/maintained/feeds/prefs.py:485
+#: ../applets/maintained/feeds/prefs.py:492
 #: ../applets/maintained/mail/mail.py:384
 #: ../applets/maintained/mail/mail.py:643
 #: ../applets/maintained/mail/mail.py:796
@@ -2096,7 +2126,7 @@ msgid "Username:"
 msgstr "Användarnamn:"
 
 #. Password: label and entry
-#: ../applets/maintained/feeds/prefs.py:499
+#: ../applets/maintained/feeds/prefs.py:506
 #: ../applets/maintained/mail/mail.py:388
 #: ../applets/maintained/mail/mail.py:646
 #: ../applets/maintained/mail/mail.py:799
@@ -2104,16 +2134,16 @@ msgstr "Användarnamn:"
 msgid "Password:"
 msgstr "Lösenord:"
 
-#: ../applets/maintained/feeds/prefs.py:526
+#: ../applets/maintained/feeds/prefs.py:533
 msgid "Feed search by "
 msgstr "Flödessökning av "
 
 #. If signed in to Google Reader
-#: ../applets/maintained/feeds/prefs.py:564
+#: ../applets/maintained/feeds/prefs.py:571
 msgid "_Search"
 msgstr "_Sök"
 
-#: ../applets/maintained/feeds/prefs.py:768
+#: ../applets/maintained/feeds/prefs.py:775
 msgid ""
 "There was an error while searching.\n"
 "Please try again later."
@@ -2121,7 +2151,7 @@ msgstr ""
 "Det uppstod ett fel under sökningen.\n"
 "Försök igen senare."
 
-#: ../applets/maintained/feeds/prefs.py:818
+#: ../applets/maintained/feeds/prefs.py:825
 msgid ""
 "No results found.\n"
 "Try checking your spelling or using different search terms."
@@ -2202,60 +2232,61 @@ msgstr "En uppstartare för din filhanterare"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:2
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:63
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1279
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1281
 msgid "File Browser Launcher"
 msgstr "Filbläddringsstartare"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:389
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:572
 #: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Filesystem"
-msgstr "Filsystem"
+msgstr "Filsystemet"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:518
 #: ../applets/maintained/yama/yama.py:315
 msgid "Connect to Server..."
 msgstr "Anslut till server..."
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:591
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:593
 msgid "CD/DVD Burner"
 msgstr "Cd/dvd-brännare"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:594
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:596
 msgid "Fonts"
 msgstr "Typsnitt"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:598
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:600
 #: ../applets/maintained/file-browser-launcher/prefs.py:295
 #: ../applets/maintained/file-browser-launcher/prefs.py:370
 msgid "Folder"
 msgstr "Mapp"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:604
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:606
 #, python-format
 msgid "Trash (%d)"
-msgstr "Papperskorg (%d)"
+msgstr "Papperskorgen (%d)"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:714
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:716
 msgid "DVD Drive"
 msgstr "Dvd-enhet"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:718
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:720
 msgid "CD Drive"
 msgstr "Cd-enhet"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1061
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1063
 msgid "Eject"
 msgstr "Mata ut"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1069
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1071
 msgid "Empty Trash"
 msgstr "Töm papperskorgen"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1092
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1094
 msgid "Confirm deletion"
 msgstr "Bekräfta tömning"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1100
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1102
 msgid ""
 "<big><b>Are you sure you want to delete\n"
 "every item from the trash?</b></big>"
@@ -2263,11 +2294,11 @@ msgstr ""
 "<big><b>Är du säker på att du vill ta bort\n"
 "alla objekt i papperskorgen?</b></big>"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1102
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1104
 msgid "This action cannot be undone."
 msgstr "Denna åtgärd kan inte ångras."
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1282
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1284
 msgid "A customizable launcher for browsing your files."
 msgstr "En anpassningsbar uppstartare för bläddring i dina filer"
 
@@ -3927,7 +3958,7 @@ msgstr "Uppe till höger"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:40
 msgid "Use _desktop background"
-msgstr "Använd s_krivbordsbakgrund"
+msgstr "Använd s_krivbordsbakgrunden"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:41
 msgid "_Applet size:"
@@ -4993,217 +5024,246 @@ msgid "Showers"
 msgstr "Regnskurar"
 
 #: ../applets/maintained/weather/weathertext.py:72
+msgid "Showers in the Vicinity"
+msgstr "Regnsk. i närheten"
+
+#: ../applets/maintained/weather/weathertext.py:73
 msgid "Sleet"
 msgstr "Snöbl. regn"
 
-#: ../applets/maintained/weather/weathertext.py:73
+#: ../applets/maintained/weather/weathertext.py:74
 msgid "Smoke"
 msgstr "Rök"
 
-#: ../applets/maintained/weather/weathertext.py:74
+#: ../applets/maintained/weather/weathertext.py:75
 msgid "Snow"
 msgstr "Snö"
 
-#: ../applets/maintained/weather/weathertext.py:75
+#: ../applets/maintained/weather/weathertext.py:76
 msgid "Snow Flurries"
 msgstr "Snöbyar"
 
-#: ../applets/maintained/weather/weathertext.py:76
+#: ../applets/maintained/weather/weathertext.py:77
 msgid "Snow Showers"
 msgstr "Snöbyar"
 
-#: ../applets/maintained/weather/weathertext.py:77
+#: ../applets/maintained/weather/weathertext.py:78
 msgid "Thunder Showers"
 msgstr "Åskskurar"
 
-#: ../applets/maintained/weather/weathertext.py:78
+#: ../applets/maintained/weather/weathertext.py:79
 msgid "Thunderstorms"
 msgstr "Åskbyar"
 
-#: ../applets/maintained/weather/weathertext.py:79
+#: ../applets/maintained/weather/weathertext.py:80
 msgid "Tornado"
 msgstr "Tromb"
 
-#: ../applets/maintained/weather/weathertext.py:80
+#: ../applets/maintained/weather/weathertext.py:81
 msgid "Tropical Storm"
 msgstr "Tropisk storm"
 
-#: ../applets/maintained/weather/weathertext.py:81
+#: ../applets/maintained/weather/weathertext.py:82
 msgid "Windy"
 msgstr "Blåsigt"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:86
+#: ../applets/maintained/weather/weathertext.py:87
 msgid "AM Clouds / PM Sun"
 msgstr "Mulet på fm., sol på em."
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:88
+#: ../applets/maintained/weather/weathertext.py:89
 msgid "AM Drizzle"
 msgstr "Duggr. på fm."
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:90
+#: ../applets/maintained/weather/weathertext.py:91
 msgid "AM Drizzle / Wind"
 msgstr "Duggr., blåst på fm."
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:92
+#: ../applets/maintained/weather/weathertext.py:93
 msgid "AM Fog / PM Sun"
 msgstr "Dimma på fm., sol på em."
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:94
+#: ../applets/maintained/weather/weathertext.py:95
 msgid "AM Light Rain"
 msgstr "Lätt regn på fm."
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:96
+#: ../applets/maintained/weather/weathertext.py:97
+msgid "AM Light Snow"
+msgstr "Lätt snö på fm."
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:99
+msgid "AM Rain / Snow"
+msgstr "Regn, snö på fm."
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:101
 msgid "AM Rain / Wind"
 msgstr "Regn, blåst på fm."
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:98
+#: ../applets/maintained/weather/weathertext.py:103
 msgid "AM Showers"
 msgstr "Regnsk. på fm."
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
-#: ../applets/maintained/weather/weathertext.py:101
+#: ../applets/maintained/weather/weathertext.py:106
 msgid "AM T-Showers"
 msgstr "Åsksk. på fm."
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
-#: ../applets/maintained/weather/weathertext.py:104
+#: ../applets/maintained/weather/weathertext.py:109
 msgid "AM T-Storms"
 msgstr "Åskbyar på fm."
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:106
+#: ../applets/maintained/weather/weathertext.py:111
 msgid "Few Showers"
 msgstr "Fåtal regnskurar"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:108
+#: ../applets/maintained/weather/weathertext.py:113
 msgid "Heavy Rain"
 msgstr "Kraftigt regn"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
-#: ../applets/maintained/weather/weathertext.py:111
+#: ../applets/maintained/weather/weathertext.py:116
 msgid "Isolated T-Storms"
 msgstr "Fåtal åskbyar"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:113
+#: ../applets/maintained/weather/weathertext.py:118
 msgid "Light Rain"
 msgstr "Lätt regn"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:115
+#: ../applets/maintained/weather/weathertext.py:120
+msgid "Light Rain / Wind"
+msgstr "Lätt regn, blåst"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:122
+msgid "Light Snow / Fog"
+msgstr "Lätt snö, dimma"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:124
 msgid "Mostly Sunny"
 msgstr "Överv. soligt"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:117
+#: ../applets/maintained/weather/weathertext.py:126
 msgid "Partly Cloudy / Wind"
 msgstr "Växl. molnighet, blåst"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:119
+#: ../applets/maintained/weather/weathertext.py:128
 msgid "PM Light Rain"
 msgstr "Lätt regn på em."
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:121
+#: ../applets/maintained/weather/weathertext.py:130
 msgid "PM Showers"
 msgstr "Regnsk. på em."
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
-#: ../applets/maintained/weather/weathertext.py:124
+#: ../applets/maintained/weather/weathertext.py:133
 msgid "PM T-Showers"
 msgstr "Åsksk. på em."
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
-#: ../applets/maintained/weather/weathertext.py:127
+#: ../applets/maintained/weather/weathertext.py:136
 msgid "PM T-Storms"
 msgstr "Åskbyar på em."
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:129
+#: ../applets/maintained/weather/weathertext.py:138
 msgid "Rain"
 msgstr "Regn"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:131
+#: ../applets/maintained/weather/weathertext.py:140
 msgid "Rain / Snow Showers"
 msgstr "Regn, snöbyar"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:133
+#: ../applets/maintained/weather/weathertext.py:142
 msgid "Rain / Thunder"
 msgstr "Regn, åska"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:135
+#: ../applets/maintained/weather/weathertext.py:144
 msgid "Rain / Wind"
 msgstr "Regn, blåst"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:137
+#: ../applets/maintained/weather/weathertext.py:146
 msgid "Scattered Showers / Wind"
 msgstr "Sprid. skurar, blåst"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
-#: ../applets/maintained/weather/weathertext.py:140
+#: ../applets/maintained/weather/weathertext.py:149
 msgid "Scattered T-Storms"
 msgstr "Sprid. åskbyar"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:142
+#: ../applets/maintained/weather/weathertext.py:151
+msgid "Showers / Wind"
+msgstr "Regnsk., blåst"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:153
 msgid "Sunny"
 msgstr "Soligt"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:144
+#: ../applets/maintained/weather/weathertext.py:155
 msgid "Sunny / Wind"
 msgstr "Soligt, blåst"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
-#: ../applets/maintained/weather/weathertext.py:147
+#: ../applets/maintained/weather/weathertext.py:158
 msgid "T-Showers"
 msgstr "Åskskurar"
 
-#: ../applets/maintained/weather/weathertext.py:151
+#: ../applets/maintained/weather/weathertext.py:162
 msgid "Monday"
 msgstr "Måndag"
 
-#: ../applets/maintained/weather/weathertext.py:152
+#: ../applets/maintained/weather/weathertext.py:163
 msgid "Tuesday"
 msgstr "Tisdag"
 
-#: ../applets/maintained/weather/weathertext.py:153
+#: ../applets/maintained/weather/weathertext.py:164
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: ../applets/maintained/weather/weathertext.py:154
+#: ../applets/maintained/weather/weathertext.py:165
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: ../applets/maintained/weather/weathertext.py:155
+#: ../applets/maintained/weather/weathertext.py:166
 msgid "Friday"
 msgstr "Fredag"
 
-#: ../applets/maintained/weather/weathertext.py:156
+#: ../applets/maintained/weather/weathertext.py:167
 msgid "Saturday"
 msgstr "Lördag"
 
-#: ../applets/maintained/weather/weathertext.py:157
+#: ../applets/maintained/weather/weathertext.py:168
 msgid "Sunday"
 msgstr "Söndag"
 
@@ -5400,17 +5460,17 @@ msgstr "Anslut till en fjärrdator eller utdelad disk"
 msgid "Clear all items from the recent documents list"
 msgstr "Rensa bort alla objekt från Senaste dokument-listan"
 
-#: ../applets/maintained/yama/yama.py:385
+#: ../applets/maintained/yama/yama.py:398
 #, python-format
 msgid "Open '%s'"
 msgstr "Öppna \"%s\""
 
-#: ../applets/maintained/yama/yama.py:428
+#: ../applets/maintained/yama/yama.py:439
 #, python-format
 msgid "Mount %s"
 msgstr "Montera %s"
 
-#: ../applets/maintained/yama/yama.py:580
+#: ../applets/maintained/yama/yama.py:591
 msgid ""
 "Clearing the Recent Documents list will clear the following:\n"
 "* All items from the Places > Recent Documents menu item.\n"

@@ -46,33 +46,33 @@ override_dh_install:
 	done
 
 ifeq ($(NUM),"10.04")
-	dh_install -pawn-applets-c-core-trunk.install usr/lib/awn/applets/related/*.so 
-	dh_install -pawn-applets-c-core-trunk.install usr/share/avant-window-navigator/applets/related.desktop 
-	dh_install -pawn-applets-c-core-trunk.install usr/share/icons/hicolor/scalable/apps/zeitgeist-logo.svg
-	dh_install -pawn-applets-c-core-trunk.install usr/lib/awn/applets/indicator-applet/indicator-applet.so
-	dh_install -pawn-applets-c-core-trunk.install usr/share/avant-window-navigator/applets/indicator-applet.desktop
-	dh_install -pawn-applets-c-core-trunk.install etc/gconf/schemas/awn-applet-indicator-applet.schemas
-	dh_install -pawn-applets-c-core-trunk.install usr/share/avant-window-navigator/schemas/awn-applet-indicator-applet.schema-ini
+	dh_install -pawn-applets-c-core-trunk usr/lib/awn/applets/related/*.so 
+	dh_install -pawn-applets-c-core-trunk usr/share/avant-window-navigator/applets/related.desktop 
+	dh_install -pawn-applets-c-core-trunk usr/share/icons/hicolor/scalable/apps/zeitgeist-logo.svg
+	dh_install -pawn-applets-c-core-trunk usr/lib/awn/applets/indicator-applet/indicator-applet.so
+	dh_install -pawn-applets-c-core-trunk usr/share/avant-window-navigator/applets/indicator-applet.desktop
+	dh_install -pawn-applets-c-core-trunk etc/gconf/schemas/awn-applet-indicator-applet.schemas
+	dh_install -pawn-applets-c-core-trunk usr/share/avant-window-navigator/schemas/awn-applet-indicator-applet.schema-ini
 endif
 
 ifeq ($(NUM),"10.10")
-	dh_install -pawn-applets-c-core-trunk.install usr/lib/awn/applets/related/*.so 
-	dh_install -pawn-applets-c-core-trunk.install usr/share/avant-window-navigator/applets/related.desktop 
-	dh_install -pawn-applets-c-core-trunk.install usr/share/icons/hicolor/scalable/apps/zeitgeist-logo.svg
-	dh_install -pawn-applets-c-core-trunk.install usr/lib/awn/applets/indicator-applet/indicator-applet.so
-	dh_install -pawn-applets-c-core-trunk.install usr/share/avant-window-navigator/applets/indicator-applet.desktop
-	dh_install -pawn-applets-c-core-trunk.install etc/gconf/schemas/awn-applet-indicator-applet.schemas
-	dh_install -pawn-applets-c-core-trunk.install usr/share/avant-window-navigator/schemas/awn-applet-indicator-applet.schema-ini
+	dh_install -pawn-applets-c-core-trunk usr/lib/awn/applets/related/*.so 
+	dh_install -pawn-applets-c-core-trunk usr/share/avant-window-navigator/applets/related.desktop 
+	dh_install -pawn-applets-c-core-trunk usr/share/icons/hicolor/scalable/apps/zeitgeist-logo.svg
+	dh_install -pawn-applets-c-core-trunk usr/lib/awn/applets/indicator-applet/indicator-applet.so
+	dh_install -pawn-applets-c-core-trunk usr/share/avant-window-navigator/applets/indicator-applet.desktop
+	dh_install -pawn-applets-c-core-trunk etc/gconf/schemas/awn-applet-indicator-applet.schemas
+	dh_install -pawn-applets-c-core-trunk usr/share/avant-window-navigator/schemas/awn-applet-indicator-applet.schema-ini
 endif
 
 ifeq ($(NUM),"11.04")
-	dh_install -pawn-applets-c-core-trunk.install usr/lib/awn/applets/related/*.so 
-	dh_install -pawn-applets-c-core-trunk.install usr/share/avant-window-navigator/applets/related.desktop 
-	dh_install -pawn-applets-c-core-trunk.install usr/share/icons/hicolor/scalable/apps/zeitgeist-logo.svg
-	dh_install -pawn-applets-c-core-trunk.install usr/lib/awn/applets/indicator-applet/indicator-applet.so
-	dh_install -pawn-applets-c-core-trunk.install usr/share/avant-window-navigator/applets/indicator-applet.desktop
-	dh_install -pawn-applets-c-core-trunk.install etc/gconf/schemas/awn-applet-indicator-applet.schemas
-	dh_install -pawn-applets-c-core-trunk.install usr/share/avant-window-navigator/schemas/awn-applet-indicator-applet.schema-ini
+	dh_install -pawn-applets-c-core-trunk usr/lib/awn/applets/related/*.so 
+	dh_install -pawn-applets-c-core-trunk usr/share/avant-window-navigator/applets/related.desktop 
+	dh_install -pawn-applets-c-core-trunk usr/share/icons/hicolor/scalable/apps/zeitgeist-logo.svg
+	dh_install -pawn-applets-c-core-trunk usr/lib/awn/applets/indicator-applet/indicator-applet.so
+	dh_install -pawn-applets-c-core-trunk usr/share/avant-window-navigator/applets/indicator-applet.desktop
+	dh_install -pawn-applets-c-core-trunk etc/gconf/schemas/awn-applet-indicator-applet.schemas
+	dh_install -pawn-applets-c-core-trunk usr/share/avant-window-navigator/schemas/awn-applet-indicator-applet.schema-ini
 endif
 	dh_install --fail-missing
 

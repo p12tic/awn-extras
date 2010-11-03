@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-30 22:29+0200\n"
-"PO-Revision-Date: 2010-10-31 18:19+0000\n"
+"PO-Revision-Date: 2010-11-02 15:54+0000\n"
 "Last-Translator: David Bengtsson <Unknown>\n"
 "Language-Team: Launchpad Swedish Translators <lp-l10n-"
 "sv@lists.launchpad.net>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-11-01 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-11-03 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Language: Swedish\n"
 
@@ -1028,7 +1028,7 @@ msgstr "Stäng av"
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:584
 #: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Computer"
-msgstr "Datorn"
+msgstr "Dator"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:214
 msgid "Home"
@@ -1038,18 +1038,18 @@ msgstr "Hemmapp"
 #: ../applets/maintained/places/applet.c:344
 #: ../applets/maintained/yama/yama.py:264
 msgid "Desktop"
-msgstr "Skrivbordet"
+msgstr "Skrivbord"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:221
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:223
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:609
 #: ../applets/maintained/file-browser-launcher/prefs.py:236
 msgid "Trash"
-msgstr "Papperskorgen"
+msgstr "Papperskorg"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:225
 msgid "File System"
-msgstr "Filsystemet"
+msgstr "Filsystem"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:356
 msgid "Removable Media"
@@ -2240,7 +2240,7 @@ msgstr "Filbläddringsstartare"
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:572
 #: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Filesystem"
-msgstr "Filsystemet"
+msgstr "Filsystem"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:518
 #: ../applets/maintained/yama/yama.py:315
@@ -2264,7 +2264,7 @@ msgstr "Mapp"
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:606
 #, python-format
 msgid "Trash (%d)"
-msgstr "Papperskorgen (%d)"
+msgstr "Papperskorg (%d)"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:716
 msgid "DVD Drive"

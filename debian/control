@@ -216,6 +216,8 @@ Architecture: any
 Depends: 	${shlibs:Depends}, 
 		${misc:Depends}, 
 		awn-applets-c-extras-trunk (= ${binary:Version})
+Conflicts: awn-applets-c-dbg
+Replaces: awn-applets-c-dbg
 Description: A collection of applets for avant-window-navigator - debug symbols
  Awn-extras-applets is a collection of applets for avant-window-navigator. It
  provides some extensions to the bar and some new features (like 
@@ -227,6 +229,8 @@ Package: awn-applets-common-trunk
 Architecture: any
 Depends: 	${shlibs:Depends}, 
 		${misc:Depends},
+Conflicts: awn-applets-common-trunk
+Replaces: awn-applets-common-trunk
 Description: A collection of applets for avant-window-navigator - debug symbols
  Awn-extras-applets is a collection of applets for avant-window-navigator. It
  provides some extensions to the bar and some new features (like 

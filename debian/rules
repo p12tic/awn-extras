@@ -74,7 +74,7 @@ ifeq ($(NUM),"11.04")
 	dh_install -pawn-applets-c-core-trunk etc/gconf/schemas/awn-applet-indicator-applet.schemas
 	dh_install -pawn-applets-c-core-trunk usr/share/avant-window-navigator/schemas/awn-applet-indicator-applet.schema-ini
 endif
-	dh_install --fail-missing
+	dh_install --list-missing
 
 build: build-stamp
 build-stamp: $(QUILT_STAMPFN)

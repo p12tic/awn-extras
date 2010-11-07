@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-30 22:29+0200\n"
-"PO-Revision-Date: 2010-11-02 08:56+0000\n"
-"Last-Translator: Gabor Karsay <Unknown>\n"
+"PO-Revision-Date: 2010-11-06 20:06+0000\n"
+"Last-Translator: Mario Blättermann <mariobl@freenet.de>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-11-03 04:56+0000\n"
+"X-Launchpad-Export-Date: 2010-11-07 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -120,6 +120,8 @@ msgstr "Terminal-Applet"
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:1
 msgid "Adds or removes 5px to the value of the AWN setting \"Size of Icons\""
 msgstr ""
+"Fügt 5 Pixel hinzu oder zieht 5 Pixel ab vom Wert »Symbolgröße« der Awn-"
+"Einstellungen"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:2
 msgid "Color to draw the background"
@@ -261,7 +263,7 @@ msgstr "Netzwerk-Bandbreitenmonitor"
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:390
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:690
 msgid "Sum Interface"
-msgstr ""
+msgstr "Summen-Schnittstelle"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:61
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:62
@@ -288,7 +290,7 @@ msgstr ""
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:411
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:708
 msgid "Multi Interface"
-msgstr ""
+msgstr "Multi-Schnittstelle"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:329
 msgid "Scanning"
@@ -315,7 +317,7 @@ msgstr "kbit/s"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:394
 msgid "Use KBps instead of Kbps"
-msgstr ""
+msgstr "kB/s statt kbit/s verwenden"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:408
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:20
@@ -347,35 +349,35 @@ msgstr "Bitte wählen Sie ein gültiges Gerät"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
 msgid "Bps"
-msgstr ""
+msgstr "B/s"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
 msgid "MBps"
-msgstr ""
+msgstr "MB/s"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
 msgid "GBps"
-msgstr ""
+msgstr "GB/s"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
 msgid "TBps"
-msgstr ""
+msgstr "TB/s"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
 msgid "bps"
-msgstr ""
+msgstr "bit/s"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
 msgid "Mbps"
-msgstr ""
+msgstr "Mbit/s"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
 msgid "Gbps"
-msgstr ""
+msgstr "Gbit/s"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
 msgid "Tbps"
-msgstr ""
+msgstr "Tbit/s"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:1
 msgid "A Network Bandwidth monitor for AWN"
@@ -565,17 +567,17 @@ msgstr "IP-Adresse:"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:670
 msgid "Subnet Mask:"
-msgstr ""
+msgstr "Subnetzmaske:"
 
 #. Translators: status of a network interface
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:678
 msgid "UP"
-msgstr ""
+msgstr "GESTARTET"
 
 #. Translators: status of a network interface
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:682
 msgid "RUNNING"
-msgstr ""
+msgstr "LÄUFT"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:699
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:717
@@ -589,7 +591,7 @@ msgstr "Keine"
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:704
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:721
 msgid "Members:"
-msgstr ""
+msgstr "Schnittstellen:"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:753
 msgid "Wireless graph type"
@@ -1596,7 +1598,7 @@ msgstr "Tastaturbelegung von AWN aus ändern"
 
 #: ../applets/maintained/dialect/dialect.py:68
 msgid "Dialect Applet"
-msgstr ""
+msgstr "»Dialekt«-Applet"
 
 #: ../applets/maintained/dialect/dialect.py:200
 msgid ""
@@ -1610,19 +1612,19 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.py:209
 msgid "small"
-msgstr ""
+msgstr "klein"
 
 #: ../applets/maintained/dialect/dialect.py:211
 msgid "large"
-msgstr ""
+msgstr "groß"
 
 #: ../applets/maintained/dialect/dialect.py:213
 msgid "transparent"
-msgstr ""
+msgstr "transparent"
 
 #: ../applets/maintained/dialect/dialect.py:215
 msgid "opaque"
-msgstr ""
+msgstr "deckend"
 
 #: ../applets/maintained/dialect/dialect.py:217
 msgid "System List"
@@ -1814,7 +1816,7 @@ msgstr "Digitale Uhr"
 #: ../applets/maintained/digital-clock/digital-clock.vala:311
 #, no-c-format
 msgid "%b %d"
-msgstr ""
+msgstr "%d. %b."
 
 #. "Copy Time" menu item
 #: ../applets/maintained/digital-clock/digital-clock.vala:346
@@ -1909,7 +1911,7 @@ msgstr "Feeds-Applet"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
 msgid "Monitor web feeds"
-msgstr ""
+msgstr "Web-Feeds beobachten"
 
 #. "Loading feeds..." label
 #: ../applets/maintained/feeds/feeds.py:98
@@ -1983,7 +1985,7 @@ msgstr "_Über %s"
 
 #: ../applets/maintained/feeds/feeds.py:1117
 msgid "Applet to monitor web feeds"
-msgstr ""
+msgstr "Ein Applet zum Beobachten von Web-Feeds"
 
 #: ../applets/maintained/feeds/feeds.py:1160
 msgid "OPML Import"
@@ -2000,13 +2002,13 @@ msgstr[1] "Wollen Sie %d Feeds hinzufügen?"
 #: ../applets/maintained/feeds/feeds.py:1219
 #, python-format
 msgid "Could not open '%s'"
-msgstr ""
+msgstr "»%s« konnte nicht geöffnet werden"
 
 #: ../applets/maintained/feeds/feeds.py:1204
 #: ../applets/maintained/feeds/prefs.py:328
 #, python-format
 msgid "Could not save '%s'"
-msgstr ""
+msgstr "»%s« konnte nicht gespeichert werden"
 
 #: ../applets/maintained/feeds/prefs.py:53
 msgid "Feeds Applet Preferences"
@@ -2455,11 +2457,11 @@ msgstr "%s-Einstellungen"
 
 #: ../applets/maintained/garbage/prefs.vala:47
 msgid "Confirm when _emptying the trash"
-msgstr ""
+msgstr "_Leeren des Mülleimers bestätigen"
 
 #: ../applets/maintained/garbage/prefs.vala:52
 msgid "Show the _item count on the icon"
-msgstr ""
+msgstr "_Anzahl der Objekte auf dem Symbol anzeigen"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:1
@@ -4995,7 +4997,7 @@ msgstr "Isolierte Gewitter"
 
 #: ../applets/maintained/weather/weathertext.py:55
 msgid "Light Drizzle"
-msgstr ""
+msgstr "Leichter Sprühregen"
 
 #: ../applets/maintained/weather/weathertext.py:56
 msgid "Light Rain Shower"
@@ -5011,7 +5013,7 @@ msgstr "Leichte Schneeschauer"
 
 #: ../applets/maintained/weather/weathertext.py:59
 msgid "Mist"
-msgstr ""
+msgstr "Leichter Nebel"
 
 #: ../applets/maintained/weather/weathertext.py:60
 msgid "Mixed Precipitation"
@@ -5063,7 +5065,7 @@ msgstr "Schauer"
 
 #: ../applets/maintained/weather/weathertext.py:72
 msgid "Showers in the Vicinity"
-msgstr ""
+msgstr "Schauer in der Umgebung"
 
 #: ../applets/maintained/weather/weathertext.py:73
 msgid "Sleet"
@@ -5186,12 +5188,12 @@ msgstr "Leichter Regen"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:120
 msgid "Light Rain / Wind"
-msgstr ""
+msgstr "Leichter Regen/Wind"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:122
 msgid "Light Snow / Fog"
-msgstr ""
+msgstr "Leichter Schneefall/Nebel"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:124
@@ -5233,7 +5235,7 @@ msgstr "Regen"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:140
 msgid "Rain / Snow Showers"
-msgstr ""
+msgstr "Regen-/Schneeschauer"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:142
@@ -5259,7 +5261,7 @@ msgstr "Vereinz. Gewitter"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:151
 msgid "Showers / Wind"
-msgstr ""
+msgstr "Schauer/Wind"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:153

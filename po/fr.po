@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-30 22:29+0200\n"
-"PO-Revision-Date: 2010-11-06 12:21+0000\n"
+"PO-Revision-Date: 2010-11-07 14:32+0000\n"
 "Last-Translator: Nicolas Delvaux <Unknown>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2010-11-07 04:43+0000\n"
+"X-Launchpad-Export-Date: 2010-11-08 05:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Generated-By: pygettext.py 1.5\n"
 
@@ -4787,7 +4787,7 @@ msgstr "DESCRIPTION"
 
 #: ../applets/maintained/weather/forecast.py:254
 msgid "Weather data provided by weather.com"
-msgstr "Donnés météorologiques fournies par weather.com"
+msgstr "Donnés météo fournies par weather.com"
 
 #: ../applets/maintained/weather/weathertext.py:38
 msgid "Blowing Snow"

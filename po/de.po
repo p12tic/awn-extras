@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-30 22:29+0200\n"
-"PO-Revision-Date: 2010-11-06 20:06+0000\n"
-"Last-Translator: Mario Blättermann <mariobl@freenet.de>\n"
+"PO-Revision-Date: 2010-11-09 18:51+0000\n"
+"Last-Translator: cmdrhenner <cmdrhenner@gmail.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-11-07 04:43+0000\n"
+"X-Launchpad-Export-Date: 2010-11-10 05:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -5115,7 +5115,7 @@ msgstr "Vm. Wolken/Nm. Sonne"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:89
 msgid "AM Drizzle"
-msgstr ""
+msgstr "Vm. Sprühregen"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:91
@@ -5135,12 +5135,12 @@ msgstr "Vm. leichter Regen"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:97
 msgid "AM Light Snow"
-msgstr ""
+msgstr "Vm. etw. Schneefall"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:99
 msgid "AM Rain / Snow"
-msgstr ""
+msgstr "Vm. Regen/Schnee"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:101

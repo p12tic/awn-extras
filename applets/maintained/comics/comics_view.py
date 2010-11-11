@@ -611,7 +611,7 @@ class ComicsViewer(ScalableWindow):
             # Only emit the updated signal when there actually is an update
             if self.__current_timestamp != 0.0:
                 self.emit('updated', feed.items[feed.newest][TITLE])
-            self.select_item(feed.items[feed.newest])
+                self.select_item(feed.items[feed.newest])
 
     def on_download_completed(self, o, code, item):
         """A new image has been downloaded."""

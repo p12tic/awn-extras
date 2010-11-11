@@ -88,23 +88,18 @@ class Feed(gobject.GObject):
         """The thread body."""
         if not self.__lock.acquire(False):
             return
+        old_status = self.status
+        self.updated = False
         try:
-            old_status = self.status
-            try:
-                self.updated = False
-                filename, headers = urllib.urlretrieve(self.url)
-                self.status = self.parse_file(filename)
-            finally:
-                pass
-            #except Exception:
-            #    self.status = Feed.DOWNLOAD_FAILED
-
+            filename, headers = urllib.urlretrieve(self.url)
+            self.status = self.parse_file(filename)
             # If the status has changed, the feed is considered updated
             if self.updated or old_status != self.status:
                 gobject.idle_add(gobject.GObject.emit, self, 'updated',
                     self.status)
-        finally:
-            self.__lock.release()
+        except Exception: 
+            self.status = Feed.DOWNLOAD_FAILED
+        self.__lock.release()
 
     def update(self):
         """Reload the feed."""

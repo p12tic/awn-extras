@@ -337,11 +337,9 @@ class ComicsViewer(ScalableWindow):
     def make_menu(self):
         """Create the context menu."""
         menu = gtk.Menu()
-        accel = gtk.AccelGroup()
-        self.add_accel_group(accel)
         
         # Generate history menu
-        history_container = gtk.ImageMenuItem(stock_id='gtk-jump-to')
+        history_container = gtk.ImageMenuItem(gtk.STOCK_JUMP_TO)
         history_menu = gtk.Menu()
         history_menu.foreach(lambda child: history_menu.remove(child))
         items = self.feeds.feeds[self.feed_name].items.items()
@@ -367,14 +365,11 @@ class ComicsViewer(ScalableWindow):
 
         size_container = gtk.MenuItem(_("Size"))
         size_menu = gtk.Menu()
-        zoom_normal_item = gtk.ImageMenuItem(gtk.STOCK_ZOOM_100, accel)
-        #zoom_normal_item.add_accelerator('activate', accel, ord('0'), gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
+        zoom_normal_item = gtk.ImageMenuItem(gtk.STOCK_ZOOM_100)
         zoom_normal_item.connect('activate', self.on_normal_activated)
-        zoom_in_item = gtk.ImageMenuItem(gtk.STOCK_ZOOM_IN, accel)
-        #zoom_in_item.add_accelerator('activate', accel, ord('+'), gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
+        zoom_in_item = gtk.ImageMenuItem(gtk.STOCK_ZOOM_IN)
         zoom_in_item.connect('activate', self.on_larger_activated)
-        zoom_out_item = gtk.ImageMenuItem(gtk.STOCK_ZOOM_OUT, accel)
-        #zoom_out_item.add_accelerator('activate', accel, ord('-'), gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
+        zoom_out_item = gtk.ImageMenuItem(gtk.STOCK_ZOOM_OUT)
         zoom_out_item.connect('activate', self.on_smaller_activated)
         size_menu.append(zoom_normal_item)
         size_menu.append(zoom_in_item)
@@ -576,7 +571,7 @@ class ComicsViewer(ScalableWindow):
             ff = self.dialog.get_filter()
             for i in gdk.pixbuf_get_formats():
                 if i['description'] == ff.get_name():
-                    for ext in i['extensions']:  # maybe not needed
+                    for ext in i['extensions']:
                         if current_name[1] == ext:
                             return
                     self.dialog.set_current_name('%s.%s' % (

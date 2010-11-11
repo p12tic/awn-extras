@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-30 22:29+0200\n"
-"PO-Revision-Date: 2010-11-09 18:51+0000\n"
+"PO-Revision-Date: 2010-11-10 21:24+0000\n"
 "Last-Translator: cmdrhenner <cmdrhenner@gmail.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-11-10 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-11-11 04:39+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -153,12 +153,18 @@ msgid ""
 "reflection in horizontal docks only, 2: show reflection in vertical docks, "
 "3: Disable reflection for all dock orientations"
 msgstr ""
+"Aktiviert/Deaktiviert Dock-Reflektionen für dieses Applet 0: Verwende AWN-"
+"Einstellungen, 1: Zeige Reflektionen ausschließlich in horizontalen Docks, "
+"2: Zeige Reflektionen in vertikalen Docks, 3: Deaktiviere  Reflektionen für "
+"Docks aller Orientierungen"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:9
 msgid ""
 "Enbables or disables drawing the applet graph - if disabled only the speed "
 "text will be displayed in the applet"
 msgstr ""
+"Aktiviert oder deaktiviert die Darstellung eines Gaphen - falls deaktiviert, "
+"wird die Geschwindigkeit ausschließlich als Text dargestellt"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:10
 msgid ""
@@ -178,24 +184,34 @@ msgid ""
 "Sets the default scale of the applet traffic graph - the scale is the amount "
 "of linear data to display at one time"
 msgstr ""
+"Setzt die Standardgröße des Graphen für das Traffic-Applet -die Größe ist "
+"der Betrag der liniaren Werte die zur selben Zeit gezeigt werden sollen"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:13
 msgid ""
 "Sets the default scale of the applet wireless signal graph - the scale is "
 "the amount of linear data to display at one time"
 msgstr ""
+"Setzt die Standardgröße des Graphen für das Funksignal-Applet -die Größe ist "
+"der Betrag der liniaren Werte die zur selben Zeit gezeigt werden sollen"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:14
 msgid ""
 "Sets the default scale of the popup-dialog traffic graph - the scale is the "
 "amount of linear data to display at one time"
 msgstr ""
+"Setzt die Standardgröße des Graphen für den Popup-Dialog des Traffic-Applets "
+"-die Größe ist der Betrag der liniaren Werte die zur selben Zeit gezeigt "
+"werden sollen"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:15
 msgid ""
 "Sets the default scale of the popup-dialog wireless signal graph - the scale "
 "is the amount of linear data to display at one time"
 msgstr ""
+"Setzt die Standardgröße des Graphen für den Popup-Dialog des Funksignal-"
+"Applets -die Größe ist der Betrag der liniaren Werte die zur selben Zeit "
+"gezeigt werden sollen"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:16
 msgid "Sets the offset of the applet from the edge of the dock"
@@ -402,7 +418,7 @@ msgstr "Applet"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:3
 msgid "Applet Offset"
-msgstr ""
+msgstr "Applet-Abstand"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:4
 msgid ""
@@ -441,7 +457,7 @@ msgstr "Nulllinie zeichnen"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:13
 msgid "Draw Applet Graph"
-msgstr ""
+msgstr "Applet-Graphen darstellen"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:14
 msgid "Draw Background"

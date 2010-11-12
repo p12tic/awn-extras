@@ -127,6 +127,7 @@ The URL is not a valid comic feed. Press "next" to try again'''))
 
         settings.save()
         self.feeds.add_feed(filename)
+        self.feeds.update()
 
     def on_add_assistant_prepare(self, widget, page):
         if page is self.ui.get_object('url_page'):

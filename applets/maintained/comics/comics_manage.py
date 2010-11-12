@@ -67,14 +67,15 @@ class ComicsManager:
     # Standard python methods                                              #
     ########################################################################
 
-    def __init__(self, feeds):
+    def __init__(self, parent):
         """Create a new ComicsManage instance."""
         # Connect dialogue events
         self.ui = gtk.Builder()
         self.ui.add_from_file(UI_FILE)
         self.ui.connect_signals(self)
 
-        self.feeds = feeds
+        self.__parent = parent
+        self.feeds = parent.feeds
 
         self.manage_window = self.ui.get_object('manage_window')
 
@@ -114,6 +115,7 @@ class ComicsManager:
         model, iterator = self.comics_list.get_selection().get_selected()
         feed_name = self.model.get_value(iterator, 0)
         filename = self.model.get_value(iterator, 1)
+        self.__parent.toggle_feed(feed_name, False)
         try:
             self.feeds.remove_feed(feed_name)
             os.remove(filename)

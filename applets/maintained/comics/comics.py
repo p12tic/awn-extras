@@ -265,7 +265,7 @@ class ComicApplet(awn.AppletSimple):
         self.toggle_feed(widget.data, widget.get_active())
 
     def on_manage_comics_activated(self, widget):
-        manager = comics_manage.ComicsManager(self.feeds)
+        manager = comics_manage.ComicsManager(self)
         manager.show()
 
     def on_show_about_activated(self, widget):

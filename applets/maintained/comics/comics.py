@@ -141,7 +141,9 @@ class ComicApplet(awn.AppletSimple):
         # Generate comics menu
         menu = self.create_default_menu()
         feed_menu = gtk.Menu()
-        for feed in self.feeds.feeds:
+        names = self.feeds.feeds.keys()
+        names.sort()
+        for feed in names:
             label = gtk.Label()
             label.set_markup(self.feeds.feeds[feed].name)
             align = gtk.Alignment(xalign=0.0)

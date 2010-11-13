@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-30 22:29+0200\n"
-"PO-Revision-Date: 2010-11-03 16:19+0000\n"
-"Last-Translator: UaHummer <Unknown>\n"
+"PO-Revision-Date: 2010-11-12 12:28+0000\n"
+"Last-Translator: Fedik <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-11-04 04:47+0000\n"
+"X-Launchpad-Export-Date: 2010-11-13 04:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -361,11 +361,11 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
 msgid "Gbps"
-msgstr ""
+msgstr "Гбіт/с"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
 msgid "Tbps"
-msgstr ""
+msgstr "Тбіт/с"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:1
 msgid "A Network Bandwidth monitor for AWN"
@@ -382,11 +382,11 @@ msgstr "Монітор пропускної здатності мережі дл
 #: ../applets/maintained/volume-control/volume-control.ui.h:4
 #: ../applets/maintained/weather/weather.ui.h:2
 msgid "<b>Display</b>"
-msgstr ""
+msgstr "<b>Відображення</b>"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:2
 msgid "Applet"
-msgstr ""
+msgstr "Аплет"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:3
 msgid "Applet Offset"
@@ -400,7 +400,7 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:6
 msgid "Applet Width"
-msgstr ""
+msgstr "Ширина аплету"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:7
 msgid "Background Color"
@@ -428,7 +428,7 @@ msgstr "Малювати нульову швидкість на графіках
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:13
 msgid "Draw Applet Graph"
-msgstr ""
+msgstr "Малювати графік"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:14
 msgid "Draw Background"
@@ -453,7 +453,7 @@ msgstr "Лише графік"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:18
 msgid "Icon Font Size"
-msgstr ""
+msgstr "Розмір шрифту на іконці"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:19
 msgid "If this is checked, the common display unit will be Bytes"
@@ -465,7 +465,7 @@ msgstr "Мінімальний поріг масштабування."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:23
 msgid "Signal Scale"
-msgstr ""
+msgstr "Шкала сигналу"
 
 #. Translators: short for "Sum Interface"
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:24
@@ -476,7 +476,7 @@ msgstr "Сума"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:25
 msgid "Traffic Scale"
-msgstr ""
+msgstr "Шкала трафіку"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:229
 msgid "Device"
@@ -486,7 +486,7 @@ msgstr "Пристрій"
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:240
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:395
 msgid "Multi"
-msgstr ""
+msgstr "Мульти"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:248
 msgid "Upload Color"
@@ -498,11 +498,11 @@ msgstr "Колір вхідного трафіку"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:335
 msgid "Upload"
-msgstr ""
+msgstr "Відвантаження"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:337
 msgid "Download"
-msgstr ""
+msgstr "Завантаження"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:339
 #, python-format
@@ -514,19 +514,19 @@ msgstr "%s %s Колір"
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:208
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:212
 msgid "SSID:"
-msgstr ""
+msgstr "SSID:"
 
 #. Translators: do not translate, just add spacing before colon,
 #. if your locale requires it
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:284
 msgid "TX:"
-msgstr ""
+msgstr "TX:"
 
 #. Translators: do not translate, just add spacing before colon,
 #. if your locale requires it
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:289
 msgid "RX:"
-msgstr ""
+msgstr "RX:"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:591
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:601
@@ -545,15 +545,15 @@ msgstr "Змінити одиницю вимірювання"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:670
 msgid "Status:"
-msgstr ""
+msgstr "Статус:"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:670
 msgid "IP Address:"
-msgstr ""
+msgstr "IP адреса:"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:670
 msgid "Subnet Mask:"
-msgstr ""
+msgstr "Маска підмережі:"
 
 #. Translators: status of a network interface
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:678
@@ -585,7 +585,7 @@ msgstr "Графік для бездротового з'єднання"
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:1
 msgid "HAL UDI of battery."
-msgstr ""
+msgstr "Унікальний ідентифікатор батареї."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:2
 msgid ""
@@ -749,7 +749,7 @@ msgstr ""
 
 #: ../applets/maintained/battery/messagehandler.py:130
 msgid "Battery is critically low"
-msgstr ""
+msgstr "Заряд батереї надто низький"
 
 #: ../applets/maintained/battery/messagehandler.py:151
 msgid "Battery is charged"
@@ -757,12 +757,12 @@ msgstr ""
 
 #: ../applets/maintained/battery/messagehandler.py:172
 msgid "Your battery is fully charged."
-msgstr ""
+msgstr "Батарея повністю заряджена"
 
 #: ../applets/maintained/battery/messagehandler.py:174
 #, python-format
 msgid "Your battery is charged to <b>%d%%</b>."
-msgstr ""
+msgstr "Ваша батарея заряджена до <b>%d%%</b>."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:1
 msgid "A custom time format (strftime()), used if not empty."

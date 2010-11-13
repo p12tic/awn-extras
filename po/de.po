@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-30 22:29+0200\n"
-"PO-Revision-Date: 2010-11-10 21:24+0000\n"
-"Last-Translator: cmdrhenner <cmdrhenner@gmail.com>\n"
+"PO-Revision-Date: 2010-11-12 12:06+0000\n"
+"Last-Translator: Gabor Karsay <Unknown>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-11-11 04:39+0000\n"
+"X-Launchpad-Export-Date: 2010-11-13 04:50+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -779,7 +779,7 @@ msgstr ""
 #: ../applets/maintained/battery/messagehandler.py:99
 #, python-format
 msgid "You have approximately <b>%s</b> of remaining battery power (%d%%)."
-msgstr ""
+msgstr "Die restliche Akkulaufzeit beträgt etwa <b>%s</b> (%d %%)."
 
 #: ../applets/maintained/battery/messagehandler.py:130
 msgid "Battery is critically low"

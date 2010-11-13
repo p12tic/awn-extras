@@ -40,14 +40,14 @@ class FeedContainer(gobject.GObject):
         of factories. If filename does not contain a feed factory, it is not
         added."""
         try:
-            module = __import__('plugins.%s' % name, fromlist=[name])
+            module = __import__('plugins.%s' % name, globals(), locals(), [name], -1)
             if hasattr(module, 'matches_url') and hasattr(module, 'get_class'):
-                self.feed_factories.append(module)
+                self.feed_factories[name] = module
                 return True
             else:
                 del module
-        except Exception:
-            pass
+        except Exception, err:
+            print "Comics!: Error loading plugin: %s" % err
 
         return False
 
@@ -81,8 +81,8 @@ class FeedContainer(gobject.GObject):
                 feed = factory(settings)
                 self.feeds[settings[NAME]] = feed
                 self.emit('feed-changed', feed, FeedContainer.FEED_ADDED)
-            except Exception:
-                pass
+            except Exception, err:
+                print "Comics!: Error loading feed: %s" % err
 
         return False
 

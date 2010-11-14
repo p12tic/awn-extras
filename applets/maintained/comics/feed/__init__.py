@@ -75,6 +75,7 @@ class FeedContainer(gobject.GObject):
                     if plugin in self.feed_factories:
                         factory = self.feed_factories[plugin].get_class()
                     else:
+                        print "Comics!: Plugin '%s' not found" % plugin
                         return False
                 else:
                     factory = RSSFeed
@@ -90,8 +91,8 @@ class FeedContainer(gobject.GObject):
         """Creates a feed suitable for a given URL. If no plugin matches the
         URL, an RSSFeed is returned."""
         for factory in self.feed_factories:
-            if factory.matches_url(url):
-                return factory.get_class()(url=url)
+            if self.feed_factories[factory].matches_url(url):
+                return self.feed_factories[factory].get_class()(url=url)
         return RSSFeed(url=url)
 
     def remove_feed(self, feed_name):

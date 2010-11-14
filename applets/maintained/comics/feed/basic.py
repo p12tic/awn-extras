@@ -23,11 +23,13 @@ import re
 import urllib
 import urlparse
 import threading
+import htmlentitydefs
 
 from settings import Settings
 
 NAME = 'name'
 URL = 'url'
+PLUGIN = 'plugin'
 TITLE = 'title'
 LINK = 'link'
 DATE = 'date'
@@ -58,8 +60,36 @@ class Feed(gobject.GObject):
         elif parsed[0][2][0] == '/':
             return parsed[1][0] + '://' + parsed[1][1] + parsed[0][2]
         else:
+            # TODO this didn't work for some (or all?) urls,
+            # like http://www.gwscomic.com - test more thoroughly whether
+            # there should be an elif for that
+            #return parsed[1][0] + '://' + parsed[1][1] \
+            #    + parsed[1][2].rsplit('/', 1)[0] + parsed[0][2]
             return parsed[1][0] + '://' + parsed[1][1] \
-                + parsed[1][2].rsplit('/', 1)[0] + parsed[0][2]
+                + '/' + parsed[0][2]
+
+    def unescape_html(self, text):
+        """Taken from Fredrik Lundh - 
+        http://effbot.org/zone/re-sub.htm#unescape-html"""
+        def fixup(m):
+            text = m.group(0)
+            if text[:2] == "&#":
+                # character reference
+                try:
+                    if text[:3] == "&#x":
+                        return unichr(int(text[3:-1], 16))
+                    else:
+                        return unichr(int(text[2:-1]))
+                except ValueError:
+                    pass
+            else:
+                # named entity
+                try:
+                    text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
+                except KeyError:
+                    pass
+            return text # leave as is
+        return re.sub("&#?\w+;", fixup, text)
 
     def __init__(self, settings=None, url=None):
         """Initialize a feed."""
@@ -97,8 +127,11 @@ class Feed(gobject.GObject):
             if self.updated or old_status != self.status:
                 gobject.idle_add(gobject.GObject.emit, self, 'updated',
                     self.status)
-        except Exception: 
+        except IOError:  # Network is down
             self.status = Feed.DOWNLOAD_FAILED
+        except Exception, err:
+            self.status = Feed.DOWNLOAD_FAILED
+            print "Comics!: Parsing error: %s" % err
         self.__lock.release()
 
     def update(self):

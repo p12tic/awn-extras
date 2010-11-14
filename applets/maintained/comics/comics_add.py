@@ -30,7 +30,7 @@ from awn.extras import _
 
 # Local
 from downloader import Downloader
-from feed.basic import Feed, NAME, URL
+from feed.basic import Feed, NAME, URL, PLUGIN
 from feed.settings import Settings
 from feed.rss import IMG_INDEX
 from shared import (UI_DIR, USER_FEEDS_DIR)
@@ -124,6 +124,10 @@ The URL is not a valid comic feed. Press "next" to try again'''))
         settings[IMG_INDEX] = self.image[0] + 1
         settings.comments[IMG_INDEX] = \
             'The index of the image in the HTML-code'
+        try:
+            settings[PLUGIN] = self.feed.get_plugin_name()
+        except Exception:
+            pass
 
         settings.save()
         self.feeds.add_feed(filename)
@@ -190,7 +194,11 @@ This guide has finished.\n\nPress "apply" to add <i>%s</i>.''') \
             self.ui.get_object('image_page').show()
         else:
             self.ui.get_object('image_page').hide()
-            self.image = images[0]
+            try:
+                self.image = images[0]
+            except IndexError:
+                self.process_error(Feed.DOWNLOAD_NOT_FEED)
+                return
 
         # Complete page
         self.assistant.set_page_complete(self.ui.get_object('wait_page'),

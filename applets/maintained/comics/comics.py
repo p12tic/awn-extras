@@ -27,6 +27,7 @@ import awn
 import os
 import sys
 import tempfile
+from xml.sax.saxutils import escape
 from awn.extras import _, awnlib
 
 # Import Comics! modules, but check dependencies first
@@ -145,7 +146,7 @@ class ComicApplet(awn.AppletSimple):
         names.sort()
         for feed in names:
             label = gtk.Label()
-            label.set_markup(self.feeds.feeds[feed].name)
+            label.set_markup(escape(self.feeds.feeds[feed].name))
             align = gtk.Alignment(xalign=0.0)
             align.add(label)
             menu_item = gtk.CheckMenuItem()

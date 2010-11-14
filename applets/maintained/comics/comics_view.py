@@ -360,7 +360,7 @@ class ComicsViewer(ScalableWindow):
             history_menu.append(menu_item)
         history_container.set_submenu(history_menu)
         history_container.set_sensitive(
-            len(self.feeds.feeds[self.feed_name].items) > 0)
+            len(self.feeds.feeds[self.feed_name].items) > 1)
         menu.append(history_container)
 
         size_container = gtk.MenuItem(_("Size"))

@@ -17,8 +17,13 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+from __future__ import with_statement
 
-from ..basic import Feed
+import feedparser
+import re
+
+from ..basic import URL, TITLE, LINK, DATE, Feed
+from ..rss import IMAGES
 
 
 def get_class():
@@ -28,7 +33,14 @@ def get_class():
 
 def matches_url(url):
     '''Mandatory for plugins.
-    Return True if we can read a comic from this url, else return False.'''
+    Return True if we want to read a comic from this url, else return False.
+    SimpleScreenScraper accepts all urls that are not feeds.'''
+    try:
+        feed = feedparser.parse(url)
+        if feed.version == '':
+            return True
+    except Exception:
+        return True
     return False
 
 
@@ -37,6 +49,57 @@ class SimpleScreenScraper(Feed):
 
     def __init__(self, settings=None, url=None):
         super(SimpleScreenScraper, self).__init__(settings, url)
+        if settings:
+            self.img_index = settings.get_int('img_index', 1) - 1
+        else:
+            self.img_index = 0
 
-    def actually_do_something(self):
-        pass
+    def parse_file(self, filename):
+        '''Mandatory for plugins.
+        Parses given file (a downloaded feed) and puts all found items
+        into self.items. An item must have an url (path to the image), a link
+        (to the homepage), a title for that link and a date (timestamp).'''
+        try:
+            with open(filename, 'r') as f:
+                data = f.read()
+        except IOError:
+            return Feed.DOWNLOAD_FAILED
+
+        # Update properties
+        if self.name is None:
+            title_re = re.compile("<title>(.*?)<\/title>", re.DOTALL | re.M)
+            self.name = title_re.findall(data)[0]
+            self.name = self.unescape_html(self.name)
+        images = []
+        images += [self.make_absolute_url(u, self.url)
+                   for u in Feed.IMG_SRC_RE.findall(data)]
+
+        item = {}
+        try:
+            item[URL] = images[self.img_index]
+        except IndexError:
+            print "Comics!: img_index out of range in '%s'." % self.name
+            return Feed.DOWNLOAD_NOT_FEED
+        item[LINK] = self.url
+        item[TITLE] = self.name
+        item[DATE] = 1.0  # We have only one item, so the date does not matter
+        item[IMAGES] = images
+
+        self.items[item[DATE]] = item
+
+        self.newest = item[DATE]
+        self.updated = True
+        return Feed.DOWNLOAD_OK
+
+    def get_unique_images(self):
+        """Mandatory for plugins.
+        Returns a list of (index, url) tuples for the images."""
+        if len(self.items) == 0:
+            return None
+        items = self.items.itervalues()
+        item = items.next()
+        return list(enumerate(item[IMAGES]))
+
+    def get_plugin_name(self):
+        """Mandatory for plugins."""
+        return __name__[13:]  # strips 'feed.plugins.'

@@ -68,8 +68,8 @@ class SimpleScreenScraper(Feed):
         # Update properties
         if self.name is None:
             title_re = re.compile("<title>(.*?)<\/title>", re.DOTALL | re.M)
-            self.name = title_re.findall(data)[0]
-            self.name = self.unescape_html(self.name)
+            self.name = self.unescape_html(title_re.findall(data)[0])
+
         images = []
         images += [self.make_absolute_url(u, self.url)
                    for u in Feed.IMG_SRC_RE.findall(data)]
@@ -82,13 +82,20 @@ class SimpleScreenScraper(Feed):
             return Feed.DOWNLOAD_NOT_FEED
         item[LINK] = self.url
         item[TITLE] = self.name
-        item[DATE] = 1.0  # We have only one item, so the date does not matter
+
+        # Set date. We have only one item, so the date is not that important.
+        # It's only needed to determine whether the feed has been updated.
+        # TODO For the time being we set it always to 1.0, maybe a real time
+        # stamp could be generated from feedparser.parse(url).headers['date']
+        if item[DATE] == 0.0:
+            item[DATE] = 1.0
         item[IMAGES] = images
 
         self.items[item[DATE]] = item
 
-        self.newest = item[DATE]
-        self.updated = True
+        if self.newest = 0.0:
+            self.newest = item[DATE]
+            self.updated = True
         return Feed.DOWNLOAD_OK
 
     def get_unique_images(self):

@@ -339,29 +339,28 @@ class ComicsViewer(ScalableWindow):
         menu = gtk.Menu()
         
         # Generate history menu
-        history_container = gtk.ImageMenuItem(gtk.STOCK_JUMP_TO)
-        history_menu = gtk.Menu()
-        history_menu.foreach(lambda child: history_menu.remove(child))
-        items = self.feeds.feeds[self.feed_name].items.items()
-        items.sort(reverse=True)
-        for date, item in items:
-            label = gtk.Label()
-            text = self.get_menu_item_name(item)
-            if self.__current_timestamp == date:
-                label.set_markup('<b>' + text + '</b>')
-            else:
-                label.set_markup(text)
-            align = gtk.Alignment(xalign=0.0)
-            align.add(label)
-            menu_item = gtk.MenuItem()
-            menu_item.data = item
-            menu_item.connect('activate', self.on_history_activated)
-            menu_item.add(align)
-            history_menu.append(menu_item)
-        history_container.set_submenu(history_menu)
-        history_container.set_sensitive(
-            len(self.feeds.feeds[self.feed_name].items) > 1)
-        menu.append(history_container)
+        if len(self.feeds.feeds[self.feed_name].items) > 1:
+            history_container = gtk.ImageMenuItem(gtk.STOCK_JUMP_TO)
+            history_menu = gtk.Menu()
+            history_menu.foreach(lambda child: history_menu.remove(child))
+            items = self.feeds.feeds[self.feed_name].items.items()
+            items.sort(reverse=True)
+            for date, item in items:
+                label = gtk.Label()
+                text = self.get_menu_item_name(item)
+                if self.__current_timestamp == date:
+                    label.set_markup('<b>' + text + '</b>')
+                else:
+                    label.set_markup(text)
+                align = gtk.Alignment(xalign=0.0)
+                align.add(label)
+                menu_item = gtk.MenuItem()
+                menu_item.data = item
+                menu_item.connect('activate', self.on_history_activated)
+                menu_item.add(align)
+                history_menu.append(menu_item)
+            history_container.set_submenu(history_menu)
+            menu.append(history_container)
 
         size_container = gtk.MenuItem(_("Size"))
         size_menu = gtk.Menu()

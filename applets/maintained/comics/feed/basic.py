@@ -24,6 +24,8 @@ import urllib
 import urlparse
 import threading
 import htmlentitydefs
+import httplib
+import time
 
 from settings import Settings
 
@@ -34,6 +36,9 @@ TITLE = 'title'
 LINK = 'link'
 DATE = 'date'
 
+ASCTIME_FORMAT = "%a %b %d %H:%M:%S %Y"
+RFC_850_FORMAT = "%A, %d-%b-%y %H:%M:%S GMT"
+RFC_1123_FORMAT = "%a, %d %b %Y %H:%M:%S GMT"
 
 class Feed(gobject.GObject):
     """A feed class."""
@@ -67,6 +72,41 @@ class Feed(gobject.GObject):
             #    + parsed[1][2].rsplit('/', 1)[0] + parsed[0][2]
             return parsed[1][0] + '://' + parsed[1][1] \
                 + '/' + parsed[0][2]
+
+    def get_timestamp_for_url(self, url):
+        """Request the "Last-Modified" header from url without downloading
+        any data and return a timestamp or None"""
+        if url is None or len(url) == 0:
+            return None
+        p = urlparse.urlparse(url)
+        try:
+            if p.scheme == 'http':
+                conn = httplib.HTTPConnection(p.netloc)
+            elif p.scheme == 'https':
+                conn = httplib.HTTPSConnection(p.netloc)
+            else:
+                raise Exception
+            conn.request("HEAD", p.path)
+            res = conn.getresponse()
+            httptime = res.getheader("Last-Modified")
+        except Exception:
+            return None
+        
+        # The following was posted by Philip Semanchuk Nov 2009 on
+        # http://mail.python.org/mailman/listinfo/python-list 
+
+        if not httptime.endswith("GMT"):
+            timestamp = time.strptime(httptime, ASCTIME_FORMAT)
+        else:
+            if "-" in httptime:
+                timestamp = time.strptime(httptime, RFC_850_FORMAT)
+            else:
+                timestamp = time.strptime(httptime, RFC_1123_FORMAT)
+        try:
+            timestamp = time.mktime(timestamp)
+        except Exception:
+            return None
+        return timestamp
 
     def unescape_html(self, text):
         """Taken from Fredrik Lundh - 

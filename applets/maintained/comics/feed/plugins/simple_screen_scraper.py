@@ -82,17 +82,14 @@ class SimpleScreenScraper(Feed):
             return Feed.DOWNLOAD_NOT_FEED
         item[LINK] = self.url
         item[TITLE] = self.name
-
-        # Set date. We have only one item, so the date is not that important.
-        # It's only needed to determine whether the feed has been updated.
-        # TODO For the time being we set it always to 1.0, maybe a real time
-        # stamp could be generated from feedparser.parse(url).headers['date']
-        item[DATE] = 1.0
+        item[DATE] = self.get_timestamp_for_url(item[URL])
+        if item[DATE] == None:
+            item[DATE] = 1.0
         item[IMAGES] = images
 
         self.items[item[DATE]] = item
 
-        if self.newest == 0.0:
+        if self.newest != item[DATE]:
             self.newest = item[DATE]
             self.updated = True
         return Feed.DOWNLOAD_OK

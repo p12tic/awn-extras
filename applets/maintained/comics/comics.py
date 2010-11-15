@@ -143,10 +143,12 @@ class ComicApplet(awn.AppletSimple):
         menu = self.create_default_menu()
         feed_menu = gtk.Menu()
         names = self.feeds.feeds.keys()
-        names.sort()
+        names.sort(key=str.lower)
         for feed in names:
             label = gtk.Label()
-            label.set_markup(escape(self.feeds.feeds[feed].name))
+            # Gtk wants '&' and '<' to be escaped
+            # this escapes '&', '<' and '>'
+            label.set_markup(escape(feed))
             align = gtk.Alignment(xalign=0.0)
             align.add(label)
             menu_item = gtk.CheckMenuItem()

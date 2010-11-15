@@ -51,7 +51,7 @@ class ComicsManager:
         shared_iterator = self.model.append(None, (_('Shared comics'), ''))
         user_iterator = self.model.append(None, (_('Your comics'), ''))
         names = self.feeds.feeds.keys()
-        names.sort()
+        names.sort(key=str.lower)
         for feed in names:
             if os.access(os.path.dirname(self.feeds.feeds[feed].filename), os.W_OK):
                 self.model.append(user_iterator, (feed, self.feeds.feeds[feed].filename))

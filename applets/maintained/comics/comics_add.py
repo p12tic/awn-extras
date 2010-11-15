@@ -115,6 +115,7 @@ The URL is not a valid comic feed. Press "next" to try again'''))
             os.mkdir(USER_FEEDS_DIR)
         except Exception:
             pass
+        self.name = self.ui.get_object('name_entry').get_text()
         f, filename = tempfile.mkstemp('.feed', '', USER_FEEDS_DIR, True)
         os.close(f)
         settings = Settings(filename)
@@ -154,6 +155,11 @@ The URL is not a valid comic feed. Press "next" to try again'''))
         self.assistant.set_page_complete(self.ui.get_object('url_page'),
             not URL_RE.match(text) is None)
 
+    def on_name_entry_changed(self, widget):
+        text = widget.get_text()
+        self.assistant.set_page_complete(self.ui.get_object('last_page'),
+            not text == '')
+
     def on_image_list_unselect_all(self, widget):
         self.assistant.set_page_complete(self.ui.get_object('image_page'),
             False)
@@ -177,8 +183,10 @@ The URL is not a valid comic feed. Press "next" to try again'''))
 
         last_label = self.ui.get_object('last_label')
         last_label.set_markup(_('''\
-This guide has finished.\n\nPress "apply" to add <i>%s</i>.''') \
-                              % self.name)
+This guide has finished.\n\
+You can change the name of this comic. Press "apply" to add it.'''))
+        name_entry = self.ui.get_object('name_entry')
+        name_entry.set_text(self.name)
 
         # Can we skip the image page?
         images = feed.get_unique_images()

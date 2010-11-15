@@ -36,9 +36,10 @@ TITLE = 'title'
 LINK = 'link'
 DATE = 'date'
 
-ASCTIME_FORMAT = "%a %b %d %H:%M:%S %Y"
-RFC_850_FORMAT = "%A, %d-%b-%y %H:%M:%S GMT"
-RFC_1123_FORMAT = "%a, %d %b %Y %H:%M:%S GMT"
+month = {'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04',
+         'May': '05', 'Jun': '06', 'Jul': '07', 'Aug': '08',
+         'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'}
+
 
 class Feed(gobject.GObject):
     """A feed class."""
@@ -88,28 +89,40 @@ class Feed(gobject.GObject):
                 raise Exception
             conn.request("HEAD", p.path)
             res = conn.getresponse()
-            httptime = res.getheader("Last-Modified")
+            htime = res.getheader("Last-Modified")
         except Exception:
             return None
-        
-        # The following was posted by Philip Semanchuk Nov 2009 on
-        # http://mail.python.org/mailman/listinfo/python-list 
 
-        if not httptime.endswith("GMT"):
-            timestamp = time.strptime(httptime, ASCTIME_FORMAT)
-        else:
-            if "-" in httptime:
-                timestamp = time.strptime(httptime, RFC_850_FORMAT)
-            else:
-                timestamp = time.strptime(httptime, RFC_1123_FORMAT)
+        # Based on a posting by Philip Semanchuk, Nov 2009 on
+        # http://mail.python.org/mailman/listinfo/python-list
+
         try:
+            if not htime.endswith("GMT"):
+                # ASCTIME format
+                # Work around locale problems: remove weedays,
+                # convert month names to decimals
+                htime = htime[4:]
+                htime = month[htime[0:3]] + htime[3:]
+                timestamp = time.strptime(htime, "%m %d %H:%M:%S %Y")
+            else:
+                # RFC 850 Format
+                if "-" in htime:
+                    htime = htime.split(" ", 1)[1]
+                    htime = htime[:3] + month[htime[3:6]] + htime[6:]
+                    timestamp = time.strptime(htime, "%d-%m-%y %H:%M:%S GMT")
+                else:
+                    # RFC 1123 Format
+                    htime = htime[5:]
+                    htime = htime[:3] + month[htime[3:6]] + htime[6:]
+                    timestamp = time.strptime(htime, "%d %m %Y %H:%M:%S GMT")
             timestamp = time.mktime(timestamp)
-        except Exception:
+        except Exception, err:
+            print "Comics!: %s" % err
             return None
         return timestamp
 
     def unescape_html(self, text):
-        """Taken from Fredrik Lundh - 
+        """Taken from Fredrik Lundh -
         http://effbot.org/zone/re-sub.htm#unescape-html"""
         def fixup(m):
             text = m.group(0)
@@ -128,7 +141,7 @@ class Feed(gobject.GObject):
                     text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
                 except KeyError:
                     pass
-            return text # leave as is
+            return text  # leave as is
         return re.sub("&#?\w+;", fixup, text)
 
     def __init__(self, settings=None, url=None):

@@ -213,7 +213,9 @@ This guide has finished.\n\nPress "apply" to add <i>%s</i>.''') \
         if code != Downloader.OK:
             self.model.remove(iterator)
         else:
-            pixbuf = gtk.gdk.pixbuf_new_from_file(o.filename)
+            try:
+                pixbuf = gtk.gdk.pixbuf_new_from_file(o.filename)
+                self.model.set_value(iterator, 1, pixbuf)
+            except Exception:
+                self.model.remove(iterator)
             os.remove(o.filename)
-
-            self.model.set_value(iterator, 1, pixbuf)

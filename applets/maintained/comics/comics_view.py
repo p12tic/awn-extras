@@ -122,11 +122,10 @@ class ComicsViewer(ScalableWindow):
             screen = self.get_screen()
             screen_width, screen_height = (screen.get_width(),
                 screen.get_height())
+            w, h = self.get_size()
+            x = self.__settings.get_int('x', (screen_width - w) / 2)
+            y = self.__settings.get_int('y', (screen_height - h) / 2)
 
-            # Show the window first...
-            self.show()
-
-            x, y = self.get_position()
             x %= screen_width
             if x < 0:
                 x += screen_width
@@ -134,22 +133,24 @@ class ComicsViewer(ScalableWindow):
             if y < 0:
                 y += screen_height
 
+            self.save_settings()
+
+            # Show the window first...
+            self.show()
             # ...and then move it
             self.move(x, y)
-
-            self.__settings['x'] = x
-            self.__settings['y'] = y
 
             if has_widget_layer():
                 compiz_widget_set(self, False)
         else:
+            if self.get_window():
+                self.save_settings()
             if has_widget_layer():
                 self.show()
                 compiz_widget_set(self, True)
             else:
                 self.hide()
 
-        self.__settings.save()
 
     def close(self):
         self.emit('removed')
@@ -432,9 +433,10 @@ class ComicsViewer(ScalableWindow):
 
         self.set_skip_taskbar_hint(True)
         self.set_skip_pager_hint(True)
-        self.set_visibility(visible)
 
         self.load_settings()
+        if visible:
+            self.set_visibility(visible)
 
     ########################################################################
     # Property updating methods                                            #
@@ -442,14 +444,9 @@ class ComicsViewer(ScalableWindow):
 
     def load_settings(self):
         """Load the settings."""
-        screen = self.get_screen()
-        w, h = self.get_size()
-
         self.set_show_link(self.__settings.get_bool('show_link',
             False))
         self.set_feed_name(self.__settings.get_string('feed_name', ''))
-        self.move(self.__settings.get_int('x', (screen.get_width() - w) / 2),
-            self.__settings.get_int('y', (screen.get_height() - h) / 2))
 
     def save_settings(self):
         """Save the settings."""

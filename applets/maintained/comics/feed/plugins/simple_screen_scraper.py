@@ -102,7 +102,3 @@ class SimpleScreenScraper(Feed):
         items = self.items.itervalues()
         item = items.next()
         return list(enumerate(item[IMAGES]))
-
-    def get_plugin_name(self):
-        """Mandatory for plugins."""
-        return __name__[13:]  # strips 'feed.plugins.'

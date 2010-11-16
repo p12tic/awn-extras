@@ -125,10 +125,8 @@ The URL is not a valid comic feed. Press "next" to try again'''))
         settings[IMG_INDEX] = self.image[0] + 1
         settings.comments[IMG_INDEX] = \
             'The index of the image in the HTML-code'
-        try:
-            settings[PLUGIN] = self.feed.get_plugin_name()
-        except Exception:
-            pass
+        if self.feed.__module__.startswith('feed.plugins.'):
+            settings[PLUGIN] = self.feed.__module__[13:]
 
         settings.save()
         self.feeds.add_feed(filename)

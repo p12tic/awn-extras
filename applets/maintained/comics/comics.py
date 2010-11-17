@@ -27,7 +27,6 @@ import awn
 import os
 import sys
 import tempfile
-from xml.sax.saxutils import escape
 from awn.extras import _, awnlib
 
 # Import Comics! modules, but check dependencies first
@@ -36,6 +35,7 @@ from pynotify import init as notify_init, Notification
 
 import comics_manage
 import comics_view
+from comics_add import ComicsAdder
 from feed.settings import Settings
 from feed import FeedContainer
 from shared import (
@@ -138,32 +138,10 @@ class ComicApplet(awn.AppletSimple):
             self.create_window(template=template)
 
     def make_menu(self):
-        """Generate the menu listing the comics."""
+        """Generate the context menu."""
         # Generate comics menu
         menu = self.create_default_menu()
-        feed_menu = gtk.Menu()
-        names = self.feeds.feeds.keys()
-        names.sort(key=str.lower)
-        for feed in names:
-            label = gtk.Label()
-            # Gtk wants '&' and '<' to be escaped
-            # this escapes '&', '<' and '>'
-            label.set_markup(escape(feed))
-            align = gtk.Alignment(xalign=0.0)
-            align.add(label)
-            menu_item = gtk.CheckMenuItem()
-            menu_item.data = feed
-            menu_item.add(align)
-            menu_item.set_active(len([w for w in self.windows
-                                      if w.feed_name == feed]) > 0)
-            menu_item.connect('toggled', self.on_comics_toggled)
-            feed_menu.append(menu_item)
-        feed_menu.show_all()
-        container = gtk.MenuItem(_('Comics'))
-        container.set_sensitive(len(self.feeds.feeds) > 0)
-        container.set_submenu(feed_menu)
-        menu.append(container)
-        manage_item = gtk.MenuItem(_('Manage Comics'))
+        manage_item = gtk.MenuItem(_('My Comics'))
         manage_item.connect("activate", self.on_manage_comics_activated)
         menu.append(manage_item)
         about_item = gtk.ImageMenuItem(_("_About %s") % applet_display_name)
@@ -234,7 +212,13 @@ class ComicApplet(awn.AppletSimple):
             window.save_settings()
 
     def on_button1_pressed(self, event):
-        self.set_visibility(not self.visible)
+        if len(self.feeds.feeds) == 0:
+            adder = ComicsAdder(self)
+        elif not self.windows:
+            manager = comics_manage.ComicsManager(self)
+            manager.show()
+        else:
+            self.set_visibility(not self.visible)
 
     def on_button3_pressed(self, event):
         menu = self.make_menu()
@@ -317,7 +301,6 @@ if __name__ == '__main__':
 
     # Load the feeds
     feeds = FeedContainer()
-    feeds.load_directory(SYS_FEEDS_DIR)
     feeds.load_directory(USER_FEEDS_DIR)
 
     #Initialise AWN and create the applet

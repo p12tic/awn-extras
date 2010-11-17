@@ -180,6 +180,7 @@ The URL is not a valid comic feed. Press "next" to try again'''))
                 self.ui.get_object('url_box').hide()
             else:
                 self.ui.get_object('list_box').hide()
+                self.ui.get_object('url_box').show()
 
         elif page is self.ui.get_object('wait_page'):
             if self.from_list:

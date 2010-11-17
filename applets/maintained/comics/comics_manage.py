@@ -80,6 +80,7 @@ class ComicsManager:
         self.comics_list = self.ui.get_object('comics_list')
         selection = self.comics_list.get_selection()
         selection.connect('changed', self.on_comics_list_selection_changed)
+        selection.set_mode(gtk.SELECTION_MULTIPLE)
         self.comics_list.set_model(self.model)
         # Translators: checkbox to show comic
         self.ui.get_object('toggle_col').set_title(_('Show'))
@@ -98,9 +99,9 @@ class ComicsManager:
     ########################################################################
 
     def on_comics_list_selection_changed(self, widget):
-        model, iterator = self.comics_list.get_selection().get_selected()
+        rows = self.comics_list.get_selection().count_selected_rows()
         button = self.ui.get_object('remove_button')
-        button.set_sensitive(iterator > 0)
+        button.set_sensitive(rows > 0)
 
     def on_feed_toggled(self, widget, path):
         self.model[path][0] = not self.model[path][0]
@@ -112,25 +113,52 @@ class ComicsManager:
         adder.assistant.connect('destroy', self.on_adder_destroy)
 
     def on_remove_button_clicked(self, widget):
-        model, iterator = self.comics_list.get_selection().get_selected()
-        feed_name = self.model.get_value(iterator, 1)
-        filename = self.model.get_value(iterator, 2)
-        self.__parent.toggle_feed(feed_name, False)
-        try:
-            self.feeds.remove_feed(feed_name)
-            os.remove(filename)
-        except Exception:
-            msg = _("Failed to remove '%s'.") % filename
-            dialog = gtk.MessageDialog(parent=self.manage_window,
-                                       flags=gtk.DIALOG_DESTROY_WITH_PARENT,
-                                       type=gtk.MESSAGE_INFO,
-                                       buttons=gtk.BUTTONS_CLOSE,
-                                       message_format=msg)
-            dialog.set_title(_('Error'))
-            dialog.run()
-            dialog.hide()
-            del dialog
+        model, path = self.comics_list.get_selection().get_selected_rows()
+        if len(path) == 1:
+            msg = _("Are you sure you want to remove the comic \"%s\"?") % \
+                self.model.get_value(self.model.get_iter(path[0]), 1)
+            sec = \
+               _("This will remove the comic from your personal comics list.")
+        else:
+            msg = \
+               _("Are you sure you want to remove the %d selected comics?") % \
+                len(path)
+            sec = \
+               _("This will remove the comics from your personal comics list.")
+
+        dialog = gtk.MessageDialog(parent=self.manage_window,
+                                   flags=gtk.DIALOG_DESTROY_WITH_PARENT,
+                                   type=gtk.MESSAGE_WARNING,
+                                   message_format=msg)
+        dialog.format_secondary_markup(sec)
+        dialog.add_buttons(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+                           gtk.STOCK_REMOVE, gtk.RESPONSE_OK)
+        response = dialog.run()
+        dialog.destroy()
+
+        if response == gtk.RESPONSE_CANCEL:
             return
+
+        def remove(model, path, iterator):
+            feed_name = model.get_value(iterator, 1)
+            filename = model.get_value(iterator, 2)
+            self.__parent.toggle_feed(feed_name, False)
+            try:
+                self.feeds.remove_feed(feed_name)
+                os.remove(filename)
+            except Exception:
+                msg = _("Failed to remove '%s'.") % filename
+                dialog = gtk.MessageDialog(parent=self.manage_window,
+                                          flags=gtk.DIALOG_DESTROY_WITH_PARENT,
+                                          type=gtk.MESSAGE_INFO,
+                                          buttons=gtk.BUTTONS_CLOSE,
+                                          message_format=msg)
+                dialog.set_title(_('Error'))
+                dialog.run()
+                dialog.destroy()
+                return
+
+        self.comics_list.get_selection().selected_foreach(remove)
         self.load_feeds()
 
     def on_close_button_clicked(self, widget):

@@ -24,6 +24,7 @@ import gtk
 import os
 
 # Symbols used
+from gettext import ngettext
 from awn.extras import _
 
 # Local
@@ -114,18 +115,16 @@ class ComicsManager:
 
     def on_remove_button_clicked(self, widget):
         model, path = self.comics_list.get_selection().get_selected_rows()
-        if len(path) == 1:
-            msg = _("Are you sure you want to remove the comic \"%s\"?") % \
-                self.model.get_value(self.model.get_iter(path[0]), 1)
-            sec = \
-               _("This will remove the comic from your personal comics list.")
-        else:
-            msg = \
-               _("Are you sure you want to remove the %d selected comics?") % \
-                len(path)
-            sec = \
-               _("This will remove the comics from your personal comics list.")
-
+        msg = ngettext(
+            "Are you sure you want to remove the comic \"%(name)s\"?",
+            "Are you sure you want to remove the %(number)d selected comics?",
+            len(path)) % {'number': len(path),
+            'name': self.model.get_value(self.model.get_iter(path[0]), 1)}
+        sec = ngettext(
+            "This will remove the comic from your personal comics list.",
+            "This will remove these comics from your personal comics list.",
+            len(path))
+       
         dialog = gtk.MessageDialog(parent=self.manage_window,
                                    flags=gtk.DIALOG_DESTROY_WITH_PARENT,
                                    type=gtk.MESSAGE_WARNING,

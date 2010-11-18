@@ -126,6 +126,9 @@ class ComicsViewer(ScalableWindow):
             x = self.__settings.get_int('x', (screen_width - w) / 2)
             y = self.__settings.get_int('y', (screen_height - h) / 2)
 
+            # Show the window first...
+            self.show()
+
             x %= screen_width
             if x < 0:
                 x += screen_width
@@ -133,10 +136,11 @@ class ComicsViewer(ScalableWindow):
             if y < 0:
                 y += screen_height
 
+            # this must be between self.show() and self.move()
+            # it calls self.get_position(), without it the comic
+            # will not be painted the very first time
             self.save_settings()
 
-            # Show the window first...
-            self.show()
             # ...and then move it
             self.move(x, y)
 
@@ -150,7 +154,6 @@ class ComicsViewer(ScalableWindow):
                 compiz_widget_set(self, True)
             else:
                 self.hide()
-
 
     def close(self):
         self.emit('removed')
@@ -338,7 +341,7 @@ class ComicsViewer(ScalableWindow):
     def make_menu(self):
         """Create the context menu."""
         menu = gtk.Menu()
-        
+
         # Generate history menu
         if len(self.feeds.feeds[self.feed_name].items) > 1:
             history_container = gtk.ImageMenuItem(gtk.STOCK_JUMP_TO)
@@ -390,7 +393,7 @@ class ComicsViewer(ScalableWindow):
         close_item = gtk.ImageMenuItem(stock_id='gtk-close')
         close_item.connect('activate', self.on_close_activated)
         menu.append(close_item)
-        
+
         menu.show_all()
         return menu
 
@@ -572,7 +575,7 @@ class ComicsViewer(ScalableWindow):
                             return
                     self.dialog.set_current_name('%s.%s' % (
                         os.path.basename(current_name[0]), i['extensions'][0]))
-                    
+
     def on_link_size_allocate(self, widget, e):
         i_dim = self.get_image_dimensions()
         l_dim = self.get_link_dimensions()

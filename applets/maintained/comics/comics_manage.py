@@ -136,7 +136,7 @@ class ComicsManager:
         response = dialog.run()
         dialog.destroy()
 
-        if response == gtk.RESPONSE_CANCEL:
+        if response != gtk.RESPONSE_OK:
             return
 
         def remove(model, path, iterator):

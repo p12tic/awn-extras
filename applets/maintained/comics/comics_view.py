@@ -164,6 +164,8 @@ class ComicsViewer(ScalableWindow):
         """Return the menu item name of item."""
         if item[DATE] > 0:
             tt = time.localtime(item[DATE])
+            # Translators: This is a date/time format string. You can check the
+            # output in terminal with 'date +"%%A %d %B"'.
             return time.strftime(_('%A %d %B'), tt)
         else:
             return item[TITLE]

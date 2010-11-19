@@ -494,13 +494,7 @@ class ComicsViewer(ScalableWindow):
     ########################################################################
 
     def on_destroy(self, widget):
-        if self.__update_id:
-            self.feeds.feeds[self.feed_name].disconnect(self.__update_id)
-            self.__update_id = None
-        if self.__download_id and self.__downloader:
-            self.__downloader.disconnect(self.__download_id)
-            self.__download_id = None
-        del self.__pixbuf
+        self.close()
 
     def on_link_clicked(self, widget, e):
         # Start the web browser in another process

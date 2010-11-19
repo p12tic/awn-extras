@@ -79,6 +79,12 @@ The URL is not a valid comic feed. Press "next" to try again'''))
         for feed in names:
             self.sys_model.append((feed, self.sys.feeds[feed].filename))
 
+    def on_screen(self):
+        return len(self.assistant) != 0
+
+    def present(self):
+        self.assistant.present()
+
     ########################################################################
     # Standard python methods                                              #
     ########################################################################

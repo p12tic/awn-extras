@@ -59,6 +59,12 @@ class ComicsManager:
     def show(self):
         self.manage_window.show()
 
+    def present(self):
+        self.manage_window.present()
+
+    def on_screen(self):
+        return len(self.manage_window) != 0
+
     ########################################################################
     # Standard python methods                                              #
     ########################################################################
@@ -109,9 +115,14 @@ class ComicsManager:
         self.__parent.toggle_feed(self.model[path][1], self.model[path][0])
 
     def on_add_button_clicked(self, widget):
-        adder = ComicsAdder(self.__parent)
-        adder.assistant.set_transient_for(self.manage_window)
-        adder.assistant.connect('destroy', self.on_adder_destroy)
+        if self.__parent.adder and self.__parent.adder.on_screen():
+            self.__parent.adder.present()
+        else:
+            self.__parent.adder = []
+            self.__parent.adder = ComicsAdder(self.__parent)
+            self.__parent.adder.assistant.set_transient_for(self.manage_window)
+            self.__parent.adder.assistant.connect('destroy',
+                self.on_adder_destroy)
 
     def on_remove_button_clicked(self, widget):
         model, path = self.comics_list.get_selection().get_selected_rows()
@@ -124,7 +135,7 @@ class ComicsManager:
             "This will remove the comic from your personal comics list.",
             "This will remove these comics from your personal comics list.",
             len(path))
-       
+
         dialog = gtk.MessageDialog(parent=self.manage_window,
                                    flags=gtk.DIALOG_DESTROY_WITH_PARENT,
                                    type=gtk.MESSAGE_WARNING,

@@ -82,6 +82,38 @@ class BidirectionalIterator:
         return self.sequence[self.index]
 
 
+class about_dialog(gtk.AboutDialog):
+    def __init__(self):
+        super(about_dialog, self).__init__()
+        pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(applet_icon, 48, 48)
+        self.set_name(applet_display_name)
+        self.set_copyright('Copyright \xc2\xa9 2008 Moses Palmér')
+        self.set_authors(['Moses Palmér',
+                         'Sharkbaitbobby',
+                         'Mark Lee',
+                         'Kyle L. Huff',
+                         'Gabor Karsay'])
+        self.set_artists(['Moses Palmér'])
+        self.set_comments(_("View your favourite comics on your desktop"))
+        self.set_license("This program is free software; you can " + \
+            "redistribute it and/or modify it under the terms of the GNU " + \
+            "General Public License as published by the Free Software " + \
+            "Foundation; either version 2 of the License, or (at your " + \
+            "option) any later version.\n\n" + \
+            "This program is distributed in the hope that it will be " + \
+            "useful, but WITHOUT ANY WARRANTY; without even the implied " + \
+            "warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR " + \
+            "PURPOSE.    See the GNU General Public License for more " + \
+            "details.\n\nYou should have received a copy of the GNU " + \
+            "General Public License along with this program; if not, " + \
+            "write to the Free Software Foundation, Inc., 51 Franklin St, " + \
+            "Fifth Floor, Boston, MA 02110-1301, USA.")
+        self.set_wrap_license(True)
+        self.set_logo(pixbuf)
+        self.set_icon_from_file(applet_icon)
+        self.set_version(awn.extras.__version__)
+
+
 class ComicApplet(awn.AppletSimple):
     DIALOG_DURATION = 3000
 
@@ -189,6 +221,9 @@ class ComicApplet(awn.AppletSimple):
         self.windows = []
         self.window_iterator = BidirectionalIterator(self.windows)
         self.current_window = None
+        self.manager = None
+        self.adder = None
+        self.about = None
 
         try:
             for filename in (f for f in os.listdir(STRIPS_DIR)
@@ -213,10 +248,13 @@ class ComicApplet(awn.AppletSimple):
 
     def on_button1_pressed(self, event):
         if len(self.feeds.feeds) == 0:
-            adder = ComicsAdder(self)
+            if self.adder and self.adder.on_screen():
+                self.adder.present()
+            else:
+                self.adder = []
+                self.adder = ComicsAdder(self)
         elif not self.windows:
-            manager = comics_manage.ComicsManager(self)
-            manager.show()
+            self.on_manage_comics_activated(None)
         else:
             self.set_visibility(not self.visible)
 
@@ -252,39 +290,21 @@ class ComicApplet(awn.AppletSimple):
         self.toggle_feed(widget.data, widget.get_active())
 
     def on_manage_comics_activated(self, widget):
-        manager = comics_manage.ComicsManager(self)
-        manager.show()
+        if self.manager and self.manager.on_screen():
+            self.manager.present()
+        else:
+            self.manager = []
+            self.manager = comics_manage.ComicsManager(self)
+            self.manager.show()
 
     def on_show_about_activated(self, widget):
-        pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(applet_icon, 48, 48)
-
-        win = gtk.AboutDialog()
-        win.set_name(applet_display_name)
-        win.set_copyright('Copyright \xc2\xa9 2008 Moses Palmér')
-        win.set_authors(['Moses Palmér',
-                         'Sharkbaitbobby',
-                         'Mark Lee',
-                         'Kyle L. Huff',
-                         'Gabor Karsay'])
-        win.set_artists(['Moses Palmér'])
-        win.set_comments(_("View your favourite comics on your desktop"))
-        win.set_license("This program is free software; you can redistribute it " +\
-            "and/or modify it under the terms of the GNU General Public License " +\
-            "as published by the Free Software Foundation; either version 2 of " +\
-            "the License, or (at your option) any later version.\n\nThis program is " +\
-            "distributed in the hope that it will be useful, but WITHOUT ANY " +\
-            "WARRANTY; without even the implied warranty of MERCHANTABILITY or " +\
-            "FITNESS FOR A PARTICULAR PURPOSE.    See the GNU General Public " +\
-            "License for more details.\n\nYou should have received a copy of the GNU " +\
-            "General Public License along with this program; if not, write to the " +\
-            "Free Software Foundation, Inc., " +\
-            "51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.")
-        win.set_wrap_license(True)
-        win.set_logo(pixbuf)
-        win.set_icon_from_file(applet_icon)
-        win.set_version(awn.extras.__version__)
-        win.run()
-        win.destroy()
+        if self.about and len(self.about) != 0:
+            self.about.present()
+        else:
+            self.about = []
+            self.about = about_dialog()
+            self.about.run()
+            self.about.destroy()
 
 if __name__ == '__main__':
     # Initialise threading

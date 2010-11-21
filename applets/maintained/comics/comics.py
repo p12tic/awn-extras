@@ -241,6 +241,9 @@ class ComicApplet(awn.AppletSimple):
 
     def on_window_removed(self, widget):
         self.windows.remove(widget)
+        if self.manager:
+            if self.manager.on_screen():
+                self.manager.load_feeds()
 
     def on_destroy(self, widget):
         for window in self.windows:

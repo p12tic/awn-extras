@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-30 22:29+0200\n"
-"PO-Revision-Date: 2010-11-12 12:28+0000\n"
+"PO-Revision-Date: 2010-11-20 15:01+0000\n"
 "Last-Translator: Fedik <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-11-13 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-11-21 04:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -1588,7 +1588,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.py:211
 msgid "large"
-msgstr ""
+msgstr "велике"
 
 #: ../applets/maintained/dialect/dialect.py:213
 msgid "transparent"
@@ -1596,7 +1596,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.py:215
 msgid "opaque"
-msgstr ""
+msgstr "непрозорий"
 
 #: ../applets/maintained/dialect/dialect.py:217
 msgid "System List"
@@ -1608,15 +1608,15 @@ msgstr "Список користувача"
 
 #: ../applets/maintained/dialect/dialect.ui.h:1
 msgid "<b>Flag on Applet Icon</b>"
-msgstr ""
+msgstr "<b>Прапорець іконки аплету</b>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:2
 msgid "<b>Keyboard</b>"
-msgstr ""
+msgstr "<b>Клавіатура</b>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:3
 msgid "<b>Mouse Actions</b>"
-msgstr ""
+msgstr "<b>Дії мишки</b>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:4
 msgid "About Dialect Applet"
@@ -1633,7 +1633,7 @@ msgstr "Змінити розкладку клавіатури з Awn."
 
 #: ../applets/maintained/dialect/dialect.ui.h:7
 msgid "Control"
-msgstr ""
+msgstr "Керування"
 
 #: ../applets/maintained/dialect/dialect.ui.h:8
 msgid "Dialect Applet Preferences"
@@ -1641,11 +1641,11 @@ msgstr "Налаштування аплету Dialect"
 
 #: ../applets/maintained/dialect/dialect.ui.h:9
 msgid "Flag _Opacity:"
-msgstr ""
+msgstr "_Непрозорість прапорця:"
 
 #: ../applets/maintained/dialect/dialect.ui.h:10
 msgid "Flag _Size:"
-msgstr ""
+msgstr "_Розмір прапорця:"
 
 #. A tooltip, layout = keyboard layout
 #: ../applets/maintained/dialect/dialect.ui.h:12
@@ -1657,48 +1657,48 @@ msgstr ""
 #. Keyboard layouts
 #: ../applets/maintained/dialect/dialect.ui.h:14
 msgid "Layouts"
-msgstr ""
+msgstr "Розкладки"
 
 #. A tooltip, layouts = keyboard layouts
 #: ../applets/maintained/dialect/dialect.ui.h:17
 msgid "Selects the hot key combination used to change layouts"
-msgstr ""
+msgstr "Оберіть гарячі клавіші для зміни розкладки клавіатури"
 
 #: ../applets/maintained/dialect/dialect.ui.h:18
 msgid "Show _Flag"
-msgstr ""
+msgstr "Показати _прапорець"
 
 #: ../applets/maintained/dialect/dialect.ui.h:19
 msgid "Show menu with layouts"
-msgstr ""
+msgstr "Показати меню з розкладками"
 
 #: ../applets/maintained/dialect/dialect.ui.h:20
 msgid "Switch to next layout in list"
-msgstr ""
+msgstr "Перейти до наступної розкладки в списку"
 
 #: ../applets/maintained/dialect/dialect.ui.h:21
 msgid "Switch to previous layout in list"
-msgstr ""
+msgstr "Перейти до попередньої розкладки в списку"
 
 #: ../applets/maintained/dialect/dialect.ui.h:22
 msgid "_Add"
-msgstr ""
+msgstr "_Додати"
 
 #: ../applets/maintained/dialect/dialect.ui.h:23
 msgid "_Allow scroll wheel to change layout"
-msgstr ""
+msgstr "_Дозволити зміну розкладки прокручуванням колеса мишки"
 
 #: ../applets/maintained/dialect/dialect.ui.h:24
 msgid "_Keyboard Toggle:"
-msgstr ""
+msgstr "_Перемикання клавіатури:"
 
 #: ../applets/maintained/dialect/dialect.ui.h:25
 msgid "_Left Click:"
-msgstr ""
+msgstr "_Лівий клік:"
 
 #: ../applets/maintained/dialect/dialect.ui.h:26
 msgid "_Middle Click:"
-msgstr ""
+msgstr "_Середній клік:"
 
 #: ../applets/maintained/digital-clock/awn-applet-digital-clock.schema-ini.in.h:1
 msgid "Command to execute when a calendar day is double-clicked."
@@ -1758,7 +1758,7 @@ msgstr "Запустити календар:"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:10
 msgid "Run Time Admin:"
-msgstr ""
+msgstr "Запустити налаштування часу:"
 
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:11
 msgid "Show the date"
@@ -1785,7 +1785,7 @@ msgstr "Цифровий годинник"
 #: ../applets/maintained/digital-clock/digital-clock.vala:311
 #, no-c-format
 msgid "%b %d"
-msgstr ""
+msgstr "%d %b"
 
 #. "Copy Time" menu item
 #: ../applets/maintained/digital-clock/digital-clock.vala:346
@@ -1858,7 +1858,7 @@ msgstr ""
 #: ../applets/maintained/feeds/classes.py:766
 #, python-format
 msgid "Post reply from %s"
-msgstr ""
+msgstr "Відповідь від %s"
 
 #: ../applets/maintained/feeds/classes.py:809
 #: ../applets/maintained/feeds/prefs.py:428
@@ -1880,7 +1880,7 @@ msgstr "Аплет стрічки новин"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:2
 msgid "Monitor web feeds"
-msgstr ""
+msgstr "Перегляд веб стрічок"
 
 #. "Loading feeds..." label
 #: ../applets/maintained/feeds/feeds.py:98
@@ -1913,6 +1913,7 @@ msgid "%s New Item - Feeds Applet"
 msgid_plural "%s New Items - Feeds Applet"
 msgstr[0] "%s Нове повідомлення - Стрічка новин"
 msgstr[1] "%s Нових повідомленнь - Стрічка новин"
+msgstr[2] "%s Нових повідомленнь - Стрічка новин"
 
 #. +Add Feed button
 #: ../applets/maintained/feeds/feeds.py:532
@@ -1931,61 +1932,62 @@ msgstr "Завантаження..."
 #: ../applets/maintained/feeds/feeds.py:628
 #: ../applets/maintained/feeds/feeds.py:787
 msgid "Show this feed's items"
-msgstr ""
+msgstr "Показати повідомлення цієї стрічки"
 
 #: ../applets/maintained/feeds/feeds.py:777
 msgid "Hide this feed's items"
-msgstr ""
+msgstr "Приховати повідомлення цієї стрічки"
 
 #. Create the items
 #: ../applets/maintained/feeds/feeds.py:1033
 #: ../applets/maintained/feeds/prefs.py:359
 msgid "Add Feed"
-msgstr ""
+msgstr "Додати стрічку"
 
 #: ../applets/maintained/feeds/feeds.py:1035
 msgid "Show Only _New Feeds"
-msgstr ""
+msgstr "Показати лише _Нові стрічки"
 
 #: ../applets/maintained/feeds/feeds.py:1038 ../shared/python/awnlib.py:125
 #, python-format
 msgid "_About %s"
-msgstr ""
+msgstr "_Про %s"
 
 #: ../applets/maintained/feeds/feeds.py:1117
 msgid "Applet to monitor web feeds"
-msgstr ""
+msgstr "Аплет перегляду веб стрічок"
 
 #: ../applets/maintained/feeds/feeds.py:1160
 msgid "OPML Import"
-msgstr ""
+msgstr "Імпорт OPML"
 
 #: ../applets/maintained/feeds/feeds.py:1163
 #, python-format
 msgid "Do you want to add %d feed?"
 msgid_plural "Do you want to add %d feeds?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Бажаєте додати стрічку %d ?"
+msgstr[1] "Бажаєте додати стрічки %d ?"
+msgstr[2] "Бажаєте додати  %d  стрічки?"
 
 #: ../applets/maintained/feeds/feeds.py:1191
 #: ../applets/maintained/feeds/feeds.py:1219
 #, python-format
 msgid "Could not open '%s'"
-msgstr ""
+msgstr "Не вдається відкрити '%s'"
 
 #: ../applets/maintained/feeds/feeds.py:1204
 #: ../applets/maintained/feeds/prefs.py:328
 #, python-format
 msgid "Could not save '%s'"
-msgstr ""
+msgstr "Не можу зберегти '%s'"
 
 #: ../applets/maintained/feeds/prefs.py:53
 msgid "Feeds Applet Preferences"
-msgstr ""
+msgstr "Параметри аплету стрічок"
 
 #: ../applets/maintained/feeds/prefs.py:63
 msgid "Feeds"
-msgstr ""
+msgstr "Стрічки"
 
 #: ../applets/maintained/feeds/prefs.py:64
 msgid "Updating"
@@ -1993,11 +1995,11 @@ msgstr "Оновлення"
 
 #: ../applets/maintained/feeds/prefs.py:103
 msgid "_Show website icons"
-msgstr ""
+msgstr "_Показвуати іконки сайтів"
 
 #: ../applets/maintained/feeds/prefs.py:108
 msgid "Show _only new feeds"
-msgstr ""
+msgstr "Показувати _лише нову стрічки"
 
 #. TODO: this position is a little ugly, but I don't know how to do it better.
 #. Import and export buttons (OPML)
@@ -2013,12 +2015,12 @@ msgstr "Експортувати"
 #. Checkbox: Notify for updated feeds
 #: ../applets/maintained/feeds/prefs.py:145
 msgid "_Notify for updated feeds"
-msgstr ""
+msgstr "_Повідомляти про оновлення в стрічках"
 
 #. Checkbox: Update automatically
 #: ../applets/maintained/feeds/prefs.py:151
 msgid "_Update automatically"
-msgstr ""
+msgstr "_Автоматисно оновлювати"
 
 #. Update every [SpinButton] minutes
 #: ../applets/maintained/feeds/prefs.py:157
@@ -2031,7 +2033,7 @@ msgstr " хвилин"
 
 #: ../applets/maintained/feeds/prefs.py:170
 msgid "Keep items unread when updating"
-msgstr ""
+msgstr "Зберігати новину непрочитаною при оновленні"
 
 #: ../applets/maintained/feeds/prefs.py:277
 msgid "Open OPML File"
@@ -2044,7 +2046,7 @@ msgstr "Зберегти OPML файл"
 #. Note: the following string is used as an exmaple filename
 #: ../applets/maintained/feeds/prefs.py:297
 msgid "feeds.opml"
-msgstr ""
+msgstr "feeds.opml"
 
 #: ../applets/maintained/feeds/prefs.py:308
 msgid "Awn Feeds Applet Items"
@@ -2053,7 +2055,7 @@ msgstr ""
 #. Source: label and radio buttons
 #: ../applets/maintained/feeds/prefs.py:363
 msgid "Source:"
-msgstr ""
+msgstr "Джерело:"
 
 #: ../applets/maintained/feeds/prefs.py:373
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:590
@@ -2063,11 +2065,11 @@ msgstr "Пошук"
 
 #: ../applets/maintained/feeds/prefs.py:376
 msgid "You must sign in to a Google service to search for feeds."
-msgstr ""
+msgstr "Потрібно увійти в сервіс Google для пошуку стрічок."
 
 #: ../applets/maintained/feeds/prefs.py:385
 msgid "RSS/Atom"
-msgstr ""
+msgstr "RSS/Atom"
 
 #: ../applets/maintained/feeds/prefs.py:430
 msgid "Timeline"
@@ -2075,12 +2077,12 @@ msgstr "Шкала часу"
 
 #: ../applets/maintained/feeds/prefs.py:435
 msgid "Replies"
-msgstr ""
+msgstr "Відповіді"
 
 #. "Search for" label and entry
 #: ../applets/maintained/feeds/prefs.py:464
 msgid "Search for"
-msgstr ""
+msgstr "Шукати за"
 
 #. URL: label and entry
 #: ../applets/maintained/feeds/prefs.py:478
@@ -2108,12 +2110,12 @@ msgstr "Пароль:"
 
 #: ../applets/maintained/feeds/prefs.py:533
 msgid "Feed search by "
-msgstr ""
+msgstr "Пошук стрічки по "
 
 #. If signed in to Google Reader
 #: ../applets/maintained/feeds/prefs.py:571
 msgid "_Search"
-msgstr ""
+msgstr "_Пошук"
 
 #: ../applets/maintained/feeds/prefs.py:775
 msgid ""
@@ -2139,73 +2141,73 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:2
 msgid "The action to perform on left click"
-msgstr ""
+msgstr "Дія при натисненні лівої кнопки мишки"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:3
 msgid "The action to perform on middle click"
-msgstr ""
+msgstr "Дія при натисненні середньої кнопки мишки"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:4
 msgid "The file browser to use"
-msgstr ""
+msgstr "Переглядач файлів"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:5
 msgid "The path to use on left click"
-msgstr ""
+msgstr "Шлях при натисненні лівої кнопки миші"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:6
 msgid "The path to use on middle click"
-msgstr ""
+msgstr "Шлях при натисненні середньої кнопки миші"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:7
 msgid "Whether or not to display Connect to server"
-msgstr ""
+msgstr "Показувати чи ні пункт \"Підключитись до серверу\""
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:8
 msgid "Whether or not to display bookmarks"
-msgstr ""
+msgstr "Чи показувати закладки"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:9
 msgid "Whether or not to display local drives"
-msgstr ""
+msgstr "Чи показувати локальні диски"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:10
 msgid "Whether or not to display network drives"
-msgstr ""
+msgstr "Чи показувати мережеві диски"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:11
 msgid "Whether or not to display the Filesystem"
-msgstr ""
+msgstr "Чи показувати файлову систему"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:12
 msgid "Whether or not to display the Trash"
-msgstr ""
+msgstr "Чи показувати  кошик"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:13
 msgid "Whether or not to display the computer"
-msgstr ""
+msgstr "Чи показувати Комп'ютер"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:14
 msgid "Whether or not to display the home folder"
-msgstr ""
+msgstr "Чи показувати домашній каталог"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:15
 msgid "Whether or not to focus the location text box"
-msgstr ""
+msgstr "Чи встановлювати фокус на поле адреси"
 
 #: ../applets/maintained/file-browser-launcher/awn-applet-file-browser-launcher.schema-ini.in.h:16
 msgid "Whether or not to open the place when clicked"
-msgstr ""
+msgstr "Чи відкривати розташування при натисненні на нього"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:1
 msgid "A launcher for your file manager"
-msgstr ""
+msgstr "Запуск файлового менеджера"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:2
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:63
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1281
 msgid "File Browser Launcher"
-msgstr ""
+msgstr "Запуск переглядача файлів"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:389
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:572
@@ -2235,7 +2237,7 @@ msgstr "Тека"
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:606
 #, python-format
 msgid "Trash (%d)"
-msgstr ""
+msgstr "Кошик (%d)"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:716
 msgid "DVD Drive"
@@ -2255,7 +2257,7 @@ msgstr "Очистити смітник"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1094
 msgid "Confirm deletion"
-msgstr ""
+msgstr "Підтвердити видалення"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1102
 msgid ""
@@ -2267,33 +2269,33 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1104
 msgid "This action cannot be undone."
-msgstr ""
+msgstr "Цю дію не можна буде скасувати"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1284
 msgid "A customizable launcher for browsing your files."
-msgstr ""
+msgstr "Налаштовуваний запуск переглядача файлів"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:44
 msgid "File Browser Launcher Preferences"
-msgstr ""
+msgstr "Параметри запуску переглядача файлів"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:101
 msgid "File Browser"
-msgstr ""
+msgstr "Переглядач файлів"
 
 #. xdg-open (aka system default)
 #: ../applets/maintained/file-browser-launcher/prefs.py:111
 msgid "System Default"
-msgstr ""
+msgstr "Системний"
 
 #. Last option: custom with an entry for the app name
 #: ../applets/maintained/file-browser-launcher/prefs.py:135
 msgid "Other"
-msgstr ""
+msgstr "Інший"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:171
 msgid "One icon with dialog"
-msgstr ""
+msgstr "Одна іконка з діалогом"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:176
 msgid "One icon with docklet"
@@ -2305,16 +2307,16 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:190
 msgid "Focus text entry"
-msgstr ""
+msgstr "Фокус на текстовому полі"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:199
 msgid "Open place when clicked"
-msgstr ""
+msgstr "Відкривати місце при кліку"
 
 #. Show all places
 #: ../applets/maintained/file-browser-launcher/prefs.py:219
 msgid "Show all places"
-msgstr ""
+msgstr "Показувати всі місця"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:234
 msgid "Home folder"
@@ -2322,11 +2324,11 @@ msgstr "Домашня тека"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:235
 msgid "Mounted local drives"
-msgstr ""
+msgstr "Змонтовані локальні пристрої"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:235
 msgid "Mounted network drives"
-msgstr ""
+msgstr "Змонтовані мережеві пристрої"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:236
 msgid "Connect to server"
@@ -2349,7 +2351,7 @@ msgstr "Відкрити теку"
 #: ../applets/maintained/file-browser-launcher/prefs.py:271
 #: ../applets/maintained/file-browser-launcher/prefs.py:346
 msgid "Nothing"
-msgstr ""
+msgstr "Нічого"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:324
 msgid "Left Click"
@@ -2374,57 +2376,58 @@ msgstr "Сміття"
 #, c-format
 msgid "%u item"
 msgid_plural "%u items"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%u елемент"
+msgstr[1] "%u елементи"
+msgstr[2] "%u елементів"
 
 #: ../applets/maintained/garbage/applet.vala:199
 #, c-format
 msgid "Could not open the trash folder with your file manager: %s"
-msgstr ""
+msgstr "Неможливо відкрити кошик з допомогою вашого файлового менеджера: %s"
 
 #: ../applets/maintained/garbage/applet.vala:215
 msgid "_Empty Trash"
-msgstr ""
+msgstr "_Очистити кошик"
 
 #: ../applets/maintained/garbage/applet.vala:232
 #: ../applets/maintained/garbage/garbage.desktop.in.in.h:1
 msgid "A lightweight, cross-desktop trash applet"
-msgstr ""
+msgstr "Легкий аплет кошика"
 
 #: ../applets/maintained/garbage/applet.vala:247
 #, c-format
 msgid ""
 "Are you sure you want to empty your trash? It currently contains %u item(s)."
-msgstr ""
+msgstr "Дійсно бажаєте очистити кошик? Він містить %u файл(ів)."
 
 #: ../applets/maintained/garbage/applet.vala:356
 #, c-format
 msgid "Could not send the dragged file(s) to the trash: %s"
-msgstr ""
+msgstr "Неможливо відправити файл(и) до кошика: %s"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:1
 msgid ""
 "Enable the confirmation dialog form when one wishes to empty the trash."
-msgstr ""
+msgstr "Запитувати підтвердження перед очищенням кошика."
 
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:2
 msgid "Show the number of items in the trash on top of the icon."
-msgstr ""
+msgstr "Показувати кількість елементів в кошику в вершній частині значка."
 
 #. This is a window title, %s is an applet's name.
 #: ../applets/maintained/garbage/prefs.vala:32 ../shared/python/awnlib.py:374
 #, c-format, python-format
 msgid "%s Preferences"
-msgstr ""
+msgstr "%s Налаштування"
 
 #: ../applets/maintained/garbage/prefs.vala:47
 msgid "Confirm when _emptying the trash"
-msgstr ""
+msgstr "підтвердження при _очищенні кошика"
 
 #: ../applets/maintained/garbage/prefs.vala:52
 msgid "Show the _item count on the icon"
-msgstr ""
+msgstr "Показувати на іконці кількість _елементів"
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:1
@@ -2433,31 +2436,31 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:2
 msgid "For each sensor, whether to show it in main dialog or not."
-msgstr ""
+msgstr "Чи показувати кожен сенсор у вікні діалогу"
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:3
 msgid "High value limit (at which alarm triggers) for each sensor."
-msgstr ""
+msgstr "Верхня межа (при якій спрацьовує попередження) для кожного сенсору"
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:4
 msgid "If enabled, show sensor value(s) as an overlay in the icon."
-msgstr ""
+msgstr "Якщо увімкнено, показує значення сенсора поверх значка."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:5
 msgid "In what row of dialog is the sensor shown."
-msgstr ""
+msgstr "В якому порядку показувати сенсор"
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:6
 msgid "Low value limit (at which alarm triggers) for each sensor."
-msgstr ""
+msgstr "Нижня межа (при якій спрацює попередження) для кожного сенсору"
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:7
 msgid "Sensor ids."
-msgstr ""
+msgstr "ids сенсора."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:8
 msgid "Sensor labels."
-msgstr ""
+msgstr "Підписи сенсорів."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:9
 msgid "Size of value overlay in the icon (0: small, 1: medium, 2: large)."
@@ -2469,7 +2472,7 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:12
 msgid "Timeout between two value updates (in seconds)."
-msgstr ""
+msgstr "Перід оновлення значення (в секундах)"
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:13
 msgid "Whether alarm should trigger at high value limit or not."
@@ -2490,66 +2493,68 @@ msgstr ""
 #: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:2
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:48
 msgid "Hardware Sensors"
-msgstr ""
+msgstr "Сенсори"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:50
 msgid "Applet to show the hardware sensors readouts"
-msgstr ""
+msgstr "Аплет показує значення сенсорів комп'ютера"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:61
 #: ../applets/maintained/weather/weather.ui.h:13
 msgid "Small"
-msgstr ""
+msgstr "Малий"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:61
 #: ../applets/maintained/weather/weather.ui.h:11
 msgid "Medium"
-msgstr ""
+msgstr "Середній"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:61
 #: ../applets/maintained/weather/weather.ui.h:9
 msgid "Large"
-msgstr ""
+msgstr "Великий"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:84
 msgid "Warning from Hardware Sensors: No sensors found"
-msgstr ""
+msgstr "Попередження від Аплету сенсорів: сенсорів не знайдено"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:85
 msgid ""
 "Install one or more of ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock "
 "and restart the applet."
 msgstr ""
+"Встановіть одне або декілька розширень (в залежності від обладняння) ACPI, "
+"HDDTemp, LM-Sensors, nvidia-settings або nvclock та перезапустіть аплет."
 
 #. == Dialog == #
 #. Create main applet dialog showing selected sensors.
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:119
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:14
 msgid "Sensors"
-msgstr ""
+msgstr "Сенсори"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:471
 msgid "Interface"
-msgstr ""
+msgstr "Зовнішній вигляд"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:473
 msgid "Name"
-msgstr ""
+msgstr "Ім'я"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:475
 msgid "Label"
-msgstr ""
+msgstr "Підпис"
 
 #. Set the cell "active" attribute to column_show - retrieve the state
 #. of the toggle button from that column in liststore
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:479
 msgid "In dialog"
-msgstr ""
+msgstr "Показ в діалозі"
 
 #. Add treeview-column to treeview
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:517
 msgid "Sensors displayed in icon"
-msgstr ""
+msgstr "Сенсори показані на іконці"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.py:535
 msgid "properties"
@@ -2561,7 +2566,7 @@ msgstr "<b>Нагадування</b>"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:3
 msgid "<b>Sensor value limits</b>"
-msgstr ""
+msgstr "<b>Значення лімітів</b>"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:4
 #: ../applets/maintained/mail/mail.ui.h:3
@@ -2574,11 +2579,11 @@ msgstr "Додати"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:6
 msgid "Enable high alarm"
-msgstr ""
+msgstr "Увімкнути попередження перевищення"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:7
 msgid "Enable low alarm"
-msgstr ""
+msgstr "Увімкнути попередження при заниженні"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:8
 msgid "Font size:"
@@ -2594,19 +2599,19 @@ msgstr "Видалити"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:12
 msgid "Sensor high value"
-msgstr ""
+msgstr "Верхнє значення сенсора"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:13
 msgid "Sensor low value"
-msgstr ""
+msgstr "Нижнє значення сенсора"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:15
 msgid "Show value in icon"
-msgstr ""
+msgstr "Показувати значення на іконці"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:16
 msgid "Temperature unit:"
-msgstr ""
+msgstr "Одиниця температури:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:17
 msgid "Theme:"
@@ -2655,23 +2660,23 @@ msgstr ""
 
 #: ../applets/maintained/indicator-applet/applet.c:186
 msgid "Me Menu"
-msgstr ""
+msgstr "Моє меню"
 
 #: ../applets/maintained/indicator-applet/applet.c:188
 msgid "Messaging Menu"
-msgstr ""
+msgstr "Меню Повідомлень"
 
 #: ../applets/maintained/indicator-applet/applet.c:190
 msgid "Network Menu"
-msgstr ""
+msgstr "Меню мережі"
 
 #: ../applets/maintained/indicator-applet/applet.c:192
 msgid "Sound Control Menu"
-msgstr ""
+msgstr "Меню звуку"
 
 #: ../applets/maintained/indicator-applet/applet.c:194
 msgid "Other Menus"
-msgstr ""
+msgstr "Інші меню"
 
 #: ../applets/maintained/indicator-applet/applet.c:204
 msgid "Options"
@@ -2691,15 +2696,15 @@ msgstr ""
 
 #: ../applets/maintained/indicator-applet/applet.c:764
 msgid "Me menu"
-msgstr ""
+msgstr "Моє меню"
 
 #: ../applets/maintained/indicator-applet/applet.c:768
 msgid "Messaging menu"
-msgstr ""
+msgstr "Меню повідомлень"
 
 #: ../applets/maintained/indicator-applet/applet.c:772
 msgid "Network menu"
-msgstr ""
+msgstr "Меню мережі"
 
 #: ../applets/maintained/indicator-applet/applet.c:776
 msgid "Indicator Applet Session"
@@ -2707,15 +2712,15 @@ msgstr ""
 
 #: ../applets/maintained/indicator-applet/applet.c:780
 msgid "Sound Menu"
-msgstr ""
+msgstr "Меню звуку"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:1
 msgid "If true, show any other menus"
-msgstr ""
+msgstr "Якщо так, показувати будь яке інше меню"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:2
 msgid "If true, show the Me menu (chat, microblogging, etc)"
-msgstr ""
+msgstr "Якщо так, показувати Моє меню (чат, мікроблог, інше)"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:3
 msgid "If true, show the Messaging icon"
@@ -2723,11 +2728,11 @@ msgstr ""
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:4
 msgid "If true, show the Network menu"
-msgstr ""
+msgstr "Якщо так, показувати меню мережі"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:5
 msgid "If true, show the Sound control menu"
-msgstr ""
+msgstr "Якщо так, показувати меню контролю звуку"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:6
 msgid "If true, show the indicator applet icons"
@@ -2749,11 +2754,11 @@ msgstr ""
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:1
 msgid "Display any network errors"
-msgstr ""
+msgstr "показувати помилки мережі"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:2
 msgid "Hide the icon if there is no new mail"
-msgstr ""
+msgstr "Приховувати іконку якщо відсутні нові повідомлення"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:3
 msgid "The Desktop Email client to use"
@@ -2769,64 +2774,66 @@ msgstr ""
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:6
 msgid "Timeout between two value updates (in minutes)."
-msgstr ""
+msgstr "Період оновленя значень (в хвилинах)"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:7
 msgid "Used for logging in; do not touch"
-msgstr ""
+msgstr "Не змінювати; використовується для входу"
 
 #: ../applets/maintained/mail/mail.desktop.in.h:1
 msgid "Check Your Email from AWN"
-msgstr ""
+msgstr "Перевірка пошти з AWN"
 
 #: ../applets/maintained/mail/mail.desktop.in.h:2
 #: ../applets/maintained/mail/mail.py:136
 #: ../applets/maintained/mail/mail.py:942
 msgid "Mail Applet"
-msgstr ""
+msgstr "Аплет пошти"
 
 #: ../applets/maintained/mail/mail.py:39
 #, python-format
 msgid "You have %d new message"
 msgid_plural "You have %d new messages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "У вас %d нове повідомлення"
+msgstr[1] "У вас %d нових повідомлення"
+msgstr[2] "У вас %d нових повідомлень"
 
 #: ../applets/maintained/mail/mail.py:43
 #, python-format
 msgid "%d unread message"
 msgid_plural "%d unread messages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d непрочитане повідомлення"
+msgstr[1] "%d непрочитаних повідомленнь"
+msgstr[2] "%d непрочитаних повідомленнь"
 
 #: ../applets/maintained/mail/mail.py:76
 msgid "Mail Applet (Click to Log In)"
-msgstr ""
+msgstr "Аплет пошти (клікніть щоб увійти)"
 
 #: ../applets/maintained/mail/mail.py:137
 #, python-format
 msgid "Logging in as %s"
-msgstr ""
+msgstr "Вхід як %s"
 
 #: ../applets/maintained/mail/mail.py:161
 msgid "Network error - Mail Applet"
-msgstr ""
+msgstr "помилка мережі - Аплет пошти"
 
 #: ../applets/maintained/mail/mail.py:170
 msgid "New Mail - Mail Applet"
-msgstr ""
+msgstr "Нова пошта - Аплет пошти"
 
 #: ../applets/maintained/mail/mail.py:274
 msgid "Mail"
-msgstr ""
+msgstr "Пошта"
 
 #: ../applets/maintained/mail/mail.py:310
 msgid "Open Web Mail"
-msgstr ""
+msgstr "Відкрити веб пошту"
 
 #: ../applets/maintained/mail/mail.py:319
 msgid "Open Desktop Client"
-msgstr ""
+msgstr "Відкрити програму перегляду пошти"
 
 #: ../applets/maintained/mail/mail.py:328
 msgid "Refresh"
@@ -2837,11 +2844,11 @@ msgstr "Оновити"
 #: ../applets/maintained/quit/quit.py:58
 #: ../applets/maintained/quit/quit.py:267
 msgid "Log Out"
-msgstr ""
+msgstr "Вийти"
 
 #: ../applets/maintained/mail/mail.py:367
 msgid "No unread messages"
-msgstr ""
+msgstr "Немає непрочитаних листів"
 
 #: ../applets/maintained/mail/mail.py:369
 msgid "No new messages"
@@ -2854,11 +2861,11 @@ msgstr "Неправильний логін чи пароль"
 #: ../applets/maintained/mail/mail.py:416
 #: ../applets/maintained/mail/mail.py:477
 msgid "Log In"
-msgstr ""
+msgstr "Вхід"
 
 #: ../applets/maintained/mail/mail.py:453
 msgid "Type:"
-msgstr ""
+msgstr "Тип:"
 
 #: ../applets/maintained/mail/mail.py:458
 msgid "Backend"
@@ -2867,7 +2874,7 @@ msgstr ""
 #: ../applets/maintained/mail/mail.py:514
 #: ../applets/maintained/mail/mail.py:742
 msgid "Could not log in: No username"
-msgstr ""
+msgstr "Неможливо увійти: не вказано ім'я"
 
 #: ../applets/maintained/mail/mail.py:522
 #: ../applets/maintained/mail/mail.py:592
@@ -2875,6 +2882,8 @@ msgid ""
 "There seem to be problems with our connection to your account. Your best bet "
 "is probably to log out and try again."
 msgstr ""
+"Виникла проблема при вході до Вашого акаунту. Можливо допоможе вийти та "
+"спробувати знову"
 
 #: ../applets/maintained/mail/mail.py:533
 #: ../applets/maintained/mail/mail.py:549
@@ -2883,16 +2892,16 @@ msgstr ""
 #: ../applets/maintained/mail/mail.py:687
 #: ../applets/maintained/mail/mail.py:781
 msgid "[No Subject]"
-msgstr ""
+msgstr "[Тема Не Вказана]"
 
 #: ../applets/maintained/mail/mail.py:535
 #: ../applets/maintained/mail/mail.py:605
 msgid "[Unknown]"
-msgstr ""
+msgstr "[невідомо]"
 
 #: ../applets/maintained/mail/mail.py:571
 msgid "Google Apps"
-msgstr ""
+msgstr "Google Apps"
 
 #: ../applets/maintained/mail/mail.py:583
 msgid "Could not log in: No username or domain"

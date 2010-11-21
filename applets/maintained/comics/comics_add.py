@@ -17,6 +17,7 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
+from __future__ import with_statement
 
 # Libraries used
 import gobject
@@ -27,7 +28,6 @@ import tempfile
 
 # Symbols used
 from awn.extras import _
-from shutil import copyfile
 
 # Local
 from downloader import Downloader
@@ -151,16 +151,45 @@ The URL is not a valid comic feed. Press "next" to try again'''))
             pass
 
         if self.from_list:
-
-            def add_feed(model, path, iterator):
-                self.name = model.get_value(iterator, 0)
-                src = model.get_value(iterator, 1)
+            model, paths = self.sys_list.get_selection().get_selected_rows()
+            for path in paths:
+                self.name = model.get_value(model.get_iter(path), 0)
+                src = model.get_value(model.get_iter(path), 1)
                 filename = USER_FEEDS_DIR + src[len(SYS_FEEDS_DIR):]
-                copyfile(src, filename)
+                with open(src, 'r') as fp:
+                    src_content = fp.read()
+                try:
+                    with open(filename, 'r') as fp:
+                        f = fp.read()
+                except IOError:
+                    f = None
+                if f:
+                    if cmp(src_content, f) == 0:
+                        continue
+                    msg = _("Overwrite comic \"%s\"?") % self.name
+                    sec = _(
+                 "This comic is already installed with different settings.")
+                    dialog = gtk.MessageDialog(parent=self.assistant,
+                                   flags=gtk.DIALOG_DESTROY_WITH_PARENT,
+                                   type=gtk.MESSAGE_WARNING,
+                                   message_format=msg)
+                    dialog.format_secondary_markup(sec)
+                    if path != paths[-1]:
+                        dialog.add_buttons(
+                                       gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
+                    dialog.add_buttons(gtk.STOCK_NO, gtk.RESPONSE_NO,
+                                       gtk.STOCK_YES, gtk.RESPONSE_YES)
+                    response = dialog.run()
+                    dialog.destroy()
+                    if response == gtk.RESPONSE_NO:
+                        continue
+                    if response != gtk.RESPONSE_YES:
+                        return
+                with open(filename, 'w') as fp:
+                    fp.write(src_content)
                 self.feeds.add_feed(filename)
                 self.feeds.update()
                 self.__parent.toggle_feed(self.name, True)
-            self.sys_list.get_selection().selected_foreach(add_feed)
         else:
             self.name = self.ui.get_object('name_entry').get_text()
             f, filename = tempfile.mkstemp('.feed', '', USER_FEEDS_DIR, True)

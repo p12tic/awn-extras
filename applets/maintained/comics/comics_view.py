@@ -156,8 +156,6 @@ class ComicsViewer(ScalableWindow):
                 self.hide()
 
     def close(self):
-        self.emit('removed')
-        self.__settings.delete()
         self.destroy()
 
     def get_menu_item_name(self, item):
@@ -496,7 +494,15 @@ class ComicsViewer(ScalableWindow):
     ########################################################################
 
     def on_destroy(self, widget):
-        self.close()
+        self.emit('removed')
+        self.__settings.delete()
+        if self.__update_id:
+            self.feeds.feeds[self.feed_name].disconnect(self.__update_id)
+            self.__update_id = None
+        if self.__download_id and self.__downloader:
+            self.__downloader.disconnect(self.__download_id)
+            self.__download_id = None
+        del self.__pixbuf
 
     def on_link_clicked(self, widget, e):
         # Start the web browser in another process
@@ -622,7 +628,11 @@ class ComicsViewer(ScalableWindow):
         self.__download_id = None
 
         if not self.__is_error:
-            del self.__pixbuf
+            try:
+                del self.__pixbuf
+            except AttributeError:
+                # Received destroy signal after download was initiated
+                return
             try:
                 self.__pixbuf = gdk.pixbuf_new_from_file(o.filename)
             except gobject.GError:

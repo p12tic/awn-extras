@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-30 22:29+0200\n"
-"PO-Revision-Date: 2010-11-20 15:01+0000\n"
+"PO-Revision-Date: 2010-11-21 15:33+0000\n"
 "Last-Translator: Fedik <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-11-21 04:44+0000\n"
+"X-Launchpad-Export-Date: 2010-11-22 04:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -2922,11 +2922,11 @@ msgstr ""
 #: ../applets/maintained/mail/mail.py:736
 #: ../applets/maintained/mail/mail.py:738
 msgid "Could not log in: "
-msgstr ""
+msgstr "Неможливо увійти: "
 
 #: ../applets/maintained/mail/mail.py:747
 msgid "Could not log in: Username or password incorrect"
-msgstr ""
+msgstr "Неможливо увійти: невірне ім'я чи пароль"
 
 #: ../applets/maintained/mail/mail.py:803
 #: ../applets/maintained/mail/mail.py:897
@@ -2936,11 +2936,11 @@ msgstr "Сервер:"
 #: ../applets/maintained/mail/mail.py:806
 #: ../applets/maintained/mail/mail.py:900
 msgid "Use SSL encryption"
-msgstr ""
+msgstr "Користуватись шифруванням SSL"
 
 #: ../applets/maintained/mail/mail.py:843
 msgid "Could not log in"
-msgstr ""
+msgstr "Неможливо увійти"
 
 #: ../applets/maintained/mail/mail.py:849
 msgid "Folder does not exst"
@@ -2948,7 +2948,7 @@ msgstr "Тека не існує"
 
 #: ../applets/maintained/mail/mail.py:903
 msgid "Get messages from only one folder"
-msgstr ""
+msgstr "Отримати повідомлення лише з однієї папки"
 
 #: ../applets/maintained/mail/mail.py:907
 msgid "Folder:"
@@ -2956,27 +2956,27 @@ msgstr "Тека:"
 
 #: ../applets/maintained/mail/mail.py:945
 msgid "An applet to check one's email"
-msgstr ""
+msgstr "Аплет для перевірки пошти"
 
 #: ../applets/maintained/mail/mail.ui.h:2
 msgid "<b>Mail</b>"
-msgstr ""
+msgstr "<b>Пошта</b>"
 
 #: ../applets/maintained/mail/mail.ui.h:4
 msgid "Update _interval:"
-msgstr ""
+msgstr "Період _перевірки:"
 
 #: ../applets/maintained/mail/mail.ui.h:5
 msgid "_Alert on network errors"
-msgstr ""
+msgstr "_Повідомляти про помилки мережі"
 
 #: ../applets/maintained/mail/mail.ui.h:6
 msgid "_Email client:"
-msgstr ""
+msgstr "_Поштовий клієнт:"
 
 #: ../applets/maintained/mail/mail.ui.h:7
 msgid "_Hide applet if no new messages"
-msgstr ""
+msgstr "_Приховувати аплет коли нема нових листів"
 
 #: ../applets/maintained/mail/mail.ui.h:9
 msgid "minutes"
@@ -2988,7 +2988,7 @@ msgstr ""
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:2
 msgid "Display album art if available."
-msgstr ""
+msgstr "Якщо доступно то показувати обкладинку альбому"
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:3
 msgid "Display docklet instead of standard applet dialog."
@@ -2996,50 +2996,50 @@ msgstr ""
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:4
 msgid "Size of the album art."
-msgstr ""
+msgstr "Розмір обкладинки"
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:5
 msgid "Tooltip format to use."
-msgstr ""
+msgstr "Формат підказки"
 
 #: ../applets/maintained/media-control/media-control.desktop.in.h:1
 msgid "Control your music player"
-msgstr ""
+msgstr "Керування плеєром"
 
 #: ../applets/maintained/media-control/media-control.desktop.in.h:2
 msgid "Media Control"
-msgstr ""
+msgstr "Керування медіа"
 
 #: ../applets/maintained/media-control/media_control.py:51
 #: ../applets/maintained/media-control/media_control.py:653
 msgid "Media Control Applet"
-msgstr ""
+msgstr "Аплет керування медіа програмами"
 
 #. Used in this sentence: Title by Artist from Album
 #: ../applets/maintained/media-control/media_control.py:509
 msgid "by"
-msgstr ""
+msgstr "від"
 
 #. Used in this sentence: Title by Artist from Album
 #: ../applets/maintained/media-control/media_control.py:512
 msgid "from"
-msgstr ""
+msgstr "з"
 
 #: ../applets/maintained/media-control/media_control.py:613
 msgid "Title - Artist"
-msgstr ""
+msgstr "Назва - Виконавець"
 
 #: ../applets/maintained/media-control/media_control.py:613
 msgid "Artist - Title"
-msgstr ""
+msgstr "Виконавець - Назва"
 
 #: ../applets/maintained/media-control/media_control.py:656
 msgid "Controls your favourite music player."
-msgstr ""
+msgstr "Керування Вашим улюбленим музичним плеєром"
 
 #: ../applets/maintained/media-control/media-control.ui.h:2
 msgid "Close docklet when mouse leaves it"
-msgstr ""
+msgstr "Закривати коли мишку відведено в сторону"
 
 #: ../applets/maintained/media-control/media-control.ui.h:3
 msgid "Display _docklet instead of dialog"
@@ -3047,19 +3047,19 @@ msgstr ""
 
 #: ../applets/maintained/media-control/media-control.ui.h:4
 msgid "Media-control preferences"
-msgstr ""
+msgstr "Налаштування керуванням"
 
 #: ../applets/maintained/media-control/media-control.ui.h:5
 msgid "Show _album art when available"
-msgstr ""
+msgstr "Коли доступно показувати обкладинку альбому"
 
 #: ../applets/maintained/media-control/media-control.ui.h:6
 msgid "_Size of the album art:"
-msgstr ""
+msgstr "Розмір обкладинки:"
 
 #: ../applets/maintained/media-control/media-control.ui.h:7
 msgid "_Tooltip format:"
-msgstr ""
+msgstr "Формат підказки:"
 
 #: ../applets/maintained/media-control/media-control.ui.h:8
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:8
@@ -3067,12 +3067,12 @@ msgstr ""
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:44
 #: ../applets/maintained/weather/weather.ui.h:19
 msgid "pixels"
-msgstr ""
+msgstr "пікселі"
 
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:68
 msgid "A media-control applet (Next Track)"
-msgstr ""
+msgstr "Аплет керування медіа (Наступний трек)"
 
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:74
@@ -3082,7 +3082,7 @@ msgstr ""
 #: ../applets/maintained/media-icons/media-icon-previous.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:69
 msgid "A media-control applet (Previous Track)"
-msgstr ""
+msgstr "Аплет керування медіа (Попередній трек)"
 
 #: ../applets/maintained/media-icons/media-icon-previous.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:75
@@ -3092,7 +3092,7 @@ msgstr ""
 #: ../applets/maintained/media-icons/media-icons.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:70
 msgid "A media-control applet (Play/Pause)"
-msgstr ""
+msgstr "Аплет керування медіа (Грати/Пауза)"
 
 #: ../applets/maintained/media-icons/media-icons.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:76
@@ -3101,15 +3101,15 @@ msgstr ""
 
 #: ../applets/maintained/media-icons/media-icons.py:57
 msgid "Next"
-msgstr ""
+msgstr "Наступний"
 
 #: ../applets/maintained/media-icons/media-icons.py:58
 msgid "Previous"
-msgstr ""
+msgstr "Попередній"
 
 #: ../applets/maintained/media-icons/media-icons.py:59
 msgid "Play/Pause"
-msgstr ""
+msgstr "Грати/Пауза"
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:1
 msgid "Audio sink to use."
@@ -3117,11 +3117,11 @@ msgstr ""
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:2
 msgid "Height of the video window."
-msgstr ""
+msgstr "Висота відеовікна"
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:3
 msgid "List of recently played URLs."
-msgstr ""
+msgstr "Список останніх відтворених адрес"
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:4
 msgid "Video sink to use."
@@ -3129,15 +3129,15 @@ msgstr ""
 
 #: ../applets/maintained/media-player/awn-applet-media-player.schema-ini.in.h:5
 msgid "Width of the video window."
-msgstr ""
+msgstr "Ширина відовікна"
 
 #: ../applets/maintained/media-player/media-player.desktop.in.h:1
 msgid "Media Player"
-msgstr ""
+msgstr "Програвач мультимедіа"
 
 #: ../applets/maintained/media-player/media-player.desktop.in.h:2
 msgid "Plays any media files you drop on the applet"
-msgstr ""
+msgstr "Програвання будь яких медіа файлів перетягуванням на аплет"
 
 #. PyGObject doesn't have BOXED support implemented
 #. recent_items = gobject.property(type=gobject.TYPE_BOXED,
@@ -3145,20 +3145,20 @@ msgstr ""
 #: ../applets/maintained/media-player/media_player.py:50
 #: ../applets/maintained/media-player/media_player.py:423
 msgid "Media Player Applet"
-msgstr ""
+msgstr "Аплет медіа програвача"
 
 #. Popup menu
 #: ../applets/maintained/media-player/media_player.py:78
 msgid "Recent items"
-msgstr ""
+msgstr "Останні елементи"
 
 #: ../applets/maintained/media-player/media_player.py:406
 msgid "Please restart the applet to apply changes to sinks."
-msgstr ""
+msgstr "Перезапустіть алет щоб застосувати зміну вигляду"
 
 #: ../applets/maintained/media-player/media_player.py:426
 msgid "Plays any media files you drop on the applet."
-msgstr ""
+msgstr "Відтворення будь яких медіа файлів перетягнувши їх на аплет"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:1
 msgid "<b>GStreamer properties</b>"
@@ -3166,11 +3166,11 @@ msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:2
 msgid "<b>Video size</b>"
-msgstr ""
+msgstr "<b>Розмір відео</b>"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:3
 msgid "Media Player Preferences"
-msgstr ""
+msgstr "Налаштування медіа плеєра"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:4
 msgid "_Audiosink:"
@@ -3178,7 +3178,7 @@ msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:5
 msgid "_Height:"
-msgstr ""
+msgstr "_Висота:"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:6
 msgid "_Videosink:"
@@ -3186,11 +3186,11 @@ msgstr ""
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:7
 msgid "_Width:"
-msgstr ""
+msgstr "_Ширина:"
 
 #: ../applets/maintained/mount/awn-applet-mount.schema-ini.in.h:1
 msgid "Command to execute after mounting a mountpoint."
-msgstr ""
+msgstr "Команда що буде виконана після монтування пристрою"
 
 #: ../applets/maintained/mount/awn-applet-mount.schema-ini.in.h:2
 msgid "List of mountpoints that should remain hidden in the UI."
@@ -3199,29 +3199,29 @@ msgstr ""
 #: ../applets/maintained/mount/mount.desktop.in.h:1
 #: ../applets/maintained/mount/mount.py:31
 msgid "An applet to (un)mount devices"
-msgstr ""
+msgstr "Аплет для монтування/відмонтування пристроїв"
 
 #: ../applets/maintained/mount/mount.desktop.in.h:2
 #: ../applets/maintained/mount/mount.py:30
 msgid "Mount Applet"
-msgstr ""
+msgstr "Аплет монтування"
 
 #: ../applets/maintained/mount/mount.ui.h:2
 #, no-c-format
 msgid "<i><b>Note:</b> use %D for the mountpoint</i>"
-msgstr ""
+msgstr "<i><b>Замітка:</b> використовуйте %D для точки монтування</i>"
 
 #: ../applets/maintained/mount/mount.ui.h:3
 msgid "List of hidden mountpoints, separated by a space"
-msgstr ""
+msgstr "Список прихованих точок монтування, розділених пробілом"
 
 #: ../applets/maintained/mount/mount.ui.h:4
 msgid "_Execute command after successful mount:"
-msgstr ""
+msgstr "Команда після успішного монтування:"
 
 #: ../applets/maintained/mount/mount.ui.h:5
 msgid "_Hidden mountpoints:"
-msgstr ""
+msgstr "приховані точки монтування:"
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:1
 msgid "Extra offset from the panel's egde."
@@ -3235,96 +3235,99 @@ msgstr ""
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:3
 msgid "Size of the icons (in percent of applet size)."
-msgstr ""
+msgstr "Розмір іконки (у відсотках)"
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:4
 msgid "The background color of the notification-area."
-msgstr ""
+msgstr "Колір фону."
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:5
 msgid "The border color of the notification-area."
-msgstr ""
+msgstr "Колір рамки."
 
 #: ../applets/maintained/notification-area/egg-tray-child.c:170
 #, c-format
 msgid "tray icon has requested a size of (%i x %i), resizing to (%i x %i)"
 msgstr ""
+"значок лотка зареєстрований з розмірами (%i x %i), змінюється на (%i x %i)"
 
 #: ../applets/maintained/notification-area/eggtraymanager.c:148
 msgid "Orientation"
-msgstr ""
+msgstr "Розміщення"
 
 #: ../applets/maintained/notification-area/eggtraymanager.c:149
 msgid "The orientation of the tray."
-msgstr ""
+msgstr "Розміщення лотка."
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:2
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:2
 #, no-c-format
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:3
 msgid "<b>Background Color</b>"
-msgstr ""
+msgstr "<b>Колір фону</b>"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:4
 msgid "<b>Border Color</b>"
-msgstr ""
+msgstr "<b>Колір рамки</b>"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:6
 msgid "Automatic"
-msgstr ""
+msgstr "Автоматично"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:7
 msgid "Custom:"
-msgstr ""
+msgstr "Нетипово:"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:8
 msgid "Extra _offset:"
-msgstr ""
+msgstr "Додаткове зміщення:"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:9
 msgid "Icon _size:"
-msgstr ""
+msgstr "Розмір іконки:"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:10
 msgid "Notification Area Preferences"
-msgstr ""
+msgstr "Налаштування області сповіщення"
 
 #: ../applets/maintained/notification-area/na-prefs.ui.h:11
 msgid "_Number of icon rows:"
-msgstr ""
+msgstr "_Кількість рядків на іконці:"
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:1
 msgid "A Notification Area (systray)"
-msgstr ""
+msgstr "Область сповіщення"
 
 #: ../applets/maintained/notification-area/notification-area.desktop.in.in.h:2
 msgid "Notification Area"
-msgstr ""
+msgstr "Область сповіщення"
 
 #: ../applets/maintained/notification-area/notification-area.vala:638
 msgid "There is already another notification area running on this screen!"
-msgstr ""
+msgstr "Інша область сповіщень вже працює на цьому екрані!"
 
 #: ../applets/maintained/notification-area/notification-area.vala:642
 msgid ""
 "Please remove the existing notification area and then restart the applet."
 msgstr ""
+"Будь ласка, видаліть існуючу область сповіщень, та перезапустіть аплет."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:1
 msgid "Background colour in the form (Hex) rrggbbaa"
-msgstr ""
+msgstr "Колір фону з (Hex) rrggbbaa"
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:2
 msgid "Border Width. A value of 0 indicates that is should not be drawn."
-msgstr ""
+msgstr "Товщина рамки. Значення \"0\" вкаже, що нічого не потрібно малювати."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:3
 msgid ""
 "Border colour in the form (Hex) rrggbbaa.  Also use for the timer widget"
 msgstr ""
+"Колір фону з (Hex) rrggbbaa.  Також використовується для віджету часу"
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:4
 msgid ""
@@ -3362,7 +3365,7 @@ msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:9
 msgid "Sound."
-msgstr ""
+msgstr "Звук."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:10
 msgid ""
@@ -3375,6 +3378,8 @@ msgid ""
 "The default sound file used unless a notification supplies the 'sound-file' "
 "or 'suppress-sound' hint. Leave empty for no default sound."
 msgstr ""
+"Використовується типовий звук якщо в повідомленні не вказано параметр 'sound-"
+"file' або 'suppress-sound'. Залиште пустим  щоб вимкнути типовий звук."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:12
 msgid ""

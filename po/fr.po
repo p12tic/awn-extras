@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-30 22:29+0200\n"
-"PO-Revision-Date: 2010-11-24 14:58+0000\n"
-"Last-Translator: computerhelp <Unknown>\n"
+"PO-Revision-Date: 2010-11-25 08:31+0000\n"
+"Last-Translator: Nicolas Delvaux <Unknown>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2010-11-25 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-11-26 04:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Generated-By: pygettext.py 1.5\n"
 
@@ -764,7 +764,7 @@ msgstr "Votre batterie est totalement chargée."
 #: ../applets/maintained/battery/messagehandler.py:174
 #, python-format
 msgid "Your battery is charged to <b>%d%%</b>."
-msgstr ""
+msgstr "Votre batterie est chargée à <b>%d%%</b>."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:1
 msgid "A custom time format (strftime()), used if not empty."

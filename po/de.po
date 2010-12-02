@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-30 22:29+0200\n"
-"PO-Revision-Date: 2010-11-18 23:38+0000\n"
-"Last-Translator: Gabor Karsay <Unknown>\n"
+"PO-Revision-Date: 2010-12-01 20:11+0000\n"
+"Last-Translator: cmdrhenner <cmdrhenner@gmail.com>\n"
 "Language-Team: German <gnome-de@gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-11-20 05:02+0000\n"
+"X-Launchpad-Export-Date: 2010-12-02 04:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -39,8 +39,7 @@ msgstr "Globales Tastenkürzel, um das Terminal zu öffnen"
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:2
 msgid "Set whether the applet should hide itself when it loses focus."
 msgstr ""
-"Bestimmt, ob das Applet ausgeblendet wird, wenn es nicht mehr im Vordergrund "
-"ist."
+"Bestimmt, ob das Applet versteckt werden soll, wenn es den Fokus verliert."
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:3
 msgid "The applet's background image."
@@ -286,7 +285,7 @@ msgstr "Summen-Schnittstelle"
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:81
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:82
 msgid "n/a"
-msgstr ""
+msgstr "n/a"
 
 #. Reset the Multi Interface records to zero
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:76
@@ -425,6 +424,8 @@ msgid ""
 "Applet Size \n"
 "Override"
 msgstr ""
+"Appletgröße\n"
+"ändern"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:6
 msgid "Applet Width"
@@ -482,7 +483,7 @@ msgstr "Nur als Linie darstellen"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:18
 msgid "Icon Font Size"
-msgstr ""
+msgstr "Icon Schriftgröße"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:19
 msgid "If this is checked, the common display unit will be Bytes"
@@ -495,7 +496,7 @@ msgstr "Untere Anzeigeschwelle"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:23
 msgid "Signal Scale"
-msgstr ""
+msgstr "Signal-Skala"
 
 #. Translators: short for "Sum Interface"
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:24
@@ -506,7 +507,7 @@ msgstr "Summe"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:25
 msgid "Traffic Scale"
-msgstr ""
+msgstr "Datenverkehrs-Skala"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:229
 msgid "Device"
@@ -611,7 +612,7 @@ msgstr "Schnittstellen:"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:753
 msgid "Wireless graph type"
-msgstr ""
+msgstr "Drahtlos-Diagrammtyp"
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:1
 msgid "HAL UDI of battery."
@@ -774,7 +775,7 @@ msgstr "_Warnen, wenn der Ladezustand unter diesen Wert fällt:"
 
 #: ../applets/maintained/battery/messagehandler.py:73
 msgid "Battery is running low"
-msgstr ""
+msgstr "Akku-Ladezustand ist niedrig"
 
 #: ../applets/maintained/battery/messagehandler.py:99
 #, python-format
@@ -783,20 +784,20 @@ msgstr "Die restliche Akkulaufzeit beträgt etwa <b>%s</b> (%d %%)."
 
 #: ../applets/maintained/battery/messagehandler.py:130
 msgid "Battery is critically low"
-msgstr ""
+msgstr "Akku-Ladezustand ist kritisch."
 
 #: ../applets/maintained/battery/messagehandler.py:151
 msgid "Battery is charged"
-msgstr ""
+msgstr "Akku ist aufgeladen"
 
 #: ../applets/maintained/battery/messagehandler.py:172
 msgid "Your battery is fully charged."
-msgstr ""
+msgstr "Ihr Akku ist vollständig geladen."
 
 #: ../applets/maintained/battery/messagehandler.py:174
 #, python-format
 msgid "Your battery is charged to <b>%d%%</b>."
-msgstr ""
+msgstr "Ihr Akku ist zu <b>%d %%</b> geladen."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:1
 msgid "A custom time format (strftime()), used if not empty."
@@ -1506,15 +1507,15 @@ msgstr "Unbekannter Befehl: %s"
 #: ../applets/maintained/common-folder/common-folder.desktop.in.h:1
 #: ../applets/maintained/common-folder/common-folder.py:32
 msgid "Common Folder Launcher"
-msgstr ""
+msgstr "Starter für bekannte Ordner"
 
 #: ../applets/maintained/common-folder/common-folder.desktop.in.h:2
 msgid "Launcher for common folders and bookmarks"
-msgstr ""
+msgstr "Starter für bekannte Ordner und für Lesezeichen"
 
 #: ../applets/maintained/common-folder/common-folder.py:33
 msgid "Applet to launch common folders and bookmarks"
-msgstr ""
+msgstr "Applet zum Öffnen von bekannten Ordnern und Lesezeichen"
 
 #: ../applets/maintained/common-folder/common-folder.py:93
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:385
@@ -1625,6 +1626,14 @@ msgid ""
 "<b>System List:</b> The complete list of layouts and variants available. "
 "Select an item and click the add button to include in your user list."
 msgstr ""
+"<b>Benutzerliste:</b> Liste der häufig benutzten Tastaturbelegungen. Die "
+"maximale Anzahl der Belegungen ist beschränkt durch das X11-xkb-System "
+"(derzeit 4). Wählen Sie einen Eintrag und drücken Sie auf »Entfernen«, um "
+"ihn von Ihrer Liste zu löschen. Sie können die Liste durch Ziehen und "
+"Ablegen ordnen.\n"
+"<b>Systemliste:</b> Die vollständige Liste aller verfügbaren "
+"Tastaturbelegungen und Varianten. Wählen Sie einen Eintrag aus und drücken "
+"Sie auf »Hinzufügen«, um ihn in Ihre Benutzerliste aufzunehmen."
 
 #: ../applets/maintained/dialect/dialect.py:209
 msgid "small"
@@ -1716,7 +1725,7 @@ msgstr "_Flagge zeigen"
 
 #: ../applets/maintained/dialect/dialect.ui.h:19
 msgid "Show menu with layouts"
-msgstr ""
+msgstr "Auswahlmenü mit Tastaturbelegungen zeigen"
 
 #: ../applets/maintained/dialect/dialect.ui.h:20
 msgid "Switch to next layout in list"
@@ -3728,6 +3737,7 @@ msgstr "Linksklick-_Aktion:"
 #: ../applets/maintained/related/related.desktop.in.in.h:1
 msgid "Applet displaying related items by talking to Zeitgeist"
 msgstr ""
+"Applet zum Anzeigen von zugehörigen Objekten mithilfe von »Zeitgeist«"
 
 #: ../applets/maintained/related/related.desktop.in.in.h:2
 msgid "Related applet"
@@ -4858,7 +4868,7 @@ msgstr "Audio-_Einstellungen öffnen"
 
 #: ../applets/maintained/volume-control/volume-control.py:379
 msgid "No GStreamer mixer found"
-msgstr ""
+msgstr "Kein GStreamer-Mixer gefunden"
 
 #: ../applets/maintained/volume-control/volume-control.py:385
 msgid "No devices found"

@@ -390,7 +390,12 @@ _get_places_menu (GtkWidget * menu)
     b_path = desktop_agnostic_vfs_file_get_path (b_file);
     b_uri = desktop_agnostic_vfs_file_get_uri (b_file);
 
-    if (b_path)
+    if (b_path && !desktop_agnostic_vfs_file_exists(b_file))
+    {
+      g_object_ref_sink (item);
+      item = NULL;
+    }
+    else if (b_path)
     {
       shell_quoted = g_shell_quote (b_path);
       exec = g_strdup_printf("%s %s", XDG_OPEN,shell_quoted);

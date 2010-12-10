@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Lesser General Public
 # License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import with_statement
+
 import os
 import time
 
@@ -280,7 +282,7 @@ class Prefs(gtk.Window):
         filename = file_chooser.get_filename()
         file_chooser.destroy()
 
-        if filename is None:
+        if response != gtk.RESPONSE_OK:
             return False
 
         self.applet.load_opml(filename)
@@ -297,7 +299,7 @@ class Prefs(gtk.Window):
         filename = file_chooser.get_filename()
         file_chooser.destroy()
 
-        if filename is None:
+        if response != gtk.RESPONSE_OK:
             return False
 
         initial_text = ['<?xml version="1.0" encoding="UTF-8"?>',
@@ -319,9 +321,14 @@ class Prefs(gtk.Window):
                 url = html_safe(feed.url)
                 feeds_text.append(each_text % (title, title, web_url, url))
 
-        fp = open(filename, 'w+')
-        fp.write('\n'.join(initial_text + feeds_text + end_text))
-        fp.close()
+        try:
+            with open(filename, 'w+') as fp:
+                fp.write('\n'.join(initial_text + feeds_text + end_text))
+        except IOError, e:
+            dialog = classes.ErrorDialog(self, _("Could not save '%s'") % filename, e)
+            dialog.run()
+            dialog.destroy()
+
 
 class AddFeed(gtk.Window):
     prefs = None

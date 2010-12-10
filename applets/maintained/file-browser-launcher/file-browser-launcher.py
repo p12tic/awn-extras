@@ -564,7 +564,7 @@ class App(awn.Applet):
         #Check if this path hasn't been used already
         if path not in self.paths and path.rstrip('/') != os.environ['HOME'].rstrip('/'):
           #Check if this is a path on the filesystem
-          if path[0] == '/':
+          if len(path) > 0 and path[0] == '/':
             if os.path.isdir(path):
               #If the user did not rename the bookmark - get the name from
               #the folder name (/media/Lexar -> Lexar)
@@ -603,7 +603,7 @@ class App(awn.Applet):
     if self.show_trash:
       count = self.trash.props.file_count
       if count > 0:
-        self.place('user-trash-full', _("Trash (%d)" % count), 'trash:///')
+        self.place('user-trash-full', _("Trash (%d)") % count, 'trash:///')
 
       else:
         self.place('user-trash', _("Trash"), 'trash:///')

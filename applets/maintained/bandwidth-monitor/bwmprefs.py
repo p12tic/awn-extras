@@ -47,8 +47,8 @@ class Preferences:
                 muti_include, '', '', '#ff0000', '#ffff00'])
         ifaces = self.parent.netstats.ifaces
         for iface in sorted(self.parent.netstats.ifaces):
-            if not 'Multi Interface' in iface \
-            and not 'Sum Interface' in iface and \
+            if not _('Multi Interface') in iface \
+            and not _('Sum Interface') in iface and \
             not iface in prefs.__str__():
                 sum_include = True if ifaces[iface]['sum_include'] \
                     else False
@@ -125,6 +125,7 @@ class Preferences:
         widthSpinButton = prefs_ui.get_object('appletWidthSpinButton')
         widthSpinButton.set_value(
             float(self.applet.settings['applet_width']))
+
         def adjust_applet_width(adj):
             self.applet.settings['applet_width'] = adj.get_value()
         widthSpinButton.connect('value-changed', adjust_applet_width)
@@ -132,6 +133,7 @@ class Preferences:
         fontSizeSpinButton = prefs_ui.get_object('appletFontSizeSpinButton')
         fontSizeSpinButton.set_value(
             float(self.applet.settings['applet_font_size']))
+
         def adjust_applet_font(adj):
             self.applet.settings['applet_font_size'] = adj.get_value()
         fontSizeSpinButton.connect('value-changed', adjust_applet_font)
@@ -139,6 +141,7 @@ class Preferences:
         appletTrafficScaleSB = prefs_ui.get_object('appletTrafficScaleSpinButton')
         appletTrafficScaleSB.set_value(
             self.applet.settings['applet_traffic_scale'])
+
         def adjust_applet_traffic_scale(adj):
             self.applet.settings['applet_traffic_scale'] = adj.get_value()
         appletTrafficScaleSB.connect('value-changed', adjust_applet_traffic_scale)
@@ -146,6 +149,7 @@ class Preferences:
         appletSignalScaleSB = prefs_ui.get_object('appletSignalScaleSpinButton')
         appletSignalScaleSB.set_value(
             self.applet.settings['applet_signal_scale'])
+
         def adjust_applet_signal_scale(adj):
             self.applet.settings['applet_signal_scale'] = adj.get_value()
         appletSignalScaleSB.connect('value-changed', adjust_applet_signal_scale)
@@ -153,6 +157,7 @@ class Preferences:
         dialogTrafficScaleSB = prefs_ui.get_object('dialogTrafficScaleSpinButton')
         dialogTrafficScaleSB.set_value(
             self.applet.settings['dialog_traffic_scale'])
+
         def adjust_dialog_traffic_scale(adj):
             self.applet.settings['dialog_traffic_scale'] = adj.get_value()
         dialogTrafficScaleSB.connect('value-changed', adjust_dialog_traffic_scale)
@@ -160,6 +165,7 @@ class Preferences:
         dialogSignalScaleSB = prefs_ui.get_object('dialogSignalScaleSpinButton')
         dialogSignalScaleSB.set_value(
             self.applet.settings['dialog_signal_scale'])
+
         def adjust_dialog_signal_scale(adj):
             self.applet.settings['dialog_signal_scale'] = adj.get_value()
         dialogSignalScaleSB.connect('value-changed', adjust_dialog_signal_scale)
@@ -167,6 +173,7 @@ class Preferences:
         appletSizeSB = prefs_ui.get_object('appletSizeSpinButton')
         appletSizeSB.set_value(
             self.applet.settings['applet_size_override'])
+
         def adjust_applet_size_override(adj):
             self.applet.settings['applet_size_override'] = adj.get_value()
             self.applet.props.size = self.parent.original_size + adj.get_value()
@@ -175,12 +182,13 @@ class Preferences:
         appletOffsetSB = prefs_ui.get_object('appletOffsetSpinButton')
         appletOffsetSB.set_value(
             self.applet.settings['applet_offset'])
+
         def adjust_applet_offset(adj):
             self.applet.settings['applet_offset'] = adj.get_value()
             self.applet.props.offset = self.parent.original_applet_offset + \
                 adj.get_value()
         appletOffsetSB.connect('value-changed', adjust_applet_offset)
-        
+
         prefs_ui.get_object('dialog-notebook').reparent(preferences_vbox)
 
     def displayGraphbutton_cb(self, widget):

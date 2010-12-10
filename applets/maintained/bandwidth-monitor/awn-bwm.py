@@ -53,13 +53,13 @@ class Netstat:
     def __init__(self, parent, unit):
         self.parent = parent
         self.ifaces = {}
-        self.ifaces['Sum Interface'] = {'collection_time': 0,
+        self.ifaces[_('Sum Interface')] = {'collection_time': 0,
             'status': 'V',
             'prbytes': 0,
             'ptbytes': 0,
             'index': 1,
-            'address': 'n/a',
-            'subnet': 'n/a',
+            'address': _('n/a'),
+            'subnet': _('n/a'),
             'rx_history': range(0, 25),
             'tx_history': range(0, 25),
             'rx_bytes': 0,
@@ -73,13 +73,13 @@ class Netstat:
             'multi_include': False,
             'upload_color': '#ff0000',
             'download_color': '#ffff00'}
-        self.ifaces['Multi Interface'] = {'collection_time': 0,
+        self.ifaces[_('Multi Interface')] = {'collection_time': 0,
             'status': 'V',
             'prbytes': 0,
             'ptbytes': 0,
             'index': 1,
-            'address': 'n/a',
-            'subnet': 'n/a',
+            'address': _('n/a'),
+            'subnet': _('n/a'),
             'rx_history': range(0, 25),
             'tx_history': range(0, 25),
             'rx_bytes': 0,
@@ -123,23 +123,23 @@ class Netstat:
         wireless_devices = self.get_wireless_devices()
 
         # Reset the Sum Interface records to zero
-        self.ifaces['Sum Interface']['rx_sum'] = 0
-        self.ifaces['Sum Interface']['tx_sum'] = 0
-        self.ifaces['Sum Interface']['rx_bytes'] = 0
-        self.ifaces['Sum Interface']['tx_bytes'] = 0
+        self.ifaces[_('Sum Interface')]['rx_sum'] = 0
+        self.ifaces[_('Sum Interface')]['tx_sum'] = 0
+        self.ifaces[_('Sum Interface')]['rx_bytes'] = 0
+        self.ifaces[_('Sum Interface')]['tx_bytes'] = 0
         sum_rx_history = 0.0
         sum_tx_history = 0.0
         # Reset the Multi Interface records to zero
-        self.ifaces['Multi Interface']['rx_sum'] = 0
-        self.ifaces['Multi Interface']['tx_sum'] = 0
-        self.ifaces['Multi Interface']['rx_bytes'] = 0
-        self.ifaces['Multi Interface']['tx_bytes'] = 0
+        self.ifaces[_('Multi Interface')]['rx_sum'] = 0
+        self.ifaces[_('Multi Interface')]['tx_sum'] = 0
+        self.ifaces[_('Multi Interface')]['rx_bytes'] = 0
+        self.ifaces[_('Multi Interface')]['tx_bytes'] = 0
         multi_rx_history = 0.0
         multi_tx_history = 0.0
         #TODO: Change this variable name - it is not an offset,
         #   that is a poor name. this variable controls the size
         #   of the list that contains the throughput data
-        offset = 800 #self.parent.meter_scale
+        offset = 800  # self.parent.meter_scale
         if netlist:
             for device in netlist:
                 device_lines = gtop.netload(device).dict()
@@ -192,17 +192,17 @@ class Netstat:
                 self.ifaces[iface]['subnet'] = subnet
                 rxtx_sum = rx_bytes + tx_bytes
                 if self.ifaces[iface]['sum_include']:
-                    self.ifaces['Sum Interface']['rx_sum'] += rx_bytes
-                    self.ifaces['Sum Interface']['tx_sum'] += tx_bytes
-                    self.ifaces['Sum Interface']['rx_bytes'] += rbytes
-                    self.ifaces['Sum Interface']['tx_bytes'] += tbytes
+                    self.ifaces[_('Sum Interface')]['rx_sum'] += rx_bytes
+                    self.ifaces[_('Sum Interface')]['tx_sum'] += tx_bytes
+                    self.ifaces[_('Sum Interface')]['rx_bytes'] += rbytes
+                    self.ifaces[_('Sum Interface')]['tx_bytes'] += tbytes
                     sum_rx_history += rabytes
                     sum_tx_history += tabytes
                 if self.ifaces[iface]['multi_include']:
-                    self.ifaces['Multi Interface']['rx_sum'] += rx_bytes
-                    self.ifaces['Multi Interface']['tx_sum'] += tx_bytes
-                    self.ifaces['Multi Interface']['rx_bytes'] += rbytes
-                    self.ifaces['Multi Interface']['tx_bytes'] += tbytes
+                    self.ifaces[_('Multi Interface')]['rx_sum'] += rx_bytes
+                    self.ifaces[_('Multi Interface')]['tx_sum'] += tx_bytes
+                    self.ifaces[_('Multi Interface')]['rx_bytes'] += rbytes
+                    self.ifaces[_('Multi Interface')]['tx_bytes'] += tbytes
                     multi_rx_history += rabytes
                     multi_tx_history += tabytes
                 self.ifaces[iface]['rx_bytes'] = rbytes
@@ -237,15 +237,15 @@ class Netstat:
                 self.ifaces[iface]['tx_history'].append(
                     self.ifaces[iface]['tabytes'])
                 devices[iface] = 1
-        self.ifaces['Sum Interface']['rx_history'] = \
-            self.ifaces['Sum Interface']['rx_history'][0 - offset:]
-        self.ifaces['Sum Interface']['rx_history'].append(sum_rx_history)
-        self.ifaces['Sum Interface']['tx_history'] = \
-            self.ifaces['Sum Interface']['tx_history'][0 - offset:]
-        self.ifaces['Sum Interface']['tx_history'].append(sum_tx_history)
+        self.ifaces[_('Sum Interface')]['rx_history'] = \
+            self.ifaces[_('Sum Interface')]['rx_history'][0 - offset:]
+        self.ifaces[_('Sum Interface')]['rx_history'].append(sum_rx_history)
+        self.ifaces[_('Sum Interface')]['tx_history'] = \
+            self.ifaces[_('Sum Interface')]['tx_history'][0 - offset:]
+        self.ifaces[_('Sum Interface')]['tx_history'].append(sum_tx_history)
         for dev in self.ifaces.keys():
-            if not dev in devices.keys() and not 'Sum Interface' in dev \
-            and not 'Multi Interface' in dev:
+            if not dev in devices.keys() and not _('Sum Interface') in dev \
+            and not _('Multi Interface') in dev:
                 ''' The device does not exist, remove it.
                     del dictionary[key] is faster than dictionary.pop(key) '''
                 del self.ifaces[dev]
@@ -267,7 +267,7 @@ class AppletBandwidthMonitor:
         self.max_rx_lbl_x = 0
 
         height = self.applet.get_size()
-        
+
         if height != icon.get_height():
             icon = icon.scale_simple(1, \
                 1, gtk.gdk.INTERP_BILINEAR)
@@ -391,7 +391,7 @@ class AppletBandwidthMonitor:
         menu = self.applet.dialog.menu
         menu_index = len(menu) - 1
 
-        self.context_menu_unit = gtk.CheckMenuItem(label='Use KBps instead of Kbps')
+        self.context_menu_unit = gtk.CheckMenuItem(label=_('Use KBps instead of Kbps'))
         if self.unit == 1:
             self.context_menu_unit.set_active(True)
 
@@ -443,7 +443,7 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
     def draw_wireless(self, ct, width, height, iface, scale,
           graph_source='applet'):
         try:
-            force = ((width / (width/scale))) - scale
+            force = ((width / (width / scale))) - scale
         except:
             force = 0
         graph_type = "bar"
@@ -463,12 +463,12 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
         if iface in self.netstats.ifaces \
         and 'ss_history' in self.netstats.ifaces[iface] \
         and len(self.netstats.ifaces[iface]['ss_history']):
-            _ss_hist = self.netstats.ifaces[iface]['ss_history'][inverse_scale : ]
+            _ss_hist = self.netstats.ifaces[iface]['ss_history'][inverse_scale:]
             _total_hist.extend(_ss_hist)
             _total_hist.sort()
             max_ss = _total_hist[-1]
             ct.move_to(0, 0)
-            for value in self.netstats.ifaces[iface]['ss_history'][inverse_scale : ]:
+            for value in self.netstats.ifaces[iface]['ss_history'][inverse_scale:]:
                 if int(value) == 0:
                     value = 200
                 else:
@@ -537,7 +537,7 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
     def draw_meter(self, ct, width, height, iface, multi=False, line_width=2,
             ratio=None, scale=4, border=None, graph_source='applet'):
         try:
-            force = ((width / (width/scale))) - scale
+            force = ((width / (width / scale))) - scale
         except:
             force = 0
         scale += force
@@ -556,20 +556,20 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
         if not multi:
             if iface in self.netstats.ifaces \
             and len(self.netstats.ifaces[iface]['rx_history']):
-                _rx_hist = self.netstats.ifaces[iface]['rx_history'][inverse_scale : ]
+                _rx_hist = self.netstats.ifaces[iface]['rx_history'][inverse_scale:]
             if iface in self.netstats.ifaces \
             and len(self.netstats.ifaces[iface]['tx_history']):
-                _tx_hist = self.netstats.ifaces[iface]['tx_history'][inverse_scale : ]
+                _tx_hist = self.netstats.ifaces[iface]['tx_history'][inverse_scale:]
             _total_hist.extend(_rx_hist)
             _total_hist.extend(_tx_hist)
         else:
             for device in self.netstats.ifaces:
                 if self.netstats.ifaces[device]['multi_include']:
                     _total_hist.extend(
-                        self.netstats.ifaces[device]['rx_history'][inverse_scale : ])
+                        self.netstats.ifaces[device]['rx_history'][inverse_scale:])
                 if self.netstats.ifaces[iface]['multi_include']:
                     _total_hist.extend(
-                        self.netstats.ifaces[device]['tx_history'][inverse_scale : ])
+                        self.netstats.ifaces[device]['tx_history'][inverse_scale:])
         _total_hist.sort()
         ''' ratio variable controls the minimum threshold for data -
             i.e. 32000 would not draw graphs for data transfers below
@@ -594,10 +594,10 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
         if iface in self.netstats.ifaces \
         and len(self.netstats.ifaces[iface]['tx_history']):
             _temp_hist = []
-            _temp_hist.extend(self.netstats.ifaces[iface]['tx_history'][inverse_scale : ])
+            _temp_hist.extend(self.netstats.ifaces[iface]['tx_history'][inverse_scale:])
             _temp_hist.sort()
             max_tx = _temp_hist[-1]
-            for value in self.netstats.ifaces[iface]['tx_history'][inverse_scale : ]:
+            for value in self.netstats.ifaces[iface]['tx_history'][inverse_scale:]:
                 x_pos_end = (x_pos - width) + 2 if border \
                 and x_pos > width else 0
                 placement = self.chart_coords(value,
@@ -655,10 +655,10 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
         if iface in self.netstats.ifaces \
         and len(self.netstats.ifaces[iface]['rx_history']):
             _temp_hist = []
-            _temp_hist.extend(self.netstats.ifaces[iface]['rx_history'][inverse_scale : ])
+            _temp_hist.extend(self.netstats.ifaces[iface]['rx_history'][inverse_scale:])
             _temp_hist.sort()
             max_rx = _temp_hist[-1]
-            for value in self.netstats.ifaces[iface]['rx_history'][inverse_scale : ]:
+            for value in self.netstats.ifaces[iface]['rx_history'][inverse_scale:]:
                 x_pos_end = (x_pos - width) + 2 if border \
                 and x_pos > width else 0
                 placement = self.chart_coords(value,
@@ -745,7 +745,7 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                 int(width + 1))
         else:
             cs = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(width) + 1,
-                applet_size + 1)            
+                applet_size + 1)
 
         if self.applet.settings['applet_font_size']:
             self.default_font_size = self.applet.settings['applet_font_size']
@@ -780,14 +780,14 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                 float(alpha))
             self.draw_background(ct, 0, 0, width + 1, applet_size + 1, 4)
             ct.fill()
-        if self.iface == 'Multi Interface' and self.display_graph:
+        if self.iface == _('Multi Interface') and self.display_graph:
             tmp_history = [1]
             for iface in self.netstats.ifaces:
                 if self.netstats.ifaces[iface]['multi_include']:
                     tmp_history.extend(
-                        self.netstats.ifaces[iface]['rx_history'][inverse_scale : ])
+                        self.netstats.ifaces[iface]['rx_history'][inverse_scale:])
                     tmp_history.extend(
-                        self.netstats.ifaces[iface]['tx_history'][inverse_scale : ])
+                        self.netstats.ifaces[iface]['tx_history'][inverse_scale:])
             tmp_history.sort()
             max_val = tmp_history[-1]
             self.ratio = max_val / 28 if max_val > self.ratio else 1
@@ -802,7 +802,7 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                         wscale = int(self.applet.settings['applet_signal_scale'] * self.applet.settings['applet_width'])
                     else:
                         wscale = int(5 * self.applet.settings['applet_width'])
-                    self.draw_wireless(ct, 
+                    self.draw_wireless(ct,
                         width,
                         applet_size,
                         self.iface,
@@ -877,8 +877,8 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
         ''' readable_speed_ps(speed) -> string
             speed is in bytes per second
             returns a readable version of the speed given '''
-        units = ['Bps', 'KBps', 'MBps', 'GBps', 'TBps'] if unit == 1 \
-        else ['bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps']
+        units = [_('Bps'), _('KBps'), _('MBps'), _('GBps'), _('TBps')] if unit == 1 \
+        else [_('bps'), _('Kbps'), _('Mbps'), _('Gbps'), _('Tbps')]
         step = 1.0
         for u in units:
             if step > 1:

@@ -49,7 +49,7 @@ struct _CairoMenuAppletPrivate {
 };
 
 
-static gchar * gnome_run_cmds[] = { "gnome-do","grun","gmrun","gnome-launch-box",
+static gchar * gnome_run_cmds[] = { "synapse","gnome-do","kupfer","grun","gmrun","gnome-launch-box",
                           "gnome-panel-control --run-dialog","xfrun4",NULL};
 
 static gchar * gnome_search_cmds[] = { "tracker-search-tool","gnome-do","gnome-search-tool",NULL};

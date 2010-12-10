@@ -1,13 +1,8 @@
 #!/usr/bin/make -f
-
-#######################################
-#                                     #
-#                                     #
-# DONT EDIT ME ! EDIT rules.autoppa   #
-#                                     #
-#                                     #
-#######################################
 #DH_VERBOSE=1
+
+DISTRO = "$(shell lsb_release -si)"
+NUM = "$(shell lsb_release -sr)"
 
 include /usr/share/quilt/quilt.make
 
@@ -15,9 +10,18 @@ configure_flags += \
 		--prefix=/usr \
 		--disable-pymod-checks \
 		--with-gconf-schema-file-dir=/etc/gconf/schemas \
-		--with-indicator \
 		--with-webkit
-		
+
+ifeq ($(NUM),"10.04")
+configure_flags += --with-indicator
+endif
+ifeq ($(NUM),"10.10")
+configure_flags += --with-indicator
+endif
+ifeq ($(NUM),"11.04")
+configure_flags += --with-indicator
+endif
+
 override_dh_install:
 	#Remove CHANGELOG,LGPL, AUTHORS, README, COPYING, .la, .a, pyo and pyc files.
 	find $(CURDIR)/debian/tmp/usr/lib/ -name *.a |xargs rm
@@ -40,8 +44,37 @@ override_dh_install:
 		rm -f $(CURDIR)/debian/tmp/etc/gconf/schemas/awn-applet-$${applet}.schemas; \
 		rm -f $(CURDIR)/debian/tmp/usr/share/avant-window-navigator/schemas/awn-applet-$${applet}.schema-ini; \
 	done
-	
-	dh_install --fail-missing
+
+ifeq ($(NUM),"10.04")
+	dh_install -pawn-applets-c-core-trunk usr/lib/awn/applets/related/*.so 
+	dh_install -pawn-applets-c-core-trunk usr/share/avant-window-navigator/applets/related.desktop 
+	dh_install -pawn-applets-c-core-trunk usr/share/icons/hicolor/scalable/apps/zeitgeist-logo.svg
+	dh_install -pawn-applets-c-core-trunk usr/lib/awn/applets/indicator-applet/indicator-applet.so
+	dh_install -pawn-applets-c-core-trunk usr/share/avant-window-navigator/applets/indicator-applet.desktop
+	dh_install -pawn-applets-c-core-trunk etc/gconf/schemas/awn-applet-indicator-applet.schemas
+	dh_install -pawn-applets-c-core-trunk usr/share/avant-window-navigator/schemas/awn-applet-indicator-applet.schema-ini
+endif
+
+ifeq ($(NUM),"10.10")
+	dh_install -pawn-applets-c-core-trunk usr/lib/awn/applets/related/*.so 
+	dh_install -pawn-applets-c-core-trunk usr/share/avant-window-navigator/applets/related.desktop 
+	dh_install -pawn-applets-c-core-trunk usr/share/icons/hicolor/scalable/apps/zeitgeist-logo.svg
+	dh_install -pawn-applets-c-core-trunk usr/lib/awn/applets/indicator-applet/indicator-applet.so
+	dh_install -pawn-applets-c-core-trunk usr/share/avant-window-navigator/applets/indicator-applet.desktop
+	dh_install -pawn-applets-c-core-trunk etc/gconf/schemas/awn-applet-indicator-applet.schemas
+	dh_install -pawn-applets-c-core-trunk usr/share/avant-window-navigator/schemas/awn-applet-indicator-applet.schema-ini
+endif
+
+ifeq ($(NUM),"11.04")
+	dh_install -pawn-applets-c-core-trunk usr/lib/awn/applets/related/*.so 
+	dh_install -pawn-applets-c-core-trunk usr/share/avant-window-navigator/applets/related.desktop 
+	dh_install -pawn-applets-c-core-trunk usr/share/icons/hicolor/scalable/apps/zeitgeist-logo.svg
+	dh_install -pawn-applets-c-core-trunk usr/lib/awn/applets/indicator-applet/indicator-applet.so
+	dh_install -pawn-applets-c-core-trunk usr/share/avant-window-navigator/applets/indicator-applet.desktop
+	dh_install -pawn-applets-c-core-trunk etc/gconf/schemas/awn-applet-indicator-applet.schemas
+	dh_install -pawn-applets-c-core-trunk usr/share/avant-window-navigator/schemas/awn-applet-indicator-applet.schema-ini
+endif
+	dh_install --list-missing
 
 build: build-stamp
 build-stamp: $(QUILT_STAMPFN)

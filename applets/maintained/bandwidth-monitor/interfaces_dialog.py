@@ -187,7 +187,7 @@ class InterfaceGraph(gtk.DrawingArea):
                         pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(os.path.join(ICON_DIR, icon_name), icon_size, icon_size)
                         signal = self.__parent.netstats.ifaces[iface]['signal']
                         ssid = None
-                        self.__parent.draw_wireless(context, 
+                        self.__parent.draw_wireless(context,
                             self.width,
                             self.height,
                             self.interface,
@@ -203,11 +203,13 @@ class InterfaceGraph(gtk.DrawingArea):
                                 context.set_line_width(3)
                                 context.move_to(6, 45)
                                 context.set_source_rgba(0, 0, 0)
-                                context.text_path('SSID: %s' % ssid)
+                                # Translators: do not translate, just add spacing before colon,
+                                # if your locale requires it
+                                context.text_path('%s %s' % (_('SSID:'), ssid))
                                 context.stroke()
                                 context.set_source_rgba(1, 1, 1)
                                 context.move_to(6, 45)
-                                context.show_text('SSID: %s' % ssid)
+                                context.show_text('%s %s' % (_('SSID:'), ssid))
                                 context.fill()
                     if not 'signal' in self.__parent.netstats.ifaces[iface] and \
                         not self.__parent.netstats.ifaces[iface]['status'] == 'V' and \
@@ -243,10 +245,10 @@ class InterfaceGraph(gtk.DrawingArea):
                         gtop.NETLOAD_IF_FLAGS_LOOPBACK & self.__parent.netstats.ifaces[iface]['status']:
                         icon_size = 24
                         pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(os.path.join(ICON_DIR, 'loopback.png'), icon_size, icon_size)
-                    if iface == 'Multi Interface':
+                    if iface == _('Multi Interface'):
                         icon_size = 24
                         pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(os.path.join(ICON_DIR, 'multi.png'), icon_size, icon_size + 5)
-                    if iface == 'Sum Interface':
+                    if iface == _('Sum Interface'):
                         icon_size = 24
                         pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(os.path.join(ICON_DIR, 'sum.png'), icon_size, icon_size)
                     if 'tun' in iface or 'tap' in iface:
@@ -271,18 +273,22 @@ class InterfaceGraph(gtk.DrawingArea):
                 context.set_line_width(3)
                 context.move_to(8 + icon_size, 20)
                 context.set_source_rgba(0, 0, 0)
-                context.text_path(self.__parent.iface)
+                context.text_path(_(self.__parent.iface))
                 context.stroke()
                 context.set_source_rgba(1, 1, 1)
                 context.move_to(8 + icon_size, 20)
-                context.show_text(self.__parent.iface)
+                context.show_text(_(self.__parent.iface))
                 context.set_font_size(14.0)
-                tx_label = 'TX: %s' % self.__parent.readable_speed_ps(
+                # Translators: do not translate, just add spacing before colon,
+                # if your locale requires it
+                tx_label = '%s %s' % (_('TX:'), self.__parent.readable_speed_ps(
                     self.__parent.netstats.ifaces[self.interface]['tx_bytes'],
-                        self.__parent.unit)
-                rx_label = 'RX: %s' % self.__parent.readable_speed_ps(
+                        self.__parent.unit))
+                # Translators: do not translate, just add spacing before colon,
+                # if your locale requires it
+                rx_label = '%s %s' % (_('RX:'), self.__parent.readable_speed_ps(
                     self.__parent.netstats.ifaces[self.interface]['rx_bytes'],
-                        self.__parent.unit)
+                        self.__parent.unit))
                 context.move_to(self.width - 100, 15)
                 context.set_source_rgba(0, 0, 0)
                 context.text_path(tx_label)
@@ -380,7 +386,13 @@ class InterfaceGraph(gtk.DrawingArea):
                     text_xpos = -4
                 context.set_source_rgba(1, 1, 1)
 
-                iface_name = self.interface.split(' ')[0]
+                iface_name = self.interface
+                if iface_name == _('Sum Interface'):
+                    # Translators: short for "Sum Interface"
+                    iface_name = _('Sum')
+                if iface_name == _('Multi Interface'):
+                    # Translators: short for "Multi Interface"
+                    iface_name = _('Multi')
                 text_xpos = self.width / 3 - 20
                 context.move_to(text_xpos, self.height - self.height / 2)
                 context.show_text(iface_name)
@@ -396,7 +408,7 @@ class InterfaceGraph(gtk.DrawingArea):
                 traffic_scale = 24
                 signal_scale = 24
             context.set_font_size(12.0)
-            multi = True if self.interface == 'Multi Interface' else False
+            multi = True if self.interface == _('Multi Interface') else False
             if multi:
                 tmp_history = [1]
                 for iface in self.__parent.netstats.ifaces:
@@ -655,25 +667,27 @@ class InterfaceOptionsDialog(gtk.Fixed):
         self.__parent.interface_dialog.interfaceDialog.connect('focus_out_event', keep_open)
 
         if iface in ifaces:
-            fields = [('status', _('Status')), ('address', _('IP Address')), ('subnet', _('Subnet Mask'))]
+            fields = [('status', _('Status:')), ('address', _('IP Address:')), ('subnet', _('Subnet Mask:'))]
             y_pos = 10
             for field in fields:
                 if field[0] == 'status':
-                    lbl_text = '%s: ' % (field[1])
+                    lbl_text = '%s ' % (field[1])
                     if ifaces[iface]['status'] == 'V' or \
                     gtop.NETLOAD_IF_FLAGS_UP & ifaces[iface]['status']:
-                        lbl_text += 'UP'
+                        # Translators: status of a network interface
+                        lbl_text += _('UP')
                     if ifaces[iface]['status'] == 'V' or \
                     gtop.NETLOAD_IF_FLAGS_RUNNING & ifaces[iface]['status']:
-                        lbl_text += ', RUNNING'
+                        # Translators: status of a network interface
+                        lbl_text += ', ' + _('RUNNING')
                 else:
-                    lbl_text = '%s: %s' % (field[1], ifaces[iface][field[0]])
+                    lbl_text = '%s %s' % (field[1], ifaces[iface][field[0]])
                 lbl = gtk.Label()
                 lbl.set_markup("<span color='white'>%s</span>" % lbl_text)
                 lbl.show()
                 self.put(lbl, 12, y_pos)
                 y_pos += 20
-            if iface == 'Sum Interface':
+            if iface == _('Sum Interface'):
                 members = ''
                 for interface in sorted(ifaces):
                     if ifaces[interface]['sum_include']:
@@ -682,15 +696,16 @@ class InterfaceOptionsDialog(gtk.Fixed):
                         else:
                             members += ', %s' % (interface)
                 if members == '':
-                    members = ' None'
+                    members = ' ' + _('None')
                 members_lbl = gtk.Label()
                 members_lbl.set_size_request(450, 50)
                 members_lbl.set_line_wrap(True)
-                members_lbl.set_markup("<span color='white'>Members:%s</span>" % members)
+                # Translators: members = interfaces included in the "Sum Interface"
+                members_lbl.set_markup("<span color='white'>%s%s</span>" % (_("Members:"), members))
                 self.put(members_lbl, 12, y_pos)
                 members_lbl.show()
                 y_pos += 20
-            if iface == 'Multi Interface':
+            if iface == _('Multi Interface'):
                 members = ''
                 for interface in sorted(ifaces):
                     if ifaces[interface]['multi_include']:
@@ -699,11 +714,11 @@ class InterfaceOptionsDialog(gtk.Fixed):
                         else:
                             members += ', %s' % (interface)
                 if members == '':
-                    members = ' None'
+                    members = ' ' + _('None')
                 members_lbl = gtk.Label()
                 members_lbl.set_size_request(450, 50)
                 members_lbl.set_line_wrap(True)
-                members_lbl.set_markup("<span color='white'>Members:%s</span>" % members)
+                members_lbl.set_markup("<span color='white'>%s%s</span>" % (_("Members:"), members))
                 self.put(members_lbl, 12, y_pos)
                 members_lbl.show()
                 y_pos += 20

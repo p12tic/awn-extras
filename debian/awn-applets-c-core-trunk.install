@@ -1,10 +1,3 @@
-################################################################
-#                                                              #
-#                                                              #
-# DONT EDIT ME ! EDIT awn-applets-c-core-trunk.install.autoppa #
-#                                                              #
-#                                                              #
-################################################################
 #
 #Awn system monitor
 #
@@ -25,13 +18,6 @@ usr/share/avant-window-navigator/applets/cairo-menu.desktop
 usr/lib/awn/applets/cairo-menu/*.so
 etc/gconf/schemas/awn-applet-cairo-menu.schemas
 usr/share/avant-window-navigator/schemas/awn-applet-cairo-menu.schema-ini
-#
-# Indicator (only lucid and +)
-#
-usr/lib/awn/applets/indicator-applet/indicator-applet.so
-usr/share/avant-window-navigator/applets/indicator-applet.desktop
-etc/gconf/schemas/awn-applet-indicator-applet.schemas
-usr/share/avant-window-navigator/schemas/awn-applet-indicator-applet.schema-ini
 #
 # Notification area
 #
@@ -71,12 +57,6 @@ usr/share/avant-window-navigator/applets/places.desktop
 usr/share/avant-window-navigator/schemas/awn-applet-places.schema-ini
 etc/gconf/schemas/awn-applet-places.schemas
 #
-# Related (Only lucid and +)
-#
-usr/lib/awn/applets/related/*.so 
-usr/share/avant-window-navigator/applets/related.desktop
-usr/share/icons/hicolor/scalable/apps/zeitgeist-logo.svg
-#
 # Garbage
 #
 usr/lib/awn/applets/garbage/*.so 
@@ -89,7 +69,5 @@ etc/gconf/schemas/awn-applet-garbage.schemas
 ####################
 #
 #usr/lib/awn/applets/separator/*.so
-#usr/lib/awn/applets/plugger/*.so
 #usr/share/avant-window-navigator/applets/separator.desktop
-#usr/share/avant-window-navigator/applets/plugger.desktop
 #usr/share/icons/hicolor/scalable/apps/separator.svg

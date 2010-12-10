@@ -1199,7 +1199,7 @@ class App(awn.AppletSimple):
 
         try:
             with open(config_path, 'w') as fp:
-                f = fp.write()
+                fp.write(f)
         except IOError, e:
             dialog = classes.ErrorDialog(self, _("Could not save '%s'") % config_path, e)
             dialog.run()

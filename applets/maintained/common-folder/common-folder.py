@@ -110,6 +110,9 @@ class CommonFolderApplet:
                         self.add_url_name(*url_name)
 
     def add_url_name(self, uri, name=None):
+        if not uri:
+            return
+
         file = vfs.File.for_uri(uri)
 
         if file.is_native():

@@ -27,6 +27,7 @@
 #include "cairo-aux-icon.h"
 #include "gnome-menu-builder.h"
 #include "config.h"
+#include <glib/gi18n-lib.h>
 
 G_DEFINE_TYPE (CairoMenuApplet, cairo_menu_applet, AWN_TYPE_APPLET)
 
@@ -294,6 +295,8 @@ cairo_menu_applet_init (CairoMenuApplet *self)
   gtk_container_add (GTK_CONTAINER (self), priv->box);
   gtk_widget_show (priv->box);
 
+  bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+  textdomain (GETTEXT_PACKAGE);
 }
 
 CairoMenuApplet*

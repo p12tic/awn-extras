@@ -22,7 +22,6 @@
 #include <gtk/gtk.h>
 #include <libawn/libawn.h>
 #include "cairo-menu-applet.h"
-#include "cairo-menu.h"
 #include "cairo-main-icon.h"
 #include "cairo-aux-icon.h"
 #include "gnome-menu-builder.h"

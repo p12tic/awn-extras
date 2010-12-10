@@ -56,9 +56,11 @@ class SimpleScreenScraper(Feed):
 
     def parse_file(self, filename):
         '''Mandatory for plugins.
-        Parses given file (a downloaded feed) and puts all found items
-        into self.items. An item must have an url (path to the image), a link
-        (to the homepage), a title for that link and a date (timestamp).'''
+        Parses given file (a downloaded feed) and puts each found item
+        into a dict with the keys URL (path to the image), LINK to the 
+        page, TITLE for that link, DATE (a timestamp) and IMAGES (list of
+        images, only needed for new comics).
+        Each of this dicts has to be put into self.items with DATE as key.'''
         try:
             with open(filename, 'r') as f:
                 data = f.read()

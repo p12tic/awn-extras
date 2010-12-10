@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-30 22:29+0200\n"
-"PO-Revision-Date: 2010-11-21 15:33+0000\n"
+"PO-Revision-Date: 2010-12-09 21:08+0000\n"
 "Last-Translator: Fedik <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-11-22 04:47+0000\n"
+"X-Launchpad-Export-Date: 2010-12-10 04:46+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -198,7 +198,7 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:17
 msgid "Sets the width of the applet icon"
-msgstr ""
+msgstr "Встановити ширину значка аплету"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:18
 msgid "The base display unit for transfer speed (0: bits, 1: bytes)"
@@ -259,7 +259,7 @@ msgstr ""
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:81
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:82
 msgid "n/a"
-msgstr ""
+msgstr "н/д"
 
 #. Reset the Multi Interface records to zero
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:76
@@ -306,7 +306,7 @@ msgstr "Кбіт/с"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:394
 msgid "Use KBps instead of Kbps"
-msgstr ""
+msgstr "Використовувати КБ/с замість Кб/с"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:408
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:20
@@ -337,27 +337,27 @@ msgstr "Оберіть діючий пристрій"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
 msgid "Bps"
-msgstr ""
+msgstr "Б/с"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
 msgid "MBps"
-msgstr ""
+msgstr "МБ/с"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
 msgid "GBps"
-msgstr ""
+msgstr "ГБ/с"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
 msgid "TBps"
-msgstr ""
+msgstr "ТБ/с"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
 msgid "bps"
-msgstr ""
+msgstr "б/с"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
 msgid "Mbps"
-msgstr ""
+msgstr "Мбіт/с"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
 msgid "Gbps"
@@ -390,13 +390,15 @@ msgstr "Аплет"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:3
 msgid "Applet Offset"
-msgstr ""
+msgstr "Зміщення аплету"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:4
 msgid ""
 "Applet Size \n"
 "Override"
 msgstr ""
+"Розмір аплету \n"
+"Перепризначення"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:6
 msgid "Applet Width"
@@ -412,7 +414,7 @@ msgstr "Колір рамки"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:9
 msgid "Dialog"
-msgstr ""
+msgstr "Діалогове вікно"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:10
 msgid "Display MBps/KBps (bytes) instead of Mbps/Kbps (bits)"
@@ -558,12 +560,12 @@ msgstr "Маска підмережі:"
 #. Translators: status of a network interface
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:678
 msgid "UP"
-msgstr ""
+msgstr "ПІДНЯТО"
 
 #. Translators: status of a network interface
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:682
 msgid "RUNNING"
-msgstr ""
+msgstr "ПРАЦЮЄ"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:699
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:717
@@ -577,7 +579,7 @@ msgstr "Нічого"
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:704
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:721
 msgid "Members:"
-msgstr ""
+msgstr "Участники:"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:753
 msgid "Wireless graph type"
@@ -663,7 +665,7 @@ msgstr "Акумулятор заряджено"
 
 #: ../applets/maintained/battery/battery.py:221
 msgid "until charged"
-msgstr ""
+msgstr "до повного заряду"
 
 #: ../applets/maintained/battery/battery.py:225
 msgid "remaining"
@@ -740,7 +742,7 @@ msgstr "_Попереджати при падінні заряду до:"
 
 #: ../applets/maintained/battery/messagehandler.py:73
 msgid "Battery is running low"
-msgstr ""
+msgstr "Низький заряд батареї"
 
 #: ../applets/maintained/battery/messagehandler.py:99
 #, python-format
@@ -753,7 +755,7 @@ msgstr "Заряд батереї надто низький"
 
 #: ../applets/maintained/battery/messagehandler.py:151
 msgid "Battery is charged"
-msgstr ""
+msgstr "Батарея заряджається"
 
 #: ../applets/maintained/battery/messagehandler.py:172
 msgid "Your battery is fully charged."
@@ -1584,7 +1586,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.py:209
 msgid "small"
-msgstr ""
+msgstr "малий"
 
 #: ../applets/maintained/dialect/dialect.py:211
 msgid "large"
@@ -1592,7 +1594,7 @@ msgstr "велике"
 
 #: ../applets/maintained/dialect/dialect.py:213
 msgid "transparent"
-msgstr ""
+msgstr "прозорість"
 
 #: ../applets/maintained/dialect/dialect.py:215
 msgid "opaque"
@@ -2303,7 +2305,7 @@ msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:183
 msgid "Multiple icons"
-msgstr ""
+msgstr "Декілька іконок"
 
 #: ../applets/maintained/file-browser-launcher/prefs.py:190
 msgid "Focus text entry"
@@ -2770,7 +2772,7 @@ msgstr ""
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:5
 msgid "The theme to use for the icon"
-msgstr ""
+msgstr "Тема іконок"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:6
 msgid "Timeout between two value updates (in minutes)."
@@ -3097,7 +3099,7 @@ msgstr "Аплет керування медіа (Грати/Пауза)"
 #: ../applets/maintained/media-icons/media-icons.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:76
 msgid "Media Icons Play/Pause"
-msgstr ""
+msgstr "Іконка Грати/Пауза"
 
 #: ../applets/maintained/media-icons/media-icons.py:57
 msgid "Next"
@@ -3162,7 +3164,7 @@ msgstr "Відтворення будь яких медіа файлів пер�
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:1
 msgid "<b>GStreamer properties</b>"
-msgstr ""
+msgstr "<b>Налаштування GStreamer</b>"
 
 #: ../applets/maintained/media-player/media-player-prefs.ui.h:2
 msgid "<b>Video size</b>"
@@ -3390,7 +3392,7 @@ msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:13
 msgid "Use bold text."
-msgstr ""
+msgstr "Використовувати товстий текст."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:14
 msgid "Whether to attempt to kill any running notification-daemons."
@@ -3412,12 +3414,12 @@ msgstr ""
 
 #: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.in.h:2
 msgid "Notification Daemon"
-msgstr ""
+msgstr "Служба повідомлень"
 
 #: ../applets/maintained/notification-daemon/daemon.c:1421
 #, c-format
 msgid "%u is not a valid notification ID"
-msgstr ""
+msgstr "%u невірний ID повідомлення"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:35
 msgid "Whether to show tooltips when hovering over a place.);"
@@ -3447,7 +3449,7 @@ msgstr ""
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:23
 msgid "The colour (RGBA) of the text in the menu.);"
-msgstr ""
+msgstr "Колір (RGBA) тексту в меню.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:21
 msgid ""
@@ -3546,30 +3548,30 @@ msgstr ""
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:2
 #: ../applets/maintained/yama/yama.py:154
 msgid "Protect your computer from unauthorized use"
-msgstr ""
+msgstr "Захистити ваш комп'ютер від несанкціонованого використання"
 
 #: ../applets/maintained/quit/quit-log-out.desktop.in.h:1
 msgid "Log Out..."
-msgstr ""
+msgstr "Завершити сеанс..."
 
 #: ../applets/maintained/quit/quit-log-out.desktop.in.h:2
 msgid "Log out of this session to log in as a different user"
-msgstr ""
+msgstr "Вийти з сеансу та зайти під іншим ім'ям"
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:1
 #: ../applets/maintained/quit/quit.py:48
 #: ../applets/maintained/yama/yama.py:176
 msgid "Shut Down..."
-msgstr ""
+msgstr "Вимкнути..."
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:2
 #: ../applets/maintained/yama/yama.py:176
 msgid "Shut down the system"
-msgstr ""
+msgstr "Вимкнути комп'ютер"
 
 #: ../applets/maintained/quit/quit.py:33
 msgid "Quit-Log Out"
-msgstr ""
+msgstr "Вийти - Завершити сеанс"
 
 #: ../applets/maintained/quit/quit.py:34
 msgid ""
@@ -3591,7 +3593,7 @@ msgstr ""
 #: ../applets/maintained/quit/quit.py:233
 #: ../applets/maintained/quit/quit.py:269
 msgid "Shut Down"
-msgstr ""
+msgstr "Вимкнути"
 
 #. Translators: %s is a username
 #. Translators: %s is a user name.
@@ -3599,11 +3601,11 @@ msgstr ""
 #: ../applets/maintained/yama/yama.py:172
 #, python-format
 msgid "Log Out %s..."
-msgstr ""
+msgstr "Завершити сеанс %s..."
 
 #: ../applets/maintained/quit/quit.py:247
 msgid "Left click _action:"
-msgstr ""
+msgstr "Дія лівого кліку:"
 
 #: ../applets/maintained/related/related.desktop.in.in.h:1
 msgid "Applet displaying related items by talking to Zeitgeist"
@@ -3611,11 +3613,11 @@ msgstr ""
 
 #: ../applets/maintained/related/related.desktop.in.in.h:2
 msgid "Related applet"
-msgstr ""
+msgstr "Подібні аплети"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:1
 msgid " The color (RGBA) applet border."
-msgstr ""
+msgstr " Колір (RGBA) рамки аплету."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:2
 msgid " The color of the desktop (RGBA) if grab_wallpaper is FALSE."
@@ -3723,15 +3725,15 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:4
 msgid "<b>Background</b>"
-msgstr ""
+msgstr "<b>Тло</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:6
 msgid "<b>Icon transparency</b>"
-msgstr ""
+msgstr "<b>прозорість іконки</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:7
 msgid "<b>Timers</b>"
-msgstr ""
+msgstr "<b>Таймери</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:8
 msgid "<b>Viewport size</b>"
@@ -3739,139 +3741,139 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:9
 msgid "<b>Windows</b>"
-msgstr ""
+msgstr "<b>Вікна</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:10
 msgid "Active window:"
-msgstr ""
+msgstr "Активне вікно:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:11
 msgid "Active workspace"
-msgstr ""
+msgstr "Активне робоче місце"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:12
 msgid "Active workspace:"
-msgstr ""
+msgstr "Активне робоче місце"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:13
 msgid "All window"
-msgstr ""
+msgstr "Всі вікна"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:14
 msgid "All windows"
-msgstr ""
+msgstr "Всі вікна"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:15
 msgid "B_order color:"
-msgstr ""
+msgstr "Колір рамки:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:17
 msgid "Border _size:"
-msgstr ""
+msgstr "Розмір рамки:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:18
 msgid "C_ustom color:"
-msgstr ""
+msgstr "Власний колір:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:19
 msgid "Cache expiration:"
-msgstr ""
+msgstr "Життя кешу:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:20
 msgid "Center"
-msgstr ""
+msgstr "Центр"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:21
 msgid "Co_lumns:"
-msgstr ""
+msgstr "Стовбців"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:22
 msgid "Icon _display:"
-msgstr ""
+msgstr "Показувати іконку:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:23
 msgid "Icon _scaling:"
-msgstr ""
+msgstr "Маштабувати іконку:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:24
 msgid "Inactive window:"
-msgstr ""
+msgstr "Неактивне вікно:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:25
 msgid "Inactive windows"
-msgstr ""
+msgstr "Неактивні вікна"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:26
 msgid "Inactive workspace:"
-msgstr ""
+msgstr "Неактивне робоче місце:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:27
 msgid "Inactive workspaces"
-msgstr ""
+msgstr "Неактивні робочі місці"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:28
 msgid "Look"
-msgstr ""
+msgstr "Перегляд"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:29
 msgid "Lower left"
-msgstr ""
+msgstr "Знизу ліворуч"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:30
 msgid "Lower right"
-msgstr ""
+msgstr "Знизу праворуч"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:31
 msgid "Never"
-msgstr ""
+msgstr "Ніколи"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:33
 msgid "Only active window"
-msgstr ""
+msgstr "Лише активне вікно"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:34
 msgid "Render update:"
-msgstr ""
+msgstr "Перемальовування:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:35
 msgid "Scale _amount:"
-msgstr ""
+msgstr "Розмір маштабування:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:36
 msgid "Scaled icon _position:"
-msgstr ""
+msgstr "Розміщення маштабованої іконки:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:37
 msgid "Shiny Switcher Preferences"
-msgstr ""
+msgstr "Налаштування Shiny Switcher"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:38
 msgid "Upper left"
-msgstr ""
+msgstr "Вгорі ліворуч"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:39
 msgid "Upper right"
-msgstr ""
+msgstr "Вгорі праворуч"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:40
 msgid "Use _desktop background"
-msgstr ""
+msgstr "Використовувати фон робочого столу"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:41
 msgid "_Applet size:"
-msgstr ""
+msgstr "Розмір аплету:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:42
 msgid "_Rows:"
-msgstr ""
+msgstr "_Рядків:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:43
 msgid "_Thumbnailing:"
-msgstr ""
+msgstr "_Мініатюра:"
 
 #: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:1
 msgid "A prettier desktop switcher"
-msgstr ""
+msgstr "Симпатичний перемикач робочих областей"
 
 #: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:2
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2438
@@ -3883,268 +3885,268 @@ msgstr ""
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1945
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2012
 msgid "Applet Preferences"
-msgstr ""
+msgstr "Налаштування апплету"
 
 #: ../applets/maintained/showdesktop/applet.vala:40
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:2
 msgid "Show Desktop"
-msgstr ""
+msgstr "Показати робочий стіл"
 
 #. vim:ft=vala:et:ts=2 sts=2 sw=2:ai:cindent
 #: ../applets/maintained/showdesktop/applet.vala:78
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:1
 msgid "Hides your windows and shows your desktop."
-msgstr ""
+msgstr "Приховує Ваші вікна та показує робочий стіл"
 
 #: ../applets/maintained/showdesktop/applet.vala:93
 msgid "Show hidden windows"
-msgstr ""
+msgstr "Показати приховані вікна"
 
 #: ../applets/maintained/showdesktop/applet.vala:98
 msgid "Hide windows and show desktop"
-msgstr ""
+msgstr "Сховати вікна та показати робочий стіл"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:1
 msgid "The background color of the dialog"
-msgstr ""
+msgstr "Колір фону для діалогу"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:2
 msgid "The border color of a drawn window"
-msgstr ""
+msgstr "Колір рамки навколо вікна"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:3
 msgid "The border color of the dialog"
-msgstr ""
+msgstr "Колір рамки діалогу"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:4
 msgid "The bottom part of the shiny gradient"
-msgstr ""
+msgstr "Нижня частина сонячного градіенту"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:5
 msgid "The bottom part of the shiny gradient when hovered"
-msgstr ""
+msgstr "Нижня частина сонячного градіенту при наведенні"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:6
 msgid "The drop shadow color of the drawn number"
-msgstr ""
+msgstr "Кидати тінь при намалюванні цифр"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:7
 msgid "The file to use as the background image"
-msgstr ""
+msgstr "Файл для фонового зображення"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:8
 msgid "The height of a workspace widget"
-msgstr ""
+msgstr "Висота робочої області віджету"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:9
 msgid "The hovered border color of a workspace widget"
-msgstr ""
+msgstr "Колір рамки віджету робочої області, при наведенні"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:10
 msgid "The icon's border color"
-msgstr ""
+msgstr "Колір рамки іконки"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:11
 msgid "The main color of a drawn window"
-msgstr ""
+msgstr "Основний колір вікна"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:12
 msgid "The main color of the drawn number"
-msgstr ""
+msgstr "Основний колір для цифр"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:13
 msgid "The normal border color of a workspace widget"
-msgstr ""
+msgstr "Колір звичайної рамки віджету"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:14
 msgid "The top part of the shiny gradient"
-msgstr ""
+msgstr "Верхня частина сонячного градієнту"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:15
 msgid "The top part of the shiny gradient when hovered"
-msgstr ""
+msgstr "Верхня частина сонячного градієнту при наведенні"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:16
 msgid "The width of a workspace widget"
-msgstr ""
+msgstr "Ширина віджету робочої області"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:17
 msgid "Whether or not to use custom colors for the dialog"
-msgstr ""
+msgstr "Використовувати чи ні власні кольори для діалогу"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:18
 msgid "Whether or not to use the standard text overlay"
-msgstr ""
+msgstr "Використовувати чи ні стандартне накладання тексту"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:19
 msgid "Which background image(s) source to use: gnome, compiz, file"
-msgstr ""
+msgstr "Яке фонове зображення використовувати: gnome, compiz, файл"
 
 #: ../applets/maintained/slickswitcher/prefs.py:69
 msgid "SlickSwitcher Preferences"
-msgstr ""
+msgstr "Налаштування SlickSwitcher"
 
 #. Colors: Borders, Windows, and Dialog
 #. Border Colors
 #: ../applets/maintained/slickswitcher/prefs.py:94
 msgid "Border Colors"
-msgstr ""
+msgstr "Колір рамки"
 
 #. Icon Border
 #: ../applets/maintained/slickswitcher/prefs.py:100
 msgid "Icon border:"
-msgstr ""
+msgstr "Рамка іконки:"
 
 #. Normal Border
 #: ../applets/maintained/slickswitcher/prefs.py:103
 msgid "Normal border:"
-msgstr ""
+msgstr "Звичайна рамка:"
 
 #. Hovered Border
 #: ../applets/maintained/slickswitcher/prefs.py:106
 msgid "Hovered border:"
-msgstr ""
+msgstr "Рамка з наведеням:"
 
 #. Window Colors
 #: ../applets/maintained/slickswitcher/prefs.py:109
 msgid "Window Colors"
-msgstr ""
+msgstr "Кольори вікна"
 
 #. Main Color
 #: ../applets/maintained/slickswitcher/prefs.py:115
 #: ../applets/maintained/slickswitcher/prefs.py:200
 msgid "Main color:"
-msgstr ""
+msgstr "Основний колір:"
 
 #. Border Color
 #: ../applets/maintained/slickswitcher/prefs.py:118
 #: ../applets/maintained/slickswitcher/prefs.py:137
 msgid "Border color:"
-msgstr ""
+msgstr "Колір рамки:"
 
 #. Dialog Colors
 #: ../applets/maintained/slickswitcher/prefs.py:121
 msgid "Dialog colors"
-msgstr ""
+msgstr "Кольори діалогу:"
 
 #. Use custom colors (CheckButton)
 #: ../applets/maintained/slickswitcher/prefs.py:127
 #: ../applets/maintained/slickswitcher/prefs.py:193
 msgid "Use custom colors"
-msgstr ""
+msgstr "Використовувати власні кольори"
 
 #. Background Color
 #: ../applets/maintained/slickswitcher/prefs.py:134
 msgid "Background color:"
-msgstr ""
+msgstr "Колір тла:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:183
 msgid "Colors"
-msgstr ""
+msgstr "Кольори"
 
 #. Other colors: text and shine
 #. Number Colors
 #: ../applets/maintained/slickswitcher/prefs.py:187
 msgid "Number Colors"
-msgstr ""
+msgstr "Кольори цифр"
 
 #. Drop-Shadow Color
 #: ../applets/maintained/slickswitcher/prefs.py:203
 msgid "Drop-shadow color:"
-msgstr ""
+msgstr "Колір тіні:"
 
 #. Shine Colors
 #: ../applets/maintained/slickswitcher/prefs.py:206
 msgid "Shine Colors"
-msgstr ""
+msgstr "Сонячні кольори"
 
 #. Top Color
 #: ../applets/maintained/slickswitcher/prefs.py:212
 msgid "Top color:"
-msgstr ""
+msgstr "Верхній колір:"
 
 #. Bottom Color
 #: ../applets/maintained/slickswitcher/prefs.py:215
 msgid "Bottom color:"
-msgstr ""
+msgstr "Нижній колір:"
 
 #. Hover Top Color
 #: ../applets/maintained/slickswitcher/prefs.py:218
 msgid "Hover top color:"
-msgstr ""
+msgstr "Верхній колір при наведенні:"
 
 #. Hover Bottom Color
 #: ../applets/maintained/slickswitcher/prefs.py:221
 msgid "Hover bottom color:"
-msgstr ""
+msgstr "Нижній колір при наведенні:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:254
 msgid "Other colors"
-msgstr ""
+msgstr "Інші кольори"
 
 #. Width
 #: ../applets/maintained/slickswitcher/prefs.py:262
 msgid "Width:"
-msgstr ""
+msgstr "Ширина:"
 
 #. Height
 #: ../applets/maintained/slickswitcher/prefs.py:279
 msgid "Height:"
-msgstr ""
+msgstr "Висота:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:299
 msgid "Workspace Size"
-msgstr ""
+msgstr "Розміри робочого простору"
 
 #. Mode
 #: ../applets/maintained/slickswitcher/prefs.py:315
 msgid "Mode:"
-msgstr ""
+msgstr "Режим:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:318
 msgid "GNOME"
-msgstr ""
+msgstr "GNOME"
 
 #: ../applets/maintained/slickswitcher/prefs.py:319
 msgid "Compiz Wallpaper Plugin"
-msgstr ""
+msgstr "Compiz Wallpaper Plugin"
 
 #: ../applets/maintained/slickswitcher/prefs.py:320
 msgid "File"
-msgstr ""
+msgstr "Файл"
 
 #. File
 #: ../applets/maintained/slickswitcher/prefs.py:339
 msgid "File:"
-msgstr ""
+msgstr "Файл:"
 
 #: ../applets/maintained/slickswitcher/prefs.py:341
 msgid "Choose a Background Image"
-msgstr ""
+msgstr "Оберіть фонове зображення"
 
 #: ../applets/maintained/slickswitcher/prefs.py:347
 msgid "Pictures"
-msgstr ""
+msgstr "Картинки"
 
 #: ../applets/maintained/slickswitcher/prefs.py:367
 #: ../applets/maintained/to-do/prefs.py:445
 msgid "Background"
-msgstr ""
+msgstr "Тло"
 
 #: ../applets/maintained/slickswitcher/prefs.py:379
 msgid "Advanced"
-msgstr ""
+msgstr "Додатково"
 
 #: ../applets/maintained/slickswitcher/slickswitcher.desktop.in.h:1
 #: ../applets/maintained/slickswitcher/slickswitcher.py:279
 msgid "A visual workspace switcher"
-msgstr ""
+msgstr "Візальний перемикач робочих областей"
 
 #: ../applets/maintained/slickswitcher/slickswitcher.desktop.in.h:2
 #: ../applets/maintained/slickswitcher/slickswitcher.py:63
 #: ../applets/maintained/slickswitcher/slickswitcher.py:270
 msgid "SlickSwitcher"
-msgstr ""
+msgstr "SlickSwitcher"
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:1
 msgid ""
@@ -4162,44 +4164,44 @@ msgstr ""
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:4
 msgid "List of icons"
-msgstr ""
+msgstr "Список іконок"
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:5
 msgid "Render background."
-msgstr ""
+msgstr "Малювати фон."
 
 #. Translators: %2.0lf is a number, %% is a percent sign, do not change them
 #: ../applets/maintained/sysmon/cpuicon.c:161
 #: ../applets/maintained/sysmon/cpuicon.c:204
 #, c-format
 msgid "CPU: %2.0lf%%"
-msgstr ""
+msgstr "CPU: %2.0lf%%"
 
 #: ../applets/maintained/sysmon/cpuicon.c:353
 #: ../applets/maintained/sysmon/cpu-dialog.c:256
 msgid "CPU"
-msgstr ""
+msgstr "Процесор"
 
 #: ../applets/maintained/sysmon/cpuicon.c:580
 msgid "Graph Type"
-msgstr ""
+msgstr "Тип Графіка"
 
 #. Translators: refers to a graph type
 #: ../applets/maintained/sysmon/cpuicon.c:587
 msgid "Area"
-msgstr ""
+msgstr "Площа"
 
 #: ../applets/maintained/sysmon/cpuicon.c:590
 msgid "Circle"
-msgstr ""
+msgstr "Коло"
 
 #: ../applets/maintained/sysmon/cpuicon.c:593
 msgid "Bars"
-msgstr ""
+msgstr "Полоси"
 
 #: ../applets/maintained/sysmon/cpuicon.c:596
 msgid "Default"
-msgstr ""
+msgstr "Стандартно"
 
 #. item = gtk_menu_item_new_with_label ("Add Icon");
 #. gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
@@ -4213,24 +4215,24 @@ msgstr ""
 #. 
 #: ../applets/maintained/sysmon/cpuicon.c:610
 msgid "Render Background"
-msgstr ""
+msgstr "Малювати фон"
 
 #: ../applets/maintained/sysmon/cpu-dialog.c:240
 msgid "PID"
-msgstr ""
+msgstr "PID"
 
 #: ../applets/maintained/sysmon/cpu-dialog.c:248
 msgid "Process Name"
-msgstr ""
+msgstr "Назва процесу"
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:1
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:2
 msgid "Manage system activity"
-msgstr ""
+msgstr "Контроль активності системи"
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:2
 msgid "System Monitor"
-msgstr ""
+msgstr "Системний монітор"
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:1
 #: ../applets/maintained/thinkhdaps/thinkhdaps.py:35

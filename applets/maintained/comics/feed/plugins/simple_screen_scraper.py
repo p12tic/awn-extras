@@ -69,8 +69,14 @@ class SimpleScreenScraper(Feed):
 
         # Update properties
         if self.name is None:
-            title_re = re.compile("<title>(.*?)<\/title>", re.DOTALL | re.M)
-            self.name = self.unescape_html(title_re.findall(data)[0])
+            title_re = re.compile("<title>(.*?)<\/title>", re.DOTALL |
+                                                           re.M |
+                                                           re.IGNORECASE)
+            try:
+                self.name = self.unescape_html(title_re.findall(data)[0])
+            except IndexError:
+                self.name = "Comic"
+            
 
         images = []
         images += [self.make_absolute_url(u, self.url)

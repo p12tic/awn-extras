@@ -795,7 +795,10 @@ class App(awn.Applet):
     #If no icon does exists - load default folder icon
     if not worked:
       if 'folder' not in self.icons[size]:
-        self.icons[size]['folder'] = self.theme.load_icon('folder', size, 0)
+        try:
+          self.icons[size]['folder'] = self.theme.load_icon('folder', size, 0)
+        except:
+          self.icons[size]['folder'] = None
 
       icon = self.icons[size]['folder']
       self.icons[size][name] = icon

@@ -392,8 +392,11 @@ _get_places_menu (GtkWidget * menu)
 
     if (b_path && !desktop_agnostic_vfs_file_exists(b_file))
     {
-      g_object_ref_sink (item);
-      item = NULL;
+      if (item)
+      {
+        g_object_ref_sink (item);
+        item = NULL;
+      }
     }
     else if (b_path)
     {
@@ -455,8 +458,11 @@ _get_places_menu (GtkWidget * menu)
     }
     else
     {
-      g_object_ref_sink (item);
-      item = NULL;
+      if (item)
+      {
+        g_object_ref_sink (item);
+        item = NULL;
+      }
     }
 
     if (item)

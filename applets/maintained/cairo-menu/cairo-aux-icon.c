@@ -195,17 +195,20 @@ cairo_aux_icon_constructed (GObject *object)
 
   if (g_strcmp0(priv->display_name, "Places") == 0) 
   {
-    priv->display_name = _("Places");
+    awn_icon_set_tooltip_text (AWN_ICON(object), _("Places"));
   }
   else if (g_strcmp0(priv->display_name, "Recent Documents") == 0) 
   {
-    priv->display_name = _("Recent Documents");
+    awn_icon_set_tooltip_text (AWN_ICON(object),_("Recent Documents"));
   }
   else if (g_strcmp0(priv->display_name, "Session") == 0) 
   {
-    priv->display_name = _("Session");
+    awn_icon_set_tooltip_text (AWN_ICON(object),_("Session"));
   }
-  awn_icon_set_tooltip_text (AWN_ICON(object),priv->display_name);
+  else
+  {
+    awn_icon_set_tooltip_text (AWN_ICON(object), priv->display_name);
+  }
 }
 
 static void

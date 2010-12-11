@@ -383,6 +383,7 @@ _get_places_menu (GtkWidget * menu)
     gchar *b_path;
     gchar *b_uri;
     gchar *shell_quoted = NULL;
+    item = NULL;
     
     bookmark = (DesktopAgnosticVFSBookmark*)node->data;
     b_file = desktop_agnostic_vfs_bookmark_get_file (bookmark);
@@ -392,11 +393,7 @@ _get_places_menu (GtkWidget * menu)
 
     if (b_path && !desktop_agnostic_vfs_file_exists(b_file))
     {
-      if (item)
-      {
-        g_object_ref_sink (item);
-        item = NULL;
-      }
+      /* leave item as NULL */
     }
     else if (b_path)
     {
@@ -455,14 +452,6 @@ _get_places_menu (GtkWidget * menu)
       }
       g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);      
       gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
-    }
-    else
-    {
-      if (item)
-      {
-        g_object_ref_sink (item);
-        item = NULL;
-      }
     }
 
     if (item)

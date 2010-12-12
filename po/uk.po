@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-30 22:29+0200\n"
-"PO-Revision-Date: 2010-12-09 21:08+0000\n"
+"PO-Revision-Date: 2010-12-11 21:01+0000\n"
 "Last-Translator: Fedik <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-12-10 04:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-12 04:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -4242,37 +4242,37 @@ msgstr ""
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:2
 #: ../applets/maintained/thinkhdaps/thinkhdaps.py:34
 msgid "ThinkHDAPS"
-msgstr ""
+msgstr "ThinkHDAPS"
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.py:40
 #, python-format
 msgid "%s protected from shocks"
-msgstr ""
+msgstr "%s захищено від струсів"
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.py:41
 #, python-format
 msgid "%s not protected from shocks"
-msgstr ""
+msgstr "%s незахищено від струсів"
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.py:153
 msgid "No hard disk found"
-msgstr ""
+msgstr "Жорсткий диск не знайдено"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:1
 msgid "Background color for high priority items"
-msgstr ""
+msgstr "Колір фону, для елементів з високим приорітетом"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:2
 msgid "Background color for low priority items"
-msgstr ""
+msgstr "Колір фону, для елементів з низьким приорітетом"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:3
 msgid "Background color for medium priority items"
-msgstr ""
+msgstr "Колір фону, для елементів з середнім приорітетом"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:4
 msgid "List of colors to use for the custom color"
-msgstr ""
+msgstr "Список кольорів для вланого вибору"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:5
 msgid "List of items' details"

@@ -70,7 +70,10 @@ class App(awn.Applet):
     #Get the default icon theme
     self.theme = gtk.icon_theme_get_default()
     self.icons[24] = {}
-    self.icons[24]['folder'] = self.theme.load_icon('folder', 24, 0)
+    try:
+      self.icons[24]['folder'] = self.theme.load_icon('folder', 24, 0)
+    except:
+      self.icons[24]['folder'] = None
 
     #Docklet...
     self.mode = self.client.get_int(group, 'mode')
@@ -1131,7 +1134,10 @@ class App(awn.Applet):
       self.do_gio_places()
 
     #Reload the stock folder icon
-    self.icons[24]['folder'] = self.theme.load_icon('folder', 24, 0)
+    try:
+      self.icons[24]['folder'] = self.theme.load_icon('folder', 24, 0)
+    except:
+      self.icons[24]['folder'] = None
 
   def dialog_config(self, button):
     #Left click data

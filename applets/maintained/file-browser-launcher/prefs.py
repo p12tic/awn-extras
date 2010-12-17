@@ -87,7 +87,10 @@ class Prefs:
     self.focus_entry = self.client.get_int(group, 'focus_entry')
 
     #Set the icon appropriately
-    self.window.set_icon(self.theme.load_icon('folder', 48, 0))
+    try:
+      self.window.set_icon(self.theme.load_icon('folder', 48, 0))
+    except:
+      pass
 
     #Make the General tab
     general_vbox = gtk.VBox(False, 12)

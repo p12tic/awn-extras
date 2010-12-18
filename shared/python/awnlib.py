@@ -28,7 +28,11 @@ import awn
 from awn.extras import _, configbinder, __version__
 
 import cairo
-import cPickle as cpickle
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
+import glib
 import gobject
 
 ___file___ = sys.argv[0]
@@ -834,7 +838,7 @@ class Settings:
         """
         value = self.__client.get(key)
         if type(value) is str and value[:9] == "!pickle;\n":
-            value = cpickle.loads(value[9:])
+            value = pickle.loads(value[9:])
         return value
 
     def __setitem__(self, key, value):
@@ -847,7 +851,7 @@ class Settings:
         unpickled_value = value
 
         if type(value) not in self.__setting_types:
-            value = "!pickle;\n%s" % cpickle.dumps(value)
+            value = "!pickle;\n%s" % pickle.dumps(value)
         elif type(value) is long:
             value = int(value)
         self.__client.set(key, value)
@@ -1241,9 +1245,9 @@ class Timing:
                 return False
 
             if int(self.__seconds) == self.__seconds:
-                self.__timer_id = gobject.timeout_add_seconds(int(self.__seconds), self.__callback)
+                self.__timer_id = glib.timeout_add_seconds(int(self.__seconds), self.__callback)
             else:
-                self.__timer_id = gobject.timeout_add(int(self.__seconds * 1000), self.__callback)
+                self.__timer_id = glib.timeout_add(int(self.__seconds * 1000), self.__callback)
             return True
 
         def stop(self):
@@ -1257,7 +1261,7 @@ class Timing:
             if self.__timer_id is None:
                 return False
 
-            gobject.source_remove(self.__timer_id)
+            glib.source_remove(self.__timer_id)
             self.__timer_id = None
             return True
 
@@ -1345,7 +1349,10 @@ class Notify:
                 self.__notification.set_timeout(timeout * 1000)
 
         def show(self):
-            self.__notification.show()
+            try:
+                self.__notification.show()
+            except glib.GError:
+                pass  # Ignore error when no reply has been received
 
 
 class Meta:
@@ -1506,7 +1513,7 @@ def init_start(applet_class, meta={}, options=[]):
     """
     assert callable(applet_class)
 
-    gobject.threads_init()
+    glib.threads_init()
 
     awn.init(sys.argv[1:])
     if "multiple-icons" in options:

@@ -245,7 +245,7 @@ class Dialogs:
             self.show_menu(self.__parent, event)
         elif dialog == "about":
             self.__register["about"].show()
-            self.__register["about"].deiconify()
+            self.__register["about"].present()
         else:
             if force == "hide" or (self.__register[dialog].is_active() and force != "show"):
                 self.__register[dialog].hide()
@@ -269,7 +269,7 @@ class Dialogs:
                 self.__register[dialog].show_all()
                 self.__current = dialog
                 if dialog == "preferences":
-                    self.__register[dialog].deiconify()
+                    self.__register[dialog].present()
 
     def show_menu(self, parent, event):
         self.__register["menu"].show_all()

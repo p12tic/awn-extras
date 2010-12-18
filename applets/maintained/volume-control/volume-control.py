@@ -189,7 +189,7 @@ class VolumeControlApplet:
 
         preferences_vbox = self.applet.dialog.new("preferences").vbox
         prefs.get_object("dialog-vbox").reparent(preferences_vbox)
-        
+
         self.load_theme_pref(prefs)
         self.load_device_pref(prefs)
         self.load_track_pref(prefs)

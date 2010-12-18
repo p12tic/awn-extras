@@ -123,8 +123,6 @@ class ThinkHDAPSApplet:
         if len(disks) > 0:
             self.__hdaps_device = disks[0]
 
-        icon = applet.get_icon()
-
         self.icon_running = OverlayThemedIcon("thinkhdaps-running")
         self.icon_running.props.scale = 0.6
 

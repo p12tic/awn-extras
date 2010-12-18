@@ -580,8 +580,11 @@ da_expose_event(GtkWidget *da, GdkEventExpose *event, IndicatorApplet *iapplet)
 
   cairo_t *cr = gdk_cairo_create(da->window);
 
-  cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
-  cairo_paint(cr);
+  if (gdk_screen_is_composited(gtk_widget_get_screen(da)))
+  {
+    cairo_set_operator(cr, CAIRO_OPERATOR_CLEAR);
+    cairo_paint(cr);
+  }
 
   cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
 

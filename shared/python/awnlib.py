@@ -439,6 +439,7 @@ class Icon:
         self.__parent = parent
 
         self.__previous_context = None
+        self.__has_remove_custom_icon_item = False
 
         # Set the themed icon to set the C{awn.Icons} object
         if "theme" in parent.meta:
@@ -478,11 +479,18 @@ class Icon:
 
         @param name: The name of the theme icon.
         @type name: C{string}
-        @return: The resultant pixbuf
-        @rtype: C{gtk.gdk.Pixbuf}
 
         """
-        return self.__parent.set_icon_name(name)
+        self.__parent.set_icon_name(name)
+
+        if not self.__has_remove_custom_icon_item:
+            self.__has_remove_custom_icon_item = True
+
+            icon = self.__parent.get_icon()
+            assert isinstance(icon, awn.ThemedIcon)
+
+            item = icon.create_remove_custom_icon_item()
+            self.__parent.dialog.menu.insert(item, 1)
 
     def set(self, icon):
         """Set a C{gtk.gdk.pixbuf} or C{cairo.Context} as your applet icon.
@@ -1449,9 +1457,9 @@ class AppletSimple(awn.AppletSimple, Applet):
         Applet.__init__(self, meta, options)
 
         # Create all required child-objects, others will be lazy-loaded
-        self.icon = Icon(self)
         self.tooltip = Tooltip(self)
         self.dialog = Dialogs(self)
+        self.icon = Icon(self)
 
         self.dialog.connect_signals(self)
 

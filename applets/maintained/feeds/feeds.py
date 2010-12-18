@@ -496,7 +496,10 @@ class App(awn.AppletSimple):
                 notification = pynotify.Notification(s, msg,
                   [icon_path, greader_path][only_greader])
                 notification.set_timeout(5000)
-                notification.show()
+                try:
+                    notification.show()
+                except glib.GError:
+                    pass  # Ignore error when no reply has been received
 
     #Set up initial widgets, frame for each feed
     def setup_dialog(self):

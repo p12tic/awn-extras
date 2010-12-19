@@ -67,7 +67,7 @@ class IcsCal:
                         [self.add_event(dtstart, dtend, summary)
                          for appt in rrulestr(str(component.rrule.value))
                          if appt.date() == dtdate]
-                    elif dtstart.date == dtdate:
+                    elif dtstart.date() == dtdate:
                         self.add_event(dtstart, dtend, summary)
         if len(self.events) == 0:
             self.events.append([None, _("No appointments")])

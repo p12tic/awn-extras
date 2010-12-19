@@ -76,12 +76,12 @@ class CalThread(threading.Thread):
         if self.applet.integration != None:
             year, month, day = time.localtime()[:3]
             prev_month = month - 1
-            prev_year = year
-            if month == 0:
-                month = 12
+            prev_year = year  # year of previous month
+            if prev_month == 0:
+                prev_month = 12
                 prev_year = prev_year - 1
             next_month = month + 1
-            next_year = year
+            next_year = year  # year of next month
             if next_month == 13:
                 next_month = 1
                 next_year = year + 1
@@ -91,7 +91,7 @@ class CalThread(threading.Thread):
                 (next_year, next_month)]
             temp_list = dict()
             for y, m in scan:
-                days = calendar.monthrange(year, month)[1]
+                days = calendar.monthrange(y, m)[1]
                 x = 1
                 integration = self.applet.integration
                 while x <= days:

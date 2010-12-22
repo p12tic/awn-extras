@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-30 22:29+0200\n"
-"PO-Revision-Date: 2010-12-18 19:44+0000\n"
-"Last-Translator: brabadu <brabadu@gmail.com>\n"
+"PO-Revision-Date: 2010-12-21 21:25+0000\n"
+"Last-Translator: Fedik <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-12-19 04:41+0000\n"
+"X-Launchpad-Export-Date: 2010-12-22 04:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -4292,27 +4292,27 @@ msgstr ""
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:9
 msgid "Text color for high priority items"
-msgstr ""
+msgstr "Колір тексту для елементів з високим приорітетом"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:10
 msgid "Text color for low priority items"
-msgstr ""
+msgstr "Колір тексту для елементів з низьким приорітетом"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:11
 msgid "Text color for medium priority items"
-msgstr ""
+msgstr "Колір тексту для елементів з середнім приорітетом"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:12
 msgid "The color to use for the icon"
-msgstr ""
+msgstr "Колір значка"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:13
 msgid "The custom width for the item entries"
-msgstr ""
+msgstr "Власна ширина списку"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:14
 msgid "The icon's opacity (10-100)"
-msgstr ""
+msgstr "Прозорість значка (10-100)"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:15
 msgid "The list of categories that are expanded"
@@ -4320,186 +4320,186 @@ msgstr ""
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:16
 msgid "The list of categories' names"
-msgstr ""
+msgstr "Список категорій"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:17
 msgid "The list of items' categories"
-msgstr ""
+msgstr "Список категорій елементів"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:18
 msgid "The title to display"
-msgstr ""
+msgstr "Заголовок для відображення"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:19
 msgid "What type of icon to display (progress, progress-items, items)"
-msgstr ""
+msgstr "Який тип значка відображати (прогрес, прогрес-елементи, елементи)"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:20
 msgid "Whether or not to confirm the deletion of categories"
-msgstr ""
+msgstr "Чи запитувати при видаленні категорій"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:21
 msgid "Whether or not to confirm the deletion of items"
-msgstr ""
+msgstr "Чи запитувати при видаленні елементів"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:22
 msgid "Whether or not to use a custom width for the entries"
-msgstr ""
+msgstr "Чи використовувати власну ширину для записів"
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Custom"
-msgstr ""
+msgstr "Своє"
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Current Theme"
-msgstr ""
+msgstr "Поточна тема"
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Butter"
-msgstr ""
+msgstr "Масло"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Chameleon"
-msgstr ""
+msgstr "Хамелеон"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Orange"
-msgstr ""
+msgstr "Апельсин"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Sky Blue"
-msgstr ""
+msgstr "Небесно-блакитна"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Plum"
-msgstr ""
+msgstr "Сливова"
 
 #: ../applets/maintained/to-do/prefs.py:33
 msgid "Chocolate"
-msgstr ""
+msgstr "Шоколад"
 
 #: ../applets/maintained/to-do/prefs.py:34
 msgid "Scarlet Red"
-msgstr ""
+msgstr "Яскраво-червона"
 
 #: ../applets/maintained/to-do/prefs.py:34
 msgid "Aluminium 1"
-msgstr ""
+msgstr "Алюміній 1"
 
 #: ../applets/maintained/to-do/prefs.py:34
 msgid "Aluminium 2"
-msgstr ""
+msgstr "Алюміній 2"
 
 #: ../applets/maintained/to-do/prefs.py:37
 msgid "Number of Items"
-msgstr ""
+msgstr "Кіількість елементів"
 
 #: ../applets/maintained/to-do/prefs.py:37
 msgid "Progress"
-msgstr ""
+msgstr "Просування"
 
 #: ../applets/maintained/to-do/prefs.py:37
 msgid "Both"
-msgstr ""
+msgstr "Обидва"
 
 #: ../applets/maintained/to-do/prefs.py:45
 msgid "To-Do List Preferences"
-msgstr ""
+msgstr "Параметри списку завдань"
 
 #: ../applets/maintained/to-do/prefs.py:61
 msgid "Priority"
-msgstr ""
+msgstr "Пріоритет"
 
 #: ../applets/maintained/to-do/prefs.py:62
 msgid "Icon"
-msgstr ""
+msgstr "Значок"
 
 #. Label: Title (bold)
 #: ../applets/maintained/to-do/prefs.py:72
 msgid "Title"
-msgstr ""
+msgstr "Заголовок"
 
 #. Label: Confirm when removing... (bold)
 #: ../applets/maintained/to-do/prefs.py:86
 msgid "Confirm when removing..."
-msgstr ""
+msgstr "Підтвердження при видаленні..."
 
 #. CheckButton: Items
 #: ../applets/maintained/to-do/prefs.py:95
 msgid "_Items"
-msgstr ""
+msgstr "_Елементи"
 
 #. CheckButton: Categories
 #: ../applets/maintained/to-do/prefs.py:102
 msgid "C_ategories"
-msgstr ""
+msgstr "К_атегорії"
 
 #. Label: Width (bold)
 #: ../applets/maintained/to-do/prefs.py:109
 msgid "Width"
-msgstr ""
+msgstr "Ширина"
 
 #. CheckButton: Use Custom Width
 #: ../applets/maintained/to-do/prefs.py:118
 msgid "_Use Custom Width"
-msgstr ""
+msgstr "_Використовувати власну ширину"
 
 #. Label: Width (pixels)
 #: ../applets/maintained/to-do/prefs.py:125
 msgid "Width (pixels)"
-msgstr ""
+msgstr "Ширина (в пікселях)"
 
 #. Label: Low Priority (bold)
 #: ../applets/maintained/to-do/prefs.py:173
 msgid "Low Priority"
-msgstr ""
+msgstr "Низький приорітет"
 
 #. Label: Medium Priority (bold)
 #: ../applets/maintained/to-do/prefs.py:186
 msgid "Medium Priority"
-msgstr ""
+msgstr "Середній пріоритет"
 
 #. Label: High Priority (bold)
 #: ../applets/maintained/to-do/prefs.py:199
 msgid "High Priority"
-msgstr ""
+msgstr "Високий приорітет"
 
 #. Label: Icon Color (bold)
 #: ../applets/maintained/to-do/prefs.py:251
 msgid "Icon Color"
-msgstr ""
+msgstr "Колір значка"
 
 #. Label: Custom Colors (bold)
 #: ../applets/maintained/to-do/prefs.py:274
 msgid "Custom Colors"
-msgstr ""
+msgstr "Власні кольори"
 
 #. Colors: Outer Border, Inner Border, Main Color, Text Color
 #: ../applets/maintained/to-do/prefs.py:283
 msgid "Outer Border"
-msgstr ""
+msgstr "Зовнішня межа"
 
 #: ../applets/maintained/to-do/prefs.py:284
 msgid "Inner Border"
-msgstr ""
+msgstr "Внутрішня межа"
 
 #: ../applets/maintained/to-do/prefs.py:285
 msgid "Main"
-msgstr ""
+msgstr "Основний"
 
 #: ../applets/maintained/to-do/prefs.py:286
 #: ../applets/maintained/to-do/prefs.py:447
 msgid "Text"
-msgstr ""
+msgstr "Текст"
 
 #. Label: Icon Type (bold)
 #: ../applets/maintained/to-do/prefs.py:289
 msgid "Icon Type"
-msgstr ""
+msgstr "Тип значка"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:1
 msgid "Manage a simple To-Do list"
-msgstr ""
+msgstr "Керування простим списком справ"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:2
 #: ../applets/maintained/to-do/to-do.py:69
@@ -4507,67 +4507,67 @@ msgstr ""
 #: ../applets/maintained/to-do/to-do.py:270
 #: ../applets/maintained/to-do/to-do.py:908
 msgid "To-Do List"
-msgstr ""
+msgstr "Список завдань"
 
 #: ../applets/maintained/to-do/to-do.py:221
 msgid "A simple To-Do List"
-msgstr ""
+msgstr "Простий список завдань"
 
 #: ../applets/maintained/to-do/to-do.py:300
 msgid "Remove item"
-msgstr ""
+msgstr "Вилучити пункт"
 
 #: ../applets/maintained/to-do/to-do.py:382
 msgid "Remove category"
-msgstr ""
+msgstr "Видалити категорію"
 
 #: ../applets/maintained/to-do/to-do.py:406
 msgid "View/Edit details"
-msgstr ""
+msgstr "Показати/Редагувати деталі"
 
 #. Make the RadioButtons for each category
 #. First category: No category! (Uncategorized)
 #: ../applets/maintained/to-do/to-do.py:526
 msgid "_Uncategorized"
-msgstr ""
+msgstr "_Без категорії"
 
 #. First RadioButton - ( )Category
 #: ../applets/maintained/to-do/to-do.py:550
 msgid "_Category"
-msgstr ""
+msgstr "_Категорія"
 
 #. Second RadioButton - (-)To-Do item
 #. TODO: better text than "To-Do item"?
 #: ../applets/maintained/to-do/to-do.py:557
 msgid "_To-Do item"
-msgstr ""
+msgstr "_Елемент списку задач"
 
 #. Label: Priority:
 #: ../applets/maintained/to-do/to-do.py:642
 msgid "Priority: "
-msgstr ""
+msgstr "Пріоритет: "
 
 #. Neutral, Low, Medium, and High priority RadioButtons
 #: ../applets/maintained/to-do/to-do.py:645
 msgid "_Neutral"
-msgstr ""
+msgstr "_Нейтральний"
 
 #: ../applets/maintained/to-do/to-do.py:647
 msgid "_Low"
-msgstr ""
+msgstr "_Низький"
 
 #: ../applets/maintained/to-do/to-do.py:649
 msgid "_Medium"
-msgstr ""
+msgstr "_Середній"
 
 #: ../applets/maintained/to-do/to-do.py:651
 msgid "_High"
-msgstr ""
+msgstr "_Високий"
 
 #. Label: Progress(%):
 #: ../applets/maintained/to-do/to-do.py:679
 msgid "Progress(%): "
-msgstr ""
+msgstr "Прогрес(%): "
 
 #. Make Label
 #: ../applets/maintained/to-do/to-do.py:1131
@@ -4576,17 +4576,19 @@ msgid ""
 "Are you sure you want to remove the category \"%s?\"\n"
 "All of its items will be removed."
 msgstr ""
+"Дійсно бажаєте видалити категорію \"%s?\"\n"
+"Всі її елементи буде видалено."
 
 #. Make CheckButton
 #: ../applets/maintained/to-do/to-do.py:1135
 #: ../applets/maintained/to-do/to-do.py:1171
 msgid "Don't show this again."
-msgstr ""
+msgstr "Не показувати це повідомлення в майбутньому."
 
 #. Make Label
 #: ../applets/maintained/to-do/to-do.py:1168
 msgid "Are you sure you want to remove this item?"
-msgstr ""
+msgstr "Ви впевнені, що бажаєте вилучити цей елемент?"
 
 #. Set the tooltip: X% done
 #. Translators: %d is a number, %% is a percent sign, please don't change them,
@@ -4598,47 +4600,47 @@ msgstr ""
 #: ../applets/maintained/to-do/to-do.py:1371
 #, python-format
 msgid "%d%% done"
-msgstr ""
+msgstr "%d%% виконано"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:1
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:31
 msgid "Control Tomboy with D-Bus"
-msgstr ""
+msgstr "Керування Tomboy через D-Bus"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:2
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:30
 msgid "Tomboy Applet"
-msgstr ""
+msgstr "Аплет Tomboy"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:108
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:130
 msgid "Select a tag:"
-msgstr ""
+msgstr "Оберіть мітку:"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:114
 msgid "No tags were created yet"
-msgstr ""
+msgstr "Жодної мітки ще не створено"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:119
 msgid "Select a note:"
-msgstr ""
+msgstr "Оберіть замітку:"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:149
 #, python-format
 msgid "Version: %s"
-msgstr ""
+msgstr "Версія: %s"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:155
 msgid "New Note"
-msgstr ""
+msgstr "Нова замітка"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:159
 msgid "New Tagged Note"
-msgstr ""
+msgstr "Нова замітка з міткою"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:163
 msgid "View Tagged Note"
-msgstr ""
+msgstr "Перегляд заміток з мітками"
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:1
 msgid "A simple applet to test vala support"
@@ -4650,29 +4652,29 @@ msgstr ""
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:1
 msgid "Name of the device."
-msgstr ""
+msgstr "Назва пристрою"
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:2
 msgid "Name of the mixer track."
-msgstr ""
+msgstr "Мікшер"
 
 #: ../applets/maintained/volume-control/volume-control.desktop.in.h:1
 msgid "Control your computer's volume"
-msgstr ""
+msgstr "Керування гучністю комп’ютера"
 
 #: ../applets/maintained/volume-control/volume-control.desktop.in.h:2
 #: ../applets/maintained/volume-control/volume-control.py:43
 msgid "Volume Control"
-msgstr ""
+msgstr "Керування гучністю"
 
 #: ../applets/maintained/volume-control/volume-control.py:44
 msgid "Applet to control your computer's volume"
-msgstr ""
+msgstr "Аплет керування гучністю комп’ютера"
 
 #: ../applets/maintained/volume-control/volume-control.py:49
 #: ../applets/maintained/weather/weather.py:62
 msgid "System theme"
-msgstr ""
+msgstr "Системна тема"
 
 #: ../applets/maintained/volume-control/volume-control.py:67
 #, python-format
@@ -4683,233 +4685,234 @@ msgstr ""
 
 #: ../applets/maintained/volume-control/volume-control.py:68
 msgid "Could not find any devices."
-msgstr ""
+msgstr "Неможливо виявити пристроїв"
 
 #: ../applets/maintained/volume-control/volume-control.py:184
 msgid "_Open Volume Control"
-msgstr ""
+msgstr "_Відкрити регулятор гучності"
 
 #: ../applets/maintained/volume-control/volume-control.py:379
 msgid "No GStreamer mixer found"
-msgstr ""
+msgstr "Не знайдено мікшера GStreamer"
 
 #: ../applets/maintained/volume-control/volume-control.py:385
 msgid "No devices found"
-msgstr ""
+msgstr "Пристроїв не знайдено"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:2
 #, no-c-format
 msgid "100%"
-msgstr ""
+msgstr "100%"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:3
 msgid "<b>Audio Options</b>"
-msgstr ""
+msgstr "<b>Параметри аудіо</b>"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:5
 msgid "_Device:"
-msgstr ""
+msgstr "_Пристрій:"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:6
 msgid "_Mixer track:"
-msgstr ""
+msgstr "_Мікшер:"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:7
 msgid "_Mute"
-msgstr ""
+msgstr "_Приглушити"
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:1
 msgid "City, and country of the weather location."
-msgstr ""
+msgstr "Погода в місті та країні."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:2
 msgid "Code that identifies the weather location."
-msgstr ""
+msgstr "Код ідентифікації місця для прогнозу"
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:3
 msgid "If enabled, show the temperature as an overlay in the icon."
-msgstr ""
+msgstr "Якщо відмічена ця опція, температура буде показана поверх значка."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:4
 msgid "Maximum width of map in pixels."
-msgstr ""
+msgstr "Максимальна ширина мапи в пікселях."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:5
 msgid "Show days of forecast in a transparent, curved dialog."
-msgstr ""
+msgstr "Показувати дні в прозорому діалозі."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:6
 msgid ""
 "Size of the temperature overlay in the icon (0: small, 1: medium, 2: large)."
 msgstr ""
+"Розмір тексту температури на значку  (0: малий, 1: середній, 2: великий)."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:7
 msgid "Temperature unit (0: Celsius, 1: Fahrenheit)."
-msgstr ""
+msgstr "Одиниці температури (0: Цельсій, 1: Фаренгейт)."
 
 #: ../applets/maintained/weather/forecast.py:54
 #: ../applets/maintained/weather/forecast.py:84
 msgid "Forecast"
-msgstr ""
+msgstr "Прогноз"
 
 #: ../applets/maintained/weather/forecast.py:54
 #: ../applets/maintained/weather/forecast.py:84
 msgid "for"
-msgstr ""
+msgstr "для"
 
 #: ../applets/maintained/weather/forecast.py:172
 msgid "WEEKDAY"
-msgstr ""
+msgstr "ДЕНЬ_ТИЖНЯ"
 
 #: ../applets/maintained/weather/forecast.py:176
 msgid "Tomorrow"
-msgstr ""
+msgstr "Завтра"
 
 #. Weather condition
 #: ../applets/maintained/weather/forecast.py:202
 #: ../applets/maintained/weather/weather.py:475
 msgid "DESCRIPTION"
-msgstr ""
+msgstr "ОПИС"
 
 #: ../applets/maintained/weather/forecast.py:254
 msgid "Weather data provided by weather.com"
-msgstr ""
+msgstr "Інформацію отримано з weather.com"
 
 #: ../applets/maintained/weather/weathertext.py:38
 msgid "Blowing Snow"
-msgstr ""
+msgstr "Невеликий сніг"
 
 #: ../applets/maintained/weather/weathertext.py:39
 msgid "Blustery"
-msgstr ""
+msgstr "Пориви вітру"
 
 #: ../applets/maintained/weather/weathertext.py:40
 msgid "Clear"
-msgstr ""
+msgstr "Ясно"
 
 #: ../applets/maintained/weather/weathertext.py:41
 msgid "Cloudy"
-msgstr ""
+msgstr "Хмарно"
 
 #: ../applets/maintained/weather/weathertext.py:42
 msgid "Cold"
-msgstr ""
+msgstr "Холодно"
 
 #: ../applets/maintained/weather/weathertext.py:43
 msgid "Drizzle"
-msgstr ""
+msgstr "Мряка"
 
 #: ../applets/maintained/weather/weathertext.py:44
 msgid "Dust"
-msgstr ""
+msgstr "Пил"
 
 #: ../applets/maintained/weather/weathertext.py:45
 msgid "Fair"
-msgstr ""
+msgstr "Посередня"
 
 #: ../applets/maintained/weather/weathertext.py:46
 msgid "Fog"
-msgstr ""
+msgstr "Туман"
 
 #: ../applets/maintained/weather/weathertext.py:47
 msgid "Freezing Drizzle"
-msgstr ""
+msgstr "Паморозь"
 
 #: ../applets/maintained/weather/weathertext.py:48
 msgid "Freezing Rain"
-msgstr ""
+msgstr "Крижаний дощ"
 
 #: ../applets/maintained/weather/weathertext.py:49
 msgid "Hail"
-msgstr ""
+msgstr "Град"
 
 #: ../applets/maintained/weather/weathertext.py:50
 msgid "Haze"
-msgstr ""
+msgstr "Серпанок"
 
 #: ../applets/maintained/weather/weathertext.py:51
 msgid "Heavy Snow"
-msgstr ""
+msgstr "Сильний сніг"
 
 #: ../applets/maintained/weather/weathertext.py:52
 msgid "Hot"
-msgstr ""
+msgstr "Спекотно"
 
 #: ../applets/maintained/weather/weathertext.py:53
 msgid "Hurricane"
-msgstr ""
+msgstr "Ураган"
 
 #: ../applets/maintained/weather/weathertext.py:54
 msgid "Isolated Thunderstorms"
-msgstr ""
+msgstr "Ізольовані грози"
 
 #: ../applets/maintained/weather/weathertext.py:55
 msgid "Light Drizzle"
-msgstr ""
+msgstr "Легка мряка"
 
 #: ../applets/maintained/weather/weathertext.py:56
 msgid "Light Rain Shower"
-msgstr ""
+msgstr "Слабкий дощ"
 
 #: ../applets/maintained/weather/weathertext.py:57
 msgid "Light Rain with Thunder"
-msgstr ""
+msgstr "Слабкий дощ з грозою"
 
 #: ../applets/maintained/weather/weathertext.py:58
 msgid "Light Snow Showers"
-msgstr ""
+msgstr "Незначний сніг"
 
 #: ../applets/maintained/weather/weathertext.py:59
 msgid "Mist"
-msgstr ""
+msgstr "Імла"
 
 #: ../applets/maintained/weather/weathertext.py:60
 msgid "Mixed Precipitation"
-msgstr ""
+msgstr "Змішані опади"
 
 #: ../applets/maintained/weather/weathertext.py:61
 msgid "Mixed Rain and Hail"
-msgstr ""
+msgstr "Дощ з градом"
 
 #: ../applets/maintained/weather/weathertext.py:62
 msgid "Mixed Rain and Sleet"
-msgstr ""
+msgstr "Дощ із снігом"
 
 #: ../applets/maintained/weather/weathertext.py:63
 msgid "Mixed Rain and Snow"
-msgstr ""
+msgstr "Дощ із снігом"
 
 #: ../applets/maintained/weather/weathertext.py:64
 msgid "Mostly Cloudy"
-msgstr ""
+msgstr "Переважно хмарно"
 
 #: ../applets/maintained/weather/weathertext.py:65
 msgid "N/A"
-msgstr ""
+msgstr "Н/Д"
 
 #: ../applets/maintained/weather/weathertext.py:66
 msgid "Partly Cloudy"
-msgstr ""
+msgstr "Мінлива хмарність"
 
 #: ../applets/maintained/weather/weathertext.py:67
 msgid "Scattered Showers"
-msgstr ""
+msgstr "Місцями злива"
 
 #: ../applets/maintained/weather/weathertext.py:68
 msgid "Scattered Snow Showers"
-msgstr ""
+msgstr "Місцями снігопади"
 
 #: ../applets/maintained/weather/weathertext.py:69
 msgid "Scattered Thunderstorms"
-msgstr ""
+msgstr "Розсіяні грози"
 
 #: ../applets/maintained/weather/weathertext.py:70
 msgid "Severe Thunderstorms"
-msgstr ""
+msgstr "Сильні грози"
 
 #: ../applets/maintained/weather/weathertext.py:71
 msgid "Showers"
-msgstr ""
+msgstr "Дощі"
 
 #: ../applets/maintained/weather/weathertext.py:72
 msgid "Showers in the Vicinity"
@@ -4917,43 +4920,43 @@ msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:73
 msgid "Sleet"
-msgstr ""
+msgstr "Мокрий сніг"
 
 #: ../applets/maintained/weather/weathertext.py:74
 msgid "Smoke"
-msgstr ""
+msgstr "Дим"
 
 #: ../applets/maintained/weather/weathertext.py:75
 msgid "Snow"
-msgstr ""
+msgstr "Сніг"
 
 #: ../applets/maintained/weather/weathertext.py:76
 msgid "Snow Flurries"
-msgstr ""
+msgstr "Сніжний шквал"
 
 #: ../applets/maintained/weather/weathertext.py:77
 msgid "Snow Showers"
-msgstr ""
+msgstr "Снігопад"
 
 #: ../applets/maintained/weather/weathertext.py:78
 msgid "Thunder Showers"
-msgstr ""
+msgstr "Грозові дощі"
 
 #: ../applets/maintained/weather/weathertext.py:79
 msgid "Thunderstorms"
-msgstr ""
+msgstr "Гроза"
 
 #: ../applets/maintained/weather/weathertext.py:80
 msgid "Tornado"
-msgstr ""
+msgstr "Смерч"
 
 #: ../applets/maintained/weather/weathertext.py:81
 msgid "Tropical Storm"
-msgstr ""
+msgstr "Тропічний шторм"
 
 #: ../applets/maintained/weather/weathertext.py:82
 msgid "Windy"
-msgstr ""
+msgstr "Вітряно"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:87

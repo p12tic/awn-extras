@@ -174,7 +174,7 @@ class InterfaceGraph(gtk.DrawingArea):
                         quality = int(self.__parent.netstats.ifaces[iface]['signal']['quality'])
                         noise = int(self.__parent.netstats.ifaces[iface]['signal']['noise'])
                         icon_size = 24
-                        if quality == 0 or noise == -256:
+                        if quality == 0 and (noise == -256 or noise == 0):
                             icon_name = 'wireless-disconnected.png'
                         elif signal <= 40:
                             icon_name = 'wireless-full.png'
@@ -343,7 +343,7 @@ class InterfaceGraph(gtk.DrawingArea):
                     signal = abs(int(self.__parent.netstats.ifaces[iface]['signal']['strength'])) * 80 / 100
                     quality = int(self.__parent.netstats.ifaces[iface]['signal']['quality'])
                     noise = int(self.__parent.netstats.ifaces[iface]['signal']['noise'])
-                    if quality == 0 or noise == -256:
+                    if quality == 0 and (noise == -256 or noise == 0):
                         icon_name = 'wireless-disconnected.png'
                     elif signal <= 40:
                         icon_name = 'wireless-full.png'
@@ -402,6 +402,7 @@ class InterfaceGraph(gtk.DrawingArea):
                     if abs(event.time - self.button_click_time) > 500:
                         self.button_click_time = event.time
                         self.__parent.change_iface(widget, self.interface)
+                        self.__parent.generate_iface_submenu()
                         self.__parent.interface_dialog.buttonArea.change_dialog(
                         widget, event, 'graph')
                 self.connect('button_release_event', click_event)
@@ -506,7 +507,6 @@ class InterfaceDeatil:
         self.applet.dialog.register('main', self.interfaceDialog)
 
         def leave_notify(widget, event, self):
-            #return True
             if not hasattr(self.interfaceOptionsArea, 'graph_selection') or \
                 not self.interfaceOptionsArea.graph_selection.get_property('popup-shown'):
                 self.parent.interface_dialog.buttonArea.change_dialog(widget, event, 'graph')

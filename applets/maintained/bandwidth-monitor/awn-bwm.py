@@ -53,15 +53,15 @@ class Netstat:
     def __init__(self, parent, unit):
         self.parent = parent
         self.ifaces = {}
-        self.ifaces[_('Sum Interface')] = {'collection_time': 0,
+        self.ifaces[_('Sum Interface')] = {'collection_time': time(),
             'status': 'V',
             'prbytes': 0,
             'ptbytes': 0,
             'index': 1,
             'address': _('n/a'),
             'subnet': _('n/a'),
-            'rx_history': range(0, 25),
-            'tx_history': range(0, 25),
+            'rx_history': [0, 0],
+            'tx_history': [0, 0],
             'rx_bytes': 0,
             'tx_bytes': 0,
             'rx_sum': 0,
@@ -73,15 +73,15 @@ class Netstat:
             'multi_include': False,
             'upload_color': '#ff0000',
             'download_color': '#ffff00'}
-        self.ifaces[_('Multi Interface')] = {'collection_time': 0,
+        self.ifaces[_('Multi Interface')] = {'collection_time': time(),
             'status': 'V',
             'prbytes': 0,
             'ptbytes': 0,
             'index': 1,
             'address': _('n/a'),
             'subnet': _('n/a'),
-            'rx_history': range(0, 25),
-            'tx_history': range(0, 25),
+            'rx_history': [0, 0],
+            'tx_history': [0, 0],
             'rx_bytes': 0,
             'tx_bytes': 0,
             'rx_sum': 0,
@@ -105,7 +105,8 @@ class Netstat:
         if os.access('/proc/net/wireless', os.R_OK):
             wireless_devices = {}
             wireless = open('/proc/net/wireless', 'r').read()
-            match = re.findall(r'(\w+): (\d+)\s+(\d+).*?([^\w]\d+).*?([^\w]\d+)', wireless, re.DOTALL)
+            match = re.findall(r'(\w+): (\d+)\s+(\d+).*?([^\w]\d+).*?([^\w]\d+)',
+                wireless, re.DOTALL)
             for wcard in match:
                 wireless_devices[wcard[0]] = \
                     {'status': wcard[1],
@@ -165,8 +166,8 @@ class Netstat:
                         'index': 1,
                         'address': address,
                         'subnet': subnet,
-                        'rx_history': range(0, 25),
-                        'tx_history': range(0, 25),
+                        'rx_history': [0, 0],
+                        'tx_history': [0, 0],
                         'ss_history': [],
                         'sq_history': [],
                         'sum_include': sum_include,
@@ -175,7 +176,7 @@ class Netstat:
                             self.parent.prefs.get_color(iface, 'upload'),
                         'download_color': \
                             self.parent.prefs.get_color(iface, 'download'),
-                        'graph_type': 'fan'}
+                        'graph_type': 'bar'}
                 collection = (
                     time() - self.ifaces[iface]['collection_time'])
                 rbytes = ((rx_bytes - self.ifaces[iface]['prbytes'])
@@ -290,9 +291,9 @@ class AppletBandwidthMonitor:
             'applet_size_override': 0,
             'applet_offset': 0,
             'applet_traffic_scale': 12,
-            'applet_signal_scale': 5,
+            'applet_signal_scale': 12,
             'dialog_traffic_scale': 12,
-            'dialog_signal_scale': 5}
+            'dialog_signal_scale': 8}
         for key, value in defaults.items():
             if not key in self.applet.settings:
                 self.applet.settings[key] = value
@@ -424,10 +425,10 @@ class AppletBandwidthMonitor:
 Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                         self.readable_size(
                             self.netstats.ifaces[self.iface]['tx_sum']
-                            * self.unit, self.unit, False),
+                            * self.unit, self.unit),
                         self.readable_size(
                             self.netstats.ifaces[self.iface]['rx_sum']
-                            * self.unit, self.unit, False)))
+                            * self.unit, self.unit)))
 
     def first_paint(self):
         self.repaint()
@@ -437,23 +438,13 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
         self.repaint()
         return True
 
-    def draw_background(self, ct, x, y, w, h, radius):
-        awn.cairo_rounded_rect(ct, x, y, w, h, radius, awn.ROUND_ALL)
-
     def draw_wireless(self, ct, width, height, iface, scale,
           graph_source='applet'):
         try:
             force = ((width / (width / scale))) - scale
         except:
             force = 0
-        graph_type = "bar"
-        prefs = self.applet.settings['wireless_signal_graph_type']
-        for wdev in prefs:
-            wdev_name, wdev_graph = wdev.split("|")
-            if wdev_name == iface:
-                graph_type = wdev_graph
-                break
-        self.netstats.ifaces[iface]['graph_type'] = graph_type
+        graph_type = self.netstats.ifaces[iface]['graph_type']
         x_pos = 0
         _ss_hist = [1]
         _total_hist = [1]
@@ -778,7 +769,11 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                 bgColor.green / 65535.0,
                 bgColor.blue / 65535.0,
                 float(alpha))
-            self.draw_background(ct, 0, 0, width + 1, applet_size + 1, 4)
+            awn.cairo_rounded_rect(ct,
+                0, 0,
+                width + 1,
+                applet_size + 1,
+                4, awn.ROUND_ALL)
             ct.fill()
         if self.iface == _('Multi Interface') and self.display_graph:
             tmp_history = [1]
@@ -847,11 +842,12 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
                 borderColor.green / 65535.0,
                 borderColor.blue / 65535.0,
                 float(alpha))
-            self.draw_background(ct,
+            awn.cairo_rounded_rect(ct,
                 line_width / 2,
                 line_width / 2,
                 width - (line_width / 2),
-               applet_size - (line_width / 2) + 0.5, 4)
+               applet_size - (line_width / 2) + 0.5,
+               4, awn.ROUND_ALL)
             ct.stroke()
         self.applet.set_icon_context(ct)
         if self.applet.dialog.is_visible('main'):
@@ -890,22 +886,22 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
             step = step * 1024.0
         return '%4.1d ' % (speed / (step / 1024)) + units[-1]
 
-    def readable_size(self, speed=0, unit=1, seconds=False):
-        ''' readable_size(speed) -> string
-            speed is in bytes per second
-            returns a readable version of the speed given '''
+    def readable_size(self, size=0, unit=1):
+        ''' readable_size(size) -> string
+            size is in bytes
+            returns a readable version of the size given '''
         units = ['B ', 'KB', 'MB', 'GB', 'TB'] if unit == 1 \
         else ['b ', 'Kb', 'Mb', 'Gb', 'Tb']
         step = 1.0
         for u in units:
             if step > 1:
-                s = '%4.2f ' % (speed / step)
+                s = '%4.2f ' % (size / step)
                 if len(s) <= 5:
                     return s + u
-            if speed / step < 1024:
-                return '%4.1d ' % (speed / step) + u
+            if size / step < 1024:
+                return '%4.1d ' % (size / step) + u
             step = step * 1024.0
-        return '%4.1d ' % (speed / (step / 1024)) + units[-1]
+        return '%4.1d ' % (size / (step / 1024)) + units[-1]
 
 if __name__ == '__main__':
     awnlib.init_start(AppletBandwidthMonitor, {'name': APPLET_NAME,

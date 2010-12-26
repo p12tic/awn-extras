@@ -444,7 +444,8 @@ Total Sent: %s - Total Received: %s (All Interfaces)''') % (
             force = ((width / (width / scale))) - scale
         except:
             force = 0
-        graph_type = self.netstats.ifaces[iface]['graph_type']
+        graph_type = self.netstats.ifaces[iface]['graph_type'] if \
+            self.netstats.ifaces[iface].has_key('graph_type') else 'bar'
         x_pos = 0
         _ss_hist = [1]
         _total_hist = [1]

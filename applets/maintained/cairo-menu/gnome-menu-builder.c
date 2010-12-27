@@ -383,6 +383,7 @@ _get_places_menu (GtkWidget * menu)
     gchar *b_path;
     gchar *b_uri;
     gchar *shell_quoted = NULL;
+    item = NULL;
     
     bookmark = (DesktopAgnosticVFSBookmark*)node->data;
     b_file = desktop_agnostic_vfs_bookmark_get_file (bookmark);
@@ -390,7 +391,11 @@ _get_places_menu (GtkWidget * menu)
     b_path = desktop_agnostic_vfs_file_get_path (b_file);
     b_uri = desktop_agnostic_vfs_file_get_uri (b_file);
 
-    if (b_path)
+    if (b_path && !desktop_agnostic_vfs_file_exists(b_file))
+    {
+      /* leave item as NULL */
+    }
+    else if (b_path)
     {
       shell_quoted = g_shell_quote (b_path);
       exec = g_strdup_printf("%s %s", XDG_OPEN,shell_quoted);
@@ -445,13 +450,11 @@ _get_places_menu (GtkWidget * menu)
         item = cairo_menu_item_new_with_label (base);
         g_free (base);
       }
-      g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);      
-      gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
-    }
-    else
-    {
-      g_object_ref_sink (item);
-      item = NULL;
+      if (item)
+      {
+        g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);      
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
+      }
     }
 
     if (item)
@@ -1141,7 +1144,7 @@ menu_build (MenuInstance * instance)
     if ( !instance->submenu_name)
     {    
       /*generates a compiler warning due to the ellipse*/
-      menu_item = cairo_menu_item_new_with_label (_("Search\u2026"));
+      menu_item = cairo_menu_item_new_with_label (_("Search\342\200\246"));
       /* add proper ellipse*/
       image = get_gtk_image ("stock_search");
       if (image)
@@ -1158,7 +1161,7 @@ menu_build (MenuInstance * instance)
     if ( !instance->submenu_name)
     {    
       /*generates a compiler warning due to the ellipse*/    
-      menu_item = cairo_menu_item_new_with_label (_("Launch\u2026"));
+      menu_item = cairo_menu_item_new_with_label (_("Launch\342\200\246"));
       /* add proper ellipse*/
       image = get_gtk_image ("gnome-run");
       if (image)

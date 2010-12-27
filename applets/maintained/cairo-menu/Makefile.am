@@ -17,13 +17,9 @@ cairo_menu_la_SOURCES =	\
 	applet.c				\
 	cairo-menu-applet.c        \
 	cairo-menu-applet.h        \
-	cairo-menu.c            \
-	cairo-menu.h            \
-	cairo-menu-item.c       \
-	cairo-menu-item.h       \
 	cairo-main-icon.c       \
 	cairo-main-icon.h       \
-  cairo-aux-icon.c       \
+	cairo-aux-icon.c       \
 	cairo-aux-icon.h       \
 	misc.h                  \
 	misc.c                  \

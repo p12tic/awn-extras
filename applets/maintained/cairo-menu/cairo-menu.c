@@ -20,8 +20,6 @@
 
 #include "cairo-menu.h"
 #include "cairo-menu-item.h"
-#include "config.h"
-#include <glib/gi18n-lib.h>
 
 G_DEFINE_TYPE (CairoMenu, cairo_menu, GTK_TYPE_MENU)
 
@@ -192,9 +190,6 @@ cairo_menu_class_init (CairoMenuClass *klass)
 static void
 cairo_menu_init (CairoMenu *self)
 {
-  bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
-  textdomain (GETTEXT_PACKAGE);
-
   CairoMenuPrivate * priv = GET_PRIVATE (self);
 
   priv->cairo_style = FALSE;

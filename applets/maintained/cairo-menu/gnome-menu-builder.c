@@ -450,8 +450,11 @@ _get_places_menu (GtkWidget * menu)
         item = cairo_menu_item_new_with_label (base);
         g_free (base);
       }
-      g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);      
-      gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
+      if (item)
+      {
+        g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);      
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
+      }
     }
 
     if (item)

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-10-30 22:29+0200\n"
-"PO-Revision-Date: 2010-12-21 21:25+0000\n"
+"PO-Revision-Date: 2010-12-26 20:54+0000\n"
 "Last-Translator: Fedik <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-12-22 04:44+0000\n"
+"X-Launchpad-Export-Date: 2010-12-27 04:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -5018,12 +5018,12 @@ msgstr ""
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:111
 msgid "Few Showers"
-msgstr ""
+msgstr "Слаб. Опади"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:113
 msgid "Heavy Rain"
-msgstr ""
+msgstr "Сильний дощ"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
@@ -5034,7 +5034,7 @@ msgstr ""
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:118
 msgid "Light Rain"
-msgstr ""
+msgstr "Легкий дощ"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:120
@@ -5081,7 +5081,7 @@ msgstr ""
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:138
 msgid "Rain"
-msgstr ""
+msgstr "Дощ"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:140
@@ -5091,12 +5091,12 @@ msgstr ""
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:142
 msgid "Rain / Thunder"
-msgstr ""
+msgstr "Дощ / Грім"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:144
 msgid "Rain / Wind"
-msgstr ""
+msgstr "Дощ / Вітер"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:146
@@ -5112,17 +5112,17 @@ msgstr ""
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:151
 msgid "Showers / Wind"
-msgstr ""
+msgstr "Опади /Вітер"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:153
 msgid "Sunny"
-msgstr ""
+msgstr "Сонячно"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:155
 msgid "Sunny / Wind"
-msgstr ""
+msgstr "Сонячно / Вітер"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
@@ -5132,87 +5132,89 @@ msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:162
 msgid "Monday"
-msgstr ""
+msgstr "Понеділок"
 
 #: ../applets/maintained/weather/weathertext.py:163
 msgid "Tuesday"
-msgstr ""
+msgstr "Вівторок"
 
 #: ../applets/maintained/weather/weathertext.py:164
 msgid "Wednesday"
-msgstr ""
+msgstr "Середа"
 
 #: ../applets/maintained/weather/weathertext.py:165
 msgid "Thursday"
-msgstr ""
+msgstr "Четвер"
 
 #: ../applets/maintained/weather/weathertext.py:166
 msgid "Friday"
-msgstr ""
+msgstr "П’ятниця"
 
 #: ../applets/maintained/weather/weathertext.py:167
 msgid "Saturday"
-msgstr ""
+msgstr "Субота"
 
 #: ../applets/maintained/weather/weathertext.py:168
 msgid "Sunday"
-msgstr ""
+msgstr "Неділя"
 
 #: ../applets/maintained/weather/weather.desktop.in.h:1
 msgid "Display the local weather"
-msgstr ""
+msgstr "Перегляд місцевої погоди"
 
 #: ../applets/maintained/weather/weather.desktop.in.h:2
 msgid "Weather Applet"
-msgstr ""
+msgstr "Аплет погоди"
 
 #: ../applets/maintained/weather/weather.py:41
 msgid "Weather"
-msgstr ""
+msgstr "Погода"
 
 #: ../applets/maintained/weather/weather.py:42
 msgid "Applet to display current weather and forecast"
-msgstr ""
+msgstr "Аплет показує поточну погоду, а також прогноз"
 
 #: ../applets/maintained/weather/weather.py:71
 msgid ""
 "Could not retrieve weather data. You may be experiencing connectivity issues."
 msgstr ""
+"Неможливо прийняти дані про погоду. Можливо у Вас проблеми з підключенням."
 
 #: ../applets/maintained/weather/weather.py:205
 msgid "Network error in Weather"
-msgstr ""
+msgstr "Мережева помилка при отримання прогнозу"
 
 #: ../applets/maintained/weather/weather.py:213
 #: ../applets/maintained/weather/weather.py:255
 msgid "Fetching conditions for"
-msgstr ""
+msgstr "Отримую умови для"
 
 #: ../applets/maintained/weather/weather.py:273
 msgid "Show _Map"
-msgstr ""
+msgstr "Показати Мапу"
 
 #: ../applets/maintained/weather/weather.py:322
 #: ../applets/maintained/weather/weather.py:400
 msgid "No records found"
-msgstr ""
+msgstr "Записів незнайдено"
 
 #: ../applets/maintained/weather/weather.py:391
 msgid "Searching..."
-msgstr ""
+msgstr "Пошук…"
 
 #: ../applets/maintained/weather/weather.ui.h:4
 msgid "<b>Icon Display</b>"
-msgstr ""
+msgstr "<b>Іконка аплета</b>"
 
 #: ../applets/maintained/weather/weather.ui.h:5
 msgid ""
 "<i><b>Examples:</b> Boston; Portland, ME, Amsterdam; or Osaka, Japan.</i>"
 msgstr ""
+"<i><b>Приклад:</b> Boston; Portland, ME, Amsterdam; або Osaka, Japan.</i>"
 
 #: ../applets/maintained/weather/weather.ui.h:6
 msgid "Current _location:"
-msgstr ""
+msgstr "Поточне місто:"
 
 #: ../applets/maintained/weather/weather.ui.h:7
 msgid ""
@@ -5226,42 +5228,42 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.ui.h:10
 msgid "Maximum _map width:"
-msgstr ""
+msgstr "Максимальна ширина мапи:"
 
 #: ../applets/maintained/weather/weather.ui.h:12
 msgid "Show temperature in _icon"
-msgstr ""
+msgstr "Показати іконку температури"
 
 #: ../applets/maintained/weather/weather.ui.h:14
 msgid "Temperature _unit:"
-msgstr ""
+msgstr "Одиниці температури:"
 
 #: ../applets/maintained/weather/weather.ui.h:15
 msgid "Temperature font _size:"
-msgstr ""
+msgstr "Розмір шрифту:"
 
 #: ../applets/maintained/weather/weather.ui.h:16
 msgid "Use transparent/curved _forecast dialog"
-msgstr ""
+msgstr "Використовувати прозорий/вигнутий діалог прогнозу"
 
 #: ../applets/maintained/weather/weather.ui.h:17
 msgid "_Location Name:"
-msgstr ""
+msgstr "Назва _місцевості:"
 
 #. Make the dialog
 #: ../applets/maintained/webapplet/applet.c:262
 #: ../applets/maintained/webapplet/applet.c:460
 msgid "Open Location"
-msgstr ""
+msgstr "Відкрити адресу"
 
 #: ../applets/maintained/webapplet/applet.c:281
 msgid "Set as new _Home Page"
-msgstr ""
+msgstr "Встановити як Домашня сторінка"
 
 #: ../applets/maintained/webapplet/applet.c:399
 #: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:2
 msgid "Web Applet"
-msgstr ""
+msgstr "Веб аплет"
 
 #. vim: set et ts=2 sts=2 sw=2 :
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:1
@@ -5271,7 +5273,7 @@ msgstr ""
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:2
 msgid "HTML engine to use."
-msgstr ""
+msgstr "Двигунець HTML для використання."
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:3
 msgid "If true display location entry and website buttons"

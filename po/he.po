@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-30 22:29+0200\n"
+"POT-Creation-Date: 2010-12-27 20:54+0100\n"
 "PO-Revision-Date: 2010-11-30 11:42+0000\n"
 "Last-Translator: Ddorda <Ddorda@ubuntu.com>\n"
 "Language-Team: Hebrew <he@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-12-01 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-28 04:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -938,7 +938,29 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:305
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:198
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1037
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1051
+#: ../applets/maintained/file-browser-launcher/prefs.py:249
+#: ../applets/maintained/places/places.desktop.in.in.h:2
+#: ../applets/maintained/yama/yama.py:255
+msgid "Places"
+msgstr ""
+
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:202
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1074
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1089
+#: ../applets/maintained/yama/yama.py:331
+msgid "Recent Documents"
+msgstr ""
+
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:206
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1120
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1131
+msgid "Session"
+msgstr ""
+
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:319
 msgid "Remove Icon"
 msgstr ""
 
@@ -1030,33 +1052,14 @@ msgstr ""
 msgid "Connect to Server"
 msgstr ""
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1034
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1048
-#: ../applets/maintained/file-browser-launcher/prefs.py:249
-#: ../applets/maintained/places/places.desktop.in.in.h:2
-#: ../applets/maintained/yama/yama.py:255
-msgid "Places"
-msgstr ""
-
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1071
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1086
-#: ../applets/maintained/yama/yama.py:331
-msgid "Recent Documents"
-msgstr ""
-
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1117
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1128
-msgid "Session"
+#. generates a compiler warning due to the ellipse
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1147
+msgid "Search…"
 msgstr ""
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1144
-msgid "Search\\u2026"
-msgstr ""
-
-#. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1161
-msgid "Launch\\u2026"
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1164
+msgid "Launch…"
 msgstr ""
 
 #: ../applets/maintained/cairo-menu/misc.c:161
@@ -3800,14 +3803,14 @@ msgid "A prettier desktop switcher"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:2
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2438
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2470
 msgid "Shiny Switcher"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:642
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:735
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1945
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2012
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1977
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2044
 msgid "Applet Preferences"
 msgstr ""
 

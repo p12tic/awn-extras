@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-30 22:29+0200\n"
-"PO-Revision-Date: 2010-12-19 02:27+0000\n"
+"POT-Creation-Date: 2010-12-27 20:54+0100\n"
+"PO-Revision-Date: 2010-12-28 01:51+0000\n"
 "Last-Translator: Fitoschido <Unknown>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-12-20 04:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-28 04:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Generated-By: pygettext.py 1.5\n"
 
@@ -159,6 +159,8 @@ msgid ""
 "Enbables or disables drawing the applet graph - if disabled only the speed "
 "text will be displayed in the applet"
 msgstr ""
+"Activa o desactiva el dibujado de la gráfica. Si se desactiva se mostrará "
+"solo el texto de velocidad en la miniaplicación"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:10
 msgid ""
@@ -985,7 +987,29 @@ msgstr "Ubicaciones"
 msgid "Edit"
 msgstr "Editar"
 
-#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:305
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:198
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1037
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1051
+#: ../applets/maintained/file-browser-launcher/prefs.py:249
+#: ../applets/maintained/places/places.desktop.in.in.h:2
+#: ../applets/maintained/yama/yama.py:255
+msgid "Places"
+msgstr "Lugares"
+
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:202
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1074
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1089
+#: ../applets/maintained/yama/yama.py:331
+msgid "Recent Documents"
+msgstr "Documentos recientes"
+
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:206
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1120
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1131
+msgid "Session"
+msgstr "Sesión"
+
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:319
 msgid "Remove Icon"
 msgstr "Eliminar icono"
 
@@ -1077,34 +1101,15 @@ msgstr "Red"
 msgid "Connect to Server"
 msgstr "Conectarse a un servidor"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1034
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1048
-#: ../applets/maintained/file-browser-launcher/prefs.py:249
-#: ../applets/maintained/places/places.desktop.in.in.h:2
-#: ../applets/maintained/yama/yama.py:255
-msgid "Places"
-msgstr "Lugares"
-
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1071
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1086
-#: ../applets/maintained/yama/yama.py:331
-msgid "Recent Documents"
-msgstr "Documentos recientes"
-
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1117
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1128
-msgid "Session"
-msgstr "Sesión"
+#. generates a compiler warning due to the ellipse
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1147
+msgid "Search…"
+msgstr "Buscar..."
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1144
-msgid "Search\\u2026"
-msgstr "Buscar\\u2026"
-
-#. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1161
-msgid "Launch\\u2026"
-msgstr "Iniciar\\u2026"
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1164
+msgid "Launch…"
+msgstr "Abrir..."
 
 #: ../applets/maintained/cairo-menu/misc.c:161
 #: ../applets/maintained/yama/yama.py:606
@@ -2798,7 +2803,7 @@ msgstr ""
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:8
 msgid "If true, use an Awn applet icon instead"
-msgstr ""
+msgstr "Si se activa, usa un icono de miniaplicación Awn"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:9
 msgid "The number of rows (top and bottom edge) or columns (side edges)"
@@ -2932,6 +2937,8 @@ msgid ""
 "There seem to be problems with our connection to your account. Your best bet "
 "is probably to log out and try again."
 msgstr ""
+"Parece haber problemas con la conexión a su cuenta. Lo mejor que podría "
+"hacer probablemente sea cerrar sesión y reintentar."
 
 #: ../applets/maintained/mail/mail.py:533
 #: ../applets/maintained/mail/mail.py:549
@@ -3372,7 +3379,7 @@ msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:1
 msgid "Background colour in the form (Hex) rrggbbaa"
-msgstr ""
+msgstr "Color de fondo en el formulario (hex) rrggbbaa"
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:2
 msgid "Border Width. A value of 0 indicates that is should not be drawn."
@@ -3934,14 +3941,14 @@ msgid "A prettier desktop switcher"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:2
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2438
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2470
 msgid "Shiny Switcher"
 msgstr "Shiny Switcher"
 
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:642
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:735
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1945
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2012
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1977
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2044
 msgid "Applet Preferences"
 msgstr "Preferencias de la miniaplicación"
 
@@ -5510,8 +5517,26 @@ msgstr "Pandora Radio"
 #~ msgid "Use Curved Dialog look"
 #~ msgstr "Curvas de estilo"
 
+#~ msgid "Lower Center"
+#~ msgstr "En el medio, debajo del icono"
+
+#~ msgid "Lower Left"
+#~ msgstr "A la izquierda, debajo del icono"
+
+#~ msgid "Lower Right"
+#~ msgstr "A la derecha, debajo del icono"
+
 #~ msgid "Upper Center"
 #~ msgstr "En el medio, sobre del icono"
+
+#~ msgid "Upper Left"
+#~ msgstr "A la izquierda, sobre del icono"
+
+#~ msgid "Upper Right"
+#~ msgstr "A la derecha, sobre del icono"
+
+#~ msgid "Show Temperature"
+#~ msgstr "Exhibir la temperatura"
 
 #~ msgid "Sent"
 #~ msgstr "Enviado"
@@ -5536,3 +5561,9 @@ msgstr "Pandora Radio"
 
 #~ msgid "Documents"
 #~ msgstr "Documents"
+
+#~ msgid "Search\\u2026"
+#~ msgstr "Buscar\\u2026"
+
+#~ msgid "Launch\\u2026"
+#~ msgstr "Iniciar\\u2026"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-30 22:29+0200\n"
+"POT-Creation-Date: 2010-12-27 20:54+0100\n"
 "PO-Revision-Date: 2010-12-04 09:04+0000\n"
 "Last-Translator: Nicolas Delvaux <Unknown>\n"
 "Language-Team: French\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2010-12-05 04:45+0000\n"
+"X-Launchpad-Export-Date: 2010-12-28 04:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Generated-By: pygettext.py 1.5\n"
 
@@ -959,7 +959,29 @@ msgstr "Emplacements"
 msgid "Edit"
 msgstr "Modifier"
 
-#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:305
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:198
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1037
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1051
+#: ../applets/maintained/file-browser-launcher/prefs.py:249
+#: ../applets/maintained/places/places.desktop.in.in.h:2
+#: ../applets/maintained/yama/yama.py:255
+msgid "Places"
+msgstr "Raccourcis"
+
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:202
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1074
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1089
+#: ../applets/maintained/yama/yama.py:331
+msgid "Recent Documents"
+msgstr "Documents récents"
+
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:206
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1120
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1131
+msgid "Session"
+msgstr "Session"
+
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:319
 msgid "Remove Icon"
 msgstr "Supprimer l'icône"
 
@@ -1051,34 +1073,15 @@ msgstr "Réseau"
 msgid "Connect to Server"
 msgstr "Se connecter a un serveur"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1034
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1048
-#: ../applets/maintained/file-browser-launcher/prefs.py:249
-#: ../applets/maintained/places/places.desktop.in.in.h:2
-#: ../applets/maintained/yama/yama.py:255
-msgid "Places"
-msgstr "Raccourcis"
-
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1071
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1086
-#: ../applets/maintained/yama/yama.py:331
-msgid "Recent Documents"
-msgstr "Documents récents"
-
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1117
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1128
-msgid "Session"
-msgstr "Session"
+#. generates a compiler warning due to the ellipse
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1147
+msgid "Search…"
+msgstr ""
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1144
-msgid "Search\\u2026"
-msgstr "Rechercher\\u2026"
-
-#. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1161
-msgid "Launch\\u2026"
-msgstr "Lancer\\u2026"
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1164
+msgid "Launch…"
+msgstr ""
 
 #: ../applets/maintained/cairo-menu/misc.c:161
 #: ../applets/maintained/yama/yama.py:606
@@ -3892,14 +3895,14 @@ msgid "A prettier desktop switcher"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:2
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2438
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2470
 msgid "Shiny Switcher"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:642
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:735
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1945
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2012
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1977
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2044
 msgid "Applet Preferences"
 msgstr ""
 
@@ -5467,8 +5470,26 @@ msgstr "Radio Pandora"
 #~ msgid "Use Curved Dialog look"
 #~ msgstr "Courbes de style"
 
+#~ msgid "Lower Center"
+#~ msgstr "Centrées en bas"
+
+#~ msgid "Lower Left"
+#~ msgstr "En bas a gauche"
+
+#~ msgid "Lower Right"
+#~ msgstr "En bas a droite"
+
 #~ msgid "Upper Center"
 #~ msgstr "Centrées en haut"
+
+#~ msgid "Upper Left"
+#~ msgstr "En haut a gauche"
+
+#~ msgid "Upper Right"
+#~ msgstr "En haut a droite"
+
+#~ msgid "Show Temperature"
+#~ msgstr "Afficher les températures"
 
 #~ msgid "Statistics calculation requires read access to /proc/net/dev"
 #~ msgstr ""
@@ -5527,6 +5548,12 @@ msgstr "Radio Pandora"
 
 #~ msgid "Celcius"
 #~ msgstr "Celcius"
+
+#~ msgid "Launch\\u2026"
+#~ msgstr "Lancer\\u2026"
+
+#~ msgid "Search\\u2026"
+#~ msgstr "Rechercher\\u2026"
 
 #~ msgid " none)."
 #~ msgstr " aucun)."
@@ -5691,6 +5718,39 @@ msgstr "Radio Pandora"
 #~ msgid_plural "%s: %u items"
 #~ msgstr[0] "%s: %u élément"
 #~ msgstr[1] "%s: %u éléments"
+
+#~ msgid "1"
+#~ msgstr "1"
+
+#~ msgid " gdk."
+#~ msgstr " gdk."
+
+#~ msgid "Tooltip text color."
+#~ msgstr "Couleur du texte de l'infobulle."
+
+#~ msgid "Use Awn's tooltip font."
+#~ msgstr "Utiliser la police des infobulles de Awn."
+
+#~ msgid "Fahrenheit)."
+#~ msgstr "Fahrenheit)."
+
+#~ msgid "Number of rows to use."
+#~ msgstr "Nombre de lignes à utiliser."
+
+#~ msgid "Stack tooltip description."
+#~ msgstr "Description de l'infobulle de la pile."
+
+#~ msgid "Size of the icons inside stack."
+#~ msgstr "Taille des icônes dans la pile."
+
+#~ msgid "Number of columns to use."
+#~ msgstr "Nombre de colonnes à utiliser."
+
+#~ msgid "Tooltip font name."
+#~ msgstr "Nom de la police de l'infobulle."
+
+#~ msgid "Tooltip border color."
+#~ msgstr "Couleur de la bordure de l'infobulle."
 
 #~ msgid "IP Address"
 #~ msgstr "Adresse IP"

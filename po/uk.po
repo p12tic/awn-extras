@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-30 22:29+0200\n"
-"PO-Revision-Date: 2010-12-26 20:54+0000\n"
+"POT-Creation-Date: 2010-12-27 20:54+0100\n"
+"PO-Revision-Date: 2010-12-27 19:57+0000\n"
 "Last-Translator: Fedik <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-12-27 04:36+0000\n"
+"X-Launchpad-Export-Date: 2010-12-28 04:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -117,7 +117,7 @@ msgstr "Аплет терміналу"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:1
 msgid "Adds or removes 5px to the value of the AWN setting \"Size of Icons\""
-msgstr ""
+msgstr "Збільшити чи зменшити розмір значків на 5 пікселів."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:2
 msgid "Color to draw the background"
@@ -129,7 +129,7 @@ msgstr "Колір рамки"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:4
 msgid "Desired applet font size"
-msgstr ""
+msgstr "Бажаний розмір шрифту"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:5
 msgid "Display parameters for interfaces"
@@ -137,7 +137,7 @@ msgstr "Показати параметри для інтерфейсів"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:6
 msgid "Draw the applet background"
-msgstr ""
+msgstr "Малювати фон аплету"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:7
 msgid "Draw the applet border"
@@ -149,6 +149,9 @@ msgid ""
 "reflection in horizontal docks only, 2: show reflection in vertical docks, "
 "3: Disable reflection for all dock orientations"
 msgstr ""
+"Дозволити/заборонити віддзеркалення для цього аплету. 0 - використовувати "
+"налаштування AWN, 1 - лише коли AWN в горизонтальному положенні, 2 - лише "
+"коли AWN в вертикальному положенні, 3 - заборонити віддзеркалення."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:9
 msgid ""
@@ -960,7 +963,29 @@ msgstr "Місця"
 msgid "Edit"
 msgstr "Редагувати"
 
-#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:305
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:198
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1037
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1051
+#: ../applets/maintained/file-browser-launcher/prefs.py:249
+#: ../applets/maintained/places/places.desktop.in.in.h:2
+#: ../applets/maintained/yama/yama.py:255
+msgid "Places"
+msgstr "Місця"
+
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:202
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1074
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1089
+#: ../applets/maintained/yama/yama.py:331
+msgid "Recent Documents"
+msgstr "Недавні документи"
+
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:206
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1120
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1131
+msgid "Session"
+msgstr "Сеанс"
+
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:319
 msgid "Remove Icon"
 msgstr "Вилучити піктограму"
 
@@ -1052,34 +1077,15 @@ msgstr "Мережа"
 msgid "Connect to Server"
 msgstr "З'єднатися з сервером"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1034
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1048
-#: ../applets/maintained/file-browser-launcher/prefs.py:249
-#: ../applets/maintained/places/places.desktop.in.in.h:2
-#: ../applets/maintained/yama/yama.py:255
-msgid "Places"
-msgstr "Місця"
-
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1071
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1086
-#: ../applets/maintained/yama/yama.py:331
-msgid "Recent Documents"
-msgstr "Недавні документи"
-
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1117
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1128
-msgid "Session"
-msgstr "Сеанс"
+#. generates a compiler warning due to the ellipse
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1147
+msgid "Search…"
+msgstr ""
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1144
-msgid "Search\\u2026"
-msgstr "Пошук\\u2026"
-
-#. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1161
-msgid "Launch\\u2026"
-msgstr "Запуск\\u2026"
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1164
+msgid "Launch…"
+msgstr ""
 
 #: ../applets/maintained/cairo-menu/misc.c:161
 #: ../applets/maintained/yama/yama.py:606
@@ -3876,14 +3882,14 @@ msgid "A prettier desktop switcher"
 msgstr "Симпатичний перемикач робочих областей"
 
 #: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:2
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2438
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2470
 msgid "Shiny Switcher"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:642
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:735
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1945
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2012
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1977
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2044
 msgid "Applet Preferences"
 msgstr "Налаштування апплету"
 
@@ -5285,25 +5291,25 @@ msgstr ""
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:5
 msgid "URI"
-msgstr ""
+msgstr "Посилання"
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:7
 #, no-c-format
 msgid "Width in %% or px."
-msgstr ""
+msgstr "Ширина в %% або px."
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:9
 #, no-c-format
 msgid "height in %% or px."
-msgstr ""
+msgstr "Висота в %% або px."
 
 #: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:1
 msgid "Applet for Websites"
-msgstr ""
+msgstr "Аплет веьсайтів"
 
 #: ../applets/maintained/wobblyzini/wobblyzini.desktop.in.in.h:1
 msgid "A simple test animation"
-msgstr ""
+msgstr "Проста тестова анімація"
 
 #: ../applets/maintained/wobblyzini/wobblyzini.desktop.in.in.h:2
 msgid "Wobbly Zini"
@@ -5312,11 +5318,11 @@ msgstr ""
 #: ../applets/maintained/yama/yama.desktop.in.h:1
 #: ../applets/maintained/yama/yama.py:47
 msgid "Main menu with places and recent documents"
-msgstr ""
+msgstr "Головне меню з дисками та останніми документами"
 
 #: ../applets/maintained/yama/yama.desktop.in.h:2
 msgid "Yet Another Menu Applet"
-msgstr ""
+msgstr "Ще один аплет меню"
 
 #: ../applets/maintained/yama/yama.py:46
 msgid "YAMA"
@@ -5325,37 +5331,37 @@ msgstr ""
 #: ../applets/maintained/yama/yama.py:172
 #, python-format
 msgid "Log out %s of this session to log in as a different user"
-msgstr ""
+msgstr "Вийти з сеансу користувача %s та зайти під іншим ім'ям"
 
 #: ../applets/maintained/yama/yama.py:190
 msgid "_Edit Menus"
-msgstr ""
+msgstr "_Редагувати меню"
 
 #: ../applets/maintained/yama/yama.py:262
 msgid "Open your personal folder"
-msgstr ""
+msgstr "Відкрити Вашу персональну теку"
 
 #: ../applets/maintained/yama/yama.py:264
 msgid "Open the contents of your desktop in a folder"
-msgstr ""
+msgstr "Відкрити вміст робочого столу у теці"
 
 #: ../applets/maintained/yama/yama.py:315
 msgid "Connect to a remote computer or shared disk"
-msgstr ""
+msgstr "З'єднатись з віддаленим комп'ютером або спільним диском"
 
 #: ../applets/maintained/yama/yama.py:345
 msgid "Clear all items from the recent documents list"
-msgstr ""
+msgstr "Очистити список недавно використаних документів"
 
 #: ../applets/maintained/yama/yama.py:398
 #, python-format
 msgid "Open '%s'"
-msgstr ""
+msgstr "Відкрити '%s'"
 
 #: ../applets/maintained/yama/yama.py:439
 #, python-format
 msgid "Mount %s"
-msgstr ""
+msgstr "Приєднати %s"
 
 #: ../applets/maintained/yama/yama.py:591
 msgid ""
@@ -5363,47 +5369,51 @@ msgid ""
 "* All items from the Places > Recent Documents menu item.\n"
 "* All items from the recent documents list in all applications."
 msgstr ""
+"Очистити список недавно використаних документів разом з:\n"
+"* Усіма елементами Місця > Останні документи, що в меню.\n"
+"* Усіма елементами, в списку часто використовуваних документів, у всіх "
+"програмах."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:1
 msgid "Awn System Monitor"
-msgstr ""
+msgstr "Системний монітор Awn"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:1
 msgid "Graph update frequency, in milliseconds."
-msgstr ""
+msgstr "Частота оновлення графіку в мілісекундах."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:2
 msgid "Set to 1 (true) to draw the gradient overlay on the graph."
-msgstr ""
+msgstr "Встановіть 1(так), щоб малювати накладання градієнту на графіку"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:3
 msgid "The color used in the applet border."
-msgstr ""
+msgstr "Колір рамки"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:4
 msgid "The color used in the graph lines."
-msgstr ""
+msgstr "Колір лінії графіка."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:5
 msgid "The color used in the graph lines. Valid values are 0.0 through 1.0."
-msgstr ""
+msgstr "Колір ліній графіка. Вірні значення в межах від 0.0 до 1.0."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:6
 msgid "The pixel width of the applet border."
-msgstr ""
+msgstr "Ширина рамки в пікселях."
 
 #: ../applets/unmaintained/main-menu/applet.c:393
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:2
 msgid "Awn Main Menu"
-msgstr ""
+msgstr "Головне меню Awn"
 
 #: ../applets/unmaintained/main-menu/applet.c:394
 msgid "Displays a list of all your applications"
-msgstr ""
+msgstr "Відображає список всіх Ваши програм"
 
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:1
 msgid "A main menu for Awn"
-msgstr ""
+msgstr "Головне меню Awn"
 
 #: ../applets/unmaintained/pandora/awn-applet-pandora.schema-ini.in.h:1
 msgid "The url of the Pandora mini flash player."
@@ -5464,6 +5474,12 @@ msgstr "Радіо Pandora"
 
 #~ msgid "Subnet Mask"
 #~ msgstr "Маска підмережі"
+
+#~ msgid "Search\\u2026"
+#~ msgstr "Пошук\\u2026"
+
+#~ msgid "Launch\\u2026"
+#~ msgstr "Запуск\\u2026"
 
 #~ msgid ""
 #~ "\n"

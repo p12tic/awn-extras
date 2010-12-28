@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-30 22:29+0200\n"
+"POT-Creation-Date: 2010-12-27 20:54+0100\n"
 "PO-Revision-Date: 2010-11-03 23:26+0000\n"
 "Last-Translator: Para <Unknown>\n"
 "Language-Team: Korean <ko@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2010-11-05 04:44+0000\n"
+"X-Launchpad-Export-Date: 2010-12-28 04:34+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -938,7 +938,29 @@ msgstr "위치"
 msgid "Edit"
 msgstr "편집"
 
-#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:305
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:198
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1037
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1051
+#: ../applets/maintained/file-browser-launcher/prefs.py:249
+#: ../applets/maintained/places/places.desktop.in.in.h:2
+#: ../applets/maintained/yama/yama.py:255
+msgid "Places"
+msgstr "위치"
+
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:202
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1074
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1089
+#: ../applets/maintained/yama/yama.py:331
+msgid "Recent Documents"
+msgstr "최근 문서"
+
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:206
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1120
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1131
+msgid "Session"
+msgstr "세션"
+
+#: ../applets/maintained/cairo-menu/cairo-aux-icon.c:319
 msgid "Remove Icon"
 msgstr "아이콘 제거"
 
@@ -1030,34 +1052,15 @@ msgstr "네트워크"
 msgid "Connect to Server"
 msgstr "서버에 연결"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1034
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1048
-#: ../applets/maintained/file-browser-launcher/prefs.py:249
-#: ../applets/maintained/places/places.desktop.in.in.h:2
-#: ../applets/maintained/yama/yama.py:255
-msgid "Places"
-msgstr "위치"
-
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1071
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1086
-#: ../applets/maintained/yama/yama.py:331
-msgid "Recent Documents"
-msgstr "최근 문서"
-
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1117
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1128
-msgid "Session"
-msgstr "세션"
+#. generates a compiler warning due to the ellipse
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1147
+msgid "Search…"
+msgstr ""
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1144
-msgid "Search\\u2026"
-msgstr "검색\\u2026"
-
-#. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1161
-msgid "Launch\\u2026"
-msgstr "실행\\u2026"
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1164
+msgid "Launch…"
+msgstr ""
 
 #: ../applets/maintained/cairo-menu/misc.c:161
 #: ../applets/maintained/yama/yama.py:606
@@ -3824,14 +3827,14 @@ msgid "A prettier desktop switcher"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:2
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2438
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2470
 msgid "Shiny Switcher"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:642
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:735
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1945
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2012
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1977
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2044
 msgid "Applet Preferences"
 msgstr ""
 
@@ -5364,8 +5367,32 @@ msgstr ""
 msgid "Pandora Radio"
 msgstr ""
 
+#~ msgid " Upload/Download"
+#~ msgstr " 업로드/다운로드"
+
+#~ msgid " bytes)"
+#~ msgstr " 바이트)"
+
+#~ msgid "Unable to caclulate statistics"
+#~ msgstr "통계 계산 사용불가능"
+
+#~ msgid "Sent"
+#~ msgstr "보내기"
+
+#~ msgid "Received"
+#~ msgstr "받음"
+
+#~ msgid "Sending"
+#~ msgstr "보내는 중"
+
+#~ msgid "Receiving"
+#~ msgstr "받는 중"
+
 #~ msgid "No"
 #~ msgstr "아니오"
+
+#~ msgid " 0.9)."
+#~ msgstr " 0.9)."
 
 #~ msgid "Mouse Actions"
 #~ msgstr "마우스 동작"
@@ -5376,8 +5403,37 @@ msgstr ""
 #~ msgid "Previous Layout"
 #~ msgstr "이전 레이아웃"
 
+#, python-format
+#~ msgid "%s New Item%s - Feeds Applet"
+#~ msgstr "%s 새 항목%s - 피드 애플릿"
+
 #~ msgid "Monitor Web Feeds"
 #~ msgstr "웹 피드 모니터"
+
+#, python-format
+#~ msgid "Do you want to add these %s feeds?"
+#~ msgstr "이 %s  피드에 추가하기를 원하십니까?"
+
+#~ msgid "Do you want to add this feed?"
+#~ msgstr "이 피드를 추가하기 원하십니까?"
+
+#~ msgid " persistent docklet"
+#~ msgstr " 영구 독렛"
+
+#~ msgid "Templates"
+#~ msgstr "템플리트"
+
+#~ msgid "Videos"
+#~ msgstr "비디오"
+
+#~ msgid "Downloads"
+#~ msgstr "다운로드"
+
+#~ msgid "Documents"
+#~ msgstr "문서"
+
+#~ msgid "Music"
+#~ msgstr "음악"
 
 #, c-format
 #~ msgid "%s: %u item"
@@ -5390,8 +5446,62 @@ msgstr ""
 #~ msgid "Show the item count on the icon"
 #~ msgstr "휴지통의 항목 개수 보이기"
 
+#~ msgid " gdk."
+#~ msgstr " gdk."
+
+#~ msgid "1"
+#~ msgstr "1"
+
+#~ msgid "-"
+#~ msgstr "-"
+
+#~ msgid "+"
+#~ msgstr "+"
+
+#~ msgid "Tooltip border color."
+#~ msgstr "풍선도움말 테두리 색."
+
+#~ msgid "Stacks backend file/directory."
+#~ msgstr "스택 백엔드 파일/폴더."
+
+#~ msgid "Sort folders before files."
+#~ msgstr "폴더 후에 파일 정렬"
+
+#~ msgid "Stack tooltip description."
+#~ msgstr "스택 풍선도움말 설명."
+
+#~ msgid "Size of the icons inside stack."
+#~ msgstr "스택 안의 아이콘 크기"
+
+#~ msgid "Sort direction of the items."
+#~ msgstr "항목 정렬 방향"
+
+#~ msgid "Tooltip background color 2."
+#~ msgstr "풍선도움말 2번째 배경 색."
+
+#~ msgid "Tooltip font name."
+#~ msgstr "풍선도움말 글꼴 이름."
+
+#~ msgid "Tooltip text color."
+#~ msgstr "풍선도움말 글자 색."
+
+#~ msgid "Tooltip background color 1."
+#~ msgstr "풍선도움말 1번째 배경 색."
+
+#~ msgid "Whether tooltips are enabled."
+#~ msgstr "풍선도움말이 활성 되어있는지 여부."
+
+#~ msgid "Use Awn's tooltip font."
+#~ msgstr "AWN의 풍선도움말 글꼴 사용."
+
+#~ msgid "Type of UI used for the stack."
+#~ msgstr "스택을 위한 UI 종류"
+
 #~ msgid "Display the sum of upload and download"
 #~ msgstr "업로드 및 다운로드의 합계를 표시"
+
+#~ msgid "Whether to browse stack contents."
+#~ msgstr "스택으로 내용을 찾아볼 수 있는지 여부"
 
 #~ msgid "Display upload and download text representation of speed"
 #~ msgstr "업로드와 다운로드 속도에 수치를 표시합니다."
@@ -5430,3 +5540,9 @@ msgstr ""
 #~ msgstr ""
 #~ "적은 양의 트래픽에서 급격한 변동량을 보여주지 않기 위한 크기 조정용 최소 한계값을 설정하십시오. 예: 32.0 KBps로 설정하였다면 "
 #~ "그래프에서는 32.0 KBps를 초과하는 처리량만을 표시합니다."
+
+#~ msgid "Search\\u2026"
+#~ msgstr "검색\\u2026"
+
+#~ msgid "Launch\\u2026"
+#~ msgstr "실행\\u2026"

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-12-27 20:54+0100\n"
-"PO-Revision-Date: 2010-12-28 01:51+0000\n"
+"PO-Revision-Date: 2010-12-29 11:24+0000\n"
 "Last-Translator: Fitoschido <Unknown>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-12-29 04:37+0000\n"
+"X-Launchpad-Export-Date: 2010-12-30 04:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Generated-By: pygettext.py 1.5\n"
 
@@ -53,7 +53,7 @@ msgstr "Aplicación externa por defecto para el terminal."
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:100
 msgid "Disabled"
-msgstr "Deshabilitado"
+msgstr "Desactivado"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:412
 #: ../applets/maintained/calendar/calendarprefs.py:75
@@ -84,7 +84,7 @@ msgstr "Atajo"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:484
 msgid "Activate"
-msgstr "Habilitar"
+msgstr "Activar"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:493
 #, c-format
@@ -149,7 +149,7 @@ msgid ""
 "reflection in horizontal docks only, 2: show reflection in vertical docks, "
 "3: Disable reflection for all dock orientations"
 msgstr ""
-"Habilita/deshabilita reflejos para esta miniaplicación 0: Usar configuración "
+"Activa/desactiva reflejos para esta miniaplicación 0: Usar configuración "
 "estándar, 1: Usar reflejo sólo en lanzadores horizontales, 2: Usar reflejo "
 "sólo en lanzadores verticales, 3: Deshabilitar reflejos para todos los "
 "lanzadores"
@@ -2497,7 +2497,7 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:4
 msgid "If enabled, show sensor value(s) as an overlay in the icon."
-msgstr "Si está habilitado, mostrar el valor del sensor encima del icono"
+msgstr "Si está activado, mostrar el valor del sensor encima del icono"
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:5
 msgid "In what row of dialog is the sensor shown."
@@ -2708,7 +2708,7 @@ msgstr "Preferencias de la miniaplicación de indicadores"
 
 #: ../applets/maintained/indicator-applet/applet.c:177
 msgid "Enabled Entries"
-msgstr "Entradas habilitadas"
+msgstr "Entradas activadas"
 
 #: ../applets/maintained/indicator-applet/applet.c:184
 msgid "Indicator Applet Session (Quit)"
@@ -2748,7 +2748,7 @@ msgstr "Número de columnas:"
 
 #: ../applets/maintained/indicator-applet/applet.c:228
 msgid "Enable Applet Icon mode"
-msgstr "Habilitar modo de icono de miniaplicación"
+msgstr "Activar modo de icono de miniaplicación"
 
 #: ../applets/maintained/indicator-applet/applet.c:764
 msgid "Me menu"
@@ -2772,28 +2772,27 @@ msgstr "Menú de sonido"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:1
 msgid "If true, show any other menus"
-msgstr "Si se habilita, mostrar los demás menús"
+msgstr "Si se activa, mostrar los demás menús"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:2
 msgid "If true, show the Me menu (chat, microblogging, etc)"
-msgstr "Si se habilita, mostrar el menú Yo (charla, difusión, etc.)"
+msgstr "Si se activa, mostrar el menú Yo (charla, difusión, etc.)"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:3
 msgid "If true, show the Messaging icon"
-msgstr "Si se habilita, mostrar el icono de Mensajería"
+msgstr "Si se activa, mostrar el icono de Mensajería"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:4
 msgid "If true, show the Network menu"
-msgstr "Si se habilita, mostrar el menú de red"
+msgstr "Si se activa, mostrar el menú de red"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:5
 msgid "If true, show the Sound control menu"
-msgstr "Si se habilita, mostrar el menú de sonido"
+msgstr "Si se activa, mostrar el menú de sonido"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:6
 msgid "If true, show the indicator applet icons"
-msgstr ""
-"Si se habilita, mostrar los iconos de la miniaplicación de indicadores"
+msgstr "Si se activa, mostrar los iconos de la miniaplicación de indicadores"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:7
 msgid ""
@@ -5298,7 +5297,7 @@ msgstr ""
 
 #: ../applets/maintained/weather/weather.ui.h:8
 msgid "If enabled, the temperature will be displayed in the icon"
-msgstr "Si se habilita, la termeratura se mostrará en el icono"
+msgstr "Si se activa, la temperatura se mostrará en el icono"
 
 #: ../applets/maintained/weather/weather.ui.h:10
 msgid "Maximum _map width:"
@@ -5344,7 +5343,7 @@ msgstr "Miniaplicación web"
 msgid ""
 "Flag that enables usage of the \"Open Location\" dialog in the applet."
 msgstr ""
-"Bandera que habilita el uso de la «ubicación abierta» en la miniaplicación."
+"Bandera que activa el uso de la «ubicación abierta» en la miniaplicación."
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:2
 msgid "HTML engine to use."

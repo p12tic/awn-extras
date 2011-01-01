@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-12-27 20:54+0100\n"
-"PO-Revision-Date: 2010-12-29 11:24+0000\n"
+"PO-Revision-Date: 2010-12-31 12:47+0000\n"
 "Last-Translator: Fitoschido <Unknown>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-12-30 04:47+0000\n"
+"X-Launchpad-Export-Date: 2011-01-01 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Generated-By: pygettext.py 1.5\n"
 
@@ -1740,7 +1740,7 @@ msgstr "_Permitir desplazarse con la rueda para cambiar esquema"
 
 #: ../applets/maintained/dialect/dialect.ui.h:24
 msgid "_Keyboard Toggle:"
-msgstr ""
+msgstr "_Conmutar teclado:"
 
 #: ../applets/maintained/dialect/dialect.ui.h:25
 msgid "_Left Click:"
@@ -2799,6 +2799,8 @@ msgid ""
 "If true, show the indicator applet session icon (lock screen, switch users, "
 "etc)"
 msgstr ""
+"Si se activa, mostrar el icono de la miniaplicación de indicadores de sesión "
+"(bloquear pantalla, cambiar usuario, etc.)"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:8
 msgid "If true, use an Awn applet icon instead"
@@ -3486,7 +3488,7 @@ msgstr ""
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:33
 msgid "The width of the menu's border.);"
-msgstr ""
+msgstr "El ancho del borde del menú.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:31
 msgid "The size of the text in the menu, in pixels.);"
@@ -3719,7 +3721,7 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:10
 msgid "Method to grab windows.  0...gdk."
-msgstr ""
+msgstr "Método para obtener ventanas. 0...gdk."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:11
 msgid ""
@@ -3937,7 +3939,7 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:1
 msgid "A prettier desktop switcher"
-msgstr ""
+msgstr "Un conmutador de escritorios más bonito"
 
 #: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:2
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2470
@@ -4008,7 +4010,7 @@ msgstr ""
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:10
 msgid "The icon's border color"
-msgstr ""
+msgstr "El color del borde del icono"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:11
 msgid "The main color of a drawn window"
@@ -4054,7 +4056,7 @@ msgstr "Preferencias de SlickSwitcher"
 #. Border Colors
 #: ../applets/maintained/slickswitcher/prefs.py:94
 msgid "Border Colors"
-msgstr ""
+msgstr "Colores de borde"
 
 #. Icon Border
 #: ../applets/maintained/slickswitcher/prefs.py:100
@@ -4112,7 +4114,7 @@ msgstr "Colores"
 #. Number Colors
 #: ../applets/maintained/slickswitcher/prefs.py:187
 msgid "Number Colors"
-msgstr ""
+msgstr "Colores de número"
 
 #. Drop-Shadow Color
 #: ../applets/maintained/slickswitcher/prefs.py:203
@@ -4571,7 +4573,7 @@ msgstr "Tipo de icono"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:1
 msgid "Manage a simple To-Do list"
-msgstr ""
+msgstr "Gestione una simple lista de tareas por hacer"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:2
 #: ../applets/maintained/to-do/to-do.py:69
@@ -4720,7 +4722,7 @@ msgstr "Una miniaplicación simple para probar el soporte de Vala"
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:2
 msgid "Test Vala Applet"
-msgstr ""
+msgstr "Miniaplicación de prueba de Vala"
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:1
 msgid "Name of the device."
@@ -4794,7 +4796,7 @@ msgstr "_Silenciar"
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:1
 msgid "City, and country of the weather location."
-msgstr ""
+msgstr "Ciudad y país de la ubicación del clima."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:2
 msgid "Code that identifies the weather location."

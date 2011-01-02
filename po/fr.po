@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-12-27 20:54+0100\n"
-"PO-Revision-Date: 2010-12-04 09:04+0000\n"
+"PO-Revision-Date: 2011-01-01 12:06+0000\n"
 "Last-Translator: Nicolas Delvaux <Unknown>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2010-12-28 04:33+0000\n"
+"X-Launchpad-Export-Date: 2011-01-02 04:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Generated-By: pygettext.py 1.5\n"
 
@@ -157,6 +157,8 @@ msgid ""
 "Enbables or disables drawing the applet graph - if disabled only the speed "
 "text will be displayed in the applet"
 msgstr ""
+"Active ou désactive l'affichage d'un graphe sur l'applet - si désactivé, "
+"seule la vitesse sera affichée textuellement sur l'applet"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:10
 msgid ""
@@ -264,7 +266,7 @@ msgstr ""
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:81
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:82
 msgid "n/a"
-msgstr ""
+msgstr "n/d"
 
 #. Reset the Multi Interface records to zero
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:76
@@ -401,7 +403,9 @@ msgstr "Hauteur de l'applet"
 msgid ""
 "Applet Size \n"
 "Override"
-msgstr "Taille de l ' applet"
+msgstr ""
+"Taille de l'applet \n"
+"Ignorer"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:6
 msgid "Applet Width"
@@ -425,7 +429,7 @@ msgstr "Afficher des Mo/s ou Ko/s au lieu de Mb/s ou Kb/s"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:11
 msgid "Display Speed Text"
-msgstr "Afficher la vitesse du texte"
+msgstr "Afficher la vitesse textuellement"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:12
 msgid "Draw 0 bps in graphs"
@@ -433,7 +437,7 @@ msgstr "Dessiner 0 b/s dans le graphe"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:13
 msgid "Draw Applet Graph"
-msgstr ""
+msgstr "Dessiner le graphe de l'applet"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:14
 msgid "Draw Background"
@@ -470,7 +474,7 @@ msgstr "Limite basse de l'échelle"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:23
 msgid "Signal Scale"
-msgstr ""
+msgstr "Échelle du signal"
 
 #. Translators: short for "Sum Interface"
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:24
@@ -481,7 +485,7 @@ msgstr "Somme"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:25
 msgid "Traffic Scale"
-msgstr ""
+msgstr "Échelle du trafic"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:229
 msgid "Device"
@@ -661,7 +665,7 @@ msgstr "batterie"
 #: ../applets/maintained/battery/battery.py:210
 #, python-format
 msgid "Computer running on %s power"
-msgstr ""
+msgstr "L'ordinateur fonctionne avec une puissance de %s"
 
 #: ../applets/maintained/battery/battery.py:213
 msgid "Battery charged"
@@ -1477,7 +1481,7 @@ msgstr "Commande envoyée inconnue : %s"
 #: ../applets/maintained/common-folder/common-folder.desktop.in.h:1
 #: ../applets/maintained/common-folder/common-folder.py:32
 msgid "Common Folder Launcher"
-msgstr ""
+msgstr "Raccourcis vers des dossiers communs"
 
 #: ../applets/maintained/common-folder/common-folder.desktop.in.h:2
 msgid "Launcher for common folders and bookmarks"
@@ -1597,19 +1601,19 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.py:209
 msgid "small"
-msgstr ""
+msgstr "petit"
 
 #: ../applets/maintained/dialect/dialect.py:211
 msgid "large"
-msgstr ""
+msgstr "grand"
 
 #: ../applets/maintained/dialect/dialect.py:213
 msgid "transparent"
-msgstr ""
+msgstr "transparent"
 
 #: ../applets/maintained/dialect/dialect.py:215
 msgid "opaque"
-msgstr ""
+msgstr "opaque"
 
 #: ../applets/maintained/dialect/dialect.py:217
 msgid "System List"
@@ -1629,7 +1633,7 @@ msgstr "<b>Clavier</b>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:3
 msgid "<b>Mouse Actions</b>"
-msgstr ""
+msgstr "<b>Actions de la souris</b>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:4
 msgid "About Dialect Applet"
@@ -1679,7 +1683,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:18
 msgid "Show _Flag"
-msgstr ""
+msgstr "Montrer le _drapeau"
 
 #: ../applets/maintained/dialect/dialect.ui.h:19
 msgid "Show menu with layouts"

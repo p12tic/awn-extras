@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-12-27 20:54+0100\n"
-"PO-Revision-Date: 2011-01-01 13:51+0000\n"
+"PO-Revision-Date: 2011-01-02 11:42+0000\n"
 "Last-Translator: Fedik <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2011-01-02 04:41+0000\n"
+"X-Launchpad-Export-Date: 2011-01-03 04:41+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -26,7 +26,7 @@ msgstr "Тваринна ферма"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:2
 msgid "Display fortune messages"
-msgstr "Повідомлення щастя"
+msgstr "Відображає цікаві цитати"
 
 #: ../applets/maintained/animal-farm/animal-farm.py:31
 msgid "Applet that displays fortune messages"
@@ -158,6 +158,8 @@ msgid ""
 "Enbables or disables drawing the applet graph - if disabled only the speed "
 "text will be displayed in the applet"
 msgstr ""
+"Увімкнути або вимкнути малювання графіку, якщо вимкнено, то на аплеті буде "
+"показано лише текст"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:10
 msgid ""
@@ -170,34 +172,44 @@ msgstr ""
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:11
 msgid "Minimum threshold to draw meter (dependent upon DEFAULT/unit)"
 msgstr ""
+"Мінімальний поріг для малювання графіку ( залежить від використаних значень "
+"за замовчуванням )"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:12
 msgid ""
 "Sets the default scale of the applet traffic graph - the scale is the amount "
 "of linear data to display at one time"
 msgstr ""
+"Встановити стандартний масштаб для графіку - кількість ліній по висоті для "
+"показу в один час."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:13
 msgid ""
 "Sets the default scale of the applet wireless signal graph - the scale is "
 "the amount of linear data to display at one time"
 msgstr ""
+"Встановити стандартний масштаб для графіку бездротової мережі  - кількість "
+"ліній по висоті для показу в один час."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:14
 msgid ""
 "Sets the default scale of the popup-dialog traffic graph - the scale is the "
 "amount of linear data to display at one time"
 msgstr ""
+"Встановити стандартний масштаб для графіку у виринаючому віконці - кількість "
+"ліній по висоті для показу в один час."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:15
 msgid ""
 "Sets the default scale of the popup-dialog wireless signal graph - the scale "
 "is the amount of linear data to display at one time"
 msgstr ""
+"Встановити стандартний масштаб для графіку, бездротової мережі, у "
+"виринаючому віконці - кількість ліній по висоті для показу в один час."
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:16
 msgid "Sets the offset of the applet from the edge of the dock"
-msgstr ""
+msgstr "Встановити зміщення аплету відносно краю панелі"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:17
 msgid "Sets the width of the applet icon"
@@ -227,7 +239,7 @@ msgstr ""
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:261
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:2
 msgid "Bandwidth Monitor"
-msgstr "Монітор пропускної здатності"
+msgstr "Монітор мережі"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:44
 msgid "Network Bandwidth monitor"
@@ -255,7 +267,7 @@ msgstr "Монітор пропускної здатності мережі"
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:390
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:690
 msgid "Sum Interface"
-msgstr ""
+msgstr "Сума інтерфейсів"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:61
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:62
@@ -282,7 +294,7 @@ msgstr "н/д"
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:411
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:708
 msgid "Multi Interface"
-msgstr ""
+msgstr "Декілька інтерфейсів"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:329
 msgid "Scanning"
@@ -356,7 +368,7 @@ msgstr "ТБ/с"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
 msgid "bps"
-msgstr "б/с"
+msgstr "біт/с"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
 msgid "Mbps"
@@ -385,7 +397,7 @@ msgstr "Монітор пропускної здатності мережі дл
 #: ../applets/maintained/volume-control/volume-control.ui.h:4
 #: ../applets/maintained/weather/weather.ui.h:2
 msgid "<b>Display</b>"
-msgstr "<b>Відображення</b>"
+msgstr "<b>Вигляд</b>"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:2
 msgid "Applet"
@@ -399,9 +411,7 @@ msgstr "Зміщення аплету"
 msgid ""
 "Applet Size \n"
 "Override"
-msgstr ""
-"Розмір аплету \n"
-"Перепризначення"
+msgstr "Розмір аплету"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:6
 msgid "Applet Width"
@@ -417,7 +427,7 @@ msgstr "Колір рамки"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:9
 msgid "Dialog"
-msgstr "Діалогове вікно"
+msgstr "Діалог"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:10
 msgid "Display MBps/KBps (bytes) instead of Mbps/Kbps (bits)"
@@ -425,7 +435,7 @@ msgstr "Показувати МБ/с і КБ/с (байти) замість Мб
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:11
 msgid "Display Speed Text"
-msgstr "Відображати швидкість"
+msgstr "Показувати текст швидкості"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:12
 msgid "Draw 0 bps in graphs"
@@ -458,7 +468,7 @@ msgstr "Лише графік"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:18
 msgid "Icon Font Size"
-msgstr "Розмір шрифту на іконці"
+msgstr "Розмір шрифту"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:19
 msgid "If this is checked, the common display unit will be Bytes"
@@ -470,7 +480,7 @@ msgstr "Мінімальний поріг масштабування."
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:23
 msgid "Signal Scale"
-msgstr "Шкала сигналу"
+msgstr "Масштаб сигналу"
 
 #. Translators: short for "Sum Interface"
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:24
@@ -481,7 +491,7 @@ msgstr "Сума"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:25
 msgid "Traffic Scale"
-msgstr "Шкала трафіку"
+msgstr "Масштаб трафіку"
 
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:229
 msgid "Device"
@@ -546,11 +556,11 @@ msgstr "Повернутись до графіка"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:626
 msgid "Change Unit"
-msgstr "Змінити одиницю вимірювання"
+msgstr "Змінити одиниці"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:670
 msgid "Status:"
-msgstr "Статус:"
+msgstr "Стан:"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:670
 msgid "IP Address:"
@@ -582,7 +592,7 @@ msgstr "Нічого"
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:704
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:721
 msgid "Members:"
-msgstr "Участники:"
+msgstr "Учасники:"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:753
 msgid "Wireless graph type"
@@ -660,7 +670,7 @@ msgstr "акумулятор"
 #: ../applets/maintained/battery/battery.py:210
 #, python-format
 msgid "Computer running on %s power"
-msgstr ""
+msgstr "Комп'ютер працює на %s енергії"
 
 #: ../applets/maintained/battery/battery.py:213
 msgid "Battery charged"
@@ -1080,12 +1090,12 @@ msgstr "З'єднатися з сервером"
 #. generates a compiler warning due to the ellipse
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1147
 msgid "Search…"
-msgstr ""
+msgstr "Пошук..."
 
 #. generates a compiler warning due to the ellipse
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1164
 msgid "Launch…"
-msgstr ""
+msgstr "Запуск..."
 
 #: ../applets/maintained/cairo-menu/misc.c:161
 #: ../applets/maintained/yama/yama.py:606
@@ -1471,15 +1481,15 @@ msgstr "Відправлено невідому команду: %s"
 #: ../applets/maintained/common-folder/common-folder.desktop.in.h:1
 #: ../applets/maintained/common-folder/common-folder.py:32
 msgid "Common Folder Launcher"
-msgstr ""
+msgstr "Відкриття основних папок"
 
 #: ../applets/maintained/common-folder/common-folder.desktop.in.h:2
 msgid "Launcher for common folders and bookmarks"
-msgstr ""
+msgstr "Відображає ярлики основних папок та закладок"
 
 #: ../applets/maintained/common-folder/common-folder.py:33
 msgid "Applet to launch common folders and bookmarks"
-msgstr ""
+msgstr "Аплет для швидкого відкриття основних папок та закладок"
 
 #: ../applets/maintained/common-folder/common-folder.py:93
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:385
@@ -1661,6 +1671,7 @@ msgid ""
 "If selected, scrolling up or down with your mouse wheel will select the next "
 "or previous layout in your user list"
 msgstr ""
+"Якщо обрано, то розкладку можна перемикати прокручуванням колеса мишки"
 
 #. Keyboard layouts
 #: ../applets/maintained/dialect/dialect.ui.h:14
@@ -2058,7 +2069,7 @@ msgstr "feeds.opml"
 
 #: ../applets/maintained/feeds/prefs.py:308
 msgid "Awn Feeds Applet Items"
-msgstr ""
+msgstr "Повідомлення аплету новин Awn"
 
 #. Source: label and radio buttons
 #: ../applets/maintained/feeds/prefs.py:363
@@ -2440,7 +2451,7 @@ msgstr "Показувати на іконці кількість _елемен�
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:1
 msgid "Applet theme."
-msgstr ""
+msgstr "Тема аплету."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:2
 msgid "For each sensor, whether to show it in main dialog or not."
@@ -2472,11 +2483,11 @@ msgstr "Підписи сенсорів."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:9
 msgid "Size of value overlay in the icon (0: small, 1: medium, 2: large)."
-msgstr ""
+msgstr "Розмір тексту на значку (0: малий, 1: середній, 2:великий)."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:11
 msgid "The color (RGBA) of the meter hand/needle."
-msgstr ""
+msgstr "Колір (RGBA) стрілки."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:12
 msgid "Timeout between two value updates (in seconds)."
@@ -2484,15 +2495,15 @@ msgstr "Перід оновлення значення (в секундах)"
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:13
 msgid "Whether alarm should trigger at high value limit or not."
-msgstr ""
+msgstr "Чи показувати попередження коли значення більше допустимого."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:14
 msgid "Whether alarm should trigger at low value limit or not."
-msgstr ""
+msgstr "Чи показувати попередження коли значення менше допустимого."
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:15
 msgid "Whether to show a sensor in applet icon or not."
-msgstr ""
+msgstr "Чи показувати датчик на іконці."
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.desktop.in.h:1
 msgid "Applet to show the hw sensors readouts"
@@ -2599,7 +2610,7 @@ msgstr "Розмір шрифту:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:10
 msgid "Meter hand color:"
-msgstr ""
+msgstr "Колір стрілки:"
 
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:11
 msgid "Remove"
@@ -2652,7 +2663,7 @@ msgstr "Аплет сповіщення"
 #: ../applets/maintained/indicator-applet/applet.c:92
 #: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.in.h:1
 msgid "An applet to hold all of the system indicators"
-msgstr ""
+msgstr "Аплет показує значення всіх датчиків системи"
 
 #: ../applets/maintained/indicator-applet/applet.c:170
 msgid "Indicator Applet Preferences"
@@ -2770,7 +2781,7 @@ msgstr "Приховувати іконку якщо відсутні нові �
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:3
 msgid "The Desktop Email client to use"
-msgstr ""
+msgstr "Клієнт електронної пошти"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:4
 msgid "The Email backend to use"
@@ -2913,7 +2924,7 @@ msgstr "Google Apps"
 
 #: ../applets/maintained/mail/mail.py:583
 msgid "Could not log in: No username or domain"
-msgstr ""
+msgstr "Неможливо увійти: Відсутні ім’я користувача, або домен"
 
 #: ../applets/maintained/mail/mail.py:650
 msgid "Domain:"
@@ -2992,7 +3003,7 @@ msgstr "хвилин"
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:1
 msgid "Close the docklet when mouse moves out from it."
-msgstr ""
+msgstr "Закривати коли мишку відведено всторону"
 
 #: ../applets/maintained/media-control/awn-applet-media-control.schema-ini.in.h:2
 msgid "Display album art if available."
@@ -3085,7 +3096,7 @@ msgstr "Аплет керування медіа (Наступний трек)"
 #: ../applets/maintained/media-icons/media-icon-next.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:74
 msgid "Media Icons Next"
-msgstr ""
+msgstr "Кнопка \"Наступний\""
 
 #: ../applets/maintained/media-icons/media-icon-previous.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:69
@@ -3095,7 +3106,7 @@ msgstr "Аплет керування медіа (Попередній трек)
 #: ../applets/maintained/media-icons/media-icon-previous.desktop.in.h:2
 #: ../applets/maintained/media-icons/media-icons.py:75
 msgid "Media Icons Previous"
-msgstr ""
+msgstr "Кнопка \"Попередній\""
 
 #: ../applets/maintained/media-icons/media-icons.desktop.in.h:1
 #: ../applets/maintained/media-icons/media-icons.py:70
@@ -3233,13 +3244,15 @@ msgstr "приховані точки монтування:"
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:1
 msgid "Extra offset from the panel's egde."
-msgstr ""
+msgstr "Зміщення від краю панелі."
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:2
 msgid ""
 "Maximum number of rows (or columns depending on the orientation of the "
 "panel) of the tray icons in the applet."
 msgstr ""
+"Максимальна кількість рядків (або колонок, в залежності від орієнтації "
+"панелі) на іконці аплету."
 
 #: ../applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in.h:3
 msgid "Size of the icons (in percent of applet size)."
@@ -3380,6 +3393,7 @@ msgid ""
 "Text colour in the form (Hex) rrggbbaa. Currently the alpha component is "
 "ignored"
 msgstr ""
+"Колір тексту форми (Hex) rrggbbaa. В даний момент прозорість ігнорується."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:11
 msgid ""
@@ -3433,19 +3447,19 @@ msgstr ""
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:33
 msgid "The width of the menu's border.);"
-msgstr ""
+msgstr "Ширина рамки меню.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:31
 msgid "The size of the text in the menu, in pixels.);"
-msgstr ""
+msgstr "Розмір тексту меню, в пікселях.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:29
 msgid "The icon theme name of the applet's icon.);"
-msgstr ""
+msgstr "Назва теми значків аплету.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:27
 msgid "The file manager that shows the contents of the places.);"
-msgstr ""
+msgstr "Файловий менеджер.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:25
 msgid ""

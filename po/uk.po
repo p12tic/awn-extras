@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-12-27 20:54+0100\n"
-"PO-Revision-Date: 2011-01-02 11:42+0000\n"
+"PO-Revision-Date: 2011-01-03 14:31+0000\n"
 "Last-Translator: Fedik <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2011-01-03 04:41+0000\n"
+"X-Launchpad-Export-Date: 2011-01-04 13:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
@@ -3505,25 +3505,30 @@ msgstr ""
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:9
 msgid "The background color (RGBA) of the menu.);"
-msgstr ""
+msgstr "Фоновий колір (RGBA) меню.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:7
 msgid ""
 "The background color (RGBA) of an entry in the menu when it is selected or "
 "the mouse hovers over it.);"
 msgstr ""
+"Фоновий колір (RGBA) пункту меню коли на нього наведено вказівник мишки.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:5
 msgid ""
 "Determines whether to use the current Gtk+ theme's colour/font settings, or "
 "the applet-specific style settings.);"
 msgstr ""
+"Визначає чи використовувати параметри (кольори/шрифт) Gtk+ теми, чи "
+"використовувати власні налаштування.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:3
 msgid ""
 "Determines whether to use the current Gtk+ theme's color/font settings, or "
 "the applet-specific style settings.);"
 msgstr ""
+"Визначає чи використовувати параметри (кольори/шрифт) поточної Gtk+ теми, чи "
+"використовувати власні налаштування.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:1
 msgid ""
@@ -3535,35 +3540,35 @@ msgstr ""
 
 #: ../applets/maintained/places/places.desktop.in.in.h:1
 msgid "Launch your folder bookmarks"
-msgstr ""
+msgstr "Швидке відкриття закладок"
 
 #: ../applets/maintained/python-test/python-test.desktop.in.h:1
 msgid "A simple applet to test python support"
-msgstr ""
+msgstr "Простий аплет для тесту підтримки python"
 
 #: ../applets/maintained/python-test/python-test.desktop.in.h:2
 msgid "Test Python Applet"
-msgstr ""
+msgstr "Аплет тесту Python"
 
 #: ../applets/maintained/quit/awn-applet-quit.schema-ini.in.h:1
 msgid "Action to perform when left clicking on the icon."
-msgstr ""
+msgstr "Яку дію виконувати при лівому кліку по значку"
 
 #: ../applets/maintained/quit/awn-applet-quit.schema-ini.in.h:2
 msgid "Command to execute if org.gnome.ScreenSaver is not available."
-msgstr ""
+msgstr "Команда для виконання, коли org.gnome.ScreenSaver недоступно."
 
 #: ../applets/maintained/quit/awn-applet-quit.schema-ini.in.h:3
 msgid "Command to execute if org.gnome.SessionManager is not available."
-msgstr ""
+msgstr "Команда для виконання, коли org.gnome.SessionManager не доступно."
 
 #: ../applets/maintained/quit/quit.desktop.in.h:1
 msgid "An applet to exit or log out of your session"
-msgstr ""
+msgstr "Аплет для швидкого виходу, чи завершення сесії"
 
 #: ../applets/maintained/quit/quit.desktop.in.h:2
 msgid "Quit-Log Out applet"
-msgstr ""
+msgstr "Аплет Виходу/Завершення сесії"
 
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:2
 #: ../applets/maintained/yama/yama.py:154
@@ -3598,6 +3603,8 @@ msgid ""
 "An applet to lock your screen, log out of your session, or shut down the "
 "system"
 msgstr ""
+"Аплет дозволяє швидко блокувати екран, виходити з сесії, або вимикати "
+"комп'ютер."
 
 #: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:52
 #: ../applets/maintained/quit/quit.py:104
@@ -3629,7 +3636,7 @@ msgstr "Дія лівого кліку:"
 
 #: ../applets/maintained/related/related.desktop.in.in.h:1
 msgid "Applet displaying related items by talking to Zeitgeist"
-msgstr ""
+msgstr "Аплет показує пов'язані елементи, поговоривши з Zeitgeist"
 
 #: ../applets/maintained/related/related.desktop.in.in.h:2
 msgid "Related applet"
@@ -3657,25 +3664,27 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:6
 msgid "Alpha value to apply to active workspace background."
-msgstr ""
+msgstr "Значення прозорості для фону активної робочої області."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:7
 msgid "Alpha value to apply to inactive workspace background."
-msgstr ""
+msgstr "Значення прозорості для фону неактивної робочої області."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:8
 msgid "Applet border width.  0 indicates no border."
-msgstr ""
+msgstr "Товщина рамки аплету. При 0 - рамка відсутня."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:9
 msgid ""
 "Factor to scale icons as specified by scale_icon_mode.  range greater 0, "
 "less or equal 1"
 msgstr ""
+"Фактор масштабування значка як зазначено в scale_icon_mode. Діапазон більше "
+"0, менше або дорівнює 1"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:10
 msgid "Method to grab windows.  0...gdk."
-msgstr ""
+msgstr "Метод захоплення вікон. 0...gdk."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:11
 msgid ""
@@ -3689,6 +3698,8 @@ msgid ""
 "expired.  After this duration it will be updated when needed if it possible "
 "to do so."
 msgstr ""
+"Кількість секунд перед тим як кеш поверхні вікна стає не дійсним. Після "
+"цього терміну він буде оновлюватись, якщо це можливо."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:13
 msgid ""
@@ -3703,19 +3714,19 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:15
 msgid "The colour (RGBA) of the applet border."
-msgstr ""
+msgstr "Колір (RGBA) рамки аплету."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:16
 msgid "The colour of the desktop (RGBA) if grab_wallpaper is FALSE."
-msgstr ""
+msgstr "Колір стільниці (RGBA) коли grab_wallpaper недоступно."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:17
 msgid "The number of columns in the pager."
-msgstr ""
+msgstr "Кількість колонок."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:18
 msgid "The number of rows in the pager."
-msgstr ""
+msgstr "Кількість рядків."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:19
 msgid ""
@@ -3731,7 +3742,7 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:21
 msgid "Whether to grab wallpaper."
-msgstr ""
+msgstr "Щи захоплювати шпалери."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:22
 msgid ""
@@ -3741,7 +3752,7 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:3
 msgid "<b>Background transparency</b>"
-msgstr ""
+msgstr "<b>Прозорість фону</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:4
 msgid "<b>Background</b>"
@@ -3757,7 +3768,7 @@ msgstr "<b>Таймери</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:8
 msgid "<b>Viewport size</b>"
-msgstr ""
+msgstr "<b>Розмір показу</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:9
 msgid "<b>Windows</b>"
@@ -3898,7 +3909,7 @@ msgstr "Симпатичний перемикач робочих областе�
 #: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:2
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2470
 msgid "Shiny Switcher"
-msgstr ""
+msgstr "Блискучий перемикач"
 
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:642
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:735
@@ -4257,7 +4268,7 @@ msgstr "Системний монітор"
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:1
 #: ../applets/maintained/thinkhdaps/thinkhdaps.py:35
 msgid "Applet that shows the shock protection status of your disks"
-msgstr ""
+msgstr "Аплет показує статус захисту Вашого диску від струсу."
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:2
 #: ../applets/maintained/thinkhdaps/thinkhdaps.py:34
@@ -4308,7 +4319,7 @@ msgstr ""
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:8
 msgid "List of items' progresses in percent (0-100)"
-msgstr ""
+msgstr "Список прогресу виконання у відсотках (0-100)"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:9
 msgid "Text color for high priority items"
@@ -4336,7 +4347,7 @@ msgstr "Прозорість значка (10-100)"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:15
 msgid "The list of categories that are expanded"
-msgstr ""
+msgstr "Список категорій"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:16
 msgid "The list of categories' names"
@@ -4664,11 +4675,11 @@ msgstr "Перегляд заміток з мітками"
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:1
 msgid "A simple applet to test vala support"
-msgstr ""
+msgstr "Простий аплет для тесту підтримки Vala"
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:2
 msgid "Test Vala Applet"
-msgstr ""
+msgstr "Аплет тесту Vala"
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:1
 msgid "Name of the device."
@@ -4981,59 +4992,59 @@ msgstr "Вітряно"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:87
 msgid "AM Clouds / PM Sun"
-msgstr ""
+msgstr "Д.О. Хмари / П.О. Сонце"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:89
 msgid "AM Drizzle"
-msgstr ""
+msgstr "Д.О. Мряка"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:91
 msgid "AM Drizzle / Wind"
-msgstr ""
+msgstr "Д.О. Мряка/Вітер"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:93
 msgid "AM Fog / PM Sun"
-msgstr ""
+msgstr "Д.О. Туман/П.О. Сонце"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:95
 msgid "AM Light Rain"
-msgstr ""
+msgstr "Д.О. Легкий дощ"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:97
 msgid "AM Light Snow"
-msgstr ""
+msgstr "Д.О. Легкий сніг"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:99
 msgid "AM Rain / Snow"
-msgstr ""
+msgstr "Д.О. Дощ/Сніг"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:101
 msgid "AM Rain / Wind"
-msgstr ""
+msgstr "Д.О. Дощ/Вітер"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:103
 msgid "AM Showers"
-msgstr ""
+msgstr "Д.О. Дощик"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
 #: ../applets/maintained/weather/weathertext.py:106
 msgid "AM T-Showers"
-msgstr ""
+msgstr "Д.О. Грім/Дощ"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
 #: ../applets/maintained/weather/weathertext.py:109
 msgid "AM T-Storms"
-msgstr ""
+msgstr "Д.О. Гроза"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:111
@@ -5049,7 +5060,7 @@ msgstr "Сильний дощ"
 #. T-Storms = Thunderstorms
 #: ../applets/maintained/weather/weathertext.py:116
 msgid "Isolated T-Storms"
-msgstr ""
+msgstr "Місцями грози"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:118
@@ -5059,44 +5070,44 @@ msgstr "Легкий дощ"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:120
 msgid "Light Rain / Wind"
-msgstr ""
+msgstr "Легкий дощ/Вітер"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:122
 msgid "Light Snow / Fog"
-msgstr ""
+msgstr "Легкий сніг/Туман"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:124
 msgid "Mostly Sunny"
-msgstr ""
+msgstr "Переважно сонячно"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:126
 msgid "Partly Cloudy / Wind"
-msgstr ""
+msgstr "Мінлива хмарність/Вітер"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:128
 msgid "PM Light Rain"
-msgstr ""
+msgstr "П.О. Легкий дощ"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:130
 msgid "PM Showers"
-msgstr ""
+msgstr "П.О. Дощик"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
 #: ../applets/maintained/weather/weathertext.py:133
 msgid "PM T-Showers"
-msgstr ""
+msgstr "П.О. Грім/Дощ"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
 #: ../applets/maintained/weather/weathertext.py:136
 msgid "PM T-Storms"
-msgstr ""
+msgstr "П.О. Гроза"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:138
@@ -5106,7 +5117,7 @@ msgstr "Дощ"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:140
 msgid "Rain / Snow Showers"
-msgstr ""
+msgstr "Дощ/Мокрий сніг"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:142
@@ -5148,7 +5159,7 @@ msgstr "Сонячно / Вітер"
 #. T-Showers = Thunder Showers
 #: ../applets/maintained/weather/weathertext.py:158
 msgid "T-Showers"
-msgstr ""
+msgstr "Грози"
 
 #: ../applets/maintained/weather/weathertext.py:162
 msgid "Monday"
@@ -5240,11 +5251,11 @@ msgstr "Поточне місто:"
 msgid ""
 "If enabled, the dialog will be transparent, and the five days of the "
 "forecast will be curved"
-msgstr ""
+msgstr "Якщо увімкнено, діалог прогнозу буде прозорим та вигнутим дугою"
 
 #: ../applets/maintained/weather/weather.ui.h:8
 msgid "If enabled, the temperature will be displayed in the icon"
-msgstr ""
+msgstr "Температура буде відображатись на іконці, якщо увімкнено"
 
 #: ../applets/maintained/weather/weather.ui.h:10
 msgid "Maximum _map width:"
@@ -5290,6 +5301,8 @@ msgstr "Веб аплет"
 msgid ""
 "Flag that enables usage of the \"Open Location\" dialog in the applet."
 msgstr ""
+"Прапорець, що дозволяє використовувати \"Відкрити розташування\" в діалозі "
+"аплету."
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:2
 msgid "HTML engine to use."

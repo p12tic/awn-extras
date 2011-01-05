@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-12-27 20:54+0100\n"
-"PO-Revision-Date: 2010-12-31 12:47+0000\n"
+"PO-Revision-Date: 2011-01-04 14:11+0000\n"
 "Last-Translator: Fitoschido <Unknown>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2011-01-01 04:52+0000\n"
+"X-Launchpad-Export-Date: 2011-01-05 04:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Generated-By: pygettext.py 1.5\n"
 
@@ -5104,7 +5104,7 @@ msgstr "Lluvia fuerte"
 #. T-Storms = Thunderstorms
 #: ../applets/maintained/weather/weathertext.py:116
 msgid "Isolated T-Storms"
-msgstr ""
+msgstr "Tormentas eléctricas aisladas"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:118
@@ -5134,7 +5134,7 @@ msgstr "Parcialmente nublado/viento"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:128
 msgid "PM Light Rain"
-msgstr ""
+msgstr "Lluvias ligeras por las tardes"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:130
@@ -5151,7 +5151,7 @@ msgstr ""
 #. T-Storms = Thunderstorms
 #: ../applets/maintained/weather/weathertext.py:136
 msgid "PM T-Storms"
-msgstr ""
+msgstr "Tormentas eléctricas por la tarde"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:138
@@ -5161,17 +5161,17 @@ msgstr "Lluvia"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:140
 msgid "Rain / Snow Showers"
-msgstr ""
+msgstr "Lluvia / nevada"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:142
 msgid "Rain / Thunder"
-msgstr ""
+msgstr "Lluvia / Trueno"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:144
 msgid "Rain / Wind"
-msgstr ""
+msgstr "Lluvia / Viento"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:146
@@ -5182,7 +5182,7 @@ msgstr ""
 #. T-Storms = Thunderstorms
 #: ../applets/maintained/weather/weathertext.py:149
 msgid "Scattered T-Storms"
-msgstr ""
+msgstr "Tormentas eléctricas dispersas"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:151
@@ -5197,13 +5197,13 @@ msgstr "Soleado"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:155
 msgid "Sunny / Wind"
-msgstr ""
+msgstr "Soleado / Viento"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
 #: ../applets/maintained/weather/weathertext.py:158
 msgid "T-Showers"
-msgstr ""
+msgstr "Tormentas eléctricas"
 
 #: ../applets/maintained/weather/weathertext.py:162
 msgid "Monday"
@@ -5267,12 +5267,12 @@ msgstr "Obteniendo condiciones para"
 
 #: ../applets/maintained/weather/weather.py:273
 msgid "Show _Map"
-msgstr ""
+msgstr "Mostrar _mapa"
 
 #: ../applets/maintained/weather/weather.py:322
 #: ../applets/maintained/weather/weather.py:400
 msgid "No records found"
-msgstr ""
+msgstr "No se encontraron registros"
 
 #: ../applets/maintained/weather/weather.py:391
 msgid "Searching..."

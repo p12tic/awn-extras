@@ -507,7 +507,7 @@ class BansheeOne(GenericPlayer):
             result['album-art'] = '%s.jpg' % (self.albumart_general + info['artwork-id'])
             if not os.path.isfile(result['album-art']):
                 result['album-art'] = '%s.jpg' % (self.albumart_general2 + info['artwork-id'])
-        elif 'album' in info:
+        elif 'album' in info and 'artist' in result:
             albumart_exact = '%s-%s.jpg' % (self.albumart_general + result['artist'], info['album'])
             result['album-art'] = albumart_exact.replace(' ', '').lower()
 

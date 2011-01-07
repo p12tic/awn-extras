@@ -688,6 +688,14 @@ da_expose_event(GtkWidget *da, GdkEventExpose *event, IndicatorApplet *iapplet)
   }
 }
 
+static gboolean 
+deactivate_event (GtkMenuShell *menushell, IndicatorApplet *iapplet)
+{
+  g_object_set (awn_overlayable_get_effects
+    (AWN_OVERLAYABLE(AWN_ICON(g_list_nth_data(iapplet->awnicons, iapplet->popup_num)))),
+     "depressed", FALSE, NULL);
+}
+
 static void
 update_icon_mode(IndicatorApplet *iapplet)
 {
@@ -742,6 +750,8 @@ update_icon_mode(IndicatorApplet *iapplet)
                        G_CALLBACK(icon_right_click), (gpointer)iapplet);
       g_signal_connect(G_OBJECT(awnicon), "scroll-event",
                        G_CALLBACK(icon_scroll), (gpointer)iapplet);
+      g_signal_connect(GTK_WIDGET (g_list_nth_data(iapplet->shown_menus, i)), "deactivate",
+                       G_CALLBACK(deactivate_event), (gpointer)iapplet);
       g_object_set_data(G_OBJECT(awnicon), "num", (gpointer)i);
 
       gtk_box_pack_start(GTK_BOX(iapplet->icon_box), GTK_WIDGET(awnicon), FALSE, FALSE, 0);

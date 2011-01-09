@@ -1,77 +1,249 @@
 <?xml version="1.0"?>
-<!--Generated with glade3 3.4.0 on Thu Feb 21 11:37:45 2008 -->
 <interface>
+  <!-- interface-requires gtk+ 2.12 -->
+  <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkAssistant" id="add_assistant">
     <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-    <property name="border_width">4</property>
+    <property name="border_width">12</property>
     <property name="title" translatable="yes">Add Comic</property>
-    <property name="window_position">GTK_WIN_POS_CENTER</property>
+    <property name="window_position">center</property>
     <property name="icon">comics.svg</property>
-    <signal handler="on_add_assistant_close" name="close"/>
-    <signal handler="on_add_assistant_cancel" name="cancel"/>
-    <signal handler="on_add_assistant_apply" name="apply"/>
-    <signal handler="on_add_assistant_prepare" name="prepare"/>
+    <signal name="apply" handler="on_add_assistant_apply"/>
+    <signal name="prepare" handler="on_add_assistant_prepare"/>
+    <signal name="cancel" handler="on_add_assistant_cancel"/>
+    <signal name="close" handler="on_add_assistant_close"/>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
     <child>
       <object class="GtkVBox" id="intro_page">
         <property name="visible">True</property>
         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-        <property name="spacing">10</property>
+        <property name="border_width">12</property>
+        <property name="spacing">12</property>
         <child>
-          <object class="GtkLabel" id="intro_label">
+          <placeholder/>
+        </child>
+        <child>
+          <object class="GtkVBox" id="vbox2">
             <property name="visible">True</property>
-            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-            <property name="xalign">0</property>
-            <property name="yalign">0</property>
-            <property name="label" translatable="yes">This guide will help you to add a new comic.
-
-To find comics suitable for adding, you may search the Internet for "comics rss".
-
-Press "next" to proceed.</property>
-            <property name="wrap">True</property>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkLabel" id="intro_label">
+                <property name="visible">True</property>
+                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">This guide will help you to add a new comic.</property>
+                <property name="use_markup">True</property>
+                <property name="wrap">True</property>
+              </object>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="intro_label2">
+                <property name="visible">True</property>
+                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">Please select how you want to add a comic:</property>
+                <property name="use_markup">True</property>
+                <property name="wrap">True</property>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <object class="GtkAlignment" id="alignment1">
+                <property name="visible">True</property>
+                <property name="left_padding">12</property>
+                <child>
+                  <object class="GtkVBox" id="vbox1">
+                    <property name="visible">True</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkRadioButton" id="list_radio">
+                        <property name="label" translatable="yes">Select a comic from a list</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="active">True</property>
+                        <property name="draw_indicator">True</property>
+                        <signal name="toggled" handler="on_radio_button_toggled"/>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkRadioButton" id="url_radio">
+                        <property name="label" translatable="yes">Add a comic by URL</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="active">True</property>
+                        <property name="draw_indicator">True</property>
+                        <property name="group">list_radio</property>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="position">4</property>
+              </packing>
+            </child>
           </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">1</property>
+          </packing>
         </child>
       </object>
       <packing>
-        <property name="page_type">GTK_ASSISTANT_PAGE_INTRO</property>
+        <property name="page_type">intro</property>
         <property name="title" translatable="yes">Add Comic</property>
         <property name="sidebar_image">logo.svg</property>
       </packing>
     </child>
     <child>
+      <placeholder/>
+    </child>
+    <child>
       <object class="GtkVBox" id="url_page">
         <property name="visible">True</property>
         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-        <property name="spacing">10</property>
+        <property name="border_width">12</property>
+        <property name="spacing">12</property>
         <child>
-          <object class="GtkHBox" id="url_page_hbox">
+          <object class="GtkVBox" id="url_box">
             <property name="visible">True</property>
-            <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-            <property name="spacing">10</property>
             <child>
-              <object class="GtkLabel" id="url_page_label">
+              <object class="GtkLabel" id="intro_label1">
                 <property name="visible">True</property>
+                <property name="can_focus">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="xalign">1</property>
-                <property name="label" translatable="yes">Enter the URL of the RSS feed:</property>
+                <property name="xalign">0</property>
+                <property name="yalign">0</property>
+                <property name="label" translatable="yes">Comics! needs either an RSS feed or a web page with a comic.
+
+Comics from feeds contain several strips. You may find suitable feeds on dedicated comics websites like &lt;a href="http://www.gocomics.com/features/rsspage"&gt;gocomics.com&lt;/a&gt;.
+
+Using a web page only the current comic is shown. You'll find suitable web pages e.g. at &lt;a href="http://www.comics.com/"&gt;comics.com&lt;/a&gt; or searching the web for "comics" or "webcomics".</property>
+                <property name="use_markup">True</property>
+                <property name="wrap">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="url_entry">
+              <object class="GtkHBox" id="url_page_hbox">
+                <property name="visible">True</property>
+                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                <property name="spacing">10</property>
+                <child>
+                  <object class="GtkLabel" id="url_page_label">
+                    <property name="visible">True</property>
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="xalign">1</property>
+                    <property name="label" translatable="yes">URL of the RSS feed or web page:</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="url_entry">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+                    <property name="invisible_char">&#x25CF;</property>
+                    <property name="activates_default">True</property>
+                    <property name="text">http://</property>
+                    <signal name="changed" handler="on_url_entry_changed"/>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <object class="GtkVBox" id="list_box">
+            <property name="visible">True</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow" id="scrolledwindow1">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="text">http://</property>
-                <signal handler="on_url_entry_changed" name="changed"/>
+                <property name="hscrollbar_policy">automatic</property>
+                <property name="vscrollbar_policy">automatic</property>
+                <child>
+                  <object class="GtkTreeView" id="pre_list">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="headers_visible">False</property>
+                    <property name="rules_hint">True</property>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="pre_col">
+                        <property name="title">column</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="cellrenderertext2"/>
+                          <attributes>
+                            <attribute name="text">0</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
               <packing>
                 <property name="position">1</property>
               </packing>
             </child>
           </object>
+          <packing>
+            <property name="position">2</property>
+          </packing>
         </child>
       </object>
       <packing>
@@ -79,9 +251,13 @@ Press "next" to proceed.</property>
       </packing>
     </child>
     <child>
+      <placeholder/>
+    </child>
+    <child>
       <object class="GtkVBox" id="wait_page">
         <property name="visible">True</property>
         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+        <property name="border_width">12</property>
         <property name="spacing">10</property>
         <child>
           <object class="GtkLabel" id="wait_label">
@@ -91,10 +267,13 @@ Press "next" to proceed.</property>
             <property name="yalign">0</property>
             <property name="wrap">True</property>
           </object>
+          <packing>
+            <property name="position">0</property>
+          </packing>
         </child>
       </object>
       <packing>
-        <property name="page_type">GTK_ASSISTANT_PAGE_PROGRESS</property>
+        <property name="page_type">progress</property>
         <property name="title" translatable="yes">Downloading Comic</property>
       </packing>
     </child>
@@ -102,6 +281,7 @@ Press "next" to proceed.</property>
       <object class="GtkVBox" id="image_page">
         <property name="visible">True</property>
         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+        <property name="border_width">12</property>
         <property name="spacing">10</property>
         <child>
           <object class="GtkLabel" id="label_image_page">
@@ -115,6 +295,7 @@ Press "next" to proceed.</property>
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
+            <property name="position">0</property>
           </packing>
         </child>
         <child>
@@ -122,16 +303,21 @@ Press "next" to proceed.</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+            <property name="hscrollbar_policy">automatic</property>
+            <property name="vscrollbar_policy">automatic</property>
             <child>
               <object class="GtkIconView" id="image_list">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
-                <property name="pixbuf_column">1</property>
                 <property name="item_width">100</property>
-                <signal handler="on_image_list_selection_changed" name="selection_changed"/>
+                <signal name="selection_changed" handler="on_image_list_selection_changed"/>
+                <child>
+                  <object class="GtkCellRendererPixbuf" id="cellrenderertext"/>
+                  <attributes>
+                    <attribute name="pixbuf">1</attribute>
+                  </attributes>
+                </child>
               </object>
             </child>
           </object>
@@ -148,6 +334,7 @@ Press "next" to proceed.</property>
       <object class="GtkVBox" id="last_page">
         <property name="visible">True</property>
         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
+        <property name="border_width">12</property>
         <property name="spacing">10</property>
         <child>
           <object class="GtkLabel" id="last_label">
@@ -159,12 +346,49 @@ Press "next" to proceed.</property>
             <property name="wrap">True</property>
           </object>
           <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHBox" id="name_box">
+            <property name="visible">True</property>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkLabel" id="label1">
+                <property name="visible">True</property>
+                <property name="xalign">0</property>
+                <property name="label" translatable="yes">Name of the comic:</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="name_entry">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="invisible_char">&#x25CF;</property>
+                <property name="activates_default">True</property>
+                <signal name="changed" handler="on_name_entry_changed"/>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
             <property name="position">1</property>
           </packing>
         </child>
       </object>
       <packing>
-        <property name="page_type">GTK_ASSISTANT_PAGE_CONFIRM</property>
+        <property name="page_type">confirm</property>
         <property name="title" translatable="yes">Ready to add comic!</property>
       </packing>
     </child>

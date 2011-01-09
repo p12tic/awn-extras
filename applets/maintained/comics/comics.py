@@ -27,7 +27,7 @@ import awn
 import os
 import sys
 import tempfile
-from awn.extras import _
+from awn.extras import _, awnlib
 
 # Import Comics! modules, but check dependencies first
 awn.check_dependencies(globals(), 'feedparser', 'pynotify')
@@ -35,6 +35,7 @@ from pynotify import init as notify_init, Notification
 
 import comics_manage
 import comics_view
+from comics_add import ComicsAdder
 from feed.settings import Settings
 from feed import FeedContainer
 from shared import (
@@ -42,6 +43,8 @@ from shared import (
     USER_DIR, USER_FEEDS_DIR)
 
 APPLET_NAME = 'comics'
+applet_display_name = _('Comics!')
+applet_icon = os.path.join(ICONS_DIR, 'comics-icon.svg')
 
 
 class BidirectionalIterator:
@@ -77,6 +80,38 @@ class BidirectionalIterator:
                 self.index = -1
                 return None
         return self.sequence[self.index]
+
+
+class about_dialog(gtk.AboutDialog):
+    def __init__(self):
+        super(about_dialog, self).__init__()
+        pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(applet_icon, 48, 48)
+        self.set_name(applet_display_name)
+        self.set_copyright('Copyright \xc2\xa9 2008 Moses Palmér')
+        self.set_authors(['Moses Palmér',
+                         'Sharkbaitbobby',
+                         'Mark Lee',
+                         'Kyle L. Huff',
+                         'Gabor Karsay'])
+        self.set_artists(['Moses Palmér'])
+        self.set_comments(_("View your favourite comics on your desktop"))
+        self.set_license("This program is free software; you can " + \
+            "redistribute it and/or modify it under the terms of the GNU " + \
+            "General Public License as published by the Free Software " + \
+            "Foundation; either version 2 of the License, or (at your " + \
+            "option) any later version.\n\n" + \
+            "This program is distributed in the hope that it will be " + \
+            "useful, but WITHOUT ANY WARRANTY; without even the implied " + \
+            "warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR " + \
+            "PURPOSE.    See the GNU General Public License for more " + \
+            "details.\n\nYou should have received a copy of the GNU " + \
+            "General Public License along with this program; if not, " + \
+            "write to the Free Software Foundation, Inc., 51 Franklin St, " + \
+            "Fifth Floor, Boston, MA 02110-1301, USA.")
+        self.set_wrap_license(True)
+        self.set_logo(pixbuf)
+        self.set_icon_from_file(applet_icon)
+        self.set_version(awn.extras.__version__)
 
 
 class ComicApplet(awn.AppletSimple):
@@ -135,30 +170,19 @@ class ComicApplet(awn.AppletSimple):
             self.create_window(template=template)
 
     def make_menu(self):
-        """Generate the menu listing the comics."""
+        """Generate the context menu."""
         # Generate comics menu
         menu = self.create_default_menu()
-        feed_menu = gtk.Menu()
-        for feed in self.feeds.feeds:
-            label = gtk.Label()
-            label.set_markup(self.feeds.feeds[feed].name)
-            align = gtk.Alignment(xalign=0.0)
-            align.add(label)
-            menu_item = gtk.CheckMenuItem()
-            menu_item.data = feed
-            menu_item.add(align)
-            menu_item.set_active(len([w for w in self.windows
-                                      if w.feed_name == feed]) > 0)
-            menu_item.connect('toggled', self.on_comics_toggled)
-            feed_menu.append(menu_item)
-        feed_menu.show_all()
-        container = gtk.MenuItem(_('Comics'))
-        container.set_sensitive(len(self.feeds.feeds) > 0)
-        container.set_submenu(feed_menu)
-        menu.append(container)
-        manage_item = gtk.MenuItem(_('Manage Comics'))
+        manage_item = gtk.MenuItem(_('My Comics'))
         manage_item.connect("activate", self.on_manage_comics_activated)
         menu.append(manage_item)
+        about_item = gtk.ImageMenuItem(_("_About %s") % applet_display_name)
+        if awnlib.is_required_version(gtk.gtk_version, (2, 16, 0)):
+            about_item.props.always_show_image = True
+        about_item.set_image(gtk.image_new_from_stock(gtk.STOCK_ABOUT,
+                                                      gtk.ICON_SIZE_MENU))
+        menu.append(about_item)
+        about_item.connect("activate", self.on_show_about_activated)
         menu.show_all()
         return menu
 
@@ -176,7 +200,7 @@ class ComicApplet(awn.AppletSimple):
 
         self.set_icon_name('comics-icon')
         # Initialise notifications
-        notify_init(_('Comics!'))
+        notify_init(applet_display_name)
         self.dialog = awn.Dialog(self)
         self.dialog.connect('button-release-event',
                             self.on_dialog_button_press)
@@ -197,6 +221,9 @@ class ComicApplet(awn.AppletSimple):
         self.windows = []
         self.window_iterator = BidirectionalIterator(self.windows)
         self.current_window = None
+        self.manager = None
+        self.adder = None
+        self.about = None
 
         try:
             for filename in (f for f in os.listdir(STRIPS_DIR)
@@ -209,24 +236,35 @@ class ComicApplet(awn.AppletSimple):
 
     def on_window_updated(self, widget, title):
         msg = Notification(_('There is a new strip of %s!') % widget.feed_name,
-                           None,
-                           os.path.join(ICONS_DIR, 'comics-icon.svg'))
+                           None, applet_icon)
         msg.show()
 
     def on_window_removed(self, widget):
         self.windows.remove(widget)
+        if self.manager:
+            if self.manager.on_screen():
+                self.manager.load_feeds()
 
     def on_destroy(self, widget):
         for window in self.windows:
             window.save_settings()
 
     def on_button1_pressed(self, event):
-        self.set_visibility(not self.visible)
+        if len(self.feeds.feeds) == 0:
+            if self.adder and self.adder.on_screen():
+                self.adder.present()
+            else:
+                self.adder = []
+                self.adder = ComicsAdder(self)
+        elif not self.windows:
+            self.on_manage_comics_activated(None)
+        else:
+            self.set_visibility(not self.visible)
 
     def on_button3_pressed(self, event):
         menu = self.make_menu()
         if menu:
-            self.popup_gtk_menu (menu, event.button, event.time)
+            self.popup_gtk_menu(menu, event.button, event.time)
 
     def on_button_press(self, widget, event):
         if event.button == 1:
@@ -255,9 +293,21 @@ class ComicApplet(awn.AppletSimple):
         self.toggle_feed(widget.data, widget.get_active())
 
     def on_manage_comics_activated(self, widget):
-        manager = comics_manage.ComicsManager(self.feeds)
-        manager.show()
+        if self.manager and self.manager.on_screen():
+            self.manager.present()
+        else:
+            self.manager = []
+            self.manager = comics_manage.ComicsManager(self)
+            self.manager.show()
 
+    def on_show_about_activated(self, widget):
+        if self.about and len(self.about) != 0:
+            self.about.present()
+        else:
+            self.about = []
+            self.about = about_dialog()
+            self.about.run()
+            self.about.destroy()
 
 if __name__ == '__main__':
     # Initialise threading
@@ -274,13 +324,11 @@ if __name__ == '__main__':
 
     # Load the feeds
     feeds = FeedContainer()
-    feeds.load_directory(SYS_FEEDS_DIR)
     feeds.load_directory(USER_FEEDS_DIR)
 
     #Initialise AWN and create the applet
     awn.init(sys.argv[1:])
     applet = ComicApplet(awn.uid, awn.panel_id, feeds)
-
 
     # Initialize user agent string
     import urllib

@@ -89,9 +89,9 @@ class RSSFeed(Feed):
 
         # Update properties
         if 'description' in feed:
-            self.description = feed.description
+            self.description = self.unescape_html(feed.description)
         if 'title' in feed.feed:
-            self.name = feed.feed.title
+            self.name = self.unescape_html(feed.feed.title)
 
         # Create an item-thread tuple for every entry
         threads = []

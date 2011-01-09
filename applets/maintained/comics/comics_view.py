@@ -42,7 +42,6 @@ from shared import (ICONS_DIR, UI_DIR, USER_DIR)
 
 STRIPS_DIR = USER_DIR
 CACHE_FILE = os.path.join(USER_DIR, '%s.cache')
-UI_FILE = os.path.join(UI_DIR, 'view.ui')
 
 BROWSER_COMMAND = 'xdg-open'
 
@@ -123,11 +122,13 @@ class ComicsViewer(ScalableWindow):
             screen = self.get_screen()
             screen_width, screen_height = (screen.get_width(),
                 screen.get_height())
+            w, h = self.get_size()
+            x = self.__settings.get_int('x', (screen_width - w) / 2)
+            y = self.__settings.get_int('y', (screen_height - h) / 2)
 
             # Show the window first...
             self.show()
 
-            x, y = self.get_position()
             x %= screen_width
             if x < 0:
                 x += screen_width
@@ -135,32 +136,34 @@ class ComicsViewer(ScalableWindow):
             if y < 0:
                 y += screen_height
 
+            # this must be between self.show() and self.move()
+            # it calls self.get_position(), without it the comic
+            # will not be painted the very first time
+            self.save_settings()
+
             # ...and then move it
             self.move(x, y)
-
-            self.__settings['x'] = x
-            self.__settings['y'] = y
 
             if has_widget_layer():
                 compiz_widget_set(self, False)
         else:
+            if self.get_window():
+                self.save_settings()
             if has_widget_layer():
                 self.show()
                 compiz_widget_set(self, True)
             else:
                 self.hide()
 
-        self.__settings.save()
-
     def close(self):
-        self.emit('removed')
-        self.__settings.delete()
         self.destroy()
 
     def get_menu_item_name(self, item):
         """Return the menu item name of item."""
         if item[DATE] > 0:
             tt = time.localtime(item[DATE])
+            # Translators: This is a date/time format string. You can check the
+            # output in terminal with 'date +"%%A %d %B"'.
             return time.strftime(_('%A %d %B'), tt)
         else:
             return item[TITLE]
@@ -335,49 +338,64 @@ class ComicsViewer(ScalableWindow):
 
         ctx.restore()
 
-    def make_file_type_chooser(self):
-        """Add the possible image types to the file chooser dialog."""
-        combo = self.__ui.get_object('file_format_combo')
-        model = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING,
-            gobject.TYPE_STRING)
-        for format in gdk.pixbuf_get_formats():
-            if format['is_writable']:
-                text = '%s (*.%s)' % (format['description'],
-                    format['extensions'][0])
-                model.append((format['description'], format['name'],
-                    format['extensions'][0]))
-        combo.set_model(model)
-        combo.set_active(0)
-
     def make_menu(self):
         """Create the context menu."""
-        # Generate history menu
-        history_menu = self.__ui.get_object('history_menu')
-        history_menu.foreach(lambda child: history_menu.remove(child))
-        items = self.feeds.feeds[self.feed_name].items.items()
-        items.sort(reverse=True)
-        for date, item in items:
-            label = gtk.Label()
-            text = self.get_menu_item_name(item)
-            if self.__current_timestamp == date:
-                label.set_markup('<b>' + text + '</b>')
-            else:
-                label.set_markup(text)
-            align = gtk.Alignment(xalign=0.0)
-            align.add(label)
-            menu_item = gtk.MenuItem()
-            menu_item.data = item
-            menu_item.connect('activate', self.on_history_activated)
-            menu_item.add(align)
-            history_menu.append(menu_item)
-        history_menu.show_all()
-        self.__ui.get_object('show_link_item').set_active(self.show_link)
-        self.__ui.get_object('history_container').set_sensitive(
-            len(self.feeds.feeds[self.feed_name].items) > 0)
-        self.__ui.get_object('save_as_item').set_sensitive(not self.__pixbuf \
-            is None)
+        menu = gtk.Menu()
 
-        return self.__ui.get_object('menu')
+        # Generate history menu
+        if len(self.feeds.feeds[self.feed_name].items) > 1:
+            history_container = gtk.ImageMenuItem(gtk.STOCK_JUMP_TO)
+            history_menu = gtk.Menu()
+            history_menu.foreach(lambda child: history_menu.remove(child))
+            items = self.feeds.feeds[self.feed_name].items.items()
+            items.sort(reverse=True)
+            for date, item in items:
+                label = gtk.Label()
+                text = self.get_menu_item_name(item)
+                if self.__current_timestamp == date:
+                    label.set_markup('<b>' + text + '</b>')
+                else:
+                    label.set_markup(text)
+                align = gtk.Alignment(xalign=0.0)
+                align.add(label)
+                menu_item = gtk.MenuItem()
+                menu_item.data = item
+                menu_item.connect('activate', self.on_history_activated)
+                menu_item.add(align)
+                history_menu.append(menu_item)
+            history_container.set_submenu(history_menu)
+            menu.append(history_container)
+
+        size_container = gtk.MenuItem(_("Size"))
+        size_menu = gtk.Menu()
+        zoom_normal_item = gtk.ImageMenuItem(gtk.STOCK_ZOOM_100)
+        zoom_normal_item.connect('activate', self.on_normal_activated)
+        zoom_in_item = gtk.ImageMenuItem(gtk.STOCK_ZOOM_IN)
+        zoom_in_item.connect('activate', self.on_larger_activated)
+        zoom_out_item = gtk.ImageMenuItem(gtk.STOCK_ZOOM_OUT)
+        zoom_out_item.connect('activate', self.on_smaller_activated)
+        size_menu.append(zoom_normal_item)
+        size_menu.append(zoom_in_item)
+        size_menu.append(zoom_out_item)
+        size_container.set_submenu(size_menu)
+        menu.append(size_container)
+
+        show_link_item = gtk.CheckMenuItem(_("Show link"))
+        show_link_item.set_active(self.show_link)
+        show_link_item.connect('toggled', self.on_show_link_toggled)
+        menu.append(show_link_item)
+
+        save_as_item = gtk.ImageMenuItem(stock_id='gtk-save-as')
+        save_as_item.set_sensitive(not self.__pixbuf is None)
+        save_as_item.connect('activate', self.on_save_as_activated)
+        menu.append(save_as_item)
+
+        close_item = gtk.ImageMenuItem(stock_id='gtk-close')
+        close_item.connect('activate', self.on_close_activated)
+        menu.append(close_item)
+
+        menu.show_all()
+        return menu
 
     ########################################################################
     # Standard python methods                                              #
@@ -399,9 +417,6 @@ class ComicsViewer(ScalableWindow):
         except Exception:
             self.__pixbuf = None
         self.__is_error = False
-        self.__ui = gtk.Builder()
-        self.__ui.add_from_file(UI_FILE)
-        self.make_file_type_chooser()
         self.__link = WWWLink('', '', LINK_FONTSIZE)
         self.__link.connect('size-allocate', self.on_link_size_allocate)
         self.__ticker = Ticker((20.0, 20.0))
@@ -412,7 +427,6 @@ class ComicsViewer(ScalableWindow):
         # Connect events
         self.connect('destroy', self.on_destroy)
         self.feeds.connect('feed-changed', self.on_feed_changed)
-        self.__ui.connect_signals(self)
 
         # Build UI
         self.__link.connect('button-press-event', self.on_link_clicked)
@@ -422,9 +436,10 @@ class ComicsViewer(ScalableWindow):
 
         self.set_skip_taskbar_hint(True)
         self.set_skip_pager_hint(True)
-        self.set_visibility(visible)
 
         self.load_settings()
+        if visible:
+            self.set_visibility(visible)
 
     ########################################################################
     # Property updating methods                                            #
@@ -432,14 +447,9 @@ class ComicsViewer(ScalableWindow):
 
     def load_settings(self):
         """Load the settings."""
-        screen = self.get_screen()
-        w, h = self.get_size()
-
         self.set_show_link(self.__settings.get_bool('show_link',
             False))
         self.set_feed_name(self.__settings.get_string('feed_name', ''))
-        self.move(self.__settings.get_int('x', (screen.get_width() - w) / 2),
-            self.__settings.get_int('y', (screen.get_height() - h) / 2))
 
     def save_settings(self):
         """Save the settings."""
@@ -484,6 +494,8 @@ class ComicsViewer(ScalableWindow):
     ########################################################################
 
     def on_destroy(self, widget):
+        self.emit('removed')
+        self.__settings.delete()
         if self.__update_id:
             self.feeds.feeds[self.feed_name].disconnect(self.__update_id)
             self.__update_id = None
@@ -516,33 +528,55 @@ class ComicsViewer(ScalableWindow):
         self.close()
 
     def on_save_as_activated(self, widget):
-        dialog = self.__ui.get_object('save_as_dialog')
-        dialog.set_title(self.feed_name)
-        combo = self.__ui.get_object('file_format_combo')
-        model, iterator = combo.get_model(), combo.get_active_iter()
-        format = model.get_value(iterator, 1)
-        ext = model.get_value(iterator, 2)
-        dialog.set_current_name('%s.%s' % (self.__link.text, ext))
-        if dialog.run():
-            model, iterator = combo.get_model(), combo.get_active_iter()
-            format = model.get_value(iterator, 1)
+        """Run FileChooserDialog and save file."""
+        self.dialog = gtk.FileChooserDialog(_("Save comic as…"), \
+                      buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, \
+                               gtk.STOCK_SAVE, gtk.RESPONSE_OK), \
+                      action=gtk.FILE_CHOOSER_ACTION_SAVE)
+        self.dialog.set_icon_from_file(os.path.join(UI_DIR, 'comics.svg'))
+        self.dialog.set_do_overwrite_confirmation(True)
+        self.dialog.set_current_name(self.__link.text + '.jpg')
+
+        # Set filters, default jpg, without ico
+        for format in gdk.pixbuf_get_formats():
+            if format['is_writable'] and format['name'] != 'ico':
+                ff = gtk.FileFilter()
+                ff.set_name(format['description'])
+                for i in format['mime_types']:
+                    ff.add_mime_type(i)
+                self.dialog.add_filter(ff)
+                if format['name'] == 'jpeg':
+                    self.dialog.set_filter(ff)
+        self.dialog.connect('notify::filter', self.on_filter_changed)
+
+        if self.dialog.run() == gtk.RESPONSE_OK:
+            ff = gtk.FileFilter()
+            ff = self.dialog.get_filter()
+            name = ff.get_name()
+            for format in gdk.pixbuf_get_formats():
+                if format['description'] == name:
+                    name = format['name']
+                    break
             try:
-                self.__pixbuf.save(dialog.get_filename(), format)
+                self.__pixbuf.save(self.dialog.get_filename(), name)
             except Exception:
                 self.applet.show_message(_('Failed to save <i>%s</i>.') %
-                    dialog.get_filename(), gtk.STOCK_DIALOG_ERROR)
+                    self.dialog.get_filename(), gtk.STOCK_DIALOG_ERROR)
+        self.dialog.destroy()
 
-        dialog.hide()
-
-    def on_file_format_combo_changed(self, widget):
-        dialog = self.__ui.get_object('save_as_dialog')
-        current_name = dialog.get_filename().rsplit('.', 1)
+    def on_filter_changed(self, pspec, data):
+        """Change filename extension."""
+        current_name = self.dialog.get_filename().rsplit('.', 1)
         if len(current_name) == 2:
-            combo = widget
-            model, iterator = combo.get_model(), combo.get_active_iter()
-            ext = model.get_value(iterator, 2)
-            dialog.set_current_name('%s.%s' % (
-                os.path.basename(current_name[0]), ext))
+            ff = gtk.FileFilter()
+            ff = self.dialog.get_filter()
+            for i in gdk.pixbuf_get_formats():
+                if i['description'] == ff.get_name():
+                    for ext in i['extensions']:
+                        if current_name[1] == ext:
+                            return
+                    self.dialog.set_current_name('%s.%s' % (
+                        os.path.basename(current_name[0]), i['extensions'][0]))
 
     def on_link_size_allocate(self, widget, e):
         i_dim = self.get_image_dimensions()
@@ -578,7 +612,8 @@ class ComicsViewer(ScalableWindow):
             # Only emit the updated signal when there actually is an update
             if self.__current_timestamp != 0.0:
                 self.emit('updated', feed.items[feed.newest][TITLE])
-            self.select_item(feed.items[feed.newest])
+            if feed.newest in feed.items:
+                self.select_item(feed.items[feed.newest])
 
     def on_download_completed(self, o, code, item):
         """A new image has been downloaded."""
@@ -593,7 +628,11 @@ class ComicsViewer(ScalableWindow):
         self.__download_id = None
 
         if not self.__is_error:
-            del self.__pixbuf
+            try:
+                del self.__pixbuf
+            except AttributeError:
+                # Received destroy signal after download was initiated
+                return
             try:
                 self.__pixbuf = gdk.pixbuf_new_from_file(o.filename)
             except gobject.GError:

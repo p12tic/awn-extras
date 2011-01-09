@@ -43,7 +43,6 @@ applets/maintained/comics/comics_view.py
 applets/maintained/comics/feed/__init__.py
 [type: gettext/glade]applets/maintained/comics/ui/add.ui
 [type: gettext/glade]applets/maintained/comics/ui/manage.ui
-[type: gettext/glade]applets/maintained/comics/ui/view.ui
 applets/maintained/comics/main.py
 applets/maintained/common-folder/common-folder.desktop.in
 applets/maintained/common-folder/common-folder.py

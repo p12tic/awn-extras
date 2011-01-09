@@ -40,14 +40,14 @@ class FeedContainer(gobject.GObject):
         of factories. If filename does not contain a feed factory, it is not
         added."""
         try:
-            module = __import__('plugins.%s' % name, fromlist=[name])
+            module = __import__('plugins.%s' % name, globals(), locals(), [name], -1)
             if hasattr(module, 'matches_url') and hasattr(module, 'get_class'):
-                self.feed_factories.append(module)
+                self.feed_factories[name] = module
                 return True
             else:
                 del module
-        except Exception:
-            pass
+        except Exception, err:
+            print "Comics!: Error loading plugin: %s" % err
 
         return False
 
@@ -75,14 +75,15 @@ class FeedContainer(gobject.GObject):
                     if plugin in self.feed_factories:
                         factory = self.feed_factories[plugin].get_class()
                     else:
+                        print "Comics!: Plugin '%s' not found" % plugin
                         return False
                 else:
                     factory = RSSFeed
                 feed = factory(settings)
                 self.feeds[settings[NAME]] = feed
                 self.emit('feed-changed', feed, FeedContainer.FEED_ADDED)
-            except Exception:
-                pass
+            except Exception, err:
+                print "Comics!: Error loading feed: %s" % err
 
         return False
 
@@ -90,8 +91,8 @@ class FeedContainer(gobject.GObject):
         """Creates a feed suitable for a given URL. If no plugin matches the
         URL, an RSSFeed is returned."""
         for factory in self.feed_factories:
-            if factory.matches_url(url):
-                return factory.get_class()(url=url)
+            if self.feed_factories[factory].matches_url(url):
+                return self.feed_factories[factory].get_class()(url=url)
         return RSSFeed(url=url)
 
     def remove_feed(self, feed_name):

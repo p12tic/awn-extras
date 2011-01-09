@@ -27,6 +27,9 @@ dist_feed_DATA = \
 feedsdir = $(applet_datadir)/feeds
 dist_feeds_DATA = $(wildcard feeds/*.feed)
 
+pluginsdir = $(applet_datadir)/feed/plugins
+dist_plugins_DATA = $(wildcard feed/plugins/*.py)
+
 uidir = $(applet_datadir)/ui
 dist_ui_DATA = \
 	$(wildcard ui/*.svg) \

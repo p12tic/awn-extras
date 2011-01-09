@@ -169,11 +169,13 @@ class GenericPlayer(object):
         """
         if (self.dbus_base_name != None):
             object_path = '/' + self.dbus_base_name.replace('.', '/')
-            bus = dbus.SessionBus()
-            obj = bus.get_object(self.dbus_base_name, object_path)
-            return True
-        else:
-            return False
+            try:
+                bus = dbus.SessionBus()
+                obj = bus.get_object(self.dbus_base_name, object_path)
+                return True
+            except Exception, e:
+                print "awnmediaplayer: error launching %s: %s" % (self.__class__.__name__, e)
+        return False
 
     def get_dbus_name(self):
         """

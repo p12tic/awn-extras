@@ -21,6 +21,7 @@
 import sys
 import os
 import subprocess
+import atexit
 
 import gobject
 import pygtk
@@ -32,7 +33,28 @@ import dbus
 from dbus.mainloop.glib import DBusGMainLoop
 import string
 
+try:
+    import mutagen.mp3
+    import mutagen.mp4
+    from mutagen.id3 import ID3
+    import tempfile
+    album_art_file = "%s/awnmediaplayer_%s.png" % (tempfile.gettempdir(), os.getenv('USERNAME'))
+    art_icon_from_tag = True
+except ImportError:
+    art_icon_from_tag = False
+
 DBusGMainLoop(set_as_default=True)
+
+
+
+def cleanup():
+    if art_icon_from_tag:
+        try:
+            os.remove(album_art_file)
+        except OSError:
+            pass
+
+atexit.register(cleanup)
 
 
 def get_app_name():
@@ -313,7 +335,8 @@ class Rhythmbox(GenericPlayer):
     def get_media_info(self):
         self.dbus_driver()
         ret_dict = {}
-        result = self.rbShell.getSongProperties(self.player.getPlayingUri())
+        playinguri = self.player.getPlayingUri()
+        result = self.rbShell.getSongProperties(playinguri)
 
         # Currently Playing Title
         if result['artist'] != '':
@@ -334,16 +357,73 @@ class Rhythmbox(GenericPlayer):
             albumart_exact = result['rb:coverArt-uri']
             # bug in rhythmbox 0.11.6 - returns uri, but not properly encoded,
             # but it's enough to remove the file:// prefix
-            albumart_exact = albumart_exact.replace('file://', '', 1)
+            albumart_exact = albumart_exact.encode('utf8').replace('file://', '', 1)
             if gtk.gtk_version >= (2, 18):
                 from urllib import unquote
                 albumart_exact = unquote(albumart_exact)
             ret_dict['album-art'] = albumart_exact
-        else:
-            # perhaps it's in the cache folder
-            if 'album' in result and 'artist' in result:
-                cache_dir = ".cache/rhythmbox/covers"
-                ret_dict['album-art'] = '%s/%s - %s.jpg' % (cache_dir, result['artist'], result['album'])
+            return ret_dict
+
+        # perhaps it's in the cache folder
+        if 'album' in result and 'artist' in result:
+            cache_dir = os.path.expanduser("~/.cache/rhythmbox/covers")
+            cache_file = '%s/%s - %s.jpg' % (cache_dir, result['artist'], result['album'])
+            if os.path.isfile(cache_file):
+                ret_dict['album-art'] = cache_file
+                return ret_dict
+
+        # The following is taken and adapted from Dockmanager, including todo
+        # Copyright (C) 2009-2010 Jason Smith, Rico Tzschichholz, Robert Dyer
+
+        # Look in song folder
+        # TODO need to replace some things, this is very weird
+        filename = playinguri.encode('utf8').replace('file://', '', 1)
+        if gtk.gtk_version >= (2, 18):
+            from urllib import unquote
+            filename = unquote(filename)
+        coverdir = os.path.dirname(filename)
+        covernames = ["cover.jpg", "cover.png", "Cover.jpg", "Cover.png",
+                      "album.jpg", "album.png", "Album.jpg", "Album.png",
+                      "albumart.jpg", "albumart.png", "Albumart.jpg",
+                      "Albumart.png", "AlbumArt.jpg", "AlbumArt.png",
+                      ".folder.jpg", ".folder.png", ".Folder.jpg",
+                      ".Folder.png", "folder.jpg", "folder.png",
+                      "Folder.jpg", "Folder.png"]
+        for covername in covernames:
+            coverfile = os.path.join(coverdir, covername)
+            if os.path.isfile(coverfile):
+                ret_dict['album-art'] = coverfile
+                return ret_dict
+
+        # Look for image in tags
+        if art_icon_from_tag and 'mimetype' in result:
+            image_data = None
+            if result['mimetype'] == "application/x-id3":
+                try:
+                    f = ID3(filename)
+                    apicframes = f.getall("APIC")
+                    if len(apicframes) >= 1:
+                        frame = apicframes[0]
+                        image_data = frame.data
+                except:
+                    pass
+            elif result['mimetype'] == "audio/x-aac":
+                try:
+                    f = mutagen.mp4.MP4(filename)
+                    if "covr" in f.tags:
+                        covertag = f.tags["covr"][0]
+                        image_data = covertag
+                except:
+                    pass
+            if image_data:
+                try:
+                    loader = gtk.gdk.PixbufLoader()
+                    loader.write(image_data)
+                    loader.close()
+                    loader.get_pixbuf().save(album_art_file, "png", {})
+                    ret_dict['album-art'] = album_art_file
+                except:
+                    pass
 
         return ret_dict
 

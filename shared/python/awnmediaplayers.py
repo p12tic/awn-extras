@@ -20,6 +20,7 @@
 
 import sys
 import os
+import subprocess
 
 import gobject
 import pygtk
@@ -67,7 +68,33 @@ def get_app_name():
         player_name = "DragonPlayer"
     elif bus_obj.NameHasOwner('org.freedesktop.MediaPlayer') == True:
         player_name = "mpDris"
+    elif bus_obj.NameHasOwner('org.mpris.clementine') == True:
+        player_name = "Clementine"
+    elif bus_obj.NameHasOwner('org.mpris.guayadeque') == True:
+        player_name = "Guayadeque"
     return player_name
+
+
+def player_available(executable):
+    """Check if player is installed if it's not in 'Activatable Services' on DBus"""
+
+    for path in os.getenv('PATH').split(':'):
+        if path == '':
+            continue
+        if os.path.isfile(os.path.join(path, executable)):
+            return True
+    return False
+
+
+def launch_player(args):
+    """Launch player if this can't be done via DBus"""
+
+    try:
+        subprocess.Popen(args)
+    except OSError, e:
+        print "awnmediaplayer: error launching %s: %s" % (args, e)
+        return False
+    return True
 
 
 class GenericPlayer(object):
@@ -627,6 +654,7 @@ class QuodLibet(GenericPlayer):
 
 
 class Songbird(MPRISPlayer):
+    """Discontinued in 2010"""
 
     def __init__(self):
         MPRISPlayer.__init__(self, 'org.mpris.songbird')
@@ -637,14 +665,27 @@ class VLC(MPRISPlayer):
     def __init__(self):
         MPRISPlayer.__init__(self, 'org.mpris.vlc')
 
+    def is_available(self):
+        return player_available('vlc')
+
+    def start(self):
+        return launch_player(['vlc', '--control', 'dbus'])
+
 
 class Audacious(MPRISPlayer):
 
     def __init__(self):
         MPRISPlayer.__init__(self, 'org.mpris.audacious')
 
+    def is_available(self):
+        return player_available('audacious')
+
+    def start(self):
+        return launch_player('audacious')
+
 
 class BMP(MPRISPlayer):
+    """Beep Media Player, discontinued"""
 
     def __init__(self):
         MPRISPlayer.__init__(self, 'org.mpris.bmp')
@@ -662,8 +703,15 @@ class Amarok(MPRISPlayer):
     def __init__(self):
         MPRISPlayer.__init__(self, 'org.mpris.amarok')
 
+    def is_available(self):
+        return player_available('amarok')
+
+    def start(self):
+        return launch_player('amarok')
+
 
 class Aeon(MPRISPlayer):
+    """Discontinued"""
 
     def __init__(self):
         MPRISPlayer.__init__(self, 'org.mpris.aeon')
@@ -681,3 +729,46 @@ class mpDris(MPRISPlayer):
 
     def __init__(self):
         MPRISPlayer.__init__(self, 'org.freedesktop.MediaPlayer')
+
+
+class Clementine(MPRISPlayer):
+
+    def __init__(self):
+        MPRISPlayer.__init__(self, 'org.mpris.clementine')
+
+    def is_available(self):
+        return player_available('clementine')
+
+    def start(self):
+        return launch_player('clementine')
+
+    def previous(self):
+        self.player.Prev()
+        # We have to emit song changed signal ourselves (Clementine 0.5)
+        self.song_changed_emitter()
+
+    def next(self):
+        self.player.Next()
+        # We have to emit song changed signal ourselves (Clementine 0.5)
+        self.song_changed_emitter()
+
+
+class Guayadeque(MPRISPlayer):
+
+    def __init__(self):
+        MPRISPlayer.__init__(self, 'org.mpris.guayadeque')
+
+    def dbus_driver(self):
+        bus_obj = dbus.SessionBus().get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
+        if bus_obj.NameHasOwner(self.dbus_base_name) == True:
+            self.session_bus = dbus.SessionBus()
+            self.proxy_obj = self.session_bus.get_object(self.dbus_base_name, '/Player')
+            self.player = dbus.Interface(self.proxy_obj, 'org.freedesktop.MediaPlayer')
+            self.player.connect_to_signal('TrackChange', self.song_changed_emitter, member_keyword='member')
+            self.player.connect_to_signal('StatusChange', self.playing_changed_emitter)
+
+    def is_available(self):
+        return player_available('guayadeque')
+
+    def start(self):
+        return launch_player('guayadeque')

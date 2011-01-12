@@ -105,9 +105,9 @@ class MailApplet:
         if token == 0:
             return self.login(True)
 
-        key = self.awn.keyring.from_token(None, token)
-
-        if not self.awn.keyring.unlock():
+        try:
+            key = self.awn.keyring.from_token(None, token)
+        except KeyRingError:
             return self.login(True)
 
         self.perform_login(key, startup=True)

@@ -1047,38 +1047,9 @@ class Keyring:
         keys = gnomekeyring.list_item_ids_sync(keyring)
         if k.token not in keys:
             raise KeyRingError("Token does not exist")
-        if not self.unlock(keyring):
-            raise KeyRingError("Keyring is locked")
+        k.unlock()  # Raises Exception if failed
             
         return k
-
-    def unlock(self, keyring):
-        """Unlock keyring.
-
-        @return: True on success (if keyring is unlocked), False if still
-            locked.
-
-        """
-
-        info = gnomekeyring.get_info_sync(keyring)
-        if not info.get_is_locked():
-            return True
-
-        # The straight way would be:
-        # gnomekeyring.unlock_sync(None, None)
-        # But this results in a type error, see launchpad bugs #432882.
-        # We set a dummy key instead and delete it immediately,
-        # this triggers a user dialog to unlock the keyring.
-        try:
-            tmp = gnomekeyring.item_create_sync(keyring, \
-                  gnomekeyring.ITEM_GENERIC_SECRET, "awn-extras dummy", \
-                  {"dummy_attr": "none"}, "dummy_pwd", True)
-        except gnomekeyring.CancelledError:
-            return False
-        gnomekeyring.item_delete_sync(keyring, tmp)
-
-        info = gnomekeyring.get_info_sync(keyring)
-        return not info.get_is_locked()
 
     class Key(object):
 
@@ -1126,6 +1097,30 @@ class Keyring:
             except gnomekeyring.CancelledError:
                 self.token = 0
 
+        def unlock(self):
+            """Unlock the key's keyring."""
+
+            info = gnomekeyring.get_info_sync(self.keyring)
+            if not info.get_is_locked():
+                return
+
+            # The straight way would be:
+            # gnomekeyring.unlock_sync(None, None)
+            # But this results in a type error, see launchpad bugs #432882.
+            # We set a dummy key instead and delete it immediately,
+            # this triggers a user dialog to unlock the keyring.
+            try:
+                tmp = gnomekeyring.item_create_sync(self.keyring, \
+                      gnomekeyring.ITEM_GENERIC_SECRET, "awn-extras dummy", \
+                      {"dummy_attr": "none"}, "dummy_pwd", True)
+            except gnomekeyring.CancelledError:
+                raise KeyRingError("Keyring is locked")
+            gnomekeyring.item_delete_sync(self.keyring, tmp)
+
+            info = gnomekeyring.get_info_sync(self.keyring)
+            if info.get_is_locked():
+                raise KeyRingError("Keyring is locked")
+
         def delete(self):
             """Delete the current key. Will also reset the token. Note that
             "del [Key]" will not delete the key itself; that would be too
@@ -1136,12 +1131,15 @@ class Keyring:
             self.token = 0
 
         def __get(self):
+            self.unlock()
             return gnomekeyring.item_get_info_sync(self.keyring, self.token)
 
         def __getAttrs(self):
+            self.unlock()
             return gnomekeyring.item_get_attributes_sync(self.keyring, self.token)
 
         def __setAttrs(self, a):
+            self.unlock()
             return gnomekeyring.item_set_attributes_sync(self.keyring, self.token, a)
 
         def __getName(self):

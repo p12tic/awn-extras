@@ -1021,6 +1021,36 @@ class Keyring:
             k.set(keyring, name, pwd, attrs, type)
         return k
 
+    def from_attributes(self, attrs, type="generic"):
+        """Load keys matching given attributes, search in all keyrings.
+
+        @param attrs: Attributes to search for
+        @type attrs: C{dict}
+        @param type: The type of key. By default: "generic"
+        @type type: C{string}; "generic", "network", or "note"
+        @return: A new C{list} object with L{Key} objects                 ???
+        @rtype: C{list}                                                   ???
+
+        """
+        if type == "network":
+            type = gnomekeyring.ITEM_NETWORK_PASSWORD
+        elif type == "note":
+            type = gnomekeyring.ITEM_NOTE
+        else:  # Generic included
+            type = gnomekeyring.ITEM_GENERIC_SECRET
+
+        try:
+            keys = gnomekeyring.find_items_sync(type, attrs)
+        except gnomekeyring.NoMatchError:
+            raise KeyRingError("Key not found")
+        except gnomekeyring.CancelledError:
+            raise KeyRingError("Keyring is locked")
+
+        result = []
+        for key in keys:
+            result.append(self.Key(key.keyring, key.item_id))
+        return result
+
     def from_token(self, keyring, token):
         """Load the key with the given token.
 

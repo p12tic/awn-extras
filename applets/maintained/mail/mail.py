@@ -105,7 +105,7 @@ class MailApplet:
         if token == 0:
             return self.login(True)
 
-        key = self.awn.keyring.from_token(token)
+        key = self.awn.keyring.from_token(None, token)
 
         if not self.awn.keyring.unlock():
             return self.login(True)
@@ -393,7 +393,7 @@ class MainDialog:
             t = {}
 
             t["callback"] = \
-                lambda widgets, awn: awn.keyring.new(
+                lambda widgets, awn: awn.keyring.new(None,
                     "Mail Applet - %s(%s)" % (widgets[0].get_text(),
                                         self.__parent.awn.settings["backend"]),
                     widgets[1].get_text(),
@@ -655,7 +655,7 @@ to log out and try again."))
 
         @staticmethod
         def __submitLoginWindow(widgets, awn):
-            return awn.keyring.new("Mail Applet - %s(%s)" \
+            return awn.keyring.new(None, "Mail Applet - %s(%s)" \
                 % (widgets[0].get_text(), "GApps"), \
                 widgets[1].get_text(), \
                 {"username": widgets[0].get_text(),
@@ -702,7 +702,7 @@ to log out and try again."))
 
             @staticmethod
             def __submitLoginWindow(widgets, awn):
-                return awn.keyring.new("Mail Applet - %s" \
+                return awn.keyring.new(None, "Mail Applet - %s" \
                     % "UnixSpool", "-", \
                     {"path": widgets[0].get_text(),
                      "username": os.path.split(widgets[0].get_text())[1]},
@@ -811,7 +811,7 @@ to log out and try again."))
 
             @staticmethod
             def __submitLoginWindow(widgets, awn):
-                return awn.keyring.new("Mail Applet - %s(%s)" \
+                return awn.keyring.new(None, "Mail Applet - %s(%s)" \
                     % (widgets[0].get_text(), "POP"), \
                     widgets[1].get_text(), \
                     {"username": widgets[0].get_text(),
@@ -929,7 +929,7 @@ to log out and try again."))
                 else:
                     folder = ""
 
-                return awn.keyring.new("Mail Applet - %s(%s)" \
+                return awn.keyring.new(None, "Mail Applet - %s(%s)" \
                     % (widgets[0].get_text(), "IMAP"), \
                     widgets[1].get_text(), \
                     {"username": widgets[0].get_text(),

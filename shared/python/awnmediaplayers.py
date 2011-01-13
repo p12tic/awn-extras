@@ -43,8 +43,10 @@ try:
 except ImportError:
     art_icon_from_tag = False
 
-DBusGMainLoop(set_as_default=True)
+if gtk.gtk_version >= (2, 18):
+    from urllib import unquote
 
+DBusGMainLoop(set_as_default=True)
 
 
 def cleanup():
@@ -282,7 +284,6 @@ class MPRISPlayer(GenericPlayer):
             if info['arturl'][0:7] == "file://":
                 result['album-art'] = str(info['arturl'][7:])
                 if gtk.gtk_version >= (2, 18):
-                    from urllib import unquote
                     result['album-art'] = unquote(result['album-art'])
             else:
                 print "Don't understand the album art location: %s" % info['arturl']
@@ -356,15 +357,18 @@ class Rhythmbox(GenericPlayer):
 
         # cover-art
         if 'rb:coverArt-uri' in result:
-            albumart_exact = result['rb:coverArt-uri']
+            albumart_exact = result['rb:coverArt-uri'].encode('utf8')
             # bug in rhythmbox 0.11.6 - returns uri, but not properly encoded,
             # but it's enough to remove the file:// prefix
-            albumart_exact = albumart_exact.encode('utf8').replace('file://', '', 1)
+            albumart_exact = albumart_exact.replace('file://', '', 1)
             if gtk.gtk_version >= (2, 18):
-                from urllib import unquote
                 albumart_exact = unquote(albumart_exact)
-            ret_dict['album-art'] = albumart_exact
-            return ret_dict
+            # Sanity check if encoding and unquoting did work
+            if os.path.isfile(albumart_exact):
+                ret_dict['album-art'] = albumart_exact
+                return ret_dict
+            else:
+                print "awnmediaplayers: Unquoting error:\n%s\ndoes not match\n%s" % (result['rb:coverArt-uri'], albumart_exact)
 
         # perhaps it's in the cache folder
         if 'album' in result and 'artist' in result:
@@ -374,28 +378,26 @@ class Rhythmbox(GenericPlayer):
                 ret_dict['album-art'] = cache_file
                 return ret_dict
 
-        # The following is taken and adapted from Dockmanager, including todo
+        # The following is based on code from Dockmanager
         # Copyright (C) 2009-2010 Jason Smith, Rico Tzschichholz, Robert Dyer
 
         # Look in song folder
-        # TODO need to replace some things, this is very weird
         filename = playinguri.encode('utf8').replace('file://', '', 1)
         if gtk.gtk_version >= (2, 18):
-            from urllib import unquote
             filename = unquote(filename)
         coverdir = os.path.dirname(filename)
-        covernames = ["cover.jpg", "cover.png", "Cover.jpg", "Cover.png",
-                      "album.jpg", "album.png", "Album.jpg", "Album.png",
-                      "albumart.jpg", "albumart.png", "Albumart.jpg",
-                      "Albumart.png", "AlbumArt.jpg", "AlbumArt.png",
-                      ".folder.jpg", ".folder.png", ".Folder.jpg",
-                      ".Folder.png", "folder.jpg", "folder.png",
-                      "Folder.jpg", "Folder.png"]
-        for covername in covernames:
-            coverfile = os.path.join(coverdir, covername)
-            if os.path.isfile(coverfile):
-                ret_dict['album-art'] = coverfile
-                return ret_dict
+        if os.path.isdir(coverdir):
+            covernames = ["cover", "album", "albumart", ".folder", "folder"]
+            extensions = [".jpg", ".jpeg", ".png"]
+            for f in os.listdir(coverdir):
+                for ext in extensions:
+                    if f.lower().endswith(ext):
+                        for name in covernames:
+                            if f.lower() == (name + ext):
+                                ret_dict['album-art'] = os.path.join(coverdir, f)
+                                return ret_dict
+        else:
+            print "awnmediaplayers: Unquoting error:\n%s (file)\ndoes not match\n%s (directory)" % (playinguri, coverdir)
 
         # Look for image in tags
         if art_icon_from_tag and 'mimetype' in result:

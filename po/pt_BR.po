@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-12-27 20:54+0100\n"
-"PO-Revision-Date: 2010-10-11 23:38+0000\n"
-"Last-Translator: Sam Samuels <gemini_sam_samuels@hotmail.co.uk>\n"
+"PO-Revision-Date: 2011-01-13 04:22+0000\n"
+"Last-Translator: Fitoschido <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2010-12-28 04:36+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-13 04:37+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:1
 #: ../applets/maintained/animal-farm/animal-farm.py:30
@@ -322,7 +322,7 @@ msgstr ""
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:600
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:621
 msgid "Interfaces"
-msgstr ""
+msgstr "Interfaces"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:421
 msgid "Please select a valid Network Device"
@@ -345,35 +345,35 @@ msgstr "Por favor, selecione um dispositivo válido"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
 msgid "Bps"
-msgstr ""
+msgstr "Bps"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
 msgid "MBps"
-msgstr ""
+msgstr "MBps"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
 msgid "GBps"
-msgstr ""
+msgstr "GBps"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
 msgid "TBps"
-msgstr ""
+msgstr "TBps"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
 msgid "bps"
-msgstr ""
+msgstr "bps"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
 msgid "Mbps"
-msgstr ""
+msgstr "Mbps"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
 msgid "Gbps"
-msgstr ""
+msgstr "Gbps"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
 msgid "Tbps"
-msgstr ""
+msgstr "Tbps"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:1
 msgid "A Network Bandwidth monitor for AWN"
@@ -522,19 +522,19 @@ msgstr "%s %s Cor"
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:208
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:212
 msgid "SSID:"
-msgstr ""
+msgstr "SSID:"
 
 #. Translators: do not translate, just add spacing before colon,
 #. if your locale requires it
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:284
 msgid "TX:"
-msgstr ""
+msgstr "TX:"
 
 #. Translators: do not translate, just add spacing before colon,
 #. if your locale requires it
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:289
 msgid "RX:"
-msgstr ""
+msgstr "RX:"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:591
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:601
@@ -553,15 +553,15 @@ msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:670
 msgid "Status:"
-msgstr ""
+msgstr "Estado:"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:670
 msgid "IP Address:"
-msgstr ""
+msgstr "Endereço IP:"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:670
 msgid "Subnet Mask:"
-msgstr ""
+msgstr "Máscara de subrede:"
 
 #. Translators: status of a network interface
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:678
@@ -571,7 +571,7 @@ msgstr ""
 #. Translators: status of a network interface
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:682
 msgid "RUNNING"
-msgstr ""
+msgstr "EXECUTANDO"
 
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:699
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:717
@@ -653,11 +653,11 @@ msgstr "Por cento"
 
 #: ../applets/maintained/battery/battery.py:209
 msgid "AC"
-msgstr ""
+msgstr "AC"
 
 #: ../applets/maintained/battery/battery.py:209
 msgid "battery"
-msgstr ""
+msgstr "bateria"
 
 #: ../applets/maintained/battery/battery.py:210
 #, python-format
@@ -674,7 +674,7 @@ msgstr ""
 
 #: ../applets/maintained/battery/battery.py:225
 msgid "remaining"
-msgstr ""
+msgstr "restando"
 
 #: ../applets/maintained/battery/battery.py:263
 #: ../applets/maintained/battery/battery.ui.h:7
@@ -684,22 +684,22 @@ msgstr "Tempo Restante"
 #: ../applets/maintained/battery/battery.py:279
 #, python-format
 msgid "%d hours"
-msgstr ""
+msgstr "%d horas"
 
 #: ../applets/maintained/battery/battery.py:281
 #, python-format
 msgid "%d hour"
-msgstr ""
+msgstr "%d hora"
 
 #: ../applets/maintained/battery/battery.py:285
 #, python-format
 msgid "%d minutes"
-msgstr ""
+msgstr "%d minutos"
 
 #: ../applets/maintained/battery/battery.py:287
 #, python-format
 msgid "%d minute"
-msgstr ""
+msgstr "%d minuto"
 
 #: ../applets/maintained/battery/battery.ui.h:2
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:5
@@ -726,7 +726,7 @@ msgstr ""
 
 #: ../applets/maintained/battery/battery.ui.h:8
 msgid "_Battery:"
-msgstr ""
+msgstr "_Bateria:"
 
 #: ../applets/maintained/battery/battery.ui.h:9
 msgid "_Notify when charge level reaches:"
@@ -759,7 +759,7 @@ msgstr ""
 
 #: ../applets/maintained/battery/messagehandler.py:151
 msgid "Battery is charged"
-msgstr ""
+msgstr "A bateria está carregada"
 
 #: ../applets/maintained/battery/messagehandler.py:172
 msgid "Your battery is fully charged."
@@ -1069,7 +1069,7 @@ msgstr "Sistema de arquivos"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:356
 msgid "Removable Media"
-msgstr ""
+msgstr "Mídia removível"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:367
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:587
@@ -1083,7 +1083,7 @@ msgstr "Conectar ao servidor"
 #. generates a compiler warning due to the ellipse
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1147
 msgid "Search…"
-msgstr ""
+msgstr "Pesquisar..."
 
 #. generates a compiler warning due to the ellipse
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1164
@@ -1094,7 +1094,7 @@ msgstr ""
 #: ../applets/maintained/yama/yama.py:606
 #, c-format, python-format
 msgid "Unable to mount %s"
-msgstr ""
+msgstr "Não foi possível montar %s"
 
 #: ../applets/maintained/cairo-menu/misc.c:407
 #: ../applets/maintained/yama/yama.py:585
@@ -1290,7 +1290,7 @@ msgstr ""
 #: ../applets/maintained/calendar/clockcal.py:299
 #, no-python-format
 msgid "%x %X"
-msgstr ""
+msgstr "%x %X"
 
 #: ../applets/maintained/calendar/clockcal.py:505
 msgid "Open in "
@@ -1433,7 +1433,7 @@ msgstr ""
 
 #: ../applets/maintained/comics/ui/add.ui.h:6
 msgid "Select Image"
-msgstr ""
+msgstr "Selecionar imagem"
 
 #: ../applets/maintained/comics/ui/add.ui.h:7
 msgid "The guide found more than one image. Please select which one to use."
@@ -1463,7 +1463,7 @@ msgstr ""
 
 #: ../applets/maintained/comics/ui/view.ui.h:2
 msgid "Size"
-msgstr ""
+msgstr "Tamanho"
 
 #: ../applets/maintained/comics/main.py:152
 #, python-format
@@ -1487,7 +1487,7 @@ msgstr ""
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:385
 #: ../applets/maintained/yama/yama.py:262
 msgid "Home Folder"
-msgstr ""
+msgstr "Pasta pessoal"
 
 #: ../applets/maintained/cpufreq/awn-applet-cpufreq.schema-ini.in.h:1
 msgid "Index of processor."
@@ -1513,11 +1513,11 @@ msgstr ""
 
 #: ../applets/maintained/cpufreq/cpufreq.py:262
 msgid "GHz"
-msgstr ""
+msgstr "GHz"
 
 #: ../applets/maintained/cpufreq/cpufreq.py:265
 msgid "MHz"
-msgstr ""
+msgstr "MHz"
 
 #: ../applets/maintained/cpufreq/cpufreq.ui.h:1
 msgid "<b>Monitored CPU</b>"
@@ -1588,19 +1588,19 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.py:209
 msgid "small"
-msgstr ""
+msgstr "pequeno"
 
 #: ../applets/maintained/dialect/dialect.py:211
 msgid "large"
-msgstr ""
+msgstr "grande"
 
 #: ../applets/maintained/dialect/dialect.py:213
 msgid "transparent"
-msgstr ""
+msgstr "transparente"
 
 #: ../applets/maintained/dialect/dialect.py:215
 msgid "opaque"
-msgstr ""
+msgstr "opaco"
 
 #: ../applets/maintained/dialect/dialect.py:217
 msgid "System List"
@@ -1608,7 +1608,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.py:219
 msgid "User List"
-msgstr ""
+msgstr "Lista de usuários"
 
 #: ../applets/maintained/dialect/dialect.ui.h:1
 msgid "<b>Flag on Applet Icon</b>"
@@ -1616,7 +1616,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:2
 msgid "<b>Keyboard</b>"
-msgstr ""
+msgstr "<b>Teclado</b>"
 
 #: ../applets/maintained/dialect/dialect.ui.h:3
 msgid "<b>Mouse Actions</b>"
@@ -1629,7 +1629,7 @@ msgstr ""
 #: ../applets/maintained/dialect/dialect.ui.h:5
 #: ../applets/maintained/digital-clock/dg-prefs.ui.h:5
 msgid "Appearance"
-msgstr ""
+msgstr "Aparência"
 
 #: ../applets/maintained/dialect/dialect.ui.h:6
 msgid "Change your keyboard layout from Awn."
@@ -1661,7 +1661,7 @@ msgstr ""
 #. Keyboard layouts
 #: ../applets/maintained/dialect/dialect.ui.h:14
 msgid "Layouts"
-msgstr ""
+msgstr "Disposições"
 
 #. A tooltip, layouts = keyboard layouts
 #: ../applets/maintained/dialect/dialect.ui.h:17
@@ -1686,7 +1686,7 @@ msgstr ""
 
 #: ../applets/maintained/dialect/dialect.ui.h:22
 msgid "_Add"
-msgstr ""
+msgstr "_Adicionar"
 
 #: ../applets/maintained/dialect/dialect.ui.h:23
 msgid "_Allow scroll wheel to change layout"
@@ -1779,7 +1779,7 @@ msgstr ""
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:2
 #: ../applets/maintained/digital-clock/digital-clock.vala:58
 msgid "Digital Clock"
-msgstr ""
+msgstr "Relógio digital"
 
 #. Translators: This is a date string. You can check the output with
 #. 'date +"%b %d"'. %b is the abbreviated name of the month, %d is the
@@ -1789,7 +1789,7 @@ msgstr ""
 #: ../applets/maintained/digital-clock/digital-clock.vala:311
 #, no-c-format
 msgid "%b %d"
-msgstr ""
+msgstr "%d %b"
 
 #. "Copy Time" menu item
 #: ../applets/maintained/digital-clock/digital-clock.vala:346
@@ -1837,16 +1837,16 @@ msgstr ""
 
 #: ../applets/maintained/feeds/classes.py:365
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #: ../applets/maintained/feeds/classes.py:531
 #: ../applets/maintained/feeds/prefs.py:534
 msgid "Google Reader"
-msgstr ""
+msgstr "Google Reader"
 
 #: ../applets/maintained/feeds/classes.py:577
 msgid "Google Wave"
-msgstr ""
+msgstr "Google Wave"
 
 #: ../applets/maintained/feeds/classes.py:663
 msgid "Reddit Inbox"
@@ -1865,11 +1865,11 @@ msgstr ""
 #: ../applets/maintained/feeds/classes.py:809
 #: ../applets/maintained/feeds/prefs.py:428
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #: ../applets/maintained/feeds/classes.py:936
 msgid "Untitled"
-msgstr ""
+msgstr "Sem título"
 
 #: ../applets/maintained/feeds/feeds.desktop.in.h:1
 #: ../applets/maintained/feeds/feeds.py:243
@@ -1924,7 +1924,7 @@ msgstr ""
 #: ../applets/maintained/feeds/feeds.py:590
 #: ../applets/maintained/feeds/prefs.py:270
 msgid "Loading..."
-msgstr ""
+msgstr "Carregando..."
 
 #: ../applets/maintained/feeds/feeds.py:628
 #: ../applets/maintained/feeds/feeds.py:787
@@ -1939,7 +1939,7 @@ msgstr ""
 #: ../applets/maintained/feeds/feeds.py:1033
 #: ../applets/maintained/feeds/prefs.py:359
 msgid "Add Feed"
-msgstr ""
+msgstr "Adicionar fonte de notícias"
 
 #: ../applets/maintained/feeds/feeds.py:1035
 msgid "Show Only _New Feeds"
@@ -1948,7 +1948,7 @@ msgstr ""
 #: ../applets/maintained/feeds/feeds.py:1038 ../shared/python/awnlib.py:125
 #, python-format
 msgid "_About %s"
-msgstr ""
+msgstr "_Sobre %s"
 
 #: ../applets/maintained/feeds/feeds.py:1117
 msgid "Applet to monitor web feeds"
@@ -1969,13 +1969,13 @@ msgstr[1] ""
 #: ../applets/maintained/feeds/feeds.py:1219
 #, python-format
 msgid "Could not open '%s'"
-msgstr ""
+msgstr "Não foi possível abrir '%s'"
 
 #: ../applets/maintained/feeds/feeds.py:1204
 #: ../applets/maintained/feeds/prefs.py:328
 #, python-format
 msgid "Could not save '%s'"
-msgstr ""
+msgstr "Não foi possível salvar '%s'"
 
 #: ../applets/maintained/feeds/prefs.py:53
 msgid "Feeds Applet Preferences"
@@ -1983,11 +1983,11 @@ msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:63
 msgid "Feeds"
-msgstr ""
+msgstr "Fontes de Notícias"
 
 #: ../applets/maintained/feeds/prefs.py:64
 msgid "Updating"
-msgstr ""
+msgstr "Atualizando"
 
 #: ../applets/maintained/feeds/prefs.py:103
 msgid "_Show website icons"
@@ -2001,11 +2001,11 @@ msgstr ""
 #. Import and export buttons (OPML)
 #: ../applets/maintained/feeds/prefs.py:115
 msgid "Import"
-msgstr ""
+msgstr "Importar"
 
 #: ../applets/maintained/feeds/prefs.py:118
 msgid "Export"
-msgstr ""
+msgstr "Exportar"
 
 #. Updating section (enable/disable automatically updating and change how often)
 #. Checkbox: Notify for updated feeds
@@ -2021,11 +2021,11 @@ msgstr ""
 #. Update every [SpinButton] minutes
 #: ../applets/maintained/feeds/prefs.py:157
 msgid "Update every "
-msgstr ""
+msgstr "Atualizar a cada "
 
 #: ../applets/maintained/feeds/prefs.py:158
 msgid " minutes"
-msgstr ""
+msgstr " minutos"
 
 #: ../applets/maintained/feeds/prefs.py:170
 msgid "Keep items unread when updating"
@@ -2042,7 +2042,7 @@ msgstr ""
 #. Note: the following string is used as an exmaple filename
 #: ../applets/maintained/feeds/prefs.py:297
 msgid "feeds.opml"
-msgstr ""
+msgstr "fontes.opml"
 
 #: ../applets/maintained/feeds/prefs.py:308
 msgid "Awn Feeds Applet Items"
@@ -2051,7 +2051,7 @@ msgstr ""
 #. Source: label and radio buttons
 #: ../applets/maintained/feeds/prefs.py:363
 msgid "Source:"
-msgstr ""
+msgstr "Fonte:"
 
 #: ../applets/maintained/feeds/prefs.py:373
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:590
@@ -2065,26 +2065,26 @@ msgstr ""
 
 #: ../applets/maintained/feeds/prefs.py:385
 msgid "RSS/Atom"
-msgstr ""
+msgstr "RSS/Atom"
 
 #: ../applets/maintained/feeds/prefs.py:430
 msgid "Timeline"
-msgstr ""
+msgstr "Linha do tempo"
 
 #: ../applets/maintained/feeds/prefs.py:435
 msgid "Replies"
-msgstr ""
+msgstr "Respostas"
 
 #. "Search for" label and entry
 #: ../applets/maintained/feeds/prefs.py:464
 msgid "Search for"
-msgstr ""
+msgstr "Pesquisar por"
 
 #. URL: label and entry
 #: ../applets/maintained/feeds/prefs.py:478
 #: ../applets/maintained/webapplet/applet.c:276
 msgid "URL:"
-msgstr ""
+msgstr "URL:"
 
 #. Username: label and entry
 #: ../applets/maintained/feeds/prefs.py:492
@@ -2111,7 +2111,7 @@ msgstr ""
 #. If signed in to Google Reader
 #: ../applets/maintained/feeds/prefs.py:571
 msgid "_Search"
-msgstr ""
+msgstr "Pe_squisar"
 
 #: ../applets/maintained/feeds/prefs.py:775
 msgid ""

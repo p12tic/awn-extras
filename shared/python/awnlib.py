@@ -1066,7 +1066,7 @@ class Keyring:
         k.keyring = keyring
         k.token = token
         
-        # Sanity checks
+        # Get name of default keyring and do some checks.
         if keyring is None:
             keyring = gnomekeyring.get_default_keyring_sync()
         if keyring is None:
@@ -1077,7 +1077,6 @@ class Keyring:
         keys = gnomekeyring.list_item_ids_sync(keyring)
         if k.token not in keys:
             raise KeyRingError("Token does not exist")
-        k.unlock()  # Raises Exception if failed
             
         return k
 
@@ -1135,21 +1134,21 @@ class Keyring:
                 return
 
             # The straight way would be:
-            # gnomekeyring.unlock_sync(None, None)
+            # gnomekeyring.unlock_sync(self.keyring, None)
             # But this results in a type error, see launchpad bugs #432882.
-            # We set a dummy key instead and delete it immediately,
-            # this triggers a user dialog to unlock the keyring.
+            # We create a dummy key instead, this triggers a user dialog to
+            # unlock the keyring. We delete the dummy key then immediately.
             try:
                 tmp = gnomekeyring.item_create_sync(self.keyring, \
                       gnomekeyring.ITEM_GENERIC_SECRET, "awn-extras dummy", \
                       {"dummy_attr": "none"}, "dummy_pwd", True)
             except gnomekeyring.CancelledError:
                 raise KeyRingError("Keyring is locked")
-            gnomekeyring.item_delete_sync(self.keyring, tmp)
-
-            info = gnomekeyring.get_info_sync(self.keyring)
-            if info.get_is_locked():
-                raise KeyRingError("Keyring is locked")
+            try:
+                gnomekeyring.item_delete_sync(self.keyring, tmp)
+            except gnomekeyring.BadArgumentsError:
+                # Race condition if several applets use this method at once
+                pass
 
         def delete(self):
             """Delete the current key. Will also reset the token. Note that
@@ -1157,6 +1156,7 @@ class Keyring:
             destructive. delete() MUST be called manually.
 
             """
+            self.unlock()
             gnomekeyring.item_delete_sync(self.keyring, self.token)
             self.token = 0
 

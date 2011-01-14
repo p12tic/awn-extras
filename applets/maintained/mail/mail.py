@@ -83,70 +83,94 @@ class MailApplet:
         self.awn.tooltip.set(_("Mail Applet (Click to Log In)"))
 
         self.__dialog = MainDialog(self)
+        
+        self.keyring = None
+        try:
+            self.keyring = awnlib.Keyring()
+        except awnlib.KeyRingError:
+            pass
 
-        self.login()
-
-    def login(self, force=False):
-        """
-        Login. Try to login from saved key, if this does not exist or
-        force is True, show login dialog
-
-        """
-        self.awn.theme.icon("login")
-
-        # If we're forcing initiation, just draw the dialog.
-        # We wouldn't be forcing if we want to use the saved login token.
-        if force:
+        if self.keyring:
+            try:
+                identify = "Awn Extras/Mail/" + self.back.__name__
+                keys = self.keyring.from_attributes({'id': identify}, 'generic')
+                if len(keys) > 1:
+                    print "Warning from Mail Applet: You have more than one key " + \
+                          "with id '%s'. This should not happen." % identify
+                login_data = keys[0].attrs
+                login_data['password'] = keys[0].password
+                self.login(login_data, startup=True)
+            except awnlib.KeyRingError:
+                self.__dialog.login_form()
+                self.awn.dialog.toggle("main", "show")
+        else:
             self.__dialog.login_form()
             self.awn.dialog.toggle("main", "show")
-            return
 
+    def save_key(self, data):
+        '''Save login data to Gnome Keyring'''
+           
+        identify = "Awn Extras/Mail/" + self.back.__name__
+        password = data['password']
+        attrs = data.copy()
+        del attrs['password']
+        attrs['id'] = identify
+
+        # Check if the key already exists
         try:
-            token = self.awn.settings["login-token"]
-        except:  # You know what? too bad. No get_null, no exception handling
-            token = 0
+            keys = self.keyring.from_attributes({'id': identify}, 'generic')
+            if len(keys) > 1:
+                print "Warning from Mail Applet: You have more than one key " + \
+                      "with id '%s'. This should not happen." % identify
+            # Overwrite existing key, do not double it or we run into problems
+            try:
+                keys[0].password = password
+                keys[0].attrs = attrs
+            except awnlib.KeyRingError:
+                pass  # not successfull, propably cancelled by user,
+                      # so we don't have to send a message
 
-        # Force login if the token is 0, which we take to mean that there is no
-        # login information. We'd delete the key, but that's not always
-        # supported.
-        if token == 0:
-            return self.login(True)
-
-        try:
-            key = self.awn.keyring.from_token(None, token)
-            login_data = key.attrs
-            login_data['password'] = key.password
         except awnlib.KeyRingError:
-            return self.login(True)
-
-        self.perform_login(login_data, startup=True)
+           # Create a new key:
+           try:
+               self.keyring.new(
+                   keyring=None,
+                   name=identify,
+                   pwd=password,
+                   attrs=attrs,
+                   type='generic')
+           except awnlib.KeyRingError:
+                pass  # not successfull, propably cancelled by user,
+                      # so we don't have to send a message
 
     def logout(self):
         if hasattr(self, "timer"):
             self.timer.stop()
         self.awn.theme.icon("login")
-        self.awn.settings["login-token"] = 0
 
-    def perform_login(self, data, startup=False):
+    def login(self, data, startup=False):
         try:
-            self.mail = self.back(data)  # Login
+            self.mail = self.back(data)  # Initialize backend, check login data
+                                         # IMAP backend connects to server
         except RuntimeError, error:
             self.__dialog.login_form(True, str(error))
         else:
             try:
-                self.mail.update()  # Update
+                self.mail.update()  # Connect to server
             except RuntimeError:
                 self.__dialog.login_form(True)
 
             else:
+                # Login successful
                 self.awn.notification.send(_("Mail Applet"),
                     _("Logging in as %s") % data["username"],
                     self.__getIconPath("login"))
 
-                # Login successful
                 self.awn.theme.icon("read")
 
-                #self.awn.settings["login-token"] = key.token  FIXME
+                if self.keyring:
+                    self.save_key(data)  # TODO key is actually saved every
+                                         # login again, even if it didn't change
 
                 self.timer = self.awn.timing.register(self.refresh,
                                                      self.awn.settings["timeout"] * 60)
@@ -483,7 +507,7 @@ class MainDialog:
         submit_button.set_image(image_login)
 
         def onsubmit(widget):
-            self.__parent.perform_login(
+            self.__parent.login(
                                 self.callback["callback"](self.callback["widgets"]))
         submit_button.connect("clicked", onsubmit)
 

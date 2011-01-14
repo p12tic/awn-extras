@@ -58,13 +58,6 @@ def get_label_entry(text, label_group=None):
 
     return (entry, hbox)
 
-def check_login_data(data, fields):
-    for field in fields:
-        if field not in data:
-            raise RuntimeError("Wrong or corrupt key")
-        if data[field] is None or data[field] == '':
-            raise RuntimeError("Please fill in every field")
-
 
 class MailApplet:
 
@@ -85,18 +78,15 @@ class MailApplet:
         self.__dialog = MainDialog(self)
         
         # Login from key or dialog
-        self.get_keyring()
-        key = self.get_key()
-        if key:
-            login_data = self.get_data_from_key(key)
-            if login_data:
-                self.login(login_data, startup=True)
-                return
+        self.init_keyring()
+        login_data = self.get_data_from_key(self.get_key())
+        if login_data:
+            self.login(login_data, startup=True)
+        else:
+            self.__dialog.login_form()
+            #self.awn.dialog.toggle("main", "show")
 
-        self.__dialog.login_form()
-        self.awn.dialog.toggle("main", "show")
-
-    def get_keyring(self):
+    def init_keyring(self):
         self.keyring = None
         try:
             self.keyring = awnlib.Keyring()
@@ -105,10 +95,13 @@ class MailApplet:
 
     def get_key(self):
         '''Get key for backend from Gnome Keyring'''
-        
+
         if not self.keyring:
             return None
-            
+
+        if self.back.__name__ == "UnixSpool":
+            return None
+        
         identify = "Awn Extras/Mail/" + self.back.__name__
         try:
             keys = self.keyring.from_attributes({'id': identify}, 'generic')
@@ -118,7 +111,7 @@ class MailApplet:
             return keys[0]
         except awnlib.KeyRingError:
             return None
-        
+
     def get_data_from_key(self, key):
         if not self.keyring or not key:
             return None
@@ -128,13 +121,16 @@ class MailApplet:
             data['password'] = key.password
         except awnlib.KeyRingError:
             return None
-        
+
         return data
 
     def save_key(self, data):
         '''Save login data for backend in Gnome Keyring'''
-           
+
         if not self.keyring or not data:
+            return
+
+        if self.back.__name__ == "UnixSpool":
             return
 
         identify = "Awn Extras/Mail/" + self.back.__name__
@@ -164,12 +160,30 @@ class MailApplet:
                 pass  # not successfull, propably cancelled by user,
                       # so we don't have to send a message
 
+    def check_login_data(self, data):
+        if self.back.__name__ == "GMail":
+            fields = ['username', 'password']
+        elif self.back.__name__ == "GApps":
+            fields = ['username', 'domain', 'password']
+        elif self.back.__name__ == "POP":
+            fields = ['username', 'url', 'usessl', 'password']
+        elif self.back.__name__ == "IMAP":
+            fields = ['username', 'url', 'usessl', 'folder', 'password']
+        else:
+            # UnixSpool has no password
+            return
+        
+        for field in fields:
+            if field not in data:
+                raise RuntimeError("Wrong or corrupt key")
+            if data[field] is None or data[field] == '':
+                raise RuntimeError("Please fill in every field")
+
     def logout(self):
         if hasattr(self, "timer"):
             self.timer.stop()
         self.awn.theme.icon("login")
-        # TODO fill in login data
-        # TODO change tooltip
+        self.awn.tooltip.set(_("Mail Applet (Click to Log In)"))
 
     def login(self, data, startup=False):
         try:
@@ -428,30 +442,10 @@ class MainDialog:
         for widget in self.login_widgets:
             widget.destroy()
 
-        if hasattr(self.__parent.back, "drawLoginWindow"):
-            t = self.__parent.back.drawLoginWindow(*groups)
-            self.login_widgets.append(t["layout"])
-            vbox.add(t["layout"])
-        else:
-            usrE, box = get_label_entry(_("Username:"), *groups)
-            vbox.add(box)
-            self.login_widgets.append(box)
-
-            pwdE, box = get_label_entry(_("Password:"), *groups)
-            pwdE.set_visibility(False)
-            vbox.add(box)
-            self.login_widgets.append(box)
-
-            t = {}
-
-            t["callback"] = \
-                lambda widgets: {'username': widgets[0].get_text(), \
-                                 'password': widgets[1].get_text()}
-
-            t["widgets"] = [usrE, pwdE]
-
+        t = self.__parent.back.drawLoginWindow(*groups)
+        self.login_widgets.append(t["layout"])
+        vbox.add(t["layout"])
         vbox.show_all()
-
         return t
 
     def login_form(self, error=False, message=_("Wrong username or password")):
@@ -501,7 +495,13 @@ class MainDialog:
                 #self.__login_get_widgets(vbox, label_group)
                 self.callback = self.__login_get_widgets(vbox, label_group)
                 # TODO if there was an error message remove it
-                # TODO if we have a key for it, fill in data
+                login_data = self.__parent.get_data_from_key(self.__parent.get_key())
+                if login_data:
+                    try:
+                        self.__parent.check_login_data(login_data)
+                        self.callback['fill-in'](self.callback['widgets'], login_data)
+                    except RuntimeError:
+                        pass
 
         label_backend = gtk.Label(_("Type:"))
         label_backend.set_alignment(0.0, 0.5)
@@ -524,6 +524,13 @@ class MainDialog:
 
         self.login_widgets = []
         self.callback = self.__login_get_widgets(vbox, label_group)
+        login_data = self.__parent.get_data_from_key(self.__parent.get_key())
+        if login_data:
+            try:
+                self.__parent.check_login_data(login_data)
+                self.callback['fill-in'](self.callback['widgets'], login_data)
+            except RuntimeError:
+                pass
 
         image_login = gtk.image_new_from_stock(gtk.STOCK_NETWORK,
                                                gtk.ICON_SIZE_BUTTON)
@@ -559,7 +566,7 @@ class Backends:
 
         def __init__(self, data):
             self.data = data
-            check_login_data(self.data, ['username', 'password'])
+            check_login_data(self.data)
 
         def url(self):
             return "https://mail.google.com/mail/"
@@ -617,13 +624,39 @@ to log out and try again."))
             # Get source of message
             return n
 
+        @classmethod
+        def drawLoginWindow(cls, *groups):
+            vbox = gtk.VBox(spacing=12)
+
+            usrE, box = get_label_entry(_("Username:"), *groups)
+            vbox.add(box)
+
+            pwdE, box = get_label_entry(_("Password:"), *groups)
+            pwdE.set_visibility(False)
+            vbox.add(box)
+
+            return {"layout": vbox, "callback": cls.__submitLoginWindow,
+                "widgets": [usrE, pwdE],
+                "fill-in": cls.__fillinLoginWindow}
+
+        @staticmethod
+        def __submitLoginWindow(widgets):
+            return {'username': widgets[0].get_text(), \
+                    'password': widgets[1].get_text()}
+
+        @staticmethod
+        def __fillinLoginWindow(widgets, data):
+            widgets[0].set_text(data['username'])
+            widgets[1].set_text(data['password'])
+
+
     class GApps:
 
         title = _("Google Apps")
 
         def __init__(self, data):
             self.data = data
-            check_login_data(self.data, ['username', 'domain', 'password'])
+            check_login_data(self.data)
 
         def url(self):
             return "https://mail.google.com/a/%s" % self.data["domain"]
@@ -697,13 +730,20 @@ to log out and try again."))
             vbox.add(box)
 
             return {"layout": vbox, "callback": cls.__submitLoginWindow,
-                "widgets": [usrE, pwdE, domE]}
+                "widgets": [usrE, pwdE, domE],
+                "fill-in": cls.__fillinLoginWindow}
 
         @staticmethod
         def __submitLoginWindow(widgets):
             return {'username': widgets[0].get_text(), \
                     'password': widgets[1].get_text(), \
                     'domain': widgets[2].get_text()}
+
+        @staticmethod
+        def __fillinLoginWindow(widgets, data):
+            widgets[0].set_text(data['username'])
+            widgets[1].set_text(data['password'])
+            widgets[2].set_text(data['domain'])
 
     try:
         global mailbox
@@ -717,7 +757,7 @@ to log out and try again."))
             title = _("Unix Spool")
 
             def __init__(self, data):
-                check_login_data(data, ['path'])
+                check_login_data(data)
                 self.path = data["path"]
 
             def update(self):
@@ -766,7 +806,7 @@ to log out and try again."))
 
             def __init__(self, data):
                 self.data = data
-                check_login_data(self.data, ['username', 'url', 'usessl', 'password'])
+                check_login_data(self.data)
 
             def update(self):
                 # POP is not designed for being logged in continously.
@@ -851,7 +891,8 @@ to log out and try again."))
                 vbox.add(sslE)
 
                 return {"layout": vbox, "callback": cls.__submitLoginWindow,
-                    "widgets": [usrE, pwdE, srvE, sslE]}
+                    "widgets": [usrE, pwdE, srvE, sslE],
+                    "fill-in": cls.__fillinLoginWindow}
 
             @staticmethod
             def __submitLoginWindow(widgets):
@@ -859,6 +900,13 @@ to log out and try again."))
                         'password': widgets[1].get_text(), \
                         'url': widgets[2].get_text(), \
                         "usessl": widgets[3].get_active()}
+
+            @staticmethod
+            def __fillinLoginWindow(widgets, data):
+                widgets[0].set_text(data['username'])
+                widgets[1].set_text(data['password'])
+                widgets[2].set_text(data['url'])
+                widgets[3].set_active(data['usessl'])
 
     try:
         global imaplib
@@ -873,7 +921,7 @@ to log out and try again."))
 
             def __init__(self, data):
                 self.data = data
-                check_login_data(self.data, ['username', 'url', 'usessl', 'folder', 'password'])
+                check_login_data(self.data)
                 args = self.data["url"].split(":")
 
                 if self.data["usessl"]:
@@ -960,7 +1008,8 @@ to log out and try again."))
 
                 allE.connect("toggled", on_toggle, boxE)
                 return {"layout": vbox, "callback": cls.__submitLoginWindow,
-                    "widgets": [usrE, pwdE, srvE, sslE, allE, foldE]}
+                    "widgets": [usrE, pwdE, srvE, sslE, allE, foldE],
+                    "fill-in": cls.__fillinLoginWindow}
 
             @staticmethod
             def __submitLoginWindow(widgets):
@@ -976,6 +1025,20 @@ to log out and try again."))
                         'url': widgets[2].get_text(), \
                         'usessl': widgets[3].get_active(), \
                         'folder': folder}
+
+            @staticmethod
+            def __fillinLoginWindow(widgets, data):
+                widgets[0].set_text(data['username'])
+                widgets[1].set_text(data['password'])
+                widgets[2].set_text(data['url'])
+                widgets[3].set_active(data['usessl'])
+                if data['folder'] != "":
+                    widgets[4].set_active(False)
+                else:
+                    widgets[4].set_active(True)
+                widgets[5].set_text(data['folder'])
+
+
 
 if __name__ == "__main__":
     awnlib.init_start(MailApplet, {

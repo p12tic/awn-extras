@@ -84,54 +84,75 @@ class MailApplet:
 
         self.__dialog = MainDialog(self)
         
+        # Login from key or dialog
+        self.get_keyring()
+        key = self.get_key()
+        if key:
+            login_data = self.get_data_from_key(key)
+            if login_data:
+                self.login(login_data, startup=True)
+                return
+
+        self.__dialog.login_form()
+        self.awn.dialog.toggle("main", "show")
+
+    def get_keyring(self):
         self.keyring = None
         try:
             self.keyring = awnlib.Keyring()
         except awnlib.KeyRingError:
             pass
 
-        if self.keyring:
-            try:
-                identify = "Awn Extras/Mail/" + self.back.__name__
-                keys = self.keyring.from_attributes({'id': identify}, 'generic')
-                if len(keys) > 1:
-                    print "Warning from Mail Applet: You have more than one key " + \
-                          "with id '%s'. This should not happen." % identify
-                login_data = keys[0].attrs
-                login_data['password'] = keys[0].password
-                self.login(login_data, startup=True)
-            except awnlib.KeyRingError:
-                self.__dialog.login_form()
-                self.awn.dialog.toggle("main", "show")
-        else:
-            self.__dialog.login_form()
-            self.awn.dialog.toggle("main", "show")
+    def get_key(self):
+        '''Get key for backend from Gnome Keyring'''
+        
+        if not self.keyring:
+            return None
+            
+        identify = "Awn Extras/Mail/" + self.back.__name__
+        try:
+            keys = self.keyring.from_attributes({'id': identify}, 'generic')
+            if len(keys) > 1:
+                print "Warning from Mail Applet: You have more than one key " + \
+                      "with id '%s'. Using the first one." % identify
+            return keys[0]
+        except awnlib.KeyRingError:
+            return None
+        
+    def get_data_from_key(self, key):
+        if not self.keyring or not key:
+            return None
+        
+        try:
+            data = key.attrs
+            data['password'] = key.password
+        except awnlib.KeyRingError:
+            return None
+        
+        return data
 
     def save_key(self, data):
-        '''Save login data to Gnome Keyring'''
+        '''Save login data for backend in Gnome Keyring'''
            
+        if not self.keyring or not data:
+            return
+
         identify = "Awn Extras/Mail/" + self.back.__name__
         password = data['password']
         attrs = data.copy()
         del attrs['password']
         attrs['id'] = identify
 
-        # Check if the key already exists
-        try:
-            keys = self.keyring.from_attributes({'id': identify}, 'generic')
-            if len(keys) > 1:
-                print "Warning from Mail Applet: You have more than one key " + \
-                      "with id '%s'. This should not happen." % identify
-            # Overwrite existing key, do not double it or we run into problems
+        # Overwrite existing key, do not double it or we run into problems
+        key = self.get_key()
+        if key:
             try:
-                keys[0].password = password
-                keys[0].attrs = attrs
+                key.password = password
+                key.attrs = attrs
             except awnlib.KeyRingError:
                 pass  # not successfull, propably cancelled by user,
                       # so we don't have to send a message
-
-        except awnlib.KeyRingError:
-           # Create a new key:
+        else:
            try:
                self.keyring.new(
                    keyring=None,
@@ -170,9 +191,8 @@ class MailApplet:
 
                 self.awn.theme.icon("read")
 
-                if self.keyring:
-                    self.save_key(data)  # TODO key is actually saved every
-                                         # login again, even if it didn't change
+                self.save_key(data)  # TODO key is actually saved every
+                                     # login again, even if it didn't change
 
                 self.timer = self.awn.timing.register(self.refresh,
                                                      self.awn.settings["timeout"] * 60)

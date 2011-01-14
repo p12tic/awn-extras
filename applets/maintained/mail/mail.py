@@ -74,8 +74,10 @@ def check_login_data(backend, data):
     for field in fields:
         if field not in data:
             raise RuntimeError("Wrong or corrupt key")
-        if data[field] is None or data[field] == '':
-            raise RuntimeError("Please fill in every field")
+        if data[field] is None:
+            raise RuntimeError("Please fill in required fields")
+        if data[field] == "" and field != "folder":  # folder is optional
+            raise RuntimeError("Please fill in required fields")
 
 
 class MailApplet:
@@ -184,6 +186,8 @@ class MailApplet:
             self.timer.stop()
         self.awn.theme.icon("login")
         self.awn.tooltip.set(_("Mail Applet (Click to Log In)"))
+        # Tooltip stays in place if dialog is hidden
+        # self.awn.dialog.toggle("main", "hide")
 
     def login(self, data, startup=False):
         try:
@@ -494,6 +498,8 @@ class MainDialog:
                 self.__parent.awn.settings["backend"] = backends[backend]
                 self.__parent.back = getattr(Backends(), backends[backend])
                 self.callback = self.__login_get_widgets(vbox, label_group)
+                
+                # Remove previous error message, fill in data if available
                 if errorbox:
                     errorbox.hide()
                 login_data = self.__parent.get_data_from_key(self.__parent.get_key())
@@ -503,6 +509,10 @@ class MainDialog:
                         self.callback['fill-in'](self.callback['widgets'], login_data)
                     except RuntimeError:
                         pass
+                
+                # Make submit button insensitive if required data is missing
+                connect_entries()
+                onchanged(None)
 
         label_backend = gtk.Label(_("Type:"))
         label_backend.set_alignment(0.0, 0.5)
@@ -537,14 +547,32 @@ class MainDialog:
                                                gtk.ICON_SIZE_BUTTON)
         submit_button = gtk.Button(label=_("Log In"), use_underline=False)
         submit_button.set_image(image_login)
-        # TODO make button insensitive as long as required fields are not filled in
-        # TODO make button default action for entries
 
         def onsubmit(widget):
             self.__parent.login(
                                 self.callback["callback"](self.callback["widgets"]))
         submit_button.connect("clicked", onsubmit)
 
+        # Make submit button insensitive if required data is missing
+        def onchanged(entry):
+            state = True
+            for e in self.entries:
+                if e.get_text() == "":
+                    state = False
+            submit_button.set_sensitive(state)
+
+        def connect_entries():
+            self.entries = []
+            for w in self.callback['widgets']:
+                if w.__gtype__.name == "GtkEntry":
+                    w.connect("activate", onsubmit)
+                    if "optional" not in dir(w):
+                        self.entries.append(w)
+                        w.connect("changed", onchanged)
+
+        connect_entries()
+        onchanged(None)
+        
         hbox_login = gtk.HBox(False, 0)
         hbox_login.pack_start(submit_button, True, False)
         vbox.pack_end(hbox_login)
@@ -931,7 +959,7 @@ to log out and try again."))
 
                 try:
                     self.server.login(self.data["username"], self.data['password'])
-                except poplib.error_proto:
+                except imaplib.IMAP4.error:
                     raise RuntimeError(_("Could not log in"))
 
                 mboxs = [i.split(")")[1].split(" ", 2)[2].strip('"') for i in self.server.list()[1]]
@@ -998,6 +1026,7 @@ to log out and try again."))
 
                 foldE, boxE = get_label_entry(_("Folder:"), *groups)
                 foldE.set_text("INBOX")
+                foldE.optional = True
                 alignmentE = gtk.Alignment(0.5, 0.5, 1.0, 1.0)
                 alignmentE.props.left_padding = 12
                 alignmentE.add(boxE)
@@ -1032,7 +1061,7 @@ to log out and try again."))
                 widgets[1].set_text(data['password'])
                 widgets[2].set_text(data['url'])
                 widgets[3].set_active(data['usessl'])
-                if data['folder'] != "":
+                if data['folder'] == "":
                     widgets[4].set_active(False)
                 else:
                     widgets[4].set_active(True)

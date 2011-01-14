@@ -147,6 +147,8 @@ class MailApplet:
         if hasattr(self, "timer"):
             self.timer.stop()
         self.awn.theme.icon("login")
+        # TODO fill in login data
+        # TODO change tooltip
 
     def login(self, data, startup=False):
         try:
@@ -157,8 +159,8 @@ class MailApplet:
         else:
             try:
                 self.mail.update()  # Connect to server
-            except RuntimeError:
-                self.__dialog.login_form(True)
+            except RuntimeError, error:
+                self.__dialog.login_form(True, str(error))
 
             else:
                 # Login successful
@@ -478,6 +480,8 @@ class MainDialog:
                 self.__parent.back = getattr(Backends(), backends[backend])
                 #self.__login_get_widgets(vbox, label_group)
                 self.callback = self.__login_get_widgets(vbox, label_group)
+                # TODO if there was an error message remove it
+                # TODO if we have a key for it, fill in data
 
         label_backend = gtk.Label(_("Type:"))
         label_backend.set_alignment(0.0, 0.5)
@@ -505,6 +509,8 @@ class MainDialog:
                                                gtk.ICON_SIZE_BUTTON)
         submit_button = gtk.Button(label=_("Log In"), use_underline=False)
         submit_button.set_image(image_login)
+        # TODO make button insensitive as long as required fields are not filled in
+        # TODO make button default action for entries
 
         def onsubmit(widget):
             self.__parent.login(
@@ -695,7 +701,10 @@ to log out and try again."))
                 self.path = data["path"]
 
             def update(self):
-                self.box = mailbox.mbox(self.path)
+                try:
+                    self.box = mailbox.mbox(self.path)
+                except IOError, e:
+                    raise RuntimeError(e)
                 email = []
 
                 self.subjects = []

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-12-27 20:54+0100\n"
-"PO-Revision-Date: 2011-01-12 06:36+0000\n"
+"PO-Revision-Date: 2011-01-13 11:41+0000\n"
 "Last-Translator: Fitoschido <Unknown>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2011-01-13 04:37+0000\n"
+"X-Launchpad-Export-Date: 2011-01-14 04:47+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 "Generated-By: pygettext.py 1.5\n"
 
@@ -53,7 +53,7 @@ msgstr "Aplicación externa por defecto para el terminal."
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:100
 msgid "Disabled"
-msgstr "Deshabilitado"
+msgstr "Desactivado"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:412
 #: ../applets/maintained/calendar/calendarprefs.py:75
@@ -84,7 +84,7 @@ msgstr "Atajo"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:484
 msgid "Activate"
-msgstr "Habilitar"
+msgstr "Activar"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:493
 #, c-format
@@ -129,7 +129,7 @@ msgstr "Color para dibujar el borde"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:4
 msgid "Desired applet font size"
-msgstr "Tamaño de tipografía de la miniaplicación deseado"
+msgstr "Tamaño deseado de la tipografía de la miniaplicación"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:5
 msgid "Display parameters for interfaces"
@@ -149,9 +149,9 @@ msgid ""
 "reflection in horizontal docks only, 2: show reflection in vertical docks, "
 "3: Disable reflection for all dock orientations"
 msgstr ""
-"Habilita/deshabilita reflejos para esta miniaplicación 0: Usar configuración "
+"Activa/desactiva reflejos para esta miniaplicación 0: Usar configuración "
 "estándar, 1: Usar reflejo sólo en lanzadores horizontales, 2: Usar reflejo "
-"sólo en lanzadores verticales, 3: Deshabilitar reflejos para todos los "
+"sólo en lanzadores verticales, 3: Desactivar reflejos para todos los "
 "lanzadores"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:9
@@ -159,6 +159,8 @@ msgid ""
 "Enbables or disables drawing the applet graph - if disabled only the speed "
 "text will be displayed in the applet"
 msgstr ""
+"Activa o desactiva el dibujado de la gráfica. Si se desactiva se mostrará "
+"solo el texto de velocidad en la miniaplicación"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:10
 msgid ""
@@ -178,15 +180,16 @@ msgid ""
 "Sets the default scale of the applet traffic graph - the scale is the amount "
 "of linear data to display at one time"
 msgstr ""
-"Fija la escala por defecto del gráfico de la miniaplicación de tráfico: la "
-"escala es la cantidad de datos lineales que se debe desplegar al tiempo"
+"Establece la escala predeterminada del gráfico de la miniaplicación de "
+"tráfico: la escala es la cantidad de datos lineales que se debe desplegar al "
+"tiempo"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:13
 msgid ""
 "Sets the default scale of the applet wireless signal graph - the scale is "
 "the amount of linear data to display at one time"
 msgstr ""
-"Fija la escala por defecto del gráfico de la miniaplicación de señal "
+"Establece la escala predeterminada del gráfico de la miniaplicación de señal "
 "inalámbrica: la escala es la cantidad de datos lineales que se debe "
 "desplegar al tiempo"
 
@@ -195,26 +198,27 @@ msgid ""
 "Sets the default scale of the popup-dialog traffic graph - the scale is the "
 "amount of linear data to display at one time"
 msgstr ""
-"Fija la escala por defecto del gráfico del diálogo emergente de tráfico: la "
-"escala es la cantidad de datos lineales que se debe desplegar al tiempo"
+"Establece la escala predeterminada del gráfico del diálogo emergente de "
+"tráfico: la escala es la cantidad de datos lineales que se debe desplegar al "
+"tiempo"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:15
 msgid ""
 "Sets the default scale of the popup-dialog wireless signal graph - the scale "
 "is the amount of linear data to display at one time"
 msgstr ""
-"Fija la escala por defecto del gráfico del diálogo emergente de señal "
-"inalámbrica: la escala es la cantidad de datos lineales que se debe "
+"Establece la escala predeterminada del gráfico del diálogo emergente de "
+"señal inalámbrica: la escala es la cantidad de datos lineales que se debe "
 "desplegar al tiempo"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:16
 msgid "Sets the offset of the applet from the edge of the dock"
 msgstr ""
-"Fija la separación desde la miniaplicación hasta el borde del lanzador"
+"Establece la separación desde la miniaplicación hasta el borde del lanzador"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:17
 msgid "Sets the width of the applet icon"
-msgstr "Fija el ancho del icono de la miniaplicación"
+msgstr "Establece el ancho del icono de la miniaplicación"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:18
 msgid "The base display unit for transfer speed (0: bits, 1: bytes)"
@@ -1102,12 +1106,12 @@ msgstr "Conectarse a un servidor"
 #. generates a compiler warning due to the ellipse
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1147
 msgid "Search…"
-msgstr ""
+msgstr "Buscar..."
 
 #. generates a compiler warning due to the ellipse
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1164
 msgid "Launch…"
-msgstr ""
+msgstr "Abrir..."
 
 #: ../applets/maintained/cairo-menu/misc.c:161
 #: ../applets/maintained/yama/yama.py:606
@@ -1738,7 +1742,7 @@ msgstr "_Permitir desplazarse con la rueda para cambiar esquema"
 
 #: ../applets/maintained/dialect/dialect.ui.h:24
 msgid "_Keyboard Toggle:"
-msgstr ""
+msgstr "_Conmutar teclado:"
 
 #: ../applets/maintained/dialect/dialect.ui.h:25
 msgid "_Left Click:"
@@ -2746,7 +2750,7 @@ msgstr "Número de columnas:"
 
 #: ../applets/maintained/indicator-applet/applet.c:228
 msgid "Enable Applet Icon mode"
-msgstr "Habilitar modo de icono de miniaplicación"
+msgstr "Activar modo de icono de miniaplicación"
 
 #: ../applets/maintained/indicator-applet/applet.c:764
 msgid "Me menu"
@@ -2770,42 +2774,45 @@ msgstr "Menú de sonido"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:1
 msgid "If true, show any other menus"
-msgstr "Si se habilita, mostrar los demás menús"
+msgstr "Si se activa, mostrar los demás menús"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:2
 msgid "If true, show the Me menu (chat, microblogging, etc)"
-msgstr "Si se habilita, mostrar el menú Yo (charla, difusión, etc.)"
+msgstr "Si se activa, mostrar el menú Yo (charla, difusión, etc.)"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:3
 msgid "If true, show the Messaging icon"
-msgstr "Si se habilita, mostrar el icono de Mensajería"
+msgstr "Si se activa, mostrar el icono de Mensajería"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:4
 msgid "If true, show the Network menu"
-msgstr "Si se habilita, mostrar el menú de red"
+msgstr "Si se activa, mostrar el menú de red"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:5
 msgid "If true, show the Sound control menu"
-msgstr "Si se habilita, mostrar el menú de sonido"
+msgstr "Si se activa, mostrar el menú de sonido"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:6
 msgid "If true, show the indicator applet icons"
-msgstr ""
-"Si se habilita, mostrar los iconos de la miniaplicación de indicadores"
+msgstr "Si se activa, mostrar los iconos de la miniaplicación de indicadores"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:7
 msgid ""
 "If true, show the indicator applet session icon (lock screen, switch users, "
 "etc)"
 msgstr ""
+"Si se activa, mostrar el icono de la miniaplicación de indicadores de sesión "
+"(bloquear pantalla, cambiar usuario, etc.)"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:8
 msgid "If true, use an Awn applet icon instead"
-msgstr ""
+msgstr "Si se activa, usa un icono de miniaplicación Awn"
 
 #: ../applets/maintained/indicator-applet/awn-applet-indicator-applet.schema-ini.in.h:9
 msgid "The number of rows (top and bottom edge) or columns (side edges)"
 msgstr ""
+"El número de filas (lados superior e inferior) o columnas (lados izquierdo y "
+"derecho)"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:1
 msgid "Display any network errors"
@@ -2935,6 +2942,8 @@ msgid ""
 "There seem to be problems with our connection to your account. Your best bet "
 "is probably to log out and try again."
 msgstr ""
+"Parece haber problemas con la conexión a su cuenta. Lo mejor que podría "
+"hacer probablemente sea cerrar sesión y reintentar."
 
 #: ../applets/maintained/mail/mail.py:533
 #: ../applets/maintained/mail/mail.py:549
@@ -3208,6 +3217,7 @@ msgstr "Elementos recientes"
 #: ../applets/maintained/media-player/media_player.py:406
 msgid "Please restart the applet to apply changes to sinks."
 msgstr ""
+"Reinicie la miniaplicación para aplicar los cambios a los receptores."
 
 #: ../applets/maintained/media-player/media_player.py:426
 msgid "Plays any media files you drop on the applet."
@@ -3375,7 +3385,7 @@ msgstr ""
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:1
 msgid "Background colour in the form (Hex) rrggbbaa"
-msgstr ""
+msgstr "Color de fondo en el formulario (hex) rrggbbaa"
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:2
 msgid "Border Width. A value of 0 indicates that is should not be drawn."
@@ -3385,6 +3395,8 @@ msgstr ""
 msgid ""
 "Border colour in the form (Hex) rrggbbaa.  Also use for the timer widget"
 msgstr ""
+"Color del borde en la forma rrggbbaa (Hex). también se usa para el widget "
+"temporizador"
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:4
 msgid ""
@@ -3397,6 +3409,8 @@ msgid ""
 "Gradient Factor applied to the notification window. Range of 0 to 1. The "
 "lower the number the more noticeable the effect."
 msgstr ""
+"El factor de degradado aplicado a la ventana de notificación. Rango de 0 a "
+"1. Entre más bajo sea el número más perceptible será el efecto."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:6
 msgid ""
@@ -3429,6 +3443,8 @@ msgid ""
 "Text colour in the form (Hex) rrggbbaa. Currently the alpha component is "
 "ignored"
 msgstr ""
+"Color de texto en formato rrggbbaa (hex). Actualmente se ignora la "
+"transparencia"
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:11
 msgid ""
@@ -3467,6 +3483,9 @@ msgid ""
 "A replacement for the standard notification daemon and notify-osd. This will "
 "disable existing notification daemons while the applet is active."
 msgstr ""
+"Un reemplazo para el demonio de notificación estándar y notify-osd. Esto "
+"desactivará los demonios de notificación activos mientras la miniaplicación "
+"esté activa."
 
 #: ../applets/maintained/notification-daemon/notification-daemon.desktop.in.in.h:2
 msgid "Notification Daemon"
@@ -3483,15 +3502,15 @@ msgstr ""
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:33
 msgid "The width of the menu's border.);"
-msgstr ""
+msgstr "El ancho del borde del menú.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:31
 msgid "The size of the text in the menu, in pixels.);"
-msgstr ""
+msgstr "El tamaño del texto en el menú, en píxeles.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:29
 msgid "The icon theme name of the applet's icon.);"
-msgstr ""
+msgstr "El nombre del tema de iconos del icono de la miniaplicación.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:27
 msgid "The file manager that shows the contents of the places.);"
@@ -3502,16 +3521,18 @@ msgid ""
 "The colour (RGBA) of the text when a place is selected or the mouse hovers "
 "over it.);"
 msgstr ""
+"El color (RGBA) del texto cuando se selecciona un lugar o el ratón se sitúa "
+"sobre él.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:23
 msgid "The colour (RGBA) of the text in the menu.);"
-msgstr ""
+msgstr "El color (RGBA) del texto en el menú.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:21
 msgid ""
 "The colour (RGBA) of the menu's border, if the border width is greater than "
 "zero.);"
-msgstr ""
+msgstr "El color (RGBA) del borde del menú, si su anchura es mayor a cero.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:19
 msgid ""
@@ -3529,11 +3550,11 @@ msgstr "El color (RGBA) del texto en el menú.);"
 msgid ""
 "The color (RGBA) of the menu's border, if the border width is greater than "
 "zero.);"
-msgstr ""
+msgstr "El color (RGBA) del borde del menú, si su anchura es mayor a cero.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:13
 msgid "The background colour (RGBA) of the menu.);"
-msgstr ""
+msgstr "El color de fondo (RGBA) del menú.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:11
 msgid ""
@@ -3543,7 +3564,7 @@ msgstr ""
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:9
 msgid "The background color (RGBA) of the menu.);"
-msgstr ""
+msgstr "El color de fondo (RGBA) del menú.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:7
 msgid ""
@@ -3677,7 +3698,7 @@ msgstr "Miniaplicación rde relacionados"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:1
 msgid " The color (RGBA) applet border."
-msgstr ""
+msgstr " El color (RGBA) del borde de la miniaplicación."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:2
 msgid " The color of the desktop (RGBA) if grab_wallpaper is FALSE."
@@ -3716,7 +3737,7 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:10
 msgid "Method to grab windows.  0...gdk."
-msgstr ""
+msgstr "Método para obtener ventanas. 0...gdk."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:11
 msgid ""
@@ -3744,7 +3765,7 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:15
 msgid "The colour (RGBA) of the applet border."
-msgstr ""
+msgstr "El color (RGBA) del borde de la miniaplicación."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:16
 msgid "The colour of the desktop (RGBA) if grab_wallpaper is FALSE."
@@ -3752,11 +3773,11 @@ msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:17
 msgid "The number of columns in the pager."
-msgstr ""
+msgstr "El número de columnas en el buscapersonas."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:18
 msgid "The number of rows in the pager."
-msgstr ""
+msgstr "El número de filas en el buscapersonas."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:19
 msgid ""
@@ -3798,7 +3819,7 @@ msgstr "<b>Temporizadores</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:8
 msgid "<b>Viewport size</b>"
-msgstr ""
+msgstr "<b>Tamaño de visor</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:9
 msgid "<b>Windows</b>"
@@ -3930,11 +3951,11 @@ msgstr "_Filas:"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:43
 msgid "_Thumbnailing:"
-msgstr ""
+msgstr "Minia_turización:"
 
 #: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:1
 msgid "A prettier desktop switcher"
-msgstr ""
+msgstr "Un conmutador de escritorios más bonito"
 
 #: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:2
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2470
@@ -3973,7 +3994,7 @@ msgstr "El color de fondo del diálogo"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:2
 msgid "The border color of a drawn window"
-msgstr ""
+msgstr "El color de borde de una ventana dibujada"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:3
 msgid "The border color of the dialog"
@@ -4005,7 +4026,7 @@ msgstr ""
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:10
 msgid "The icon's border color"
-msgstr ""
+msgstr "El color del borde del icono"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:11
 msgid "The main color of a drawn window"
@@ -4051,7 +4072,7 @@ msgstr "Preferencias de SlickSwitcher"
 #. Border Colors
 #: ../applets/maintained/slickswitcher/prefs.py:94
 msgid "Border Colors"
-msgstr ""
+msgstr "Colores de borde"
 
 #. Icon Border
 #: ../applets/maintained/slickswitcher/prefs.py:100
@@ -4109,7 +4130,7 @@ msgstr "Colores"
 #. Number Colors
 #: ../applets/maintained/slickswitcher/prefs.py:187
 msgid "Number Colors"
-msgstr ""
+msgstr "Colores de número"
 
 #. Drop-Shadow Color
 #: ../applets/maintained/slickswitcher/prefs.py:203
@@ -4568,7 +4589,7 @@ msgstr "Tipo de icono"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:1
 msgid "Manage a simple To-Do list"
-msgstr ""
+msgstr "Gestione una simple lista de tareas por hacer"
 
 #: ../applets/maintained/to-do/to-do.desktop.in.h:2
 #: ../applets/maintained/to-do/to-do.py:69
@@ -4717,7 +4738,7 @@ msgstr "Una miniaplicación simple para probar el soporte de Vala"
 
 #: ../applets/maintained/vala-test/vala-test.desktop.in.in.h:2
 msgid "Test Vala Applet"
-msgstr ""
+msgstr "Miniaplicación de prueba de Vala"
 
 #: ../applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in.h:1
 msgid "Name of the device."
@@ -4791,7 +4812,7 @@ msgstr "_Silenciar"
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:1
 msgid "City, and country of the weather location."
-msgstr ""
+msgstr "Ciudad y país de la ubicación del clima."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:2
 msgid "Code that identifies the weather location."
@@ -5156,17 +5177,17 @@ msgstr "Lluvia"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:140
 msgid "Rain / Snow Showers"
-msgstr ""
+msgstr "Lluvia / nevada"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:142
 msgid "Rain / Thunder"
-msgstr ""
+msgstr "Lluvia / Truenos"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:144
 msgid "Rain / Wind"
-msgstr ""
+msgstr "Lluvia / Viento"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:146
@@ -5192,7 +5213,7 @@ msgstr "Soleado"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:155
 msgid "Sunny / Wind"
-msgstr ""
+msgstr "Soleado / Viento"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
@@ -5262,12 +5283,12 @@ msgstr "Obteniendo condiciones para"
 
 #: ../applets/maintained/weather/weather.py:273
 msgid "Show _Map"
-msgstr ""
+msgstr "Mostrar _mapa"
 
 #: ../applets/maintained/weather/weather.py:322
 #: ../applets/maintained/weather/weather.py:400
 msgid "No records found"
-msgstr ""
+msgstr "No se encontraron registros"
 
 #: ../applets/maintained/weather/weather.py:391
 msgid "Searching..."
@@ -5291,10 +5312,12 @@ msgid ""
 "If enabled, the dialog will be transparent, and the five days of the "
 "forecast will be curved"
 msgstr ""
+"Si se activa, el diálogo será transparente, y los cinco días del pronóstico "
+"se mostrarán curveados"
 
 #: ../applets/maintained/weather/weather.ui.h:8
 msgid "If enabled, the temperature will be displayed in the icon"
-msgstr "Si se habilita, la termeratura se mostrará en el icono"
+msgstr "Si se activa, la temperatura se mostrará en el icono"
 
 #: ../applets/maintained/weather/weather.ui.h:10
 msgid "Maximum _map width:"
@@ -5340,7 +5363,7 @@ msgstr "Miniaplicación web"
 msgid ""
 "Flag that enables usage of the \"Open Location\" dialog in the applet."
 msgstr ""
-"Bandera que habilita el uso de la «ubicación abierta» en la miniaplicación."
+"Bandera que activa el uso de la «ubicación abierta» en la miniaplicación."
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:2
 msgid "HTML engine to use."

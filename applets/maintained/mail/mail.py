@@ -58,6 +58,25 @@ def get_label_entry(text, label_group=None):
 
     return (entry, hbox)
 
+def check_login_data(backend, data):
+    if backend == "GMail":
+        fields = ['username', 'password']
+    elif backend == "GApps":
+        fields = ['username', 'domain', 'password']
+    elif backend == "POP":
+        fields = ['username', 'url', 'usessl', 'password']
+    elif backend == "IMAP":
+        fields = ['username', 'url', 'usessl', 'folder', 'password']
+    else:
+        # UnixSpool has no password
+        return
+
+    for field in fields:
+        if field not in data:
+            raise RuntimeError("Wrong or corrupt key")
+        if data[field] is None or data[field] == '':
+            raise RuntimeError("Please fill in every field")
+
 
 class MailApplet:
 
@@ -159,25 +178,6 @@ class MailApplet:
            except awnlib.KeyRingError:
                 pass  # not successfull, propably cancelled by user,
                       # so we don't have to send a message
-
-    def check_login_data(self, data):
-        if self.back.__name__ == "GMail":
-            fields = ['username', 'password']
-        elif self.back.__name__ == "GApps":
-            fields = ['username', 'domain', 'password']
-        elif self.back.__name__ == "POP":
-            fields = ['username', 'url', 'usessl', 'password']
-        elif self.back.__name__ == "IMAP":
-            fields = ['username', 'url', 'usessl', 'folder', 'password']
-        else:
-            # UnixSpool has no password
-            return
-        
-        for field in fields:
-            if field not in data:
-                raise RuntimeError("Wrong or corrupt key")
-            if data[field] is None or data[field] == '':
-                raise RuntimeError("Please fill in every field")
 
     def logout(self):
         if hasattr(self, "timer"):
@@ -467,6 +467,7 @@ class MainDialog:
         label_group = gtk.SizeGroup(gtk.SIZE_GROUP_HORIZONTAL)
 
         # Display an error message if there is an error
+        errorbox = None
         if error:
             image = gtk.image_new_from_stock(gtk.STOCK_DIALOG_ERROR,
                                              gtk.ICON_SIZE_MENU)
@@ -479,10 +480,10 @@ class MainDialog:
 
             # Align the image and label in the center, with the image
             # right next to the label
-            hboxbox = gtk.HBox(False)
-            hboxbox.pack_start(hbox, True, False)
+            errorbox = gtk.HBox(False)
+            errorbox.pack_start(hbox, True, False)
 
-            vbox.add(hboxbox)
+            vbox.add(errorbox)
 
         # Allow user to change the backend in the login dialog
         def changed_backend_cb(combobox, label_group):
@@ -492,13 +493,13 @@ class MainDialog:
                 backends = [i for i in dir(Backends) if i[:2] != "__"]
                 self.__parent.awn.settings["backend"] = backends[backend]
                 self.__parent.back = getattr(Backends(), backends[backend])
-                #self.__login_get_widgets(vbox, label_group)
                 self.callback = self.__login_get_widgets(vbox, label_group)
-                # TODO if there was an error message remove it
+                if errorbox:
+                    errorbox.hide()
                 login_data = self.__parent.get_data_from_key(self.__parent.get_key())
                 if login_data:
                     try:
-                        self.__parent.check_login_data(login_data)
+                        check_login_data(self.__parent.back.__name__, login_data)
                         self.callback['fill-in'](self.callback['widgets'], login_data)
                     except RuntimeError:
                         pass
@@ -527,7 +528,7 @@ class MainDialog:
         login_data = self.__parent.get_data_from_key(self.__parent.get_key())
         if login_data:
             try:
-                self.__parent.check_login_data(login_data)
+                check_login_data(self.__parent.back.__name__, login_data)
                 self.callback['fill-in'](self.callback['widgets'], login_data)
             except RuntimeError:
                 pass
@@ -566,7 +567,7 @@ class Backends:
 
         def __init__(self, data):
             self.data = data
-            check_login_data(self.data)
+            check_login_data("GMail", self.data)
 
         def url(self):
             return "https://mail.google.com/mail/"
@@ -656,7 +657,7 @@ to log out and try again."))
 
         def __init__(self, data):
             self.data = data
-            check_login_data(self.data)
+            check_login_data("GApps", self.data)
 
         def url(self):
             return "https://mail.google.com/a/%s" % self.data["domain"]
@@ -757,7 +758,6 @@ to log out and try again."))
             title = _("Unix Spool")
 
             def __init__(self, data):
-                check_login_data(data)
                 self.path = data["path"]
 
             def update(self):
@@ -806,7 +806,7 @@ to log out and try again."))
 
             def __init__(self, data):
                 self.data = data
-                check_login_data(self.data)
+                check_login_data("POP", self.data)
 
             def update(self):
                 # POP is not designed for being logged in continously.
@@ -921,7 +921,7 @@ to log out and try again."))
 
             def __init__(self, data):
                 self.data = data
-                check_login_data(self.data)
+                check_login_data("IMAP", self.data)
                 args = self.data["url"].split(":")
 
                 if self.data["usessl"]:

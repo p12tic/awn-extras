@@ -331,7 +331,6 @@ class MailApplet:
     def refresh_hide_applet(self, value):
         if hasattr(self, "mail") and value and len(self.mail.subjects) == 0:
             self.awn.icon.hide()
-            self.awn.dialog.hide()
         else:
             self.awn.show()
 

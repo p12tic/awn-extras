@@ -161,15 +161,19 @@ class MailApplet:
         attrs['id'] = identify
 
         # Overwrite existing key, do not double it or we run into problems
-        key = self.get_key()
-        if key:
-            try:
-                key.password = password
-                key.attrs = attrs
-            except awnlib.KeyRingError:
-                pass  # not successfull, propably cancelled by user,
-                      # so we don't have to send a message
-        else:
+        error = None
+        try:
+            keys = self.keyring.from_attributes({'id': identify}, 'generic')
+            if len(keys) > 1:
+                print "Warning from Mail Applet: You have more than one key " + \
+                      "with id '%s'. Using the first one." % identify
+        except awnlib.KeyRingError, error:
+            pass
+        
+        if str(error) == "Keyring is locked":
+            return
+        
+        if str(error) == "Key not found":
            try:
                self.keyring.new(
                    keyring=None,
@@ -178,8 +182,13 @@ class MailApplet:
                    attrs=attrs,
                    type='generic')
            except awnlib.KeyRingError:
-                pass  # not successfull, propably cancelled by user,
-                      # so we don't have to send a message
+                pass  # should never happen
+        else:
+            try:
+                keys[0].password = password
+                keys[0].attrs = attrs
+            except awnlib.KeyRingError:
+                pass  # should never happen
 
     def logout(self):
         if hasattr(self, "timer"):

@@ -151,30 +151,34 @@ class YamaApplet:
             menu.append(separator)
 
         if can_lock_screen:
+            def dummy_cb(*args):
+                pass
+
+            def error_cb(e):
+                # NoReply exception may occur even while the screensaver did lock the screen
+                if e.get_dbus_name() != "org.freedesktop.DBus.Error.NoReply":
+                    raise e
+
             lock_item = self.append_menu_item(menu, _("Lock Screen"), "system-lock-screen", _("Protect your computer from unauthorized use"))
             def lock_screen_cb(widget):
-                try:
-                    ss_proxy = self.session_bus.get_object("org.gnome.ScreenSaver", "/")
-                    dbus.Interface(ss_proxy, "org.gnome.ScreenSaver").Lock()
-                except dbus.DBusException, e:
-                    # NoReply exception may occur even while the screensaver did lock the screen
-                    if e.get_dbus_name() != "org.freedesktop.DBus.Error.NoReply":
-                        raise
+                ss_proxy = self.session_bus.get_object("org.gnome.ScreenSaver", "/")
+                ss_iface = dbus.Interface(ss_proxy, "org.gnome.ScreenSaver")
+                ss_iface.Lock(reply_handler=dummy_cb, error_handler=error_cb)
             lock_item.connect("activate", lock_screen_cb)
             self.session_items.append(lock_item)
 
         if can_manage_session:
             sm_proxy = self.session_bus.get_object("org.gnome.SessionManager", "/org/gnome/SessionManager")
-            sm_if = dbus.Interface(sm_proxy, "org.gnome.SessionManager")
+            sm_iface = dbus.Interface(sm_proxy, "org.gnome.SessionManager")
 
             user_name = commands.getoutput("whoami")
             # Translators: %s is a user name.
             logout_item = self.append_menu_item(menu, _("Log Out %s...") % user_name, "system-log-out", _("Log out %s of this session to log in as a different user") % user_name)
-            logout_item.connect("activate", lambda w: sm_if.Logout(0))
+            logout_item.connect("activate", lambda w: sm_iface.Logout(0, reply_handler=dummy_cb, error_handler=error_cb))
             self.session_items.append(logout_item)
 
             shutdown_item = self.append_menu_item(menu, _("Shut Down..."), "system-shutdown", _("Shut down the system"))
-            shutdown_item.connect("activate", lambda w: sm_if.Shutdown())
+            shutdown_item.connect("activate", lambda w: sm_iface.Shutdown(reply_handler=dummy_cb, error_handler=error_cb))
             self.session_items.append(shutdown_item)
 
     def clicked_cb(self, widget):

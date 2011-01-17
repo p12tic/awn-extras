@@ -291,6 +291,8 @@ class ViewportWidget(gtk.DrawingArea):
             #Move the viewport
             self.table.switch.move((self.row - 1, self.column - 1))
 
+            self.table.applet.hide_dialog()
+
     #The mouse cursor has entered this widget
     def enter_notify(self, widget, event):
         #Make sure that this isn't called too soon

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-12-27 20:54+0100\n"
-"PO-Revision-Date: 2011-01-16 00:13+0000\n"
+"PO-Revision-Date: 2011-01-16 16:53+0000\n"
 "Last-Translator: Nicolas Delvaux <Unknown>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2011-01-16 04:45+0000\n"
+"X-Launchpad-Export-Date: 2011-01-17 04:45+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 "Generated-By: pygettext.py 1.5\n"
 
@@ -25,7 +25,7 @@ msgstr "Ferme des animaux"
 
 #: ../applets/maintained/animal-farm/animal-farm.desktop.in.h:2
 msgid "Display fortune messages"
-msgstr "Affiche une fortune."
+msgstr "Affiche des fortunes"
 
 #: ../applets/maintained/animal-farm/animal-farm.py:31
 msgid "Applet that displays fortune messages"
@@ -234,6 +234,10 @@ msgid ""
 "chart with colored bars, bar: Bar chart, fan: Waving chart with density, "
 "fan_bar: Waving Bar chart with density"
 msgstr ""
+"Type de graphique à utiliser pour les périphériques sans fil - area : "
+"diagramme de zone, area_bar : diagramme de zone avec des barres colorées, "
+"bar : diagramme bâton, fan : diagramme à vagues avec densité, fan_bar : "
+"diagramme bâton à vagues avec densité"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:40
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:261
@@ -317,7 +321,7 @@ msgstr "Ko/s"
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:84
 msgid "Kbps"
-msgstr "kb/s"
+msgstr "Kb/s"
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:394
 msgid "Use KBps instead of Kbps"
@@ -384,7 +388,7 @@ msgstr "Tb/s"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:1
 msgid "A Network Bandwidth monitor for AWN"
-msgstr "Un moniteur réseau pour AWN"
+msgstr "Un moniteur réseau pour Awn"
 
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:1
 #: ../applets/maintained/battery/battery.ui.h:1
@@ -1088,12 +1092,12 @@ msgstr "Se connecter a un serveur"
 #. generates a compiler warning due to the ellipse
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1147
 msgid "Search…"
-msgstr ""
+msgstr "Recherche..."
 
 #. generates a compiler warning due to the ellipse
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1164
 msgid "Launch…"
-msgstr ""
+msgstr "Lancement..."
 
 #: ../applets/maintained/cairo-menu/misc.c:161
 #: ../applets/maintained/yama/yama.py:606
@@ -1595,7 +1599,7 @@ msgstr " Applet Dialecte"
 
 #: ../applets/maintained/dialect/dialect.desktop.in.h:2
 msgid "Change your keyboard input layout from Awn."
-msgstr "Changer l'agencement de votre clavier depuis Awn."
+msgstr "Changer l'agencement de votre clavier depuis Awn"
 
 #: ../applets/maintained/dialect/dialect.py:68
 msgid "Dialect Applet"
@@ -1666,7 +1670,7 @@ msgstr "Apparence"
 
 #: ../applets/maintained/dialect/dialect.ui.h:6
 msgid "Change your keyboard layout from Awn."
-msgstr "Changer l'agencement de votre clavier depuis Awn."
+msgstr "Changer l'agencement de votre clavier depuis Awn"
 
 #: ../applets/maintained/dialect/dialect.ui.h:7
 msgid "Control"
@@ -1813,7 +1817,7 @@ msgstr "Utiliser les couleurs de Awn"
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:1
 msgid "A clock and calendar in one."
-msgstr "Sert à la fois d'horloge et de calendrier."
+msgstr "Sert à la fois d'horloge et de calendrier"
 
 #: ../applets/maintained/digital-clock/digital-clock.desktop.in.in.h:2
 #: ../applets/maintained/digital-clock/digital-clock.vala:58
@@ -3404,6 +3408,8 @@ msgid ""
 "Display icon for awn notification daemon.  Allows toggling of notification "
 "display"
 msgstr ""
+"Affiche une icône pour le démon de notification Awn. Autorise le changement "
+"d'affichage des notifications"
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:5
 msgid ""
@@ -3472,6 +3478,10 @@ msgid ""
 "notification windows with a timeout.  Value is in ms. A value less than or "
 "equal to 0 indicates that client and default values should be honoured."
 msgstr ""
+"Cela remplacera le temps d'attente du client ou par défaut pour toutes les "
+"fenêtres de notification temporisées. La valeur est en millisecondes. Une "
+"valeur inférieure ou égale à 0 signifie que les valeurs du client ou par "
+"défaut doivent être respectées."
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:13
 msgid "Use bold text."
@@ -3560,6 +3570,8 @@ msgid ""
 "The color (RGBA) of the text when a place is selected or the mouse hovers "
 "over it.);"
 msgstr ""
+"La couleur (RGBA) du texte quand un emplacement est sélectionné ou que la "
+"souris le survole.);"
 
 #: ../applets/maintained/places/awn-applet-places.schema-ini.in.h:17
 msgid "The color (RGBA) of the text in the menu.);"
@@ -3693,6 +3705,8 @@ msgid ""
 "An applet to lock your screen, log out of your session, or shut down the "
 "system"
 msgstr ""
+"Un applet pour verrouiller votre écran,fermer votre session ou éteindre le "
+"système"
 
 #: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:52
 #: ../applets/maintained/quit/quit.py:104
@@ -3725,6 +3739,7 @@ msgstr "_Action au clic gauche :"
 #: ../applets/maintained/related/related.desktop.in.in.h:1
 msgid "Applet displaying related items by talking to Zeitgeist"
 msgstr ""
+"Applet affichant les éléments relatifs en communiquant avec Zeitgeist"
 
 #: ../applets/maintained/related/related.desktop.in.in.h:2
 msgid "Related applet"
@@ -3740,15 +3755,16 @@ msgstr " La couleur du bureau (RGBA) si grab_wallpaper vaut « faux »."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:3
 msgid "0... centre  1 NW    2 NE   3 SE  4 SW\t"
-msgstr ""
+msgstr "0... centre 1 NO 2 NE 3 SE 4 SO\t"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:4
 msgid "Alpha to apply to icon overlayed on active window."
-msgstr ""
+msgstr "Transparence à appliquer à l'icône superposée à la fenêtre active."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:5
 msgid "Alpha to apply to icon overlayed on inactive window."
 msgstr ""
+"Transparence à appliquer à l'icône superposée aux fenêtres inactives."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:6
 msgid "Alpha value to apply to active workspace background."
@@ -3767,16 +3783,21 @@ msgid ""
 "Factor to scale icons as specified by scale_icon_mode.  range greater 0, "
 "less or equal 1"
 msgstr ""
+"Le facteur d'échelle des icônes comme spécifié par scale_icon_mode. Entre 0 "
+"(exclu) et 1"
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:10
 msgid "Method to grab windows.  0...gdk."
-msgstr ""
+msgstr "Méthode pour récupérer les fenêtres. 0...gdk."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:11
 msgid ""
 "Mousewheel  0. off. 1 up left, down right. 2 Opposite direction of 1. 3 Same "
 "as 1 no wrap. 4 opposite direction of 3."
 msgstr ""
+"Molette de la souris. 0 : Off ; 1 : vers le haut = déplacement vers la "
+"gauche, vers le bas = déplacement vers la droite ; 2 : Inverse de 1 ; 3 : "
+"Comme pour 1 mais sans cycle ; 4 : Inverse de 3."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:12
 msgid ""
@@ -3784,6 +3805,9 @@ msgid ""
 "expired.  After this duration it will be updated when needed if it possible "
 "to do so."
 msgstr ""
+"Nombre de secondes avant que la surface d'une fenêtre en cache soit "
+"considérée comme expirée. Après cette durée, elle sera mise à jour si "
+"nécessaire et si possible."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:13
 msgid ""
@@ -3799,6 +3823,7 @@ msgstr ""
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:14
 msgid "Scales the applet size relative to the maximum icon size"
 msgstr ""
+"Dimensionne la taille de l'applet par rapport à la taille d'icône maximale."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:15
 msgid "The colour (RGBA) of the applet border."
@@ -3810,33 +3835,41 @@ msgstr "La couleur du bureau (RGBA) si grab_wallpaper vaut « faux »."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:17
 msgid "The number of columns in the pager."
-msgstr ""
+msgstr "Le nombre de colonnes dans le gestionnaire."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:18
 msgid "The number of rows in the pager."
-msgstr ""
+msgstr "Le nombre de lignes dans le gestionnaire."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:19
 msgid ""
 "When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t"
 "2...all but active win\t3..all."
 msgstr ""
+"Quand recouvrir l'icône de l'application : 0...jamais\t1...Seulement dans "
+"les espaces de travail inactifs\t2...toujours, sauf pour les fenêtres "
+"actives\t3...toujours."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:20
 msgid ""
 "When to scale icons:  0...none  1...on all active ws  2...on_active_win "
 "3...all"
 msgstr ""
+"Quand redimensionner les icônes : 0...jamais\t1...pour l'espace de travail "
+"actif\t2...pour la fenêtre active\t3...toujours."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:21
 msgid "Whether to grab wallpaper."
-msgstr ""
+msgstr "Si il faut afficher le fond d'écran."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:22
 msgid ""
 "Win grabs:  0...none\t1...all (grab method may override) 2..active ws (and "
 "sticky)  3...active win"
 msgstr ""
+"Récupération des fenêtres : 0...non\t1...toutes (la clef « win_grab_method » "
+"peut forcer cela)\t2. Espace de travail actif (et permanent)\t3...fenêtre "
+"active."
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:3
 msgid "<b>Background transparency</b>"
@@ -3852,11 +3885,11 @@ msgstr "<b>Transparence de l'icône</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:7
 msgid "<b>Timers</b>"
-msgstr ""
+msgstr "<b>Délais</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:8
 msgid "<b>Viewport size</b>"
-msgstr ""
+msgstr "<b>Taille de la vue</b>"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:9
 msgid "<b>Windows</b>"
@@ -3876,7 +3909,7 @@ msgstr "Espace de travail actif :"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:13
 msgid "All window"
-msgstr ""
+msgstr "Toutes les fenêtres"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:14
 msgid "All windows"
@@ -3884,15 +3917,15 @@ msgstr "Toutes les fenêtres"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:15
 msgid "B_order color:"
-msgstr ""
+msgstr "Couleur de la _bordure :"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:17
 msgid "Border _size:"
-msgstr ""
+msgstr "_Taille de la bordure :"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:18
 msgid "C_ustom color:"
-msgstr ""
+msgstr "C_ouleur personnalisée :"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:19
 msgid "Cache expiration:"
@@ -3908,11 +3941,11 @@ msgstr "Co_lonnes :"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:22
 msgid "Icon _display:"
-msgstr ""
+msgstr "_Affichage de l'icône :"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:23
 msgid "Icon _scaling:"
-msgstr ""
+msgstr "_Redimensionnement de l'icône :"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:24
 msgid "Inactive window:"
@@ -3952,19 +3985,19 @@ msgstr "Fenêtre active uniquement"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:34
 msgid "Render update:"
-msgstr ""
+msgstr "Mise à jour du rendu :"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:35
 msgid "Scale _amount:"
-msgstr ""
+msgstr "Taux de mise à l'é_chelle :"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:36
 msgid "Scaled icon _position:"
-msgstr ""
+msgstr "Position de l'icône mise à l'échelle :"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:37
 msgid "Shiny Switcher Preferences"
-msgstr ""
+msgstr "Préférences du changeur de bureau visuel"
 
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:38
 msgid "Upper left"
@@ -3992,19 +4025,19 @@ msgstr "Miniatures :"
 
 #: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:1
 msgid "A prettier desktop switcher"
-msgstr ""
+msgstr "Un beau changeur d'espace de travail"
 
 #: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:2
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2470
 msgid "Shiny Switcher"
-msgstr ""
+msgstr "Changeur de bureau visuel"
 
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:642
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:735
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1977
 #: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2044
 msgid "Applet Preferences"
-msgstr ""
+msgstr "Préférences de l'applet"
 
 #: ../applets/maintained/showdesktop/applet.vala:40
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:2
@@ -4015,7 +4048,7 @@ msgstr "Afficher le bureau"
 #: ../applets/maintained/showdesktop/applet.vala:78
 #: ../applets/maintained/showdesktop/showdesktop.desktop.in.in.h:1
 msgid "Hides your windows and shows your desktop."
-msgstr "Masque vos fenêtres et affiche votre bureau."
+msgstr "Masque vos fenêtres et affiche votre bureau"
 
 #: ../applets/maintained/showdesktop/applet.vala:93
 msgid "Show hidden windows"
@@ -4031,7 +4064,7 @@ msgstr "Couleur d'arrière-plan de la boite de dialogue"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:2
 msgid "The border color of a drawn window"
-msgstr ""
+msgstr "La couleur de la bordure de la fenêtre affichée"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:3
 msgid "The border color of the dialog"
@@ -4039,15 +4072,16 @@ msgstr "La couleur de la bordure de la boite de dialogue"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:4
 msgid "The bottom part of the shiny gradient"
-msgstr ""
+msgstr "La partie inférieure du dégradé brillant"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:5
 msgid "The bottom part of the shiny gradient when hovered"
 msgstr ""
+"La partie inférieure du dégradé brillant lorsque la souris le survole"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:6
 msgid "The drop shadow color of the drawn number"
-msgstr ""
+msgstr "La couleur de l'ombre portée du numéro affiché"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:7
 msgid "The file to use as the background image"
@@ -4055,11 +4089,11 @@ msgstr "Fichier à utiliser en tant qu'image d'arrière-plan"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:8
 msgid "The height of a workspace widget"
-msgstr ""
+msgstr "La hauteur d'un widget d'espace de travail"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:9
 msgid "The hovered border color of a workspace widget"
-msgstr ""
+msgstr "La couleur d'une bordure survolée d'un widget d'espace de travail"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:10
 msgid "The icon's border color"
@@ -4067,35 +4101,38 @@ msgstr "Couleur de la bordure de l'icône"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:11
 msgid "The main color of a drawn window"
-msgstr ""
+msgstr "La couleur principale d'une fenêtre dessinée"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:12
 msgid "The main color of the drawn number"
-msgstr ""
+msgstr "La couleur principale d'un numéro affiché"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:13
 msgid "The normal border color of a workspace widget"
-msgstr ""
+msgstr "La couleur d'une bordure normale d'un widget d'espace de travail"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:14
 msgid "The top part of the shiny gradient"
-msgstr ""
+msgstr "La partie supérieure du dégradé brillant"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:15
 msgid "The top part of the shiny gradient when hovered"
 msgstr ""
+"La partie supérieure du dégradé brillant lorsque la souris le survole"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:16
 msgid "The width of a workspace widget"
-msgstr ""
+msgstr "La largeur d'un widget d'espace de travail"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:17
 msgid "Whether or not to use custom colors for the dialog"
 msgstr ""
+"Si il faut (ou pas) utiliser les couleurs personnalisées pour la boîte de "
+"dialogue"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:18
 msgid "Whether or not to use the standard text overlay"
-msgstr ""
+msgstr "Si il faut utiliser (ou pas) le texte standard de superposition"
 
 #: ../applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in.h:19
 msgid "Which background image(s) source to use: gnome, compiz, file"
@@ -4103,7 +4140,7 @@ msgstr "Source d'image(s) d'arrière-plan à utiliser : gnome, compiz, fichier"
 
 #: ../applets/maintained/slickswitcher/prefs.py:69
 msgid "SlickSwitcher Preferences"
-msgstr ""
+msgstr "Préférences du changeur de bureau astucieux"
 
 #. Colors: Borders, Windows, and Dialog
 #. Border Colors
@@ -4119,23 +4156,23 @@ msgstr "Bordure de l'icône :"
 #. Normal Border
 #: ../applets/maintained/slickswitcher/prefs.py:103
 msgid "Normal border:"
-msgstr ""
+msgstr "Bordure normale :"
 
 #. Hovered Border
 #: ../applets/maintained/slickswitcher/prefs.py:106
 msgid "Hovered border:"
-msgstr ""
+msgstr "Bordure survolées :"
 
 #. Window Colors
 #: ../applets/maintained/slickswitcher/prefs.py:109
 msgid "Window Colors"
-msgstr ""
+msgstr "Couleurs de la fenêtre"
 
 #. Main Color
 #: ../applets/maintained/slickswitcher/prefs.py:115
 #: ../applets/maintained/slickswitcher/prefs.py:200
 msgid "Main color:"
-msgstr ""
+msgstr "Couleur  principale :"
 
 #. Border Color
 #: ../applets/maintained/slickswitcher/prefs.py:118
@@ -4146,7 +4183,7 @@ msgstr "Couleur de la bordure :"
 #. Dialog Colors
 #: ../applets/maintained/slickswitcher/prefs.py:121
 msgid "Dialog colors"
-msgstr ""
+msgstr "Couleurs de la boîte de dialogue"
 
 #. Use custom colors (CheckButton)
 #: ../applets/maintained/slickswitcher/prefs.py:127
@@ -4167,12 +4204,12 @@ msgstr "Couleurs"
 #. Number Colors
 #: ../applets/maintained/slickswitcher/prefs.py:187
 msgid "Number Colors"
-msgstr ""
+msgstr "Couleurs du numéro"
 
 #. Drop-Shadow Color
 #: ../applets/maintained/slickswitcher/prefs.py:203
 msgid "Drop-shadow color:"
-msgstr ""
+msgstr "Couleur de l'ombre portée :"
 
 #. Shine Colors
 #: ../applets/maintained/slickswitcher/prefs.py:206
@@ -4192,12 +4229,12 @@ msgstr "Couleur du bas :"
 #. Hover Top Color
 #: ../applets/maintained/slickswitcher/prefs.py:218
 msgid "Hover top color:"
-msgstr ""
+msgstr "Couleur supérieure lors du survole :"
 
 #. Hover Bottom Color
 #: ../applets/maintained/slickswitcher/prefs.py:221
 msgid "Hover bottom color:"
-msgstr ""
+msgstr "Couleur inférieure lors du survole :"
 
 #: ../applets/maintained/slickswitcher/prefs.py:254
 msgid "Other colors"
@@ -4259,31 +4296,36 @@ msgstr "Avancé"
 #: ../applets/maintained/slickswitcher/slickswitcher.desktop.in.h:1
 #: ../applets/maintained/slickswitcher/slickswitcher.py:279
 msgid "A visual workspace switcher"
-msgstr "Un changeur d'espace de travail visuel"
+msgstr "Un changeur d'espace de travail compact"
 
 #: ../applets/maintained/slickswitcher/slickswitcher.desktop.in.h:2
 #: ../applets/maintained/slickswitcher/slickswitcher.py:63
 #: ../applets/maintained/slickswitcher/slickswitcher.py:270
 msgid "SlickSwitcher"
-msgstr "SlickSwitcher"
+msgstr "Changeur de bureau astucieux"
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:1
 msgid ""
 "CPU graph type to use.  Note that some Icons do not support all graph types. "
 " If this occurs an icon will revert to it's own default (value of 0)."
 msgstr ""
+"Type de graphe du processeur à utiliser. Notez que certaines icônes ne "
+"supportent pas tous les types de graphe. Si cela survient, l'icône reviendra "
+"à sa valeur par défaut (0)."
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:2
 msgid "If the updates are time based then how frequently to update in ms."
 msgstr ""
+"Si les mises à jour sont basées sur le temps alors quel est l'intervalle "
+"entre chaque mise à jour (en millisecondes)."
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:3
 msgid "Just a dummy key.. this will be removed later."
-msgstr ""
+msgstr "Juste une clé vide... elle sera supprimée plus tard."
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:4
 msgid "List of icons"
-msgstr ""
+msgstr "Liste des icônes"
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:5
 msgid "Render background."
@@ -4294,33 +4336,33 @@ msgstr "S'occuper du rendu de l'arrière-plan."
 #: ../applets/maintained/sysmon/cpuicon.c:204
 #, c-format
 msgid "CPU: %2.0lf%%"
-msgstr ""
+msgstr "Processeur : %2.0lf%%"
 
 #: ../applets/maintained/sysmon/cpuicon.c:353
 #: ../applets/maintained/sysmon/cpu-dialog.c:256
 msgid "CPU"
-msgstr ""
+msgstr "Processeur"
 
 #: ../applets/maintained/sysmon/cpuicon.c:580
 msgid "Graph Type"
-msgstr ""
+msgstr "Type de graphe"
 
 #. Translators: refers to a graph type
 #: ../applets/maintained/sysmon/cpuicon.c:587
 msgid "Area"
-msgstr ""
+msgstr "Zone"
 
 #: ../applets/maintained/sysmon/cpuicon.c:590
 msgid "Circle"
-msgstr ""
+msgstr "Cercle"
 
 #: ../applets/maintained/sysmon/cpuicon.c:593
 msgid "Bars"
-msgstr ""
+msgstr "Barres"
 
 #: ../applets/maintained/sysmon/cpuicon.c:596
 msgid "Default"
-msgstr ""
+msgstr "Par défaut"
 
 #. item = gtk_menu_item_new_with_label ("Add Icon");
 #. gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
@@ -4334,20 +4376,20 @@ msgstr ""
 #. 
 #: ../applets/maintained/sysmon/cpuicon.c:610
 msgid "Render Background"
-msgstr ""
+msgstr "Rendu de l'arrière-plan"
 
 #: ../applets/maintained/sysmon/cpu-dialog.c:240
 msgid "PID"
-msgstr ""
+msgstr "Identifiant du processus"
 
 #: ../applets/maintained/sysmon/cpu-dialog.c:248
 msgid "Process Name"
-msgstr ""
+msgstr "Nom du processus"
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:1
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:2
 msgid "Manage system activity"
-msgstr ""
+msgstr "Gérer l'activité du système"
 
 #: ../applets/maintained/sysmon/sysmon.desktop.in.in.h:2
 msgid "System Monitor"
@@ -4357,25 +4399,26 @@ msgstr "Moniteur système"
 #: ../applets/maintained/thinkhdaps/thinkhdaps.py:35
 msgid "Applet that shows the shock protection status of your disks"
 msgstr ""
+"Un applet qui affiche l'état de la protection contre les chocs de vos disques"
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.desktop.in.h:2
 #: ../applets/maintained/thinkhdaps/thinkhdaps.py:34
 msgid "ThinkHDAPS"
-msgstr ""
+msgstr "ThinkHDAPS"
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.py:40
 #, python-format
 msgid "%s protected from shocks"
-msgstr ""
+msgstr "%s est protégé des chocs"
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.py:41
 #, python-format
 msgid "%s not protected from shocks"
-msgstr ""
+msgstr "%s n'est pas protégé des chocs"
 
 #: ../applets/maintained/thinkhdaps/thinkhdaps.py:153
 msgid "No hard disk found"
-msgstr ""
+msgstr "Pas de disque dur trouvé"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:1
 msgid "Background color for high priority items"
@@ -4391,59 +4434,59 @@ msgstr "Couleur d'arrière-plan pour les éléments à priorité moyenne"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:4
 msgid "List of colors to use for the custom color"
-msgstr ""
+msgstr "Liste des couleurs à utiliser pour la couleur personnalisée"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:5
 msgid "List of items' details"
-msgstr ""
+msgstr "Liste des détails des éléments"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:6
 msgid "List of items' names"
-msgstr ""
+msgstr "Liste des noms des éléments"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:7
 msgid "List of items' priorities (0-3)"
-msgstr ""
+msgstr "Liste des propriétés des éléments (0-3)"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:8
 msgid "List of items' progresses in percent (0-100)"
-msgstr ""
+msgstr "Liste de la progression des éléments en pourcentage (0-100)"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:9
 msgid "Text color for high priority items"
-msgstr ""
+msgstr "Couleur du texte pour les éléments à haute priorité"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:10
 msgid "Text color for low priority items"
-msgstr ""
+msgstr "Couleur du texte pour les éléments à faible priorité"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:11
 msgid "Text color for medium priority items"
-msgstr ""
+msgstr "Couleur du texte pour les éléments à priorité moyenne"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:12
 msgid "The color to use for the icon"
-msgstr ""
+msgstr "La couleur à utiliser pour l'icône"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:13
 msgid "The custom width for the item entries"
-msgstr ""
+msgstr "La largeur personnalisée pour les entrées"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:14
 msgid "The icon's opacity (10-100)"
-msgstr ""
+msgstr "L'opacité de l'icône (10-100)"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:15
 msgid "The list of categories that are expanded"
-msgstr ""
+msgstr "La liste des catégories développées"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:16
 msgid "The list of categories' names"
-msgstr ""
+msgstr "La liste des noms de catégories"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:17
 msgid "The list of items' categories"
-msgstr ""
+msgstr "La liste des catégories des éléments"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:18
 msgid "The title to display"
@@ -4452,18 +4495,19 @@ msgstr "Titre à afiicher"
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:19
 msgid "What type of icon to display (progress, progress-items, items)"
 msgstr ""
+"Quel type d'icône afficher (progression, éléments-progression, éléments)"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:20
 msgid "Whether or not to confirm the deletion of categories"
-msgstr ""
+msgstr "Faut-il confirmer (ou pas) la suppression des catégories"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:21
 msgid "Whether or not to confirm the deletion of items"
-msgstr ""
+msgstr "Faut-il confirmer (ou pas) la suppression des éléments"
 
 #: ../applets/maintained/to-do/awn-applet-to-do.schema-ini.in.h:22
 msgid "Whether or not to use a custom width for the entries"
-msgstr ""
+msgstr "Faut-il (ou pas) utiliser une largeur personnalisée pour les entrées"
 
 #: ../applets/maintained/to-do/prefs.py:32
 msgid "Custom"
@@ -4719,7 +4763,7 @@ msgstr "Êtes vous sûr de vouloir supprimer cet élément ?"
 #: ../applets/maintained/to-do/to-do.py:1371
 #, python-format
 msgid "%d%% done"
-msgstr ""
+msgstr "Fait à %d%%"
 
 #: ../applets/maintained/tomboy-applet/tomboy-applet.desktop.in.h:1
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:31
@@ -4788,12 +4832,12 @@ msgstr "Contrôleur de volume"
 
 #: ../applets/maintained/volume-control/volume-control.py:44
 msgid "Applet to control your computer's volume"
-msgstr ""
+msgstr "Applet pour contrôler le volume de votre ordinateur"
 
 #: ../applets/maintained/volume-control/volume-control.py:49
 #: ../applets/maintained/weather/weather.py:62
 msgid "System theme"
-msgstr ""
+msgstr "Thème du système"
 
 #: ../applets/maintained/volume-control/volume-control.py:67
 #, python-format
@@ -4801,27 +4845,29 @@ msgid ""
 "Install the appropriate plug-ins for one or more of the following GStreamer "
 "elements: %s."
 msgstr ""
+"Installer les extensions appropriées pour un ou plusieurs des éléments "
+"GStreamer suivants : %s."
 
 #: ../applets/maintained/volume-control/volume-control.py:68
 msgid "Could not find any devices."
-msgstr ""
+msgstr "Aucun périphérique n'a été trouvé."
 
 #: ../applets/maintained/volume-control/volume-control.py:184
 msgid "_Open Volume Control"
-msgstr ""
+msgstr "_Ouvrir le contrôleur de volume"
 
 #: ../applets/maintained/volume-control/volume-control.py:379
 msgid "No GStreamer mixer found"
-msgstr ""
+msgstr "Aucun mélangeur GStreamer n'a été trouvé"
 
 #: ../applets/maintained/volume-control/volume-control.py:385
 msgid "No devices found"
-msgstr ""
+msgstr "Aucun périphérique n'a été trouvé"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:2
 #, no-c-format
 msgid "100%"
-msgstr ""
+msgstr "100%"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:3
 msgid "<b>Audio Options</b>"
@@ -4837,7 +4883,7 @@ msgstr "Piste du _mixeur :"
 
 #: ../applets/maintained/volume-control/volume-control.ui.h:7
 msgid "_Mute"
-msgstr ""
+msgstr "_Muet"
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:1
 msgid "City, and country of the weather location."
@@ -4864,10 +4910,12 @@ msgstr ""
 msgid ""
 "Size of the temperature overlay in the icon (0: small, 1: medium, 2: large)."
 msgstr ""
+"Taille de la température superposée sur l'icône (0 : petite, 1 : moyenne, "
+"2 : grande)."
 
 #: ../applets/maintained/weather/awn-applet-weather.schema-ini.in.h:7
 msgid "Temperature unit (0: Celsius, 1: Fahrenheit)."
-msgstr ""
+msgstr "Unité de température (0 : Celcius, 1 : Fahrenheit)."
 
 #: ../applets/maintained/weather/forecast.py:54
 #: ../applets/maintained/weather/forecast.py:84
@@ -4967,15 +5015,15 @@ msgstr "Orages isolés"
 
 #: ../applets/maintained/weather/weathertext.py:55
 msgid "Light Drizzle"
-msgstr ""
+msgstr "Bruine légère"
 
 #: ../applets/maintained/weather/weathertext.py:56
 msgid "Light Rain Shower"
-msgstr ""
+msgstr "Légère averse"
 
 #: ../applets/maintained/weather/weathertext.py:57
 msgid "Light Rain with Thunder"
-msgstr ""
+msgstr "Légère pluie avec du tonnerre"
 
 #: ../applets/maintained/weather/weathertext.py:58
 msgid "Light Snow Showers"
@@ -4983,7 +5031,7 @@ msgstr "Légères averses de neige"
 
 #: ../applets/maintained/weather/weathertext.py:59
 msgid "Mist"
-msgstr ""
+msgstr "Brume"
 
 #: ../applets/maintained/weather/weathertext.py:60
 msgid "Mixed Precipitation"
@@ -5035,7 +5083,7 @@ msgstr "Averse"
 
 #: ../applets/maintained/weather/weathertext.py:72
 msgid "Showers in the Vicinity"
-msgstr ""
+msgstr "Averses localisées"
 
 #: ../applets/maintained/weather/weathertext.py:73
 msgid "Sleet"
@@ -5080,59 +5128,59 @@ msgstr "Vent"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:87
 msgid "AM Clouds / PM Sun"
-msgstr ""
+msgstr "Nuages puis soleil"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:89
 msgid "AM Drizzle"
-msgstr ""
+msgstr "Bruine (matin)"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:91
 msgid "AM Drizzle / Wind"
-msgstr ""
+msgstr "Bruine/vent (AM)"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:93
 msgid "AM Fog / PM Sun"
-msgstr ""
+msgstr "Brou puis sol"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:95
 msgid "AM Light Rain"
-msgstr ""
+msgstr "Pluie faible (AM)"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:97
 msgid "AM Light Snow"
-msgstr ""
+msgstr "Neige faible (AM)"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:99
 msgid "AM Rain / Snow"
-msgstr ""
+msgstr "Pluie/neige (AM)"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:101
 msgid "AM Rain / Wind"
-msgstr ""
+msgstr "Pluie/vent (AM)"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:103
 msgid "AM Showers"
-msgstr ""
+msgstr "Averses (AM)"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
 #: ../applets/maintained/weather/weathertext.py:106
 msgid "AM T-Showers"
-msgstr ""
+msgstr "Orage/averses (AM)"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
 #: ../applets/maintained/weather/weathertext.py:109
 msgid "AM T-Storms"
-msgstr ""
+msgstr "Orages (AM)"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:111
@@ -5153,49 +5201,49 @@ msgstr "Orages isolés"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:118
 msgid "Light Rain"
-msgstr ""
+msgstr "Pluie faible"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:120
 msgid "Light Rain / Wind"
-msgstr ""
+msgstr "Pluie faible/vent"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:122
 msgid "Light Snow / Fog"
-msgstr ""
+msgstr "Neige faible/brou"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:124
 msgid "Mostly Sunny"
-msgstr ""
+msgstr "Ensoleillé"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:126
 msgid "Partly Cloudy / Wind"
-msgstr ""
+msgstr "Nuageux/vent"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:128
 msgid "PM Light Rain"
-msgstr ""
+msgstr "Pluie faible (PM)"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:130
 msgid "PM Showers"
-msgstr ""
+msgstr "Averses (PM)"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
 #: ../applets/maintained/weather/weathertext.py:133
 msgid "PM T-Showers"
-msgstr ""
+msgstr "Orage/Averses (PM)"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
 #: ../applets/maintained/weather/weathertext.py:136
 msgid "PM T-Storms"
-msgstr ""
+msgstr "Orages (PM)"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:138
@@ -5205,22 +5253,22 @@ msgstr "Pluie"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:140
 msgid "Rain / Snow Showers"
-msgstr ""
+msgstr "Pluie / Neige"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:142
 msgid "Rain / Thunder"
-msgstr ""
+msgstr "Pluie / Tonnerre"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:144
 msgid "Rain / Wind"
-msgstr "Pluie / vent"
+msgstr "Pluie / Vent"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:146
 msgid "Scattered Showers / Wind"
-msgstr ""
+msgstr "Pluies éparses/vent"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
@@ -5231,7 +5279,7 @@ msgstr "Orages épars"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:151
 msgid "Showers / Wind"
-msgstr ""
+msgstr "Averses / Vent"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:153
@@ -5241,13 +5289,13 @@ msgstr "Ensoleillé"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:155
 msgid "Sunny / Wind"
-msgstr ""
+msgstr "Soleil / Vent"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
 #: ../applets/maintained/weather/weathertext.py:158
 msgid "T-Showers"
-msgstr ""
+msgstr "Averses/orage"
 
 #: ../applets/maintained/weather/weathertext.py:162
 msgid "Monday"
@@ -5353,7 +5401,7 @@ msgstr "Largeur maximale de la _carte :"
 
 #: ../applets/maintained/weather/weather.ui.h:12
 msgid "Show temperature in _icon"
-msgstr ""
+msgstr "Montrer la température dans l'_icône"
 
 #: ../applets/maintained/weather/weather.ui.h:14
 msgid "Temperature _unit:"
@@ -5379,12 +5427,12 @@ msgstr "Ouvrir l'emplacement"
 
 #: ../applets/maintained/webapplet/applet.c:281
 msgid "Set as new _Home Page"
-msgstr ""
+msgstr "Définir comme nouvelle _page d'accueil"
 
 #: ../applets/maintained/webapplet/applet.c:399
 #: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:2
 msgid "Web Applet"
-msgstr ""
+msgstr "Applet Web"
 
 #. vim: set et ts=2 sts=2 sw=2 :
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:1
@@ -5396,41 +5444,41 @@ msgstr ""
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:2
 msgid "HTML engine to use."
-msgstr ""
+msgstr "Moteur de rendu HTML à utiliser."
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:3
 msgid "If true display location entry and website buttons"
-msgstr ""
+msgstr "Si vrai, affiche la barre d’adresses et les boutons du sites Web"
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:4
 msgid "Name of specialized website to use"
-msgstr ""
+msgstr "Nom du site Web spécialisé à ouvrir"
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:5
 msgid "URI"
-msgstr ""
+msgstr "URI"
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:7
 #, no-c-format
 msgid "Width in %% or px."
-msgstr ""
+msgstr "Largeur en %% ou en pixels."
 
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:9
 #, no-c-format
 msgid "height in %% or px."
-msgstr ""
+msgstr "Hauteur en %% ou en pixels."
 
 #: ../applets/maintained/webapplet/webapplet.desktop.in.in.h:1
 msgid "Applet for Websites"
-msgstr ""
+msgstr "Applet pour les sites Web"
 
 #: ../applets/maintained/wobblyzini/wobblyzini.desktop.in.in.h:1
 msgid "A simple test animation"
-msgstr ""
+msgstr "Une simple animation de test"
 
 #: ../applets/maintained/wobblyzini/wobblyzini.desktop.in.in.h:2
 msgid "Wobbly Zini"
-msgstr ""
+msgstr "Wobbly Zini"
 
 #: ../applets/maintained/yama/yama.desktop.in.h:1
 #: ../applets/maintained/yama/yama.py:47
@@ -5439,46 +5487,48 @@ msgstr "Menu principal avec des emplacements et des documents récents"
 
 #: ../applets/maintained/yama/yama.desktop.in.h:2
 msgid "Yet Another Menu Applet"
-msgstr ""
+msgstr "Encore un Autre Applet de Menu"
 
 #: ../applets/maintained/yama/yama.py:46
 msgid "YAMA"
-msgstr ""
+msgstr "EAAM"
 
 #: ../applets/maintained/yama/yama.py:172
 #, python-format
 msgid "Log out %s of this session to log in as a different user"
 msgstr ""
+"Se déconnecter de la session %s afin de se reconnecter sous un autre "
+"identifiant"
 
 #: ../applets/maintained/yama/yama.py:190
 msgid "_Edit Menus"
-msgstr ""
+msgstr "_Éditer les menus"
 
 #: ../applets/maintained/yama/yama.py:262
 msgid "Open your personal folder"
-msgstr ""
+msgstr "Ouvre votre dossier personnel"
 
 #: ../applets/maintained/yama/yama.py:264
 msgid "Open the contents of your desktop in a folder"
-msgstr ""
+msgstr "Ouvre le contenu du bureau dans un dossier"
 
 #: ../applets/maintained/yama/yama.py:315
 msgid "Connect to a remote computer or shared disk"
-msgstr ""
+msgstr "Se connecte à un ordinateur distant ou à un disque partagé"
 
 #: ../applets/maintained/yama/yama.py:345
 msgid "Clear all items from the recent documents list"
-msgstr ""
+msgstr "Effacer tous les éléments de la liste des documents récents"
 
 #: ../applets/maintained/yama/yama.py:398
 #, python-format
 msgid "Open '%s'"
-msgstr ""
+msgstr "Ouvrir « %s »"
 
 #: ../applets/maintained/yama/yama.py:439
 #, python-format
 msgid "Mount %s"
-msgstr ""
+msgstr "Monter %s"
 
 #: ../applets/maintained/yama/yama.py:591
 msgid ""
@@ -5493,31 +5543,33 @@ msgstr ""
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in.in.h:1
 msgid "Awn System Monitor"
-msgstr ""
+msgstr "Moniteur système Awn"
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:1
 msgid "Graph update frequency, in milliseconds."
-msgstr ""
+msgstr "Fréquence de mise à jour du graphe, en millisecondes."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:2
 msgid "Set to 1 (true) to draw the gradient overlay on the graph."
-msgstr ""
+msgstr "Mettre à 1 (vrai) pour dessiner le dégradé sur le graphe."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:3
 msgid "The color used in the applet border."
-msgstr ""
+msgstr "La couleur utilisée pour la bordure de l'applet."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:4
 msgid "The color used in the graph lines."
-msgstr ""
+msgstr "La couleur utilisée pour les lignes du graphe."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:5
 msgid "The color used in the graph lines. Valid values are 0.0 through 1.0."
 msgstr ""
+"La couleur utilisée pour les lignes du graphe. Les valeurs valides vont de "
+"0.0 à 1.0."
 
 #: ../applets/unmaintained/awnsystemmonitor/awnsystemmonitor.schemas.in.h:6
 msgid "The pixel width of the applet border."
-msgstr ""
+msgstr "La largeur (en pixels) de la bordure de l'applet."
 
 #: ../applets/unmaintained/main-menu/applet.c:393
 #: ../applets/unmaintained/main-menu/main-menu.desktop.in.in.h:2

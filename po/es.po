@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: awn-core-applets 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-12-27 20:54+0100\n"
-"PO-Revision-Date: 2011-01-13 11:41+0000\n"
+"PO-Revision-Date: 2011-01-16 19:21+0000\n"
 "Last-Translator: Fitoschido <Unknown>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2011-01-14 04:47+0000\n"
+"X-Launchpad-Export-Date: 2011-01-17 04:45+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 "Generated-By: pygettext.py 1.5\n"
 
@@ -33,7 +33,7 @@ msgstr "Miniaplicación que muestra mensajes de la fortuna"
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:1
 msgid "Global hotkey used to activate the terminal."
-msgstr "Tecla global que activa el terminal."
+msgstr "Tecla global usada para activar la Terminal"
 
 #: ../applets/maintained/awnterm/awn-applet-awnterm.schema-ini.in.h:2
 msgid "Set whether the applet should hide itself when it loses focus."
@@ -150,8 +150,8 @@ msgid ""
 "3: Disable reflection for all dock orientations"
 msgstr ""
 "Activa/desactiva reflejos para esta miniaplicación 0: Usar configuración "
-"estándar, 1: Usar reflejo sólo en lanzadores horizontales, 2: Usar reflejo "
-"sólo en lanzadores verticales, 3: Desactivar reflejos para todos los "
+"estándar, 1: Usar reflejo solo en lanzadores horizontales, 2: Usar reflejo "
+"solo en lanzadores verticales, 3: Desactivar reflejos para todos los "
 "lanzadores"
 
 #: ../applets/maintained/bandwidth-monitor/awn-applet-bandwidth-monitor.schema-ini.in.h:9
@@ -2499,7 +2499,7 @@ msgstr ""
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:4
 msgid "If enabled, show sensor value(s) as an overlay in the icon."
-msgstr "Si está habilitado, mostrar el valor del sensor encima del icono"
+msgstr "Si está activado, mostrar el valor del sensor encima del icono"
 
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:5
 msgid "In what row of dialog is the sensor shown."
@@ -2710,7 +2710,7 @@ msgstr "Preferencias de la miniaplicación de indicadores"
 
 #: ../applets/maintained/indicator-applet/applet.c:177
 msgid "Enabled Entries"
-msgstr "Entradas habilitadas"
+msgstr "Entradas activadas"
 
 #: ../applets/maintained/indicator-applet/applet.c:184
 msgid "Indicator Applet Session (Quit)"
@@ -5120,7 +5120,7 @@ msgstr "Lluvia fuerte"
 #. T-Storms = Thunderstorms
 #: ../applets/maintained/weather/weathertext.py:116
 msgid "Isolated T-Storms"
-msgstr ""
+msgstr "Tormentas eléctricas aisladas"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:118
@@ -5150,7 +5150,7 @@ msgstr "Parcialmente nublado/viento"
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:128
 msgid "PM Light Rain"
-msgstr ""
+msgstr "Lluvias ligeras por las tardes"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:130
@@ -5167,7 +5167,7 @@ msgstr ""
 #. T-Storms = Thunderstorms
 #: ../applets/maintained/weather/weathertext.py:136
 msgid "PM T-Storms"
-msgstr ""
+msgstr "Tormentas eléctricas por la tarde"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:138
@@ -5198,7 +5198,7 @@ msgstr ""
 #. T-Storms = Thunderstorms
 #: ../applets/maintained/weather/weathertext.py:149
 msgid "Scattered T-Storms"
-msgstr ""
+msgstr "Tormentas eléctricas dispersas"
 
 #. Please keep translation short, approx. 12 characters
 #: ../applets/maintained/weather/weathertext.py:151
@@ -5219,7 +5219,7 @@ msgstr "Soleado / Viento"
 #. T-Showers = Thunder Showers
 #: ../applets/maintained/weather/weathertext.py:158
 msgid "T-Showers"
-msgstr ""
+msgstr "Tormentas eléctricas"
 
 #: ../applets/maintained/weather/weathertext.py:162
 msgid "Monday"

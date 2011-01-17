@@ -366,7 +366,7 @@ class AddFeed(gtk.Window):
         source_vbox = gtk.VBox(False, 3)
 
         #Search via Google Reader
-        pb = self.icon_theme.load_icon('search', 16, 0)
+        pb = self.icon_theme.load_icon("system-search", 16, 0)
         pb = classes.get_16x16(pb)
 
         search_radio = gtk.RadioButton(None)

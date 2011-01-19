@@ -1176,13 +1176,17 @@ class Keyring:
             return self.__get().get_display_name()
 
         def __setName(self, name):
-            self.__get().set_display_name(name)
+            info = self.__get()
+            info.set_display_name(name)
+            return gnomekeyring.item_set_info_sync(self.keyring, self.token, info)
 
         def __getPass(self):
             return self.__get().get_secret()
 
         def __setPass(self, passwd):
-            self.__get().set_secret(passwd)
+            info = self.__get()
+            info.set_secret(passwd)
+            return gnomekeyring.item_set_info_sync(self.keyring, self.token, info)
 
         attrs = property(__getAttrs, __setAttrs)
         """

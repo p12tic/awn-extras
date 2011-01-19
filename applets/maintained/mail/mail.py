@@ -960,10 +960,13 @@ to log out and try again."))
                 check_login_data("IMAP", self.data)
                 args = self.data["url"].split(":")
 
-                if self.data["usessl"]:
-                    self.server = imaplib.IMAP4_SSL(*args)
-                else:
-                    self.server = imaplib.IMAP4(*args)
+                try:
+                    if self.data["usessl"]:
+                        self.server = imaplib.IMAP4_SSL(*args)
+                    else:
+                        self.server = imaplib.IMAP4(*args)
+                except imaplib.socket.error:
+                    raise RuntimeError(_("Could not connect to server"))
 
                 try:
                     self.server.login(self.data["username"], self.data['password'])
@@ -981,20 +984,28 @@ to log out and try again."))
 
             def update(self):
                 self.subjects = []
-
-                if self.box != "":
-                    emails = [i for i in self.server.search(None, "(UNSEEN)")[1][0].split(" ") if i != ""]
-
+                
+                def get_subject(emails):
                     for i in emails:
                         s = self.server.fetch(i, '(BODY[HEADER.FIELDS (SUBJECT)])')[1][0]
-
+                        if self.data['url'] == "imap.gmail.com":  # GMail sets mails unread
+                            self.server.store(i, '-FLAGS', '\\Seen')
                         if s is not None:
-                            self.subjects.append(s[1][9:].replace("\r\n", "\n").replace("\n", ""))  # Don't ask
+                            subject = s[1][9:].replace("\r\n", "\n").replace("\n", "")  # Don't ask
+                            # decode headers like this: '=?ISO-8859-1?B?RXJpbm5lcn...'
+                            text, charset = email.Header.decode_header(subject)[0]
+                            if charset is not None:
+                                subject = text.decode(charset)
+                            self.subjects.append(subject)
+                    
+                if self.box != "":
+                    emails = [i for i in self.server.search(None, "(UNSEEN)")[1][0].split(" ") if i != ""]
+                    get_subject(emails)
+
                 else:
                     mboxs = [re.search("(\W*) (\W*) (.*)", i).groups()[2] for i in self.server.list()[1]]
-                    mboxs = [i for i in mboxs if i not in ("Sent", "Trash") and i[:6] != "[Gmail]"]
+                    mboxs = [i for i in mboxs if i not in ("Sent", "Trash") and i[1:8] != "[Gmail]"]
 
-                    emails = []
                     for b in mboxs:
                         r, d = self.server.select(b)
 
@@ -1003,13 +1014,11 @@ to log out and try again."))
 
                         p = self.server.search("UTF8", "(UNSEEN)")[1][0].split(" ")
 
-                        emails.extend([i for i in p if i != ""])
+                        emails = []
+                        # 'and i not in emails' due to strange behaviour of GMail
+                        emails.extend([i for i in p if i != "" and i not in emails])
+                        get_subject(emails)
 
-                        for i in emails:
-                            s = self.server.fetch(i, '(BODY[HEADER.FIELDS (SUBJECT)])')[1][0]
-
-                            if s is not None:
-                                self.subjects.append(s[1][9:].replace("\r\n", "\n").replace("\n", ""))  # Don't ask
 
             @classmethod
             def drawLoginWindow(cls, *groups):

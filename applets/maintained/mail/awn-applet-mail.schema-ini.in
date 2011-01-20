@@ -35,3 +35,9 @@ _description=Used for logging in; do not touch
 type = integer
 default = 2
 _description=Timeout between two value updates (in minutes).
+
+[DEFAULT/unix-spool]
+type = string
+default = default
+_description=The Unix Spool file
+

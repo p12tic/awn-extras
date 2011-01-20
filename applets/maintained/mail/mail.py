@@ -140,6 +140,16 @@ class MailApplet:
             return None
 
     def get_data_from_key(self, key):
+        # Unix Spool has no password, get data from config
+        if self.back.__name__ == "UnixSpool":
+            path = self.awn.settings["unix-spool"]
+            if path == "default":
+                path = "/var/spool/mail/" + os.path.split(os.path.expanduser("~"))[1]
+            data = {}
+            data['path'] = path
+            data['username'] = os.path.split(path)[1]
+            return data
+
         if not self.keyring or not key:
             return None
 
@@ -157,7 +167,9 @@ class MailApplet:
         if not self.keyring or not data:
             return
 
+        # Spool has no password, just save path in config
         if self.back.__name__ == "UnixSpool":
+            self.awn.settings["unix-spool"] = data["path"]
             return
 
         password = data['password']
@@ -571,7 +583,7 @@ class MainDialog:
             for w in self.callback['widgets']:
                 if w.__gtype__.name == "GtkEntry":
                     w.connect("activate", onsubmit)
-                    if "optional" not in dir(w):
+                    if not hasattr(w, "optional"):
                         self.entries.append(w)
                         w.connect("changed", onchanged)
 
@@ -790,7 +802,7 @@ to log out and try again."))
             title = _("Unix Spool")
 
             def __init__(self, data):
-                self.path = data["path"]
+                self.path = data['path']
 
             def update(self):
                 try:
@@ -815,15 +827,18 @@ to log out and try again."))
                 path, box = get_label_entry(_("Spool Path:"), *groups)
                 vbox.add(box)
 
-                path.set_text("/var/spool/mail/" + os.path.split(os.path.expanduser("~"))[1])
-
                 return {"layout": vbox, "callback": cls.__submitLoginWindow,
+                    "fill-in": cls.__fillinLoginWindow,
                     "widgets": [path]}
 
             @staticmethod
             def __submitLoginWindow(widgets):
                 return {'path': widgets[0].get_text(), \
                         'username': os.path.split(widgets[0].get_text())[1]}
+
+            @staticmethod
+            def __fillinLoginWindow(widgets, data):
+                widgets[0].set_text(data['path'])
 
     try:
         global poplib

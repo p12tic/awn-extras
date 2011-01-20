@@ -1105,6 +1105,7 @@ if __name__ == "__main__":
         "author": "Pavel Panchekha",
         "copyright-year": "2008",
         "email": "pavpanchekha@gmail.com",
-        "authors": ["onox <denkpadje@gmail.com>",
+        "authors": ["Gabor Karsay <gabor.karsay@gmx.at>",
+                    "onox <denkpadje@gmail.com>",
                     "sharkbaitbobby <sharkbaitbobby+awn@gmail.com>",
                     "Pavel Panchekha"]})

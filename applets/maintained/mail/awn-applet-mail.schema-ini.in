@@ -26,6 +26,11 @@ type = boolean
 default = true
 _description=Display any network errors
 
+[DEFAULT/login-token]
+type = list-string
+default = Backend,Keyring,Token
+_description=Used for logging in; do not touch
+
 [DEFAULT/timeout]
 type = integer
 default = 2

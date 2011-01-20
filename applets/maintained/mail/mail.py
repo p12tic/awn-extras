@@ -58,6 +58,7 @@ def get_label_entry(text, label_group=None):
 
     return (entry, hbox)
 
+
 def check_login_data(backend, data):
     if backend == "GMail":
         fields = ['username', 'password']
@@ -97,7 +98,7 @@ class MailApplet:
         self.awn.tooltip.set(_("Mail Applet (Click to Log In)"))
 
         self.__dialog = MainDialog(self)
-        
+
         # Login from key or dialog
         self.init_keyring()
         login_data = self.get_data_from_key(self.get_key())
@@ -117,26 +118,31 @@ class MailApplet:
     def get_key(self):
         '''Get key for backend from Gnome Keyring'''
 
+        #Sanity checks and make sure the key is for the currently used backend
         if not self.keyring:
             return None
-
         if self.back.__name__ == "UnixSpool":
             return None
-        
-        identify = "Awn Extras/Mail/" + self.back.__name__
+        keydata = self.awn.settings["login-token"]
+        if len(keydata) == 0 or len(keydata) > 3:
+            self.awn.settings["login-token"] = ["Backend", "Keyring", "Token"]
+            return None
+        if keydata[0] != self.back.__name__:
+            return None
+
         try:
-            keys = self.keyring.from_attributes({'id': identify}, 'generic')
-            if len(keys) > 1:
-                print "Warning from Mail Applet: You have more than one key " + \
-                      "with id '%s'. Using the first one." % identify
-            return keys[0]
-        except awnlib.KeyRingError:
+            key = self.keyring.from_token(keydata[1], long(keydata[2]))
+            return key
+        except awnlib.KeyRingError, error:
+            if str(error) == "Keyring does not exist" \
+                or str(error) == "Token does not exist":
+                self.awn.settings["login-token"] = ["Backend", "Keyring", "Token"]
             return None
 
     def get_data_from_key(self, key):
         if not self.keyring or not key:
             return None
-        
+
         try:
             data = key.attrs
             data['password'] = key.password
@@ -154,41 +160,32 @@ class MailApplet:
         if self.back.__name__ == "UnixSpool":
             return
 
-        identify = "Awn Extras/Mail/" + self.back.__name__
         password = data['password']
         attrs = data.copy()
         del attrs['password']
-        attrs['id'] = identify
+        desc = "Awn Extras/Mail/" + self.back.__name__ + "/" + attrs['username']
 
-        # Overwrite existing key, do not double it or we run into problems
-        error = None
-        try:
-            keys = self.keyring.from_attributes({'id': identify}, 'generic')
-            if len(keys) > 1:
-                print "Warning from Mail Applet: You have more than one key " + \
-                      "with id '%s'. Using the first one." % identify
-        except awnlib.KeyRingError, error:
-            pass
-        
-        if str(error) == "Keyring is locked":
-            return
-        
-        if str(error) == "Key not found":
-           try:
-               self.keyring.new(
-                   keyring=None,
-                   name=identify,
-                   pwd=password,
-                   attrs=attrs,
-                   type='generic')
-           except awnlib.KeyRingError:
-                pass  # should never happen
+        key = self.get_key()
+        if key is None:
+            try:
+                key = self.keyring.new(
+                          keyring=None,
+                          name=desc,
+                          pwd=password,
+                          attrs=attrs,
+                          type='generic')
+                self.awn.settings["login-token"] = [self.back.__name__,
+                                                    key.keyring,
+                                                    str(key.token)]
+            except awnlib.KeyRingError:
+                pass
         else:
             try:
-                keys[0].password = password
-                keys[0].attrs = attrs
+                key.password = password
+                key.attrs = attrs
+                key.name = desc
             except awnlib.KeyRingError:
-                pass  # should never happen
+                pass
 
     def logout(self):
         if hasattr(self, "timer"):
@@ -218,8 +215,8 @@ class MailApplet:
 
                 self.awn.theme.icon("read")
 
-                self.save_key(data)  # TODO key is actually saved every
-                                     # login again, even if it didn't change
+                # key is saved on every successfull login again
+                self.save_key(data)
 
                 self.timer = self.awn.timing.register(self.refresh,
                                                      self.awn.settings["timeout"] * 60)
@@ -506,7 +503,7 @@ class MainDialog:
                 self.__parent.awn.settings["backend"] = backends[backend]
                 self.__parent.back = getattr(Backends(), backends[backend])
                 self.callback = self.__login_get_widgets(vbox, label_group)
-                
+
                 # Remove previous error message, fill in data if available
                 if errorbox:
                     errorbox.hide()
@@ -517,7 +514,7 @@ class MainDialog:
                         self.callback['fill-in'](self.callback['widgets'], login_data)
                     except RuntimeError:
                         pass
-                
+
                 # Make submit button insensitive if required data is missing
                 connect_entries()
                 onchanged(None)
@@ -580,7 +577,7 @@ class MainDialog:
 
         connect_entries()
         onchanged(None)
-        
+
         hbox_login = gtk.HBox(False, 0)
         hbox_login.pack_start(submit_button, True, False)
         vbox.pack_end(hbox_login)
@@ -685,7 +682,6 @@ to log out and try again."))
         def __fillinLoginWindow(widgets, data):
             widgets[0].set_text(data['username'])
             widgets[1].set_text(data['password'])
-
 
     class GApps:
 
@@ -984,7 +980,7 @@ to log out and try again."))
 
             def update(self):
                 self.subjects = []
-                
+
                 def get_subject(emails):
                     for i in emails:
                         s = self.server.fetch(i, '(BODY[HEADER.FIELDS (SUBJECT)])')[1][0]
@@ -997,7 +993,7 @@ to log out and try again."))
                             if charset is not None:
                                 subject = text.decode(charset)
                             self.subjects.append(subject)
-                    
+
                 if self.box != "":
                     emails = [i for i in self.server.search(None, "(UNSEEN)")[1][0].split(" ") if i != ""]
                     get_subject(emails)
@@ -1018,7 +1014,6 @@ to log out and try again."))
                         # 'and i not in emails' due to strange behaviour of GMail
                         emails.extend([i for i in p if i != "" and i not in emails])
                         get_subject(emails)
-
 
             @classmethod
             def drawLoginWindow(cls, *groups):
@@ -1083,7 +1078,6 @@ to log out and try again."))
                 else:
                     widgets[4].set_active(True)
                 widgets[5].set_text(data['folder'])
-
 
 
 if __name__ == "__main__":

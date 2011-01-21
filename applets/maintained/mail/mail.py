@@ -60,26 +60,33 @@ def get_label_entry(text, label_group=None):
 
 
 def check_login_data(backend, data):
-    if backend == "GMail":
-        fields = ['username', 'password']
-    elif backend == "GApps":
-        fields = ['username', 'domain', 'password']
-    elif backend == "POP":
-        fields = ['username', 'url', 'usessl', 'password']
-    elif backend == "IMAP":
-        fields = ['username', 'url', 'usessl', 'folder', 'password']
-    else:
-        # UnixSpool has no password
-        return
-
-    for field in fields:
+    '''Sanity check for login data. Data from login dialog should always
+    pass this test, this is mainly for wrong or manipulated keys.'''
+    
+    for field in backend.fields:
         if field not in data:
-            raise RuntimeError("Wrong or corrupt key")
+            raise LoginError("Wrong or corrupt key")
         if data[field] is None:
-            raise RuntimeError("Please fill in required fields")
-        if data[field] == "" and field != "folder":  # folder is optional
-            raise RuntimeError("Please fill in required fields")
+            raise LoginError("Key with field is None")
+        if type(data[field]) == str and len(data[field]) == 0:
+            raise LoginError("Key with empty field")
 
+    # Optional fields must be in data but may be empty.
+    if hasattr(backend, "optional"):
+        for field in backend.optional:
+            if field not in data:
+                raise LoginError("Wrong or corrupt key")
+            if data[field] is None:
+                raise LoginError("Key with field is None")
+        
+
+class LoginError(Exception):
+
+    def __init__(self, str):
+        self.msg = str
+
+    def __str__(self):
+        return self.msg
 
 class MailApplet:
 
@@ -109,23 +116,41 @@ class MailApplet:
             #self.awn.dialog.toggle("main", "show")
 
     def init_keyring(self):
-        self.keyring = None
         try:
             self.keyring = awnlib.Keyring()
-        except awnlib.KeyRingError:
-            pass
+        except awnlib.KeyringError:
+            self.keyring = None
 
     def get_key(self):
         '''Get key for backend from Gnome Keyring'''
 
-        #Sanity checks and make sure the key is for the currently used backend
-        if not self.keyring:
+        def set_login_settings_to_default():
+            # Default setting means we have no key at all
+            self.awn.settings["login-keyring-token"] = ["Backend", "Keyring", "Token"]
+        
+        if self.keyring is None:
             return None
         if self.back.__name__ == "UnixSpool":
             return None
-        keydata = self.awn.settings["login-token"]
+            
+        # Migration code from old "login-token" to new "login-keyring-token"
+        # To be deleted in the version following version 0.6
+        try:
+            old_token = self.awn.settings["login-token"]
+        except ValueError:
+            # New installation, token does not exist
+            old_token = 0
+        if old_token != 0:
+            import gnomekeyring
+            self.awn.settings["login-keyring-token"] = \
+                [self.back.__name__,
+                 gnomekeyring.get_default_keyring_sync(),
+                 str(old_token)]
+            self.awn.settings["login-token"] = 0
+                 
+        keydata = self.awn.settings["login-keyring-token"]
         if len(keydata) == 0 or len(keydata) > 3:
-            self.awn.settings["login-token"] = ["Backend", "Keyring", "Token"]
+            set_login_settings_to_default()
             return None
         if keydata[0] != self.back.__name__:
             return None
@@ -133,10 +158,8 @@ class MailApplet:
         try:
             key = self.keyring.from_token(keydata[1], long(keydata[2]))
             return key
-        except awnlib.KeyRingError, error:
-            if str(error) == "Keyring does not exist" \
-                or str(error) == "Token does not exist":
-                self.awn.settings["login-token"] = ["Backend", "Keyring", "Token"]
+        except awnlib.KeyringNoMatchError:
+            set_login_settings_to_default()
             return None
 
     def get_data_from_key(self, key):
@@ -144,19 +167,22 @@ class MailApplet:
         if self.back.__name__ == "UnixSpool":
             path = self.awn.settings["unix-spool"]
             if path == "default":
-                path = "/var/spool/mail/" + os.path.split(os.path.expanduser("~"))[1]
+                path = os.path.join("/var/spool/mail/", 
+                    os.path.split(os.path.expanduser("~"))[1])
             data = {}
             data['path'] = path
             data['username'] = os.path.split(path)[1]
             return data
 
-        if not self.keyring or not key:
+        if self.keyring is None or key is None:
             return None
 
         try:
             data = key.attrs
             data['password'] = key.password
-        except awnlib.KeyRingError:
+        except awnlib.KeyringError:
+            # Reads data from keyring, probably only KeyringCancelledError,
+            # but return None on any failure
             return None
 
         return data
@@ -164,7 +190,7 @@ class MailApplet:
     def save_key(self, data):
         '''Save login data for backend in Gnome Keyring'''
 
-        if not self.keyring or not data:
+        if self.keyring is None or data is None:
             return
 
         # Spool has no password, just save path in config
@@ -186,17 +212,18 @@ class MailApplet:
                           pwd=password,
                           attrs=attrs,
                           type='generic')
-                self.awn.settings["login-token"] = [self.back.__name__,
-                                                    key.keyring,
-                                                    str(key.token)]
-            except awnlib.KeyRingError:
+                self.awn.settings["login-keyring-token"] = [self.back.__name__,
+                                                            key.keyring,
+                                                            str(key.token)]
+            except awnlib.KeyringCancelledError:
+                # User cancelled himself
                 pass
         else:
             try:
                 key.password = password
                 key.attrs = attrs
                 key.name = desc
-            except awnlib.KeyRingError:
+            except awnlib.KeyringCancelledError:
                 pass
 
     def logout(self):
@@ -204,19 +231,17 @@ class MailApplet:
             self.timer.stop()
         self.awn.theme.icon("login")
         self.awn.tooltip.set(_("Mail Applet (Click to Log In)"))
-        # Tooltip stays in place if dialog is hidden
-        # self.awn.dialog.toggle("main", "hide")
 
     def login(self, data, startup=False):
         try:
             self.mail = self.back(data)  # Initialize backend, check login data
                                          # IMAP backend connects to server
-        except RuntimeError, error:
+        except LoginError, error:
             self.__dialog.login_form(True, str(error))
         else:
             try:
                 self.mail.update()  # Connect to server
-            except RuntimeError, error:
+            except LoginError, error:
                 self.__dialog.login_form(True, str(error))
 
             else:
@@ -242,7 +267,7 @@ class MailApplet:
 
         try:
             self.mail.update()
-        except RuntimeError, e:
+        except LoginError, e:
             self.awn.theme.icon("error")
 
             if self.awn.settings["show-network-errors"]:
@@ -519,13 +544,7 @@ class MainDialog:
                 # Remove previous error message, fill in data if available
                 if errorbox:
                     errorbox.hide()
-                login_data = self.__parent.get_data_from_key(self.__parent.get_key())
-                if login_data:
-                    try:
-                        check_login_data(self.__parent.back.__name__, login_data)
-                        self.callback['fill-in'](self.callback['widgets'], login_data)
-                    except RuntimeError:
-                        pass
+                fill_in()
 
                 # Make submit button insensitive if required data is missing
                 connect_entries()
@@ -552,13 +571,18 @@ class MainDialog:
 
         self.login_widgets = []
         self.callback = self.__login_get_widgets(vbox, label_group)
-        login_data = self.__parent.get_data_from_key(self.__parent.get_key())
-        if login_data:
-            try:
-                check_login_data(self.__parent.back.__name__, login_data)
-                self.callback['fill-in'](self.callback['widgets'], login_data)
-            except RuntimeError:
-                pass
+        
+        def fill_in():
+            login_data = self.__parent.get_data_from_key(self.__parent.get_key())
+            if login_data:
+                try:
+                    check_login_data(self.__parent.back, login_data)
+                    self.callback['fill-in'](self.callback['widgets'], login_data)
+                except LoginError:
+                    # Corrupt key, user won't know what to do, just skip it
+                    pass
+        
+        fill_in()
 
         image_login = gtk.image_new_from_stock(gtk.STOCK_NETWORK,
                                                gtk.ICON_SIZE_BUTTON)
@@ -581,7 +605,7 @@ class MainDialog:
         def connect_entries():
             self.entries = []
             for w in self.callback['widgets']:
-                if w.__gtype__.name == "GtkEntry":
+                if isinstance(w, gtk.Entry):
                     w.connect("activate", onsubmit)
                     if not hasattr(w, "optional"):
                         self.entries.append(w)
@@ -609,10 +633,11 @@ class Backends:
     class GMail:
 
         title = "Gmail"
+        fields = ['username', 'password']
 
         def __init__(self, data):
             self.data = data
-            check_login_data("GMail", self.data)
+            check_login_data(self, self.data)
 
         def url(self):
             return "https://mail.google.com/mail/"
@@ -623,7 +648,7 @@ class Backends:
                             % (self.data["username"], self.data['password']))
 
             if "bozo_exception" in f.keys():
-                raise RuntimeError(_("There seem to be problems with our \
+                raise LoginError(_("There seem to be problems with our \
 connection to your account. Your best bet is probably \
 to log out and try again."))
             # Hehe, Google is funny. Bozo exception
@@ -698,10 +723,11 @@ to log out and try again."))
     class GApps:
 
         title = _("Google Apps")
+        fields = ['username', 'domain', 'password']
 
         def __init__(self, data):
             self.data = data
-            check_login_data("GApps", self.data)
+            check_login_data(self, self.data)
 
         def url(self):
             return "https://mail.google.com/a/%s" % self.data["domain"]
@@ -713,7 +739,7 @@ to log out and try again."))
                     self.data['password'], self.data["domain"]))
 
             if "bozo_exception" in f.keys():
-                raise RuntimeError(_("There seem to be problems with our \
+                raise LoginError(_("There seem to be problems with our \
 connection to your account. Your best bet is probably \
 to log out and try again."))
             # Hehe, Google is funny. Bozo exception
@@ -800,6 +826,7 @@ to log out and try again."))
         class UnixSpool:
 
             title = _("Unix Spool")
+            fields = ['username', 'path']
 
             def __init__(self, data):
                 self.path = data['path']
@@ -808,7 +835,7 @@ to log out and try again."))
                 try:
                     self.box = mailbox.mbox(self.path)
                 except IOError, e:
-                    raise RuntimeError(e)
+                    raise LoginError(e)
                 email = []
 
                 self.subjects = []
@@ -850,10 +877,11 @@ to log out and try again."))
         class POP:
 
             title = "POP"
+            fields = ['username', 'url', 'usessl', 'password']
 
             def __init__(self, data):
                 self.data = data
-                check_login_data("POP", self.data)
+                check_login_data(self, self.data)
 
             def update(self):
                 # POP is not designed for being logged in continously.
@@ -866,22 +894,22 @@ to log out and try again."))
                     else:
                         self.server = poplib.POP3(self.data["url"])
                 except socket.gaierror, message:
-                    raise RuntimeError(_("Could not log in: ") + str(message))
+                    raise LoginError(_("Could not log in: ") + str(message))
                 except socket.error, message:
-                    raise RuntimeError(_("Could not log in: ") + str(message))
+                    raise LoginError(_("Could not log in: ") + str(message))
 
                 else:
                     self.server.user(self.data["username"])
                     try:
                         self.server.pass_(self.data['password'])
                     except poplib.error_proto:
-                        raise RuntimeError(_("Could not log in: Username or password incorrect"))
+                        raise LoginError(_("Could not log in: Username or password incorrect"))
 
                 # Fetch mails
                 try:
                     messagesInfo = self.server.list()[1][-20:]
                 except poplib.error_proto, err:
-                    raise RuntimeError("POP protocol error: %s" % err)
+                    raise LoginError("POP protocol error: %s" % err)
 
                 emails = []
                 for msg in messagesInfo:
@@ -965,10 +993,12 @@ to log out and try again."))
         class IMAP:
 
             title = "IMAP"
+            fields = ['username', 'url', 'usessl', 'password']
+            optional = ['folder']
 
             def __init__(self, data):
                 self.data = data
-                check_login_data("IMAP", self.data)
+                check_login_data(self, self.data)
                 args = self.data["url"].split(":")
 
                 try:
@@ -977,18 +1007,18 @@ to log out and try again."))
                     else:
                         self.server = imaplib.IMAP4(*args)
                 except imaplib.socket.error:
-                    raise RuntimeError(_("Could not connect to server"))
+                    raise LoginError(_("Server did not respond"))
 
                 try:
                     self.server.login(self.data["username"], self.data['password'])
                 except imaplib.IMAP4.error:
-                    raise RuntimeError(_("Could not log in"))
+                    raise LoginError(_("Could not log in"))
 
                 mboxs = [i.split(")")[1].split(" ", 2)[2].strip('"') for i in self.server.list()[1]]
                 self.box = self.data["folder"]
 
                 if self.box not in mboxs and self.box != "":
-                    raise RuntimeError(_("Folder does not exst"))
+                    raise LoginError(_("Folder does not exst"))
 
                 if self.box != "":
                     self.server.select(self.box)
@@ -1026,8 +1056,7 @@ to log out and try again."))
                         p = self.server.search("UTF8", "(UNSEEN)")[1][0].split(" ")
 
                         emails = []
-                        # 'and i not in emails' due to strange behaviour of GMail
-                        emails.extend([i for i in p if i != "" and i not in emails])
+                        emails.extend(i for i in p if i != "")
                         get_subject(emails)
 
             @classmethod

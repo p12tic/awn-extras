@@ -27,6 +27,14 @@ default = true
 _description=Display any network errors
 
 [DEFAULT/login-token]
+# This is a legacy entry.
+# The value is copied by the applet to login-keyring-token.
+# Remove this key in version following version 0.6
+type = integer
+default = 0
+_description=Used for logging in; do not touch
+
+[DEFAULT/login-keyring-token]
 type = list-string
 default = Backend,Keyring,Token
 _description=Used for logging in; do not touch

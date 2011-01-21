@@ -102,8 +102,8 @@ class Netstat:
             return gobject.timeout_add(seconds * 1000, callback)
 
     def get_wireless_devices(self):
+        wireless_devices = {}
         if os.access('/proc/net/wireless', os.R_OK):
-            wireless_devices = {}
             wireless = open('/proc/net/wireless', 'r').read()
             match = re.findall(r'(\w+): (\d+)\s+(\d+).*?([^\w]\d+).*?([^\w]\d+)',
                 wireless, re.DOTALL)
@@ -113,9 +113,7 @@ class Netstat:
                     'quality': wcard[2],
                     'strength': wcard[3],
                     'noise': wcard[4]}
-            return wireless_devices
-        else:
-            return None
+        return wireless_devices
 
     def update_net_stats(self):
         netlist = gtop.netlist()

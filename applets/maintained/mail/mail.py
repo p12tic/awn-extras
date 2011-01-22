@@ -62,7 +62,7 @@ def get_label_entry(text, label_group=None):
 def check_login_data(backend, data):
     '''Sanity check for login data. Data from login dialog should always
     pass this test, this is mainly for wrong or manipulated keys.'''
-    
+
     for field in backend.fields:
         if field not in data:
             raise LoginError("Wrong or corrupt key")
@@ -78,15 +78,11 @@ def check_login_data(backend, data):
                 raise LoginError("Wrong or corrupt key")
             if data[field] is None:
                 raise LoginError("Key with field is None")
-        
+
 
 class LoginError(Exception):
+    pass
 
-    def __init__(self, str):
-        self.msg = str
-
-    def __str__(self):
-        return self.msg
 
 class MailApplet:
 
@@ -127,12 +123,12 @@ class MailApplet:
         def set_login_settings_to_default():
             # Default setting means we have no key at all
             self.awn.settings["login-keyring-token"] = ["Backend", "Keyring", "Token"]
-        
+
         if self.keyring is None:
             return None
         if self.back.__name__ == "UnixSpool":
             return None
-            
+
         # Migration code from old "login-token" to new "login-keyring-token"
         # To be deleted in the version following version 0.6
         try:
@@ -147,7 +143,7 @@ class MailApplet:
                  gnomekeyring.get_default_keyring_sync(),
                  str(old_token)]
             self.awn.settings["login-token"] = 0
-                 
+
         keydata = self.awn.settings["login-keyring-token"]
         if len(keydata) == 0 or len(keydata) > 3:
             set_login_settings_to_default()
@@ -167,7 +163,7 @@ class MailApplet:
         if self.back.__name__ == "UnixSpool":
             path = self.awn.settings["unix-spool"]
             if path == "default":
-                path = os.path.join("/var/spool/mail/", 
+                path = os.path.join("/var/spool/mail/",
                     os.path.split(os.path.expanduser("~"))[1])
             data = {}
             data['path'] = path
@@ -571,7 +567,7 @@ class MainDialog:
 
         self.login_widgets = []
         self.callback = self.__login_get_widgets(vbox, label_group)
-        
+
         def fill_in():
             login_data = self.__parent.get_data_from_key(self.__parent.get_key())
             if login_data:
@@ -581,7 +577,7 @@ class MainDialog:
                 except LoginError:
                     # Corrupt key, user won't know what to do, just skip it
                     pass
-        
+
         fill_in()
 
         image_login = gtk.image_new_from_stock(gtk.STOCK_NETWORK,
@@ -908,8 +904,8 @@ to log out and try again."))
                 # Fetch mails
                 try:
                     messagesInfo = self.server.list()[1][-20:]
-                except poplib.error_proto, err:
-                    raise LoginError("POP protocol error: %s" % err)
+                except poplib.error_proto, message:
+                    raise LoginError(_("Could not log in: ") + str(message))
 
                 emails = []
                 for msg in messagesInfo:

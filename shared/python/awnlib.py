@@ -91,28 +91,16 @@ def is_required_version(version, required_version):
 
 
 class KeyringError(Exception):
+    pass
 
-    def __init__(self, str):
-        self.msg = str
-
-    def __str__(self):
-        return self.msg
 
 class KeyringCancelledError(KeyringError):
+    pass
 
-    def __init__(self):
-        self.msg = "Operation cancelled by user"
-
-    def __str__(self):
-        return self.msg
 
 class KeyringNoMatchError(KeyringError):
+    pass
 
-    def __init__(self, str):
-        self.msg = str
-
-    def __str__(self):
-        return self.msg
 
 class Dialogs:
 
@@ -609,6 +597,7 @@ class Icons:
 
         # Callback context menu
         if context_menu is None:
+
             def popup_menu_cb(widget, event):
                 self.__parent.dialog.show_menu(widget, event)
             icon.connect("context-menu-popup", popup_menu_cb)
@@ -1129,7 +1118,7 @@ class Keyring:
                       gnomekeyring.ITEM_GENERIC_SECRET, "awn-extras dummy", \
                       {"dummy_attr": "none"}, "dummy_pwd", True)
             except gnomekeyring.CancelledError:
-                raise KeyringCancelledError
+                raise KeyringCancelledError("Operation cancelled by user")
             try:
                 gnomekeyring.item_delete_sync(self.keyring, tmp)
             except gnomekeyring.BadArgumentsError:

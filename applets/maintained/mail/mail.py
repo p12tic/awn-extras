@@ -106,7 +106,7 @@ class MailApplet:
         self.init_keyring()
         login_data = self.get_data_from_key(self.get_key())
         if login_data:
-            self.login(login_data, startup=True)
+            self.login(login_data)
         else:
             self.__dialog.login_form()
             #self.awn.dialog.toggle("main", "show")
@@ -228,7 +228,7 @@ class MailApplet:
         self.awn.theme.icon("login")
         self.awn.tooltip.set(_("Mail Applet (Click to Log In)"))
 
-    def login(self, data, startup=False):
+    def login(self, data):
         try:
             self.mail = self.back(data)  # Initialize backend, check login data
                                          # IMAP backend connects to server
@@ -253,10 +253,7 @@ class MailApplet:
 
                 self.timer = self.awn.timing.register(self.refresh,
                                                      self.awn.settings["timeout"] * 60)
-                if startup and self.awn.settings["hide"]:
-                    self.awn.timing.delay(self.refresh, 0.1)  # init must finish first
-                else:
-                    self.refresh(show=False)
+                self.refresh(show=False)
 
     def refresh(self, show=True):
         oldSubjects = self.mail.subjects
@@ -283,10 +280,7 @@ class MailApplet:
 
         self.awn.theme.icon("unread" if len(self.mail.subjects) > 0 else "read")
 
-        if self.awn.settings["hide"] and len(self.mail.subjects) == 0:
-            self.awn.icon.hide()
-            self.awn.dialog.hide()
-        elif show:
+        if show:
             self.awn.show()
 
         self.__dialog.update_email_list()
@@ -362,16 +356,9 @@ class MailApplet:
         binder = self.awn.settings.get_binder(prefs)
         binder.bind("theme", "combobox-theme", key_callback=self.awn.theme.theme)
         binder.bind("email-client", "entry-client")
-        binder.bind("hide", "checkbutton-hide-applet", key_callback=self.refresh_hide_applet)
         binder.bind("show-network-errors", "checkbutton-alert-errors")
         binder.bind("timeout", "spinbutton-timeout", key_callback=change_timeout)
         self.awn.settings.load_bindings(binder)
-
-    def refresh_hide_applet(self, value):
-        if hasattr(self, "mail") and value and len(self.mail.subjects) == 0:
-            self.awn.icon.hide()
-        else:
-            self.awn.show()
 
 
 class MainDialog:

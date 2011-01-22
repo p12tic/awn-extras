@@ -16,11 +16,6 @@ type = string
 default = evolution -c mail
 _description=The Desktop Email client to use
 
-[DEFAULT/hide]
-type = boolean
-default = false
-_description=Hide the icon if there is no new mail
-
 [DEFAULT/show-network-errors]
 type = boolean
 default = true

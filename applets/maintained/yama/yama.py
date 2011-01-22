@@ -59,6 +59,7 @@ menu_rebuild_delay = 2
 
 gtk_show_image_ok = awnlib.is_required_version(gtk.gtk_version, (2, 16, 0))
 pygio_emblemed_icon_ok = awnlib.is_required_version(gio.pygio_version, (2, 17, 0))
+pyglib_ok = awnlib.is_required_version(glib.pyglib_version, (2, 18, 0))
 
 
 class YamaApplet:
@@ -265,8 +266,14 @@ class YamaApplet:
 
         home_item = self.append_menu_item(menu, _("Home Folder"), "user-home", _("Open your personal folder"))
         home_item.connect("activate", self.open_folder_cb, "file://%s" % user_path)
-        desktop_item = self.append_menu_item(menu, _("Desktop"), "user-desktop", _("Open the contents of your desktop in a folder"))
-        desktop_item.connect("activate", self.open_folder_cb, "file://%s" % os.path.join(user_path, "Desktop"))
+
+        if pyglib_ok:
+            # Add Desktop
+            desktop_path = glib.get_user_special_dir(glib.USER_DIRECTORY_DESKTOP)
+            if desktop_path != user_path:
+                label = glib.filename_display_basename(desktop_path)
+                desktop_item = self.append_menu_item(menu, label, "user-desktop", _("Open the contents of your desktop in a folder"))
+                desktop_item.connect("activate", self.open_folder_cb, "file://%s" % desktop_path)
 
         """ Bookmarks """
         self.places_menu = menu

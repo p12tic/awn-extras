@@ -49,8 +49,8 @@ class Feed(gobject.GObject):
     DOWNLOAD_NOT_FEED = -2
 
     # Convenient regular expressions
-    IMG_RE = re.compile('(<img .*?>)', re.IGNORECASE)
-    IMG_SRC_RE = re.compile('<img .*?src=["\'](.*?)["\'].*?>', re.IGNORECASE)
+    IMG_RE = re.compile('(<img[\n ].*?>)', re.IGNORECASE)
+    IMG_SRC_RE = re.compile('<img[\n ].*?src=["\'](.*?)["\'].*?>', re.IGNORECASE)
 
     __gsignals__ = {
         'updated': (gobject.SIGNAL_RUN_FIRST, None, (int,)),
@@ -91,6 +91,8 @@ class Feed(gobject.GObject):
             res = conn.getresponse()
             htime = res.getheader("Last-Modified")
         except Exception:
+            return None
+        if htime is None:
             return None
 
         # Based on a posting by Philip Semanchuk, Nov 2009 on

@@ -80,6 +80,18 @@ def check_login_data(backend, data):
                 raise LoginError("Key with field is None")
 
 
+def decode_header(message):
+    ''' Decodes internationalized headers like these:
+    =?UTF-8?B?dMOkc3Q=?= '''
+
+    if message is None or len(message) == 0:
+        return _("[No Subject]")
+    text, charset = email.Header.decode_header(message)[0]
+    if charset:
+        message = text.decode(charset)
+    return message
+
+
 class LoginError(Exception):
     pass
 
@@ -229,61 +241,51 @@ class MailApplet:
         self.awn.tooltip.set(_("Mail Applet (Click to Log In)"))
 
     def login(self, data):
+        # Initialize backend, check login data
+        # IMAP backend already connects to server
         try:
-            self.mail = self.back(data)  # Initialize backend, check login data
-                                         # IMAP backend connects to server
+            self.mail = self.back(data)
         except LoginError, error:
             self.__dialog.login_form(True, str(error))
-        else:
-            try:
-                self.mail.update()  # Connect to server
-            except LoginError, error:
-                self.__dialog.login_form(True, str(error))
+            return
 
-            else:
-                # Login successful
-                self.awn.notification.send(_("Mail Applet"),
-                    _("Logging in as %s") % data["username"],
-                    self.__getIconPath("login"))
+        # Connect to server
+        try:
+            self.mail.update()
+        except LoginError, error:
+            self.__dialog.login_form(True, str(error))
+            return
 
-                self.awn.theme.icon("read")
+        # Login successful
+        self.__dialog.update_email_list()
+        self.awn.notification.send(_("Mail Applet"),
+                                   _("Logging in as %s") % data["username"],
+                                   self.__getIconPath("login"))
+        self.save_key(data)
+        self.timer = self.awn.timing.register(self.refresh,
+                                             self.awn.settings["timeout"] * 60)
 
-                # key is saved on every successfull login again
-                self.save_key(data)
-
-                self.timer = self.awn.timing.register(self.refresh,
-                                                     self.awn.settings["timeout"] * 60)
-                self.refresh(show=False)
-
-    def refresh(self, show=True):
+    def refresh(self):
         oldSubjects = self.mail.subjects
 
+        # Login
         try:
             self.mail.update()
         except LoginError, e:
             self.awn.theme.icon("error")
-
             if self.awn.settings["show-network-errors"]:
                 self.awn.notification.send(_("Network error - Mail Applet"), str(e), "")
             return
 
-        diffSubjects = [i for i in self.mail.subjects if i not in oldSubjects]
+        self.__dialog.update_email_list()
 
+        # Notify on new subjects
+        diffSubjects = [i for i in self.mail.subjects if i not in oldSubjects]
         if len(diffSubjects) > 0:
             msg = strMailMessages(len(diffSubjects)) + ":\n" + \
                                                         "\n".join(diffSubjects)
-
             self.awn.notification.send(_("New Mail - Mail Applet"), msg,
                                  self.__getIconPath("mail-unread"))
-
-        self.awn.tooltip.set(strMessages(len(self.mail.subjects)))
-
-        self.awn.theme.icon("unread" if len(self.mail.subjects) > 0 else "read")
-
-        if show:
-            self.awn.show()
-
-        self.__dialog.update_email_list()
 
     def __getIconPath(self, name):
         path = os.path.join(mail_theme_dir, self.awn.settings["theme"], "scalable", name + ".svg")
@@ -445,6 +447,8 @@ class MainDialog:
         parent.remove(self.__email_list)
 
         mail = self.__parent.mail
+        self.__parent.awn.tooltip.set(strMessages(len(mail.subjects)))
+        self.__parent.awn.theme.icon("unread" if len(mail.subjects) > 0 else "read")
         if len(mail.subjects) > 0:
             self.__dialog.set_title(strMessages(len(self.__parent.mail.subjects)))
 
@@ -918,7 +922,7 @@ to log out and try again."))
                     # TODO: Implement body previews
 
                     if "subject" in msg:
-                        subject = msg["subject"]
+                        subject = decode_header(msg["subject"])
                     else:
                         subject = _("[No Subject]")
 
@@ -1016,11 +1020,7 @@ to log out and try again."))
                             self.server.store(i, '-FLAGS', '\\Seen')
                         if s is not None:
                             subject = s[1][9:].replace("\r\n", "\n").replace("\n", "")  # Don't ask
-                            # decode headers like this: '=?ISO-8859-1?B?RXJpbm5lcn...'
-                            text, charset = email.Header.decode_header(subject)[0]
-                            if charset is not None:
-                                subject = text.decode(charset)
-                            self.subjects.append(subject)
+                            self.subjects.append(decode_header(subject))
 
                 if self.box != "":
                     emails = [i for i in self.server.search(None, "(UNSEEN)")[1][0].split(" ") if i != ""]

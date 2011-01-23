@@ -1022,7 +1022,7 @@ class Keyring:
         """
         k = self.Key(keyring)
         if name and pwd:
-            k.set(keyring, name, pwd, attrs, type)
+            k.set(k.keyring, name, pwd, attrs, type)
         return k
 
     def from_token(self, keyring, token):

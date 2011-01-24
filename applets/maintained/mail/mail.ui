@@ -7,7 +7,6 @@
       <object class="GtkVBox" id="dialog-vbox">
         <property name="visible">True</property>
         <property name="border_width">2</property>
-        <property name="orientation">vertical</property>
         <property name="spacing">12</property>
         <child>
           <object class="GtkFrame" id="frame1">
@@ -22,7 +21,6 @@
                 <child>
                   <object class="GtkVBox" id="vbox2">
                     <property name="visible">True</property>
-                    <property name="orientation">vertical</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkHBox" id="hbox3">
@@ -93,7 +91,6 @@
                 <child>
                   <object class="GtkVBox" id="vbox3">
                     <property name="visible">True</property>
-                    <property name="orientation">vertical</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkHBox" id="hbox1">
@@ -134,20 +131,6 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkCheckButton" id="checkbutton-hide-applet">
-                        <property name="label" translatable="yes">_Hide applet if no new messages</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="use_underline">True</property>
-                        <property name="draw_indicator">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
                       <object class="GtkCheckButton" id="checkbutton-alert-errors">
                         <property name="label" translatable="yes">_Alert on network errors</property>
                         <property name="visible">True</property>
@@ -158,7 +141,7 @@
                       </object>
                       <packing>
                         <property name="expand">False</property>
-                        <property name="position">2</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                   </object>
@@ -191,7 +174,6 @@
                 <child>
                   <object class="GtkVBox" id="vbox1">
                     <property name="visible">True</property>
-                    <property name="orientation">vertical</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkHBox" id="hbox5">
@@ -280,8 +262,8 @@
   </object>
   <object class="GtkSizeGroup" id="sizegroup1">
     <widgets>
-      <widget name="label-theme"/>
       <widget name="label-client"/>
+      <widget name="label-theme"/>
     </widgets>
   </object>
   <object class="GtkAdjustment" id="adjustment_timeout">

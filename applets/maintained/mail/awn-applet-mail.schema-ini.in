@@ -16,22 +16,31 @@ type = string
 default = evolution -c mail
 _description=The Desktop Email client to use
 
-[DEFAULT/hide]
-type = boolean
-default = false
-_description=Hide the icon if there is no new mail
-
 [DEFAULT/show-network-errors]
 type = boolean
 default = true
 _description=Display any network errors
 
 [DEFAULT/login-token]
+# This is a legacy entry.
+# The value is copied by the applet to login-keyring-token.
+# Remove this key in version following version 0.6
 type = integer
 default = 0
+_description=Used for logging in; do not touch
+
+[DEFAULT/login-keyring-token]
+type = list-string
+default = Backend,Keyring,Token
 _description=Used for logging in; do not touch
 
 [DEFAULT/timeout]
 type = integer
 default = 2
 _description=Timeout between two value updates (in minutes).
+
+[DEFAULT/unix-spool]
+type = string
+default = default
+_description=The Unix Spool file
+

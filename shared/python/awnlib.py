@@ -90,13 +90,16 @@ def is_required_version(version, required_version):
     return True
 
 
-class KeyRingError:
+class KeyringError(Exception):
+    pass
 
-    def __init__(self, str):
-        self.msg = str
 
-    def __str__(self):
-        return self.msg
+class KeyringCancelledError(KeyringError):
+    pass
+
+
+class KeyringNoMatchError(KeyringError):
+    pass
 
 
 class Dialogs:
@@ -594,6 +597,7 @@ class Icons:
 
         # Callback context menu
         if context_menu is None:
+
             def popup_menu_cb(widget, event):
                 self.__parent.dialog.show_menu(widget, event)
             icon.connect("context-menu-popup", popup_menu_cb)
@@ -984,21 +988,24 @@ class Keyring:
             awn.check_dependencies(globals(), "gnomekeyring")
 
         if not gnomekeyring.is_available():
-            raise KeyRingError("Keyring not available")
+            raise KeyringError("Keyring not available")
 
         keyring_list = gnomekeyring.list_keyring_names_sync()
 
         if len(keyring_list) == 0:
-            raise KeyRingError("No keyrings available")
+            raise KeyringError("No keyrings available")
 
         try:
             gnomekeyring.get_default_keyring_sync()
         except gnomekeyring.NoKeyringDaemonError:
-            raise KeyRingError("Had trouble connecting to daemon")
+            raise KeyringError("Had trouble connecting to daemon")
 
-    def new(self, name=None, pwd=None, attrs={}, type="generic"):
+    def new(self, keyring=None, name=None, pwd=None, attrs={}, type="generic"):
         """Create a new keyring key.
 
+        @param keyring: The keyring holding the key. If omitted, the default
+            keyring is returned.
+        @type keyring: C{string}
         @param name: The display name of the key. If omitted, an empty key is
             returned.
         @type name: C{string}
@@ -1013,68 +1020,63 @@ class Keyring:
         @rtype: L{Key}
 
         """
-        k = self.Key()
+        k = self.Key(keyring)
         if name and pwd:
-            k.set(name, pwd, attrs, type)
+            k.set(k.keyring, name, pwd, attrs, type)
         return k
 
-    def from_token(self, token):
-        """Load the key with the given token.
+    def from_token(self, keyring, token):
+        """Load the key with the given token. Note: If keyring is None, the
+        default keyring is used. However, this is not recommended.
 
+        @param keyring: The keyring holding the key. If omitted, the default
+            keyring is used.
+        @type keyring: C{string}
         @param token: The password token of the key
         @type token: C{int} or C{long}
         @return: A new L{Key} object
         @rtype: L{Key}
 
         """
-        k = self.Key()
-        k.token = token
+        k = self.Key(keyring, token)
+
+        keys = gnomekeyring.list_item_ids_sync(keyring)
+        if k.token not in keys:
+            raise KeyringNoMatchError("Token does not exist")
+
         return k
-
-    def unlock(self):
-        """Unlock keyring.
-
-        @return: True if keyring is unlocked, False if locked.
-
-        """
-
-        info = gnomekeyring.get_info_sync(None)
-        if not info.get_is_locked():
-            return True
-
-        # The straight way would be:
-        # gnomekeyring.unlock_sync(None, None)
-        # But this results in a type error, see launchpad bugs #432882.
-        # We set a dummy key instead and delete it immediately,
-        # this triggers a user dialog to unlock the keyring.
-        try:
-            tmp = gnomekeyring.item_create_sync(None, \
-                  gnomekeyring.ITEM_GENERIC_SECRET, "awn-extras dummy", \
-                  {"dummy_attr": "none"}, "dummy_pwd", True)
-        except gnomekeyring.CancelledError:
-            return False
-        gnomekeyring.item_delete_sync(None, tmp)
-
-        info = gnomekeyring.get_info_sync(None)
-        return not info.get_is_locked()
 
     class Key(object):
 
-        def __init__(self, token=0):
-            """Create a new key.
+        def __init__(self, keyring=None, token=0):
+            """Create a new key. If keyring is None, the default keyring is
+            used. Note: self.keyring will hold the name of the keyring used.
+            To identify a key unambiguously keyring name and token are needed.
 
-            @param keyring: The keyring module.
-            @type keyring: C{module}
+            @param keyring: The keyring holding the key. If omitted, the
+                default keyring is used.
+            @type keyring: C{string}
             @param token: The token of an already-existing key. Optional.
             @type token: C{long}
 
             """
+            if keyring is None:
+                keyring = gnomekeyring.get_default_keyring_sync()
+                if keyring is None:
+                    raise KeyringError("No default keyring set")
+            keyrings = gnomekeyring.list_keyring_names_sync()
+            if keyring not in keyrings:
+                raise KeyringNoMatchError("Keyring does not exist")
+
+            self.keyring = keyring
             self.token = token
 
-        def set(self, name, pwd, attrs={}, type="generic"):
+        def set(self, keyring, name, pwd, attrs={}, type="generic"):
             """Create a new keyring key. Note that if another key
             exists with the same name, it will be overwritten.
 
+            @param keyring: The keyring holding the key.
+            @type keyring: C{string}
             @param name: The display name of the key.
             @type name: C{string}
             @param pwd: The password stored in the key.
@@ -1093,10 +1095,35 @@ class Keyring:
                 type = gnomekeyring.ITEM_GENERIC_SECRET
 
             try:
-                self.token = gnomekeyring.item_create_sync(None, type, name, \
-                    attrs, pwd, True)
+                self.token = gnomekeyring.item_create_sync(keyring, type, \
+                    name, attrs, pwd, True)
+                self.keyring = keyring
             except gnomekeyring.CancelledError:
                 self.token = 0
+
+        def __unlock(self):
+            """Unlock the key's keyring."""
+
+            info = gnomekeyring.get_info_sync(self.keyring)
+            if not info.get_is_locked():
+                return
+
+            # The straight way would be:
+            # gnomekeyring.unlock_sync(self.keyring, None)
+            # But this results in a type error, see launchpad bugs #432882.
+            # We create a dummy key instead, this triggers a user dialog to
+            # unlock the keyring. We delete the dummy key then immediately.
+            try:
+                tmp = gnomekeyring.item_create_sync(self.keyring, \
+                      gnomekeyring.ITEM_GENERIC_SECRET, "awn-extras dummy", \
+                      {"dummy_attr": "none"}, "dummy_pwd", True)
+            except gnomekeyring.CancelledError:
+                raise KeyringCancelledError("Operation cancelled by user")
+            try:
+                gnomekeyring.item_delete_sync(self.keyring, tmp)
+            except gnomekeyring.BadArgumentsError:
+                # Race condition if several applets use this method at once
+                pass
 
         def delete(self):
             """Delete the current key. Will also reset the token. Note that
@@ -1104,29 +1131,37 @@ class Keyring:
             destructive. delete() MUST be called manually.
 
             """
-            gnomekeyring.item_delete_sync(None, self.token)
+            self.__unlock()
+            gnomekeyring.item_delete_sync(self.keyring, self.token)
             self.token = 0
 
         def __get(self):
-            return gnomekeyring.item_get_info_sync(None, self.token)
+            self.__unlock()
+            return gnomekeyring.item_get_info_sync(self.keyring, self.token)
 
         def __getAttrs(self):
-            return gnomekeyring.item_get_attributes_sync(None, self.token)
+            self.__unlock()
+            return gnomekeyring.item_get_attributes_sync(self.keyring, self.token)
 
         def __setAttrs(self, a):
-            return gnomekeyring.item_set_attributes_sync(None, self.token, a)
+            self.__unlock()
+            return gnomekeyring.item_set_attributes_sync(self.keyring, self.token, a)
 
         def __getName(self):
             return self.__get().get_display_name()
 
         def __setName(self, name):
-            self.__get().set_display_name(name)
+            info = self.__get()
+            info.set_display_name(name)
+            return gnomekeyring.item_set_info_sync(self.keyring, self.token, info)
 
         def __getPass(self):
             return self.__get().get_secret()
 
         def __setPass(self, passwd):
-            self.__get().set_secret(passwd)
+            info = self.__get()
+            info.set_secret(passwd)
+            return gnomekeyring.item_set_info_sync(self.keyring, self.token, info)
 
         attrs = property(__getAttrs, __setAttrs)
         """

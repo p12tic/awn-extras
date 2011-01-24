@@ -334,7 +334,7 @@ class KeySaver:
                 if token is None or token == 0:
                     #No for i18n because if the user changes the language, he
                     #could lose the password (and most users won't even see this)
-                    self.key = self.applet.keyring.new('Feeds - ' + url,
+                    self.key = self.applet.keyring.new(None, 'Feeds - ' + url,
                         password,
                         {'username': username, 'network': self.base_id},
                         'network')
@@ -342,7 +342,7 @@ class KeySaver:
                     self.applet.tokens[url] = int(self.key.token)
 
                 else:
-                    self.key = self.applet.keyring.from_token(token)
+                    self.key = self.applet.keyring.from_token(None, token)
 
             #No password provided, e.g. on applet startup
             else:
@@ -351,7 +351,7 @@ class KeySaver:
                     self.error()
 
                 else:
-                    self.key = self.applet.keyring.from_token(token)
+                    self.key = self.applet.keyring.from_token(None, token)
                     self.password = self.key.password
 
         return self.key

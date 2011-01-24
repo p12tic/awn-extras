@@ -211,8 +211,13 @@ _get_places_menu (GtkWidget * menu)
   gtk_container_foreach (GTK_CONTAINER (menu),(GtkCallback)_remove_menu_item,menu);
 
   add_special_item (menu,_("Computer"),"nautilus","computer:///","computer",NULL);
-  add_special_item (menu,_("Home"),XDG_OPEN,homedir,"folder-home","stock_home",NULL);
-  add_special_item (menu,_("Desktop"),XDG_OPEN,desktop_dir?desktop_dir:homedir,"desktop",NULL);
+  gchar *home_quoted, *desktop_quoted;
+  home_quoted = g_shell_quote (homedir);
+  desktop_quoted = g_shell_quote (desktop_dir);
+  add_special_item (menu,_("Home"),XDG_OPEN,home_quoted,"folder-home","stock_home",NULL);
+  add_special_item (menu,_("Desktop"),XDG_OPEN,desktop_dir?desktop_quoted:home_quoted,"desktop",NULL);
+  g_free (home_quoted);
+  g_free (desktop_quoted);
   
   if (trash_handler)
     trash_file_count = desktop_agnostic_vfs_trash_get_file_count (trash_handler);

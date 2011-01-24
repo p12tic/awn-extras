@@ -631,7 +631,7 @@ class Backends:
 
         def update(self):
             f = feedparser.parse(\
-                "https://%s:%s@mail.google.com/gmail/feed/atom" \
+                "https://%s:%s@mail.google.com/gmail/feed/atom/unread/" \
                             % (self.data["username"], self.data['password']))
 
             if "bozo_exception" in f.keys():

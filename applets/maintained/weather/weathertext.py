@@ -55,6 +55,7 @@ conditions = [
     N_("Light Drizzle"),
     N_("Light Rain Shower"),
     N_("Light Rain with Thunder"),
+    N_("Light Snow"),
     N_("Light Snow Showers"),
     N_("Mist"),
     N_("Mixed Precipitation"),
@@ -73,6 +74,7 @@ conditions = [
     N_("Sleet"),
     N_("Smoke"),
     N_("Snow"),
+    N_("Snow and Fog"),
     N_("Snow Flurries"),
     N_("Snow Showers"),
     N_("Thunder Showers"),
@@ -102,6 +104,8 @@ forecast = [
     # Please keep translation short, approx. 12 characters
     N_("AM Showers"), 
     # Please keep translation short, approx. 12 characters
+    N_("AM Snow Showers"), 
+    # Please keep translation short, approx. 12 characters
     # T-Showers = Thunder Showers
     N_("AM T-Showers"),
     # Please keep translation short, approx. 12 characters
@@ -125,7 +129,15 @@ forecast = [
     # Please keep translation short, approx. 12 characters
     N_("Partly Cloudy / Wind"),
     # Please keep translation short, approx. 12 characters
+    N_("PM Drizzle"),
+    # Please keep translation short, approx. 12 characters
     N_("PM Light Rain"), 
+    # Please keep translation short, approx. 12 characters
+    N_("PM Light Snow"), 
+    # Please keep translation short, approx. 12 characters
+    N_("PM Rain"), 
+    # Please keep translation short, approx. 12 characters
+    N_("PM Rain / Snow"), 
     # Please keep translation short, approx. 12 characters
     N_("PM Showers"), 
     # Please keep translation short, approx. 12 characters
@@ -136,6 +148,8 @@ forecast = [
     N_("PM T-Storms"),
     # Please keep translation short, approx. 12 characters
     N_("Rain"),
+    # Please keep translation short, approx. 12 characters
+    N_("Rain / Snow"),
     # Please keep translation short, approx. 12 characters
     N_("Rain / Snow Showers"),
     # Please keep translation short, approx. 12 characters
@@ -149,6 +163,14 @@ forecast = [
     N_("Scattered T-Storms"),
     # Please keep translation short, approx. 12 characters
     N_("Showers / Wind"),
+    # Please keep translation short, approx. 12 characters
+    N_("Snow Shower"),
+    # Please keep translation short, approx. 12 characters
+    N_("Snow to Rain"),
+    # Please keep translation short, approx. 12 characters
+    N_("Snow to Wintry Mix"),
+    # Please keep translation short, approx. 12 characters
+    N_("Snow / Wind"),
     # Please keep translation short, approx. 12 characters
     N_("Sunny"),
     # Please keep translation short, approx. 12 characters

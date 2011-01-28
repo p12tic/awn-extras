@@ -116,18 +116,57 @@ class MailApplet:
 
         # Login from key or dialog
         self.init_keyring()
-        login_data = self.get_data_from_key(self.get_key())
-        if login_data:
-            self.login(login_data)
+        self.migrate_key()
+        if self.keyring is None:
+            self.__dialog.login_form(True,
+                _("GNOME keyring not available: Password won't be saved"))
         else:
-            self.__dialog.login_form()
-            #self.awn.dialog.toggle("main", "show")
+            login_data = self.get_data_from_key(self.get_key())
+            if login_data:
+                self.login(login_data)
+            else:
+                try:
+                    # Create a key in default keyring without saving it
+                    self.keyring.Key(None)
+                except awnlib.KeyringError:
+                    self.__dialog.login_form(True,
+                        _("Default GNOME keyring or \"login\" keyring not found:\nPassword won't be saved"))
+                else:
+                    self.__dialog.login_form()
 
     def init_keyring(self):
         try:
             self.keyring = awnlib.Keyring()
         except awnlib.KeyringError:
             self.keyring = None
+
+    def migrate_key(self):
+        # Migration code from old "login-token" to new "login-keyring-token"
+        # To be deleted in the version following version 0.6
+        try:
+            old_token = self.awn.settings["login-token"]
+        except ValueError:
+            return
+
+        if self.keyring is None or old_token == 0:
+            return
+
+        try:
+            key = self.keyring.from_token(None, old_token)
+        except awnlib.KeyringError:
+            self.awn.settings["login-token"] = 0
+            return
+        data = self.get_data_from_key(key)
+        if data:
+            try:
+                check_login_data(self.back, data)
+            except LoginError:
+                pass
+            else:
+                if self.awn.settings["login-keyring-token"] == ["Backend", "Keyring", "Token"]:
+                    self.awn.settings["login-keyring-token"] = \
+                        [self.back.__name__, key.keyring, str(key.token)]
+        self.awn.settings["login-token"] = 0
 
     def get_key(self):
         '''Get key for backend from Gnome Keyring'''
@@ -141,23 +180,8 @@ class MailApplet:
         if self.back.__name__ == "UnixSpool":
             return None
 
-        # Migration code from old "login-token" to new "login-keyring-token"
-        # To be deleted in the version following version 0.6
-        try:
-            old_token = self.awn.settings["login-token"]
-        except ValueError:
-            # New installation, token does not exist
-            old_token = 0
-        if old_token != 0:
-            import gnomekeyring
-            self.awn.settings["login-keyring-token"] = \
-                [self.back.__name__,
-                 gnomekeyring.get_default_keyring_sync(),
-                 str(old_token)]
-            self.awn.settings["login-token"] = 0
-
         keydata = self.awn.settings["login-keyring-token"]
-        if len(keydata) == 0 or len(keydata) > 3:
+        if len(keydata) != 3:
             set_login_settings_to_default()
             return None
         if keydata[0] != self.back.__name__:
@@ -223,8 +247,9 @@ class MailApplet:
                 self.awn.settings["login-keyring-token"] = [self.back.__name__,
                                                             key.keyring,
                                                             str(key.token)]
-            except awnlib.KeyringCancelledError:
-                # User cancelled himself
+            except awnlib.KeyringError:
+                # Cancelled by user or default keyring does not exist
+                # which was checked and presented as error message in init
                 pass
         else:
             try:

@@ -1040,7 +1040,7 @@ class Keyring:
         """
         k = self.Key(keyring, token)
 
-        keys = gnomekeyring.list_item_ids_sync(keyring)
+        keys = gnomekeyring.list_item_ids_sync(k.keyring)
         if k.token not in keys:
             raise KeyringNoMatchError("Token does not exist")
 
@@ -1049,9 +1049,10 @@ class Keyring:
     class Key(object):
 
         def __init__(self, keyring=None, token=0):
-            """Create a new key. If keyring is None, the default keyring is
-            used. Note: self.keyring will hold the name of the keyring used.
-            To identify a key unambiguously keyring name and token are needed.
+            """Create a new key. If keyring is None, the default keyring or
+            "login" keyring is used. Note: self.keyring will hold the name of
+            the keyring eventually used. To identify a key unambiguously
+            keyring name and token are needed.
 
             @param keyring: The keyring holding the key. If omitted, the
                 default keyring is used.
@@ -1060,12 +1061,15 @@ class Keyring:
             @type token: C{long}
 
             """
+            keyring_list = gnomekeyring.list_keyring_names_sync()
             if keyring is None:
                 keyring = gnomekeyring.get_default_keyring_sync()
                 if keyring is None:
-                    raise KeyringError("No default keyring set")
-            keyrings = gnomekeyring.list_keyring_names_sync()
-            if keyring not in keyrings:
+                    if "login" in keyring_list:
+                        keyring = "login"
+                    else:
+                        raise KeyringError("No default keyring set")
+            if keyring not in keyring_list:
                 raise KeyringNoMatchError("Keyring does not exist")
 
             self.keyring = keyring

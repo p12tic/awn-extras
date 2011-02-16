@@ -699,13 +699,16 @@ class Errors:
                 print "\n".join(["-" * 80, traceback, "-" * 80])
                 summary = "%s in %s: %s" % (error_type, self.__parent.meta["name"], error)
                 if self.__parent.meta["version"] == __version__:
-                    args["message"] = "Visit Launchpad and report the bug by following these steps:\n\n" \
+                    args["message"] = "If you speak English and know how a bug tracker works, then visit Launchpad and report the bug by following these steps:\n\n" \
                                     + "1) Paste the error summary text in the 'summary' field\n" \
-                                    + "2) Press Continue and then check whether the bug has already been reported or not\n" \
-                                    + "3) If you continue and report the bug, paste the following in the big textarea:\n" \
+                                    + "2) Press Continue and then check whether the bug has already been reported or not. Do NOT add duplicates. Instead comment on the bug report that already exists.\n" \
+                                    + "3) If you continue and report the bug, put the following in the big textarea:\n" \
+                                    + "    - exact version of awn-extras\n" \
+                                    + "    - operating system name and version\n" \
                                     + "    - the traceback\n" \
-                                    + "    - applet version: '%s'\n" % self.__parent.meta["version"] \
-                                    + "    - other info requested by the guidelines found below the big textarea"
+                                    + "    - other info requested by the guidelines found below the big textarea\n\n" \
+                                    + "Remember: you must be able to speak English and check regularly whether the developers ask you questions. Do NOT add duplicates, but comment on the existing bug report. You cannot expect a bug to be fixed if you don't provide information.\n\n" \
+                                    + "If you don't think you can meet these conditions, then don't file a bug report."
                     args["url"] = bug_report_link
                 else:
                     args["message"] = "Report this bug at the bug tracker of the %s applet." % self.__parent.meta["name"]
@@ -771,6 +774,10 @@ class Errors:
 
             if len(message) > 0:
                 self.format_secondary_markup(message)
+
+            # Make texts non-selectable to stop unhelpful bug reports from stupid users
+            for i in self.get_message_area().get_children():
+                i.set_selectable(False)
 
             if url is not None:
                 alignment = gtk.Alignment(xalign=0.5, xscale=0.0)

@@ -848,6 +848,7 @@ class Settings:
 
         """
         value = self.__client.get(key)
+
         if type(value) is str and value[:9] == "!pickle;\n":
             value = pickle.loads(value[9:])
         return value
@@ -865,6 +866,7 @@ class Settings:
             value = "!pickle;\n%s" % pickle.dumps(value)
         elif type(value) is long:
             value = int(value)
+
         self.__client.set(key, value)
 
     def __contains__(self, key):
@@ -892,16 +894,19 @@ class Settings:
 
             """
             self.__config_object = None
+            self.__parent = None
 
             type_client = type(client)
             if client is None:
                 self.__client = awn.config_get_default(awn.PANEL_ID_DEFAULT)
-            elif type_client is AppletSimple or type_client is AppletMultiple:
+            elif type_client in (AppletSimple, AppletMultiple):
                 self.__client = awn.config_get_default_for_applet(client)
 
                 def applet_deleted_cb(applet):
                     self.__client.remove_instance()
                 client.connect("applet-deleted", applet_deleted_cb)
+                
+                self.__parent = client
             elif type_client is config.Client:
                 self.__client = client
             else:
@@ -936,7 +941,9 @@ class Settings:
                 try:
                     self.__client.set_value(self.__folder, key, value)
                 except:
-                    raise ValueError("Could not set new value of '%s'" % key)
+                    name = self.__parent.meta["name"] if self.__parent is not None else "UNKNOWN" 
+                    print "%s: Could not set new value for key '%s'" % (name, key)
+                    raise
 
         def get(self, key):
             """Get an existing key's value.
@@ -953,7 +960,9 @@ class Settings:
                 try:
                     return self.__client.get_value(self.__folder, key)
                 except:
-                    raise ValueError("'%s' does not exist" % key)
+                    name = self.__parent.meta["name"] if self.__parent is not None else "UNKNOWN"
+                    print "%s: key '%s' does not exist" % (name, key)
+                    raise
 
         def contains(self, key):
             """Test if the key maps to a value.

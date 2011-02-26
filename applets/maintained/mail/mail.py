@@ -901,38 +901,27 @@ to log out and try again."))
                 emails = []
                 for msg in messagesInfo:
                     msgNum = int(msg.split(" ")[0])
-                    msgSize = int(msg.split(" ")[1])
-                    if msgSize < 10000:
-                        try:
-                            message = self.server.retr(msgNum)[1]
-                        except poplib.error_proto, err:
-                            # Probably not so serious errors
-                            print("Mail Applet: POP protocol error: %s" % err)
-                            continue
-                        message = "\n".join(message)
-                        emails.append(message)
+                    try:
+                        message = self.server.top(msgNum, 0)[1]
+                    except poplib.error_proto, err:
+                        print("Mail Applet: POP protocol error: %s" % err)
+                        continue
+                    message = "\n".join(message)
+                    emails.append(message)
 
-                #t = []
                 self.subjects = []
                 for i in emails:
                     msg = email.message_from_string(i)
-
-                    #t.append(MailItem(i.title, i.author))
-                    # TODO: Actually do something with t
-                    # TODO: Implement body previews
-
                     if "subject" in msg:
                         subject = decode_header(msg["subject"])
                     else:
                         subject = _("[No Subject]")
-
                     self.subjects.append(subject)
 
                 # Quit
                 try:
                     self.server.quit()
                 except poplib.error_proto, err:
-                    # Probably not so serious errors
                     print("Mail Applet: POP protocol error: %s" % err)
 
             @classmethod

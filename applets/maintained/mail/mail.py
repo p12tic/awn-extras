@@ -86,10 +86,19 @@ def decode_header(message):
 
     if message is None or len(message) == 0:
         return _("[No Subject]")
-    text, charset = email.Header.decode_header(message)[0]
-    if charset:
-        message = text.decode(charset)
-    return message
+
+    decoded_message = ""
+    for split in message.split(" "):
+        text, charset = email.Header.decode_header(split)[0]
+        if charset:
+            split = text.decode(charset)
+        else:
+            split += " "
+        decoded_message += split
+
+    if decoded_message.endswith(" "):
+        return decoded_message[:-1]
+    return decoded_message
 
 
 class LoginError(Exception):
@@ -975,6 +984,10 @@ to log out and try again."))
             def __init__(self, data):
                 self.data = data
                 check_login_data(self, self.data)
+
+            def update(self):
+                # Login on each update
+                # otherwise it won't work after suspend
                 args = self.data["url"].split(":")
 
                 try:
@@ -990,6 +1003,7 @@ to log out and try again."))
                 except imaplib.IMAP4.error:
                     raise LoginError(_("Could not log in"))
 
+                # Select mailbox(es) and get subjects
                 mboxs = [i.split(")")[1].split(" ", 2)[2].strip('"') for i in self.server.list()[1]]
                 self.box = self.data["folder"]
 
@@ -997,19 +1011,17 @@ to log out and try again."))
                     raise LoginError(_("Folder does not exst"))
 
                 if self.box != "":
-                    self.server.select(self.box)
-
-            def update(self):
+                    # select mailbox with "read only" flag
+                    self.server.select(self.box, True)
                 self.subjects = []
 
                 def get_subject(emails):
                     for i in emails:
                         s = self.server.fetch(i, '(BODY[HEADER.FIELDS (SUBJECT)])')[1][0]
-                        if self.data['url'] == "imap.gmail.com":  # GMail sets mails unread
-                            self.server.store(i, '-FLAGS', '\\Seen')
                         if s is not None:
                             subject = s[1][9:].replace("\r\n", "\n").replace("\n", "")  # Don't ask
                             self.subjects.append(decode_header(subject))
+                    self.server.close()  # Close current mailbox
 
                 if self.box != "":
                     emails = [i for i in self.server.search(None, "(UNSEEN)")[1][0].split(" ") if i != ""]
@@ -1020,7 +1032,8 @@ to log out and try again."))
                     mboxs = [i for i in mboxs if i not in ("Sent", "Trash") and i[1:8] != "[Gmail]"]
 
                     for b in mboxs:
-                        r, d = self.server.select(b)
+                        # select mailbox with "read only" flag
+                        r, d = self.server.select(b, True)
 
                         if r == "NO":
                             continue
@@ -1030,6 +1043,9 @@ to log out and try again."))
                         emails = []
                         emails.extend(i for i in p if i != "")
                         get_subject(emails)
+
+                # Finally quit
+                self.server.logout()
 
             @classmethod
             def drawLoginWindow(cls, *groups):

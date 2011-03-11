@@ -652,7 +652,7 @@ class WeatherApplet:
         def get_weather_map(self, location_code):
             map_url = "http://www.weather.com/outlook/travel/businesstraveler/map/%s" % location_code
             with closing(urllib2.urlopen(map_url)) as usock:
-                mapExp = """<IMG NAME="mapImg" SRC="([^\"]+)" WIDTH=([0-9]+) HEIGHT=([0-9]+) BORDER"""
+                mapExp = """<img name="mapImg" src="([^\"]+)" width="([0-9]+)" height="([0-9]+)" border"""
                 result = re.findall(mapExp, usock.read())
                 if not result or len(result) != 1:
                     raise NetworkException("Couldn't parse weather map")

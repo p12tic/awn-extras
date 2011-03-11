@@ -96,48 +96,48 @@ class OverlayStateMachine:
 
 class BaseState:
 
-    def __init__(self, handler, throbber, disconnect):
-        self.handler = handler
+    def __init__(self, machine, throbber, disconnect):
+        self.machine = machine
 
-        self.handler.throbber_overlay.props.active = throbber
-        self.handler.disconnect_overlay.props.active = disconnect
+        self.machine.throbber_overlay.props.active = throbber
+        self.machine.disconnect_overlay.props.active = disconnect
 
     def evaluate(self):
         disconnected = any(disconnect_counter.values())
         busy = any(throbber_counter.values())
 
         if busy and disconnected:
-            self.handler.set_next(RefreshAndErrorState)
+            self.machine.set_next(RefreshAndErrorState)
         elif busy and not disconnected:
-            self.handler.set_next(RefreshState)
+            self.machine.set_next(RefreshState)
         elif not busy and disconnected:
-            self.handler.set_next(ErrorState)
+            self.machine.set_next(ErrorState)
         else:
-            self.handler.set_next(IdleState)
+            self.machine.set_next(IdleState)
 
 
 class IdleState(BaseState):
 
-    def __init__(self, handler):
-        BaseState.__init__(self, handler, False, False)
+    def __init__(self, machine):
+        BaseState.__init__(self, machine, False, False)
 
 
 class RefreshState(BaseState):
 
-    def __init__(self, handler):
-        BaseState.__init__(self, handler, True, False)
+    def __init__(self, machine):
+        BaseState.__init__(self, machine, True, False)
 
 
 class ErrorState(BaseState):
 
-    def __init__(self, handler):
-        BaseState.__init__(self, handler, False, True)
+    def __init__(self, machine):
+        BaseState.__init__(self, machine, False, True)
 
 
 class RefreshAndErrorState(BaseState):
 
-    def __init__(self, handler):
-        BaseState.__init__(self, handler, True, False)
+    def __init__(self, machine):
+        BaseState.__init__(self, machine, True, False)
 
 
 def with_overlays(func):
@@ -147,23 +147,23 @@ def with_overlays(func):
     """
     throbber_counter[func] = False
     disconnect_counter[func] = False
-    def activate_throbber(do_show):
+    def display_throbber(do_show):
         throbber_counter[func] = do_show
         overlay_fsm.evaluate()
-    def active_icon(is_error):
+    def display_disconnected(is_error):
         disconnect_counter[func] = is_error
         overlay_fsm.evaluate()
     def bound_func(obj, *args, **kwargs):
-        activate_throbber(True)
+        display_throbber(True)
         try:
             result = func(obj, *args, **kwargs)
-            active_icon(False)
+            display_disconnected(False)
             return result
         except:
-            active_icon(True)
+            display_disconnected(True)
             raise
         finally:
-            activate_throbber(False)
+            display_throbber(False)
     return bound_func
 
 

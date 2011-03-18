@@ -229,6 +229,11 @@ class WeatherApplet:
 
         global overlay_fsm
         overlay_fsm = OverlayStateMachine(disconnect_overlay, throbber_overlay)
+        
+        def show_map(widget):
+            if self.map_dialog is None:
+                self.fetch_weather_map(show=True)
+        applet.connect("middle-clicked", show_map)
 
         # Set up the timer which will refresh the conditions, forecast, and weather map
         applet.timing.register(self.activate_refresh_cb, update_interval * 60)
@@ -241,7 +246,6 @@ class WeatherApplet:
 
             if all(self.weather_fail):
                 # Clean up weather map
-                self.map_item.set_sensitive(False)
                 if self.map_dialog is not None:
                     self.applet.dialog.unregister("secondary")
                 self.reset_weather_data()
@@ -273,10 +277,9 @@ class WeatherApplet:
         self.map_item = gtk.MenuItem(_("Show _Map"))
         self.map_item.connect("activate", self.activate_map_cb)
         menu.insert(self.map_item, menu_index)
-        self.map_item.set_sensitive(False)
 
         refresh_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_REFRESH)
-        refresh_item.connect("activate", self.activate_refresh_cb)
+        refresh_item.connect("activate", self.activate_refresh_cb, True)
         menu.insert(refresh_item, menu_index + 1)
 
         menu.insert(gtk.SeparatorMenuItem(), menu_index + 2)
@@ -412,9 +415,11 @@ class WeatherApplet:
 
     def activate_map_cb(self, widget):
         if self.map_dialog is not None:
-            self.map_dialog.show_all()
+            self.applet.dialog.toggle("secondary", "show")
+        else:
+            self.fetch_weather_map(show=True)
 
-    def activate_refresh_cb(self, widget=None, map=True):
+    def activate_refresh_cb(self, widget=None, map=False):
         """Refresh the icon, forecast, and map data. Called by the
         "Refresh" option in the context menu.
 
@@ -501,7 +506,7 @@ class WeatherApplet:
                 self.network_error_cb(e, tb)
         self.network_handler.get_forecast(self.applet.settings['location_code'], callback=cb, error=error_cb)
 
-    def fetch_weather_map(self, retries=3):
+    def fetch_weather_map(self, retries=3, show=False):
         """Download the latest weather map from weather.com, storing it
         as a pixbuf, and create a dialog with the new map.
 
@@ -509,6 +514,8 @@ class WeatherApplet:
         def cb(pixbuf):
             self.weather_fail[2] = False
             self.set_map_pixbuf(pixbuf)
+            if show:
+                self.applet.dialog.toggle("secondary", "show")
         def error_cb(e, tb):
             if type(e) is NetworkException and retries > 0:
                 print "Warning in Weather:", e
@@ -541,14 +548,13 @@ class WeatherApplet:
 
         map_size = pixbuf.get_width(), pixbuf.get_height()
 
-        # resize if necessary as defined by map_maxwidth
+        # Resize if necessary as defined by map_maxwidth
         ratio = float(self.applet.settings['map_maxwidth']) / map_size[0]
         if ratio < 1:
             width, height = [int(ratio * dim) for dim in map_size]
             pixbuf = pixbuf.scale_simple(width, height, gtk.gdk.INTERP_BILINEAR)
 
         self.map_vbox.add(gtk.image_new_from_pixbuf(pixbuf))
-        self.map_item.set_sensitive(True)
 
     def convert_temperature(self, value):
         unit = temperature_units[self.applet.settings["temperature-unit"]]
@@ -648,6 +654,7 @@ class WeatherApplet:
                         raise NetworkException("Couldn't parse conditions: %s" % e)
 
         @async_method
+        @with_overlays
         @network_exception
         def get_weather_map(self, location_code):
             map_url = "http://www.weather.com/outlook/travel/businesstraveler/map/%s" % location_code

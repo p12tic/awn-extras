@@ -263,7 +263,8 @@ class Dialogs:
             else:
                 self.__parent.tooltip.hide()
 
-                if self.__current is not None and self.__current not in self.__special_dialogs:
+                if self.__current is not None and self.__current not in self.__special_dialogs \
+                        and dialog != self.__current:
                     current = self.__register[self.__current]
                     current_was_active = current.is_active()
 

@@ -1748,7 +1748,10 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
 
   g_log_set_always_fatal(G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL);
 
-  sound_init();
+/*  
+   //Disabling sound until gstreamer init crash can be fixed.
+   sound_init();
+   */
 
   conf_client = awn_config_get_default_for_applet(AWN_APPLET(applet), NULL);
 

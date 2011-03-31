@@ -183,9 +183,12 @@ class VolumeControlApplet:
 
         volume_control_item = gtk.MenuItem(_("_Open Volume Control"))
         volume_control_item.connect("activate", self.show_volume_control_cb)
+        volume_control_item.show_all()
         menu.insert(volume_control_item, menu_index)
 
-        menu.insert(gtk.SeparatorMenuItem(), menu_index + 1)
+        separator_item = gtk.SeparatorMenuItem()
+        separator_item.show_all()
+        menu.insert(separator_item, menu_index + 1)
 
         preferences_vbox = self.applet.dialog.new("preferences").vbox
         prefs.get_object("dialog-vbox").reparent(preferences_vbox)

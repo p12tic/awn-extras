@@ -194,9 +194,12 @@ class YamaApplet:
 
         edit_menus_item = gtk.MenuItem(_("_Edit Menus"))
         edit_menus_item.connect("activate", self.show_menu_editor_cb)
+        edit_menus_item.show_all()
         menu.insert(edit_menus_item, menu_index)
 
-        menu.insert(gtk.SeparatorMenuItem(), menu_index + 1)
+        separator_item = gtk.SeparatorMenuItem()
+        separator_item.show_all()
+        menu.insert(separator_item, menu_index + 1)
 
     def show_menu_editor_cb(self, widget):
         for command in menu_editor_apps:

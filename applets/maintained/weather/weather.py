@@ -276,13 +276,17 @@ class WeatherApplet:
 
         self.map_item = gtk.MenuItem(_("Show _Map"))
         self.map_item.connect("activate", self.activate_map_cb)
+        self.map_item.show_all()
         menu.insert(self.map_item, menu_index)
 
         refresh_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_REFRESH)
         refresh_item.connect("activate", self.activate_refresh_cb, True)
+        refresh_item.show_all()
         menu.insert(refresh_item, menu_index + 1)
 
-        menu.insert(gtk.SeparatorMenuItem(), menu_index + 2)
+        separator_item = gtk.SeparatorMenuItem()
+        separator_item.show_all()
+        menu.insert(separator_item, menu_index + 2)
 
         prefs = gtk.Builder()
         prefs.add_from_file(ui_file)

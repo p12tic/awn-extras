@@ -135,6 +135,7 @@ class Dialogs:
             about_item.set_image(gtk.image_new_from_stock(gtk.STOCK_ABOUT, gtk.ICON_SIZE_MENU))
             self.menu.append(about_item)
             about_item.connect("activate", lambda w: self.toggle("about"))
+            about_item.show()
 
     def connect_signals(self, parent):
         def popup_menu_cb(widget, event):
@@ -175,8 +176,8 @@ class Dialogs:
             if self.__gtk_show_image_ok:
                 prefs_item.props.always_show_image = True
             self.menu.insert(prefs_item, position)
-            prefs_item.connect("activate", lambda w: self.toggle(
-               "preferences", "show"))
+            prefs_item.connect("activate", lambda w: self.toggle("preferences", "show"))
+            prefs_item.show()
         else:
             dlog = awn.Dialog(self.__parent)
 
@@ -280,7 +281,7 @@ class Dialogs:
                     self.__register[dialog].present()
 
     def show_menu(self, parent, event):
-        self.__register["menu"].show_all()
+        self.__register["menu"].show()
         parent.popup_gtk_menu(self.__register["menu"], event.button, event.time)
 
     def hide(self):
@@ -606,7 +607,7 @@ class Icons:
             assert isinstance(context_menu, gtk.Menu)
 
             def popup_menu_cb(widget, event, menu):
-                menu.show_all()
+                menu.show()
                 widget.popup_gtk_menu(menu, event.button, event.time)
             icon.connect("context-menu-popup", popup_menu_cb, context_menu)
 

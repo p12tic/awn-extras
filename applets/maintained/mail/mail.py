@@ -20,6 +20,7 @@ import os
 import re
 import subprocess
 import socket
+import urllib2
 
 import pygtk
 pygtk.require("2.0")
@@ -635,15 +636,22 @@ class Backends:
             return "https://mail.google.com/mail/"
 
         def update(self):
-            f = feedparser.parse(\
-                "https://%s:%s@mail.google.com/gmail/feed/atom" \
-                            % (self.data["username"], self.data['password']))
+            password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm()
+            password_mgr.add_password(None, 'https://mail.google.com', \
+                self.data["username"], self.data["password"])
 
-            if "bozo_exception" in f.keys():
+            auth = urllib2.HTTPBasicAuthHandler(password_mgr)
+            opener = urllib2.build_opener(auth)
+
+            try:
+                src = opener.open('https://mail.google.com/mail/feed/atom/unread')
+            except:
                 raise LoginError(_("There seem to be problems with our \
 connection to your account. Your best bet is probably \
 to log out and try again."))
-            # Hehe, Google is funny. Bozo exception
+
+            feed = src.read()
+            f = feedparser.parse(feed)
 
             t = []
             self.subjects = []

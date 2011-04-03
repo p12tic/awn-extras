@@ -88,7 +88,7 @@ def decode_header(message):
         return _("[No Subject]")
 
     decoded_message = ""
-    for split in re.split('(=\?.*=\?=)', message):
+    for split in re.split('(=\?.*?\?=)', message):
         text, charset = email.Header.decode_header(split)[0]
         if charset:
             split = text.decode(charset)

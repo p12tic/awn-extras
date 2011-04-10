@@ -116,7 +116,7 @@ class CommonFolderApplet:
         file = vfs.File.for_uri(uri)
 
         if file.is_native():
-            monitor = file.monitor()
+            monitor = gio.File(uri).monitor_file()
             self.__monitors.append(monitor)
             monitor.connect("changed", self.file_changed_cb)
 
@@ -175,7 +175,7 @@ class CommonFolderApplet:
                     gio_file.mount_enclosing_volume(gtk.MountOperation(), mount_result)
 
     def file_changed_cb(self, monitor, file, other_file, event):
-        if event in (vfs.FILE_MONITOR_EVENT_CREATED, vfs.FILE_MONITOR_EVENT_DELETED):
+        if event in (gio.FILE_MONITOR_EVENT_CREATED, gio.FILE_MONITOR_EVENT_DELETED):
             self.rebuild_icons()
 
 

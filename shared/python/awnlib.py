@@ -23,7 +23,7 @@ import pygtk
 pygtk.require("2.0")
 import gtk
 
-from desktopagnostic import config, Color
+from desktopagnostic import config, Color, vfs
 import awn
 from awn.extras import _, configbinder, __version__
 
@@ -593,18 +593,30 @@ class Icons:
 
         """
         icon = awn.ThemedIcon()
-        icon.set_info_simple(self.__parent.meta["short"], self.__parent.get_uid(), icon_name)
         icon.set_tooltip_text(tooltip_text)
         icon.set_size(self.__parent.get_size())
+        if isinstance(icon_name, vfs.File):
+            icon_pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(icon_name.props.path, -1, self.__parent.get_size())
+            icon.set_from_pixbuf(icon_pixbuf)
+            # TODO make sure icon gets refreshed when doing update_size() (see above)
+        else:
+            icon.set_info_simple(self.__parent.meta["short"], self.__parent.get_uid(), icon_name)
 
         # Callback context menu
         if context_menu is None:
+            # TODO make sure item will not be added more than once
+            item = icon.create_remove_custom_icon_item()
+            self.__parent.dialog.menu.insert(item, 1)
 
             def popup_menu_cb(widget, event):
                 self.__parent.dialog.show_menu(widget, event)
             icon.connect("context-menu-popup", popup_menu_cb)
         else:
             assert isinstance(context_menu, gtk.Menu)
+
+            # TODO make sure item will not be added more than once
+            item = icon.create_remove_custom_icon_item()
+            context_menu.insert(item, 1)
 
             def popup_menu_cb(widget, event, menu):
                 menu.show()

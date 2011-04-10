@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright (C) 2010  onox <denkpadje@gmail.com>
+# Copyright (C) 2010 - 2011  onox <denkpadje@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -123,8 +123,17 @@ class CommonFolderApplet:
             if not file.exists():
                 return
 
-            existing_icons = filter(self.icon_theme.has_icon, file.get_icon_names())
-            icon = existing_icons[0] if len(existing_icons) > 0 else "image-missing"
+            icon = None
+
+            # Use a custom icon if it has been set
+            info = gio.File(uri).query_info("metadata::custom-icon", gio.FILE_QUERY_INFO_NONE)
+            custom_icon_uri = info.get_attribute_string("metadata::custom-icon")
+            if custom_icon_uri is not None:
+                icon = vfs.File.for_uri(custom_icon_uri)
+
+            if icon is None or not icon.exists():
+                existing_icons = filter(self.icon_theme.has_icon, file.get_icon_names())
+                icon = existing_icons[0] if len(existing_icons) > 0 else "image-missing"
         else:
             icon = "folder-remote"
 
@@ -177,6 +186,6 @@ if __name__ == "__main__":
         "description": applet_description,
         "theme": applet_logo,
         "author": "onox",
-        "copyright-year": 2010,
+        "copyright-year": "2010 - 2011",
         "authors": ["onox <denkpadje@gmail.com>"]},
         ["multiple-icons"])

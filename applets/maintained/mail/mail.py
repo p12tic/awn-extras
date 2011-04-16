@@ -87,10 +87,15 @@ def decode_header(message):
 
     if message is None or len(message) == 0:
         return _("[No Subject]")
-    text, charset = email.Header.decode_header(message)[0]
-    if charset:
-        message = text.decode(charset)
-    return message
+
+    decoded_message = ""
+    for split in re.split('(=\?.*?\?=)', message):
+        text, charset = email.Header.decode_header(split)[0]
+        if charset:
+            split = text.decode(charset)
+        decoded_message += split
+
+    return decoded_message
 
 
 class LoginError(Exception):
@@ -664,7 +669,7 @@ class Backends:
             opener = urllib2.build_opener(auth)
 
             try:
-                src = opener.open("https://mail.google.com/gmail/feed/atom")
+                src = opener.open("https://mail.google.com/gmail/feed/atom/unread")
             except IOError, e:
                 raise LoginError(_("There seem to be problems with our \
 connection to your account. Your best bet is probably \
@@ -933,38 +938,27 @@ to log out and try again."))
                 emails = []
                 for msg in messagesInfo:
                     msgNum = int(msg.split(" ")[0])
-                    msgSize = int(msg.split(" ")[1])
-                    if msgSize < 10000:
-                        try:
-                            message = self.server.retr(msgNum)[1]
-                        except poplib.error_proto, err:
-                            # Probably not so serious errors
-                            print("Mail Applet: POP protocol error: %s" % err)
-                            continue
-                        message = "\n".join(message)
-                        emails.append(message)
+                    try:
+                        message = self.server.top(msgNum, 0)[1]
+                    except poplib.error_proto, err:
+                        print("Mail Applet: POP protocol error: %s" % err)
+                        continue
+                    message = "\n".join(message)
+                    emails.append(message)
 
-                #t = []
                 self.subjects = []
                 for i in emails:
                     msg = email.message_from_string(i)
-
-                    #t.append(MailItem(i.title, i.author))
-                    # TODO: Actually do something with t
-                    # TODO: Implement body previews
-
                     if "subject" in msg:
                         subject = decode_header(msg["subject"])
                     else:
                         subject = _("[No Subject]")
-
                     self.subjects.append(subject)
 
                 # Quit
                 try:
                     self.server.quit()
                 except poplib.error_proto, err:
-                    # Probably not so serious errors
                     print("Mail Applet: POP protocol error: %s" % err)
 
             @classmethod
@@ -1018,6 +1012,10 @@ to log out and try again."))
             def __init__(self, data):
                 self.data = data
                 check_login_data(self, self.data)
+
+            def update(self):
+                # Login on each update
+                # otherwise it won't work after suspend
                 args = self.data["url"].split(":")
 
                 try:
@@ -1033,6 +1031,7 @@ to log out and try again."))
                 except imaplib.IMAP4.error:
                     raise LoginError(_("Could not log in"))
 
+                # Select mailbox(es) and get subjects
                 mboxs = [i.split(")")[1].split(" ", 2)[2].strip('"') for i in self.server.list()[1]]
                 self.box = self.data["folder"]
 
@@ -1040,19 +1039,17 @@ to log out and try again."))
                     raise LoginError(_("Folder does not exst"))
 
                 if self.box != "":
-                    self.server.select(self.box)
-
-            def update(self):
+                    # select mailbox with "read only" flag
+                    self.server.select(self.box, True)
                 self.subjects = []
 
                 def get_subject(emails):
                     for i in emails:
                         s = self.server.fetch(i, '(BODY[HEADER.FIELDS (SUBJECT)])')[1][0]
-                        if self.data['url'] == "imap.gmail.com":  # GMail sets mails unread
-                            self.server.store(i, '-FLAGS', '\\Seen')
                         if s is not None:
                             subject = s[1][9:].replace("\r\n", "\n").replace("\n", "")  # Don't ask
                             self.subjects.append(decode_header(subject))
+                    self.server.close()  # Close current mailbox
 
                 if self.box != "":
                     emails = [i for i in self.server.search(None, "(UNSEEN)")[1][0].split(" ") if i != ""]
@@ -1063,7 +1060,8 @@ to log out and try again."))
                     mboxs = [i for i in mboxs if i not in ("Sent", "Trash") and i[1:8] != "[Gmail]"]
 
                     for b in mboxs:
-                        r, d = self.server.select(b)
+                        # select mailbox with "read only" flag
+                        r, d = self.server.select(b, True)
 
                         if r == "NO":
                             continue
@@ -1073,6 +1071,9 @@ to log out and try again."))
                         emails = []
                         emails.extend(i for i in p if i != "")
                         get_subject(emails)
+
+                # Finally quit
+                self.server.logout()
 
             @classmethod
             def drawLoginWindow(cls, *groups):

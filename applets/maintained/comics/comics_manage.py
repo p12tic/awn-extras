@@ -94,12 +94,6 @@ class ComicsManager:
         self.ui.get_object('name_col').set_title(_('Comic'))
 
         self.load_feeds()
-        x, y = self.comics_list.size_request()
-        if x > 475:
-            x = 475
-        if y > 400:
-            y = 400
-        self.manage_window.set_default_size(x + 25, y + 100)
 
     ########################################################################
     # Event hooks                                                          #

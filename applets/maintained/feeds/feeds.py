@@ -167,7 +167,7 @@ class App(awn.AppletSimple):
         self.client = awn.config_get_default_for_applet(self)
 
         #Connect to signals
-        self.connect('button-release-event', self.button_release)
+        self.connect('button-press-event', self.button_press)
         self.dialog.props.hide_on_unfocus = True
 
         self.get_urls()
@@ -1008,8 +1008,8 @@ class App(awn.AppletSimple):
         if len(self.feeds) == 1:
           self.do_timer()
 
-    #When a button is released on the applet
-    def button_release(self, widget, event):
+    #When a button is pressed on the applet
+    def button_press(self, widget, event):
         if event.button == 1:
             if self.dialog.flags() & gtk.VISIBLE:
                 self.dialog.hide()

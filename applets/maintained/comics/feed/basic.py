@@ -49,30 +49,18 @@ class Feed(gobject.GObject):
     DOWNLOAD_NOT_FEED = -2
 
     # Convenient regular expressions
-    IMG_RE = re.compile('(<img .*?>)', re.IGNORECASE)
-    IMG_SRC_RE = re.compile('<img .*?src=["\'](.*?)["\'].*?>', re.IGNORECASE)
+    IMG_RE = re.compile('(<img[\n ].*?>)', re.IGNORECASE)
+    IMG_SRC_RE = re.compile('<img[\n ].*?src=["\'](.*?)["\'].*?>', re.IGNORECASE)
 
     __gsignals__ = {
         'updated': (gobject.SIGNAL_RUN_FIRST, None, (int,)),
         }
 
-    def make_absolute_url(self, url, from_doc):
+    def make_absolute_url(self, url, base):
         """Convert a relative URL to an absolute one."""
         if url is None or len(url) == 0:
             return None
-        parsed = (urlparse.urlparse(url), urlparse.urlparse(from_doc))
-        if len(parsed[0][1]) > 0:
-            return url
-        elif parsed[0][2][0] == '/':
-            return parsed[1][0] + '://' + parsed[1][1] + parsed[0][2]
-        else:
-            # TODO this didn't work for some (or all?) urls,
-            # like http://www.gwscomic.com - test more thoroughly whether
-            # there should be an elif for that
-            #return parsed[1][0] + '://' + parsed[1][1] \
-            #    + parsed[1][2].rsplit('/', 1)[0] + parsed[0][2]
-            return parsed[1][0] + '://' + parsed[1][1] \
-                + '/' + parsed[0][2]
+        return urlparse.urljoin(base, url)
 
     def get_timestamp_for_url(self, url):
         """Request the "Last-Modified" header from url without downloading
@@ -91,6 +79,8 @@ class Feed(gobject.GObject):
             res = conn.getresponse()
             htime = res.getheader("Last-Modified")
         except Exception:
+            return None
+        if htime is None:
             return None
 
         # Based on a posting by Philip Semanchuk, Nov 2009 on

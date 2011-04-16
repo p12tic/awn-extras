@@ -94,12 +94,6 @@ class ComicsManager:
         self.ui.get_object('name_col').set_title(_('Comic'))
 
         self.load_feeds()
-        x, y = self.comics_list.size_request()
-        if x > 475:
-            x = 475
-        if y > 400:
-            y = 400
-        self.manage_window.set_default_size(x + 25, y + 100)
 
     ########################################################################
     # Event hooks                                                          #
@@ -125,16 +119,16 @@ class ComicsManager:
                 self.on_adder_destroy)
 
     def on_remove_button_clicked(self, widget):
-        model, path = self.comics_list.get_selection().get_selected_rows()
+        model, paths = self.comics_list.get_selection().get_selected_rows()
         msg = ngettext(
             "Are you sure you want to remove the comic \"%(name)s\"?",
             "Are you sure you want to remove the %(number)d selected comics?",
-            len(path)) % {'number': len(path),
-            'name': self.model.get_value(self.model.get_iter(path[0]), 1)}
+            len(paths)) % {'number': len(paths),
+            'name': self.model.get_value(self.model.get_iter(paths[0]), 1)}
         sec = ngettext(
             "This will remove the comic from your personal comics list.",
             "This will remove these comics from your personal comics list.",
-            len(path))
+            len(paths))
 
         dialog = gtk.MessageDialog(parent=self.manage_window,
                                    flags=gtk.DIALOG_DESTROY_WITH_PARENT,
@@ -149,9 +143,11 @@ class ComicsManager:
         if response != gtk.RESPONSE_OK:
             return
 
-        def remove(model, path, iterator):
-            feed_name = model.get_value(iterator, 1)
-            filename = model.get_value(iterator, 2)
+        # Need to delete from end, if not paths change during removal
+        paths.reverse()
+        for path in paths:
+            feed_name = model.get_value(model.get_iter(path), 1)
+            filename = model.get_value(model.get_iter(path), 2)
             self.__parent.toggle_feed(feed_name, False)
             try:
                 self.feeds.remove_feed(feed_name)
@@ -168,7 +164,6 @@ class ComicsManager:
                 dialog.destroy()
                 return
 
-        self.comics_list.get_selection().selected_foreach(remove)
         self.load_feeds()
 
     def on_close_button_clicked(self, widget):

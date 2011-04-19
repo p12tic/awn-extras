@@ -51,7 +51,7 @@ class NvSensor(Sensor):
 
         line = nv_output[self.id]
         nv_sensor = regexc.match(line)
-        if nv_sensor:
+        if nv_sensor and len(nv_sensor.group("value")) > 0:
             self.value = float(nv_sensor.group("value"))
         else:
             self.value = -273
@@ -78,6 +78,7 @@ def get_sensors(timeout=1):
 nvidia_path = '/usr/bin/nvidia-settings'
 nvidia_cmd = '/usr/bin/nvidia-settings -q GPUCoreTemp'
 ##nvcmd = nvidia_path + " -q [gpu:" + str(i) + "]/GPUCoreTemp"
+
 
 def get_nvidia_output():
     if os.path.exists(nvidia_path):

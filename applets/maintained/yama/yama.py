@@ -57,6 +57,9 @@ url_pattern = re.compile("^[a-z]+://(?:[^@]+@)?([^/]+)/(.*)$")
 # Delay in seconds before starting rebuilding the menu
 menu_rebuild_delay = 2
 
+# Size of icon in menu items
+item_icon_size = 24
+
 gtk_show_image_ok = awnlib.is_required_version(gtk.gtk_version, (2, 16, 0))
 pygio_emblemed_icon_ok = awnlib.is_required_version(gio.pygio_version, (2, 17, 0))
 pyglib_ok = awnlib.is_required_version(glib.pyglib_version, (2, 18, 0))
@@ -583,7 +586,7 @@ class YamaApplet:
         if os.path.isabs(icon_value):
             if os.path.isfile(icon_value):
                 try:
-                    return gtk.gdk.pixbuf_new_from_file_at_size(icon_value, 24, 24)
+                    return gtk.gdk.pixbuf_new_from_file_at_size(icon_value, item_icon_size, item_icon_size)
                 except glib.GError:
                     return None
             icon_name = os.path.basename(icon_value)
@@ -594,13 +597,13 @@ class YamaApplet:
             icon_name = icon_name[:-4]
         try:
             self.icon_theme.handler_block_by_func(self.theme_changed_cb)
-            return self.icon_theme.load_icon(icon_name, 24, gtk.ICON_LOOKUP_FORCE_SIZE)
+            return self.icon_theme.load_icon(icon_name, item_icon_size, gtk.ICON_LOOKUP_FORCE_SIZE)
         except:
             for dir in xdg_data_dirs:
                 for i in ("pixmaps", "icons"):
                     path = os.path.join(dir, i, icon_value)
                     if os.path.isfile(path):
-                        return gtk.gdk.pixbuf_new_from_file_at_size(path, 24, 24)
+                        return gtk.gdk.pixbuf_new_from_file_at_size(path, item_icon_size, item_icon_size)
         finally:
             self.icon_theme.handler_unblock_by_func(self.theme_changed_cb)
 

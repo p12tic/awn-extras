@@ -524,16 +524,29 @@ class YamaApplet:
 
     def append_directory(self, tree, menu, index=None, item_list=None):
         for node in tree.contents:
-            if not isinstance(node, gmenu.Entry) and not isinstance(node, gmenu.Directory):
-                continue
-            # Don't set comment yet because we don't want it for submenu's
-            item = self.create_menu_item(node.name, node.icon, None)
+            is_entry = isinstance(node, gmenu.Entry)
+            is_separator = isinstance(node, gmenu.Separator)
+            is_directory = isinstance(node, gmenu.Directory)
 
-            menu.append(item) if index is None else menu.insert(item, index)
+            if not is_entry and not is_directory and not is_separator:
+                continue
+
+            if is_separator:
+                item = gtk.SeparatorMenuItem()
+            else:
+                # Don't set comment yet because we don't want it for submenu's
+                item = self.create_menu_item(node.name, node.icon, None)
+
+            if index is None:
+                menu.append(item)
+            else:
+                menu.insert(item, index)
+                index += 1
+
             if item_list is not None:
                 item_list.append(item)
 
-            if isinstance(node, gmenu.Entry):
+            if is_entry:
                 item.set_tooltip_text(node.comment)
                 item.connect("activate", self.launch_app, node.desktop_file_path)
 
@@ -542,12 +555,10 @@ class YamaApplet:
                 if node.icon is not None:
                     item.drag_source_set_icon_name(node.icon)
                 item.connect("drag-data-get", self.drag_item_cb, node.desktop_file_path)
-            else:
+            elif is_directory:
                 sub_menu = gtk.Menu()
                 item.set_submenu(sub_menu)
                 self.append_directory(node, sub_menu)
-            if index is not None:
-                index += 1
 
     def drag_item_cb(self, widget, context, selection_data, info, time, path):
         selection_data.set_uris(["file://" + path])

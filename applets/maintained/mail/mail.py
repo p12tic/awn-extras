@@ -1038,22 +1038,27 @@ to log out and try again."))
                 if self.box not in mboxs and self.box != "":
                     raise LoginError(_("Folder does not exst"))
 
-                if self.box != "":
-                    # select mailbox with "read only" flag
-                    self.server.select(self.box, True)
                 self.subjects = []
 
-                def get_subject(emails):
+                def get_subjects():
+                    ''' Get all unseen subjects of current mailbox'''
+                    emails = self.server.search(None, "(UNSEEN)")[1][0]  # None: any charset
+                    if emails is None:
+                        self.server.close()
+                        return
+
+                    emails = [i for i in emails.split(" ") if i != ""]
                     for i in emails:
                         s = self.server.fetch(i, '(BODY[HEADER.FIELDS (SUBJECT)])')[1][0]
                         if s is not None:
-                            subject = s[1][9:].replace("\r\n", "\n").replace("\n", "")  # Don't ask
+                            subject = s[1][9:].replace("\r\n", "\n").replace("\n", "")
                             self.subjects.append(decode_header(subject))
                     self.server.close()  # Close current mailbox
 
                 if self.box != "":
-                    emails = [i for i in self.server.search(None, "(UNSEEN)")[1][0].split(" ") if i != ""]
-                    get_subject(emails)
+                    # select mailbox with "read only" flag
+                    self.server.select(self.box, True)
+                    get_subjects()
 
                 else:
                     mboxs = [re.search("(\W*) (\W*) (.*)", i).groups()[2] for i in self.server.list()[1]]
@@ -1061,16 +1066,12 @@ to log out and try again."))
 
                     for b in mboxs:
                         # select mailbox with "read only" flag
-                        r, d = self.server.select(b, True)
+                        response, data = self.server.select(b, True)
 
-                        if r == "NO":
+                        if response == "NO":
                             continue
 
-                        p = self.server.search("UTF8", "(UNSEEN)")[1][0].split(" ")
-
-                        emails = []
-                        emails.extend(i for i in p if i != "")
-                        get_subject(emails)
+                        get_subjects()
 
                 # Finally quit
                 self.server.logout()

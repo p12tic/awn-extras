@@ -519,8 +519,7 @@ _get_recent_menu (GtkWidget * menu)
                                                          &count,
                                                          &time_))
         {
-          gchar * exec = g_strdup_printf ("%s %s",app_exec,
-                                          gtk_recent_info_get_uri (iter->data));
+          gchar * exec = g_strdup (app_exec);
           g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(_exec), exec);
           g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify) g_free,exec);          
         }

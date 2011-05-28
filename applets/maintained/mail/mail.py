@@ -93,6 +93,8 @@ def decode_header(message):
         text, charset = email.Header.decode_header(split)[0]
         if charset:
             split = text.decode(charset)
+        elif split == "\n " or split == " ":  # separators
+            continue
         decoded_message += split
 
     return decoded_message

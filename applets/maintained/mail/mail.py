@@ -494,6 +494,7 @@ class MainDialog:
 
                 label = gtk.Label(mail.subjects[i])
                 label.set_use_markup(True)
+                label.set_alignment(0.0, 0.5)
                 self.__email_list.attach(label, 1, 2, i, i + 1)
         else:
             self.__dialog.set_title(_("No unread messages"))

@@ -67,9 +67,6 @@ mixer_names = ("pulsemixer", "oss4mixer", "alsamixer")
 no_mixer_message = _("Install the appropriate plug-ins for one or more of the following GStreamer elements: %s.")
 no_devices_message = _("Could not find any devices.")
 
-gtk_add_mark_ok = awnlib.is_required_version(gtk.gtk_version, (2, 16, 0)) \
-    and awnlib.is_required_version(gtk.pygtk_version, (2, 15, 0))
-
 
 class BackendError(Exception):
     pass
@@ -119,8 +116,7 @@ class VolumeControlApplet:
         self.volume_scale = prefs.get_object("hscale-volume")
         self.volume_scale.props.can_focus = False
 
-        if gtk_add_mark_ok:
-            self.volume_scale.add_mark(100, gtk.POS_BOTTOM, "<small>%s</small>" % "100%")
+        self.volume_scale.add_mark(100, gtk.POS_BOTTOM, "<small>%s</small>" % "100%")
 
         self.volume_label = prefs.get_object("label-volume")
         self.mute_item = prefs.get_object("checkbutton-mute")

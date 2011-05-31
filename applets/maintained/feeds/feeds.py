@@ -1039,8 +1039,7 @@ class App(awn.AppletSimple):
             sep = gtk.SeparatorMenuItem()
             prefs_item = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
             about = gtk.ImageMenuItem(_("_About %s") % _("Feeds Applet"))
-            if awnlib.is_required_version(gtk.gtk_version, (2, 16, 0)):
-                about.props.always_show_image = True
+            about.props.always_show_image = True
             about.set_image(gtk.image_new_from_stock(gtk.STOCK_ABOUT, gtk.ICON_SIZE_MENU))
 
             #Add icon for "Add Feed"

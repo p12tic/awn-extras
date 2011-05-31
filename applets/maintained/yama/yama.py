@@ -41,9 +41,7 @@ import gio
 import glib
 import gmenu
 
-xdg_data_dirs = [os.path.expanduser("~/.local/share")]
-if "XDG_DATA_DIRS" in os.environ:
-    xdg_data_dirs += os.environ["XDG_DATA_DIRS"].split(":")
+xdg_data_dirs = [glib.get_user_data_dir()] + list(glib.get_system_data_dirs())
 
 applet_name = _("YAMA")
 applet_description = _("Main menu with places and recent documents")
@@ -61,10 +59,6 @@ menu_rebuild_delay = 2
 
 # Size of icon in menu items
 item_icon_size = 24
-
-gtk_show_image_ok = awnlib.is_required_version(gtk.gtk_version, (2, 16, 0))
-pygio_emblemed_icon_ok = awnlib.is_required_version(gio.pygio_version, (2, 17, 0))
-pyglib_ok = awnlib.is_required_version(glib.pyglib_version, (2, 18, 0))
 
 
 class YamaApplet:
@@ -275,13 +269,12 @@ class YamaApplet:
         home_item = self.append_menu_item(menu, _("Home Folder"), "user-home", _("Open your personal folder"))
         home_item.connect("activate", self.open_folder_cb, "file://%s" % user_path)
 
-        if pyglib_ok:
-            # Add Desktop
-            desktop_path = glib.get_user_special_dir(glib.USER_DIRECTORY_DESKTOP)
-            if desktop_path != user_path:
-                label = glib.filename_display_basename(desktop_path)
-                desktop_item = self.append_menu_item(menu, label, "user-desktop", _("Open the contents of your desktop in a folder"))
-                desktop_item.connect("activate", self.open_folder_cb, "file://%s" % desktop_path)
+        # Add Desktop
+        desktop_path = glib.get_user_special_dir(glib.USER_DIRECTORY_DESKTOP)
+        if desktop_path != user_path:
+            label = glib.filename_display_basename(desktop_path)
+            desktop_item = self.append_menu_item(menu, label, "user-desktop", _("Open the contents of your desktop in a folder"))
+            desktop_item.connect("activate", self.open_folder_cb, "file://%s" % desktop_path)
 
         """ Bookmarks """
         self.places_menu = menu
@@ -427,7 +420,7 @@ class YamaApplet:
             self.places_menu.show_all()
 
     def get_icon_name(self, icon):
-        if pygio_emblemed_icon_ok and isinstance(icon, gio.EmblemedIcon):
+        if isinstance(icon, gio.EmblemedIcon):
             icon = icon.get_icon()
 
         if isinstance(icon, gio.ThemedIcon):
@@ -500,8 +493,7 @@ class YamaApplet:
 
     def create_menu_item(self, label, icon_name, comment):
         item = gtk.ImageMenuItem(label)
-        if gtk_show_image_ok:
-            item.props.always_show_image = True
+        item.props.always_show_image = True
         icon_pixbuf = self.get_pixbuf_icon(icon_name)
         item.set_image(gtk.image_new_from_pixbuf(icon_pixbuf))
         if comment is not None:

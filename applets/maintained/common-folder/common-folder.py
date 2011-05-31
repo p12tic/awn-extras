@@ -41,20 +41,15 @@ url_pattern = re.compile("^[a-z]+://(?:[^@]+@)?([^/]+)/(.*)$")
 user_path = os.path.expanduser("~/")
 bookmarks_file = os.path.expanduser("~/.gtk-bookmarks")
 
-pyglib_ok = awnlib.is_required_version(glib.pyglib_version, (2, 18, 0))
-
-if pyglib_ok:
-    # Ordered sequence of XDG user special folders
-    user_dirs = [glib.USER_DIRECTORY_DOCUMENTS,
-                 glib.USER_DIRECTORY_MUSIC,
-                 glib.USER_DIRECTORY_PICTURES,
-                 glib.USER_DIRECTORY_VIDEOS,
-                 glib.USER_DIRECTORY_DOWNLOAD,
-                 glib.USER_DIRECTORY_PUBLIC_SHARE,
-                 glib.USER_DIRECTORY_TEMPLATES]
-    xdg_user_uris = ["file://%s" % glib.get_user_special_dir(dir) for dir in user_dirs]
-else:
-    xdg_user_uris = []
+# Ordered sequence of XDG user special folders
+user_dirs = [glib.USER_DIRECTORY_DOCUMENTS,
+             glib.USER_DIRECTORY_MUSIC,
+             glib.USER_DIRECTORY_PICTURES,
+             glib.USER_DIRECTORY_VIDEOS,
+             glib.USER_DIRECTORY_DOWNLOAD,
+             glib.USER_DIRECTORY_PUBLIC_SHARE,
+             glib.USER_DIRECTORY_TEMPLATES]
+xdg_user_uris = ["file://%s" % glib.get_user_special_dir(dir) for dir in user_dirs]
 
 
 class CommonFolderApplet:
@@ -92,11 +87,10 @@ class CommonFolderApplet:
 
         self.add_folder_icon(_("Home Folder"), "user-home", "file://%s" % user_path)
 
-        if pyglib_ok:
-            # Add Desktop
-            desktop_path = glib.get_user_special_dir(glib.USER_DIRECTORY_DESKTOP)
-            if desktop_path != user_path:
-                self.add_folder_icon(glib.filename_display_basename(desktop_path), "user-desktop", "file://%s" % desktop_path)
+        # Add Desktop
+        desktop_path = glib.get_user_special_dir(glib.USER_DIRECTORY_DESKTOP)
+        if desktop_path != user_path:
+            self.add_folder_icon(glib.filename_display_basename(desktop_path), "user-desktop", "file://%s" % desktop_path)
 
         # Add XDG user special folders
         for uri in xdg_user_uris:

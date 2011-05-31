@@ -106,8 +106,6 @@ class Dialogs:
 
     __special_dialogs = ("menu", "about", "preferences")
 
-    __gtk_show_image_ok = is_required_version(gtk.gtk_version, (2, 16, 0))
-
     def __init__(self, parent):
         """Create an instance of Dialogs. Creates a context menu,
         and an About dialog, which is added to the menu.
@@ -130,8 +128,7 @@ class Dialogs:
             about_dialog = self.new("about")
 
             about_item = gtk.ImageMenuItem(_("_About %s") % self.__parent.meta["name"])
-            if self.__gtk_show_image_ok:
-                about_item.props.always_show_image = True
+            about_item.props.always_show_image = True
             about_item.set_image(gtk.image_new_from_stock(gtk.STOCK_ABOUT, gtk.ICON_SIZE_MENU))
             self.menu.append(about_item)
             about_item.connect("activate", lambda w: self.toggle("about"))
@@ -173,8 +170,7 @@ class Dialogs:
                 position = position - 1
 
             prefs_item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
-            if self.__gtk_show_image_ok:
-                prefs_item.props.always_show_image = True
+            prefs_item.props.always_show_image = True
             self.menu.insert(prefs_item, position)
             prefs_item.connect("activate", lambda w: self.toggle("preferences", "show"))
             prefs_item.show()

@@ -177,8 +177,7 @@ class ComicApplet(awn.AppletSimple):
         manage_item.connect("activate", self.on_manage_comics_activated)
         menu.append(manage_item)
         about_item = gtk.ImageMenuItem(_("_About %s") % applet_display_name)
-        if awnlib.is_required_version(gtk.gtk_version, (2, 16, 0)):
-            about_item.props.always_show_image = True
+        about_item.props.always_show_image = True
         about_item.set_image(gtk.image_new_from_stock(gtk.STOCK_ABOUT,
                                                       gtk.ICON_SIZE_MENU))
         menu.append(about_item)

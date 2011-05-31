@@ -41,7 +41,9 @@ import gio
 import glib
 import gmenu
 
-xdg_data_dirs = [os.path.expanduser("~/.local/share")] + os.environ["XDG_DATA_DIRS"].split(":")
+xdg_data_dirs = [os.path.expanduser("~/.local/share")]
+if "XDG_DATA_DIRS" in os.environ:
+    xdg_data_dirs += os.environ["XDG_DATA_DIRS"].split(":")
 
 applet_name = _("YAMA")
 applet_description = _("Main menu with places and recent documents")

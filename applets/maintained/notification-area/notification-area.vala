@@ -25,7 +25,6 @@ using DesktopAgnostic;
 
 // our local "libraries"
 using EggTray;
-using NotificationAreaPrefs;
 
 static bool gpm_workaround_done = false;
 

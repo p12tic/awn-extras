@@ -41,7 +41,13 @@ import gio
 import glib
 import gmenu
 
-xdg_data_dirs = [glib.get_user_data_dir()] + list(glib.get_system_data_dirs())
+# TODO Remove the check and the else as soon as Ubuntu Moaning Monkey is not supported anymore
+if awnlib.is_required_version(glib.pyglib_version, (2, 26, 0)):
+    xdg_data_dirs = [glib.get_user_data_dir()] + list(glib.get_system_data_dirs())
+else:
+    xdg_data_dirs = [os.path.expanduser("~/.local/share")]
+    if "XDG_DATA_DIRS" in os.environ:
+        xdg_data_dirs += os.environ["XDG_DATA_DIRS"].split(":")
 
 applet_name = _("YAMA")
 applet_description = _("Main menu with places and recent documents")

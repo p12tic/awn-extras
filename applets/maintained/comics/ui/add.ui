@@ -145,7 +145,7 @@
 
 Comics from feeds contain several strips. You may find suitable feeds on dedicated comics websites like &lt;a href="http://www.gocomics.com/features/rsspage"&gt;gocomics.com&lt;/a&gt;.
 
-Using a web page only the current comic is shown. You'll find suitable web pages e.g. at &lt;a href="http://www.comics.com/"&gt;comics.com&lt;/a&gt; or searching the web for "comics" or "webcomics".</property>
+Using a web page only the current comic is shown. You may find web pages searching the web for "comics" or "webcomics".</property>
                 <property name="use_markup">True</property>
                 <property name="wrap">True</property>
               </object>

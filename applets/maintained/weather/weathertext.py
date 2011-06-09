@@ -178,6 +178,9 @@ forecast = [
     # Please keep translation short, approx. 12 characters
     # T-Showers = Thunder Showers
     N_("T-Showers"),
+    # Please keep translation short, approx. 12 characters
+    # T-Storms = Thunderstorms
+    N_("T-Storms"),
 ]
 
 days = [

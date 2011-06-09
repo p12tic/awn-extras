@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-24 09:20+0100\n"
+"POT-Creation-Date: 2011-06-09 20:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -840,15 +840,15 @@ msgstr ""
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:8
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
 #: ../applets/maintained/weather/weather.py:59
-#: ../applets/maintained/weather/weather.py:562
-#: ../applets/maintained/weather/weather.py:567
+#: ../applets/maintained/weather/weather.py:572
+#: ../applets/maintained/weather/weather.py:577
 msgid "Celsius"
 msgstr ""
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:9
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
 #: ../applets/maintained/weather/weather.py:59
-#: ../applets/maintained/weather/weather.py:560
+#: ../applets/maintained/weather/weather.py:570
 msgid "Fahrenheit"
 msgstr ""
 
@@ -938,14 +938,14 @@ msgstr ""
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1056
 #: ../applets/maintained/file-browser-launcher/prefs.py:252
 #: ../applets/maintained/places/places.desktop.in.in.h:2
-#: ../applets/maintained/yama/yama.py:260
+#: ../applets/maintained/yama/yama.py:268
 msgid "Places"
 msgstr ""
 
 #: ../applets/maintained/cairo-menu/cairo-aux-icon.c:202
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1079
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1094
-#: ../applets/maintained/yama/yama.py:342
+#: ../applets/maintained/yama/yama.py:349
 msgid "Recent Documents"
 msgstr ""
 
@@ -986,7 +986,7 @@ msgstr ""
 #: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:46
 #: ../applets/maintained/quit/quit.py:57
 #: ../applets/maintained/quit/quit.py:265
-#: ../applets/maintained/yama/yama.py:163
+#: ../applets/maintained/yama/yama.py:168
 msgid "Lock Screen"
 msgstr ""
 
@@ -1057,13 +1057,13 @@ msgid "Launch…"
 msgstr ""
 
 #: ../applets/maintained/cairo-menu/misc.c:161
-#: ../applets/maintained/yama/yama.py:617
+#: ../applets/maintained/yama/yama.py:634
 #, c-format, python-format
 msgid "Unable to mount %s"
 msgstr ""
 
 #: ../applets/maintained/cairo-menu/misc.c:407
-#: ../applets/maintained/yama/yama.py:596
+#: ../applets/maintained/yama/yama.py:613
 msgid "Clear the Recent Documents list?"
 msgstr ""
 
@@ -1077,9 +1077,9 @@ msgid ""
 msgstr ""
 
 #: ../applets/maintained/cairo-menu/misc.c:423
-#: ../applets/maintained/cairo-menu/misc.c:532
-#: ../applets/maintained/yama/yama.py:356
-#: ../applets/maintained/yama/yama.py:601
+#: ../applets/maintained/cairo-menu/misc.c:531
+#: ../applets/maintained/yama/yama.py:363
+#: ../applets/maintained/yama/yama.py:618
 msgid "Clear Recent Documents"
 msgstr ""
 
@@ -1338,25 +1338,25 @@ msgstr ""
 msgid "Comic"
 msgstr ""
 
-#: ../applets/maintained/comics/comics_manage.py:130
+#: ../applets/maintained/comics/comics_manage.py:124
 #, python-format
 msgid "Are you sure you want to remove the comic \"%(name)s\"?"
 msgid_plural "Are you sure you want to remove the %(number)d selected comics?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../applets/maintained/comics/comics_manage.py:135
+#: ../applets/maintained/comics/comics_manage.py:129
 msgid "This will remove the comic from your personal comics list."
 msgid_plural "This will remove these comics from your personal comics list."
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../applets/maintained/comics/comics_manage.py:160
+#: ../applets/maintained/comics/comics_manage.py:156
 #, python-format
 msgid "Failed to remove '%s'."
 msgstr ""
 
-#: ../applets/maintained/comics/comics_manage.py:166
+#: ../applets/maintained/comics/comics_manage.py:162
 #: ../applets/maintained/feeds/feeds.py:391
 msgid "Error"
 msgstr ""
@@ -1366,12 +1366,12 @@ msgid "My Comics"
 msgstr ""
 
 #: ../applets/maintained/comics/comics.py:179
-#: ../applets/maintained/feeds/feeds.py:1041 ../shared/python/awnlib.py:132
+#: ../applets/maintained/feeds/feeds.py:1041 ../shared/python/awnlib.py:130
 #, python-format
 msgid "_About %s"
 msgstr ""
 
-#: ../applets/maintained/comics/comics.py:238
+#: ../applets/maintained/comics/comics.py:237
 #: ../applets/maintained/comics/main.py:192
 #, python-format
 msgid "There is a new strip of %s!"
@@ -1416,9 +1416,8 @@ msgid ""
 "dedicated comics websites like <a href=\"http://www.gocomics.com/features/"
 "rsspage\">gocomics.com</a>.\n"
 "\n"
-"Using a web page only the current comic is shown. You'll find suitable web "
-"pages e.g. at <a href=\"http://www.comics.com/\">comics.com</a> or searching "
-"the web for \"comics\" or \"webcomics\"."
+"Using a web page only the current comic is shown. You may find web pages "
+"searching the web for \"comics\" or \"webcomics\"."
 msgstr ""
 
 #: ../applets/maintained/comics/ui/add.ui.h:8
@@ -1483,9 +1482,9 @@ msgstr ""
 msgid "Applet to launch common folders and bookmarks"
 msgstr ""
 
-#: ../applets/maintained/common-folder/common-folder.py:93
+#: ../applets/maintained/common-folder/common-folder.py:88
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:388
-#: ../applets/maintained/yama/yama.py:267
+#: ../applets/maintained/yama/yama.py:275
 msgid "Home Folder"
 msgstr ""
 
@@ -1503,7 +1502,7 @@ msgstr ""
 msgid "CPU Frequency Monitor"
 msgstr ""
 
-#: ../applets/maintained/cpufreq/cpufreq.py:234
+#: ../applets/maintained/cpufreq/cpufreq.py:235
 msgid ""
 "<span size=\"large\"><b>Scaling unavailable</b></span>\n"
 "\n"
@@ -1511,11 +1510,11 @@ msgid ""
 "available for the selected CPU."
 msgstr ""
 
-#: ../applets/maintained/cpufreq/cpufreq.py:262
+#: ../applets/maintained/cpufreq/cpufreq.py:263
 msgid "GHz"
 msgstr ""
 
-#: ../applets/maintained/cpufreq/cpufreq.py:265
+#: ../applets/maintained/cpufreq/cpufreq.py:266
 msgid "MHz"
 msgstr ""
 
@@ -1876,7 +1875,7 @@ msgstr ""
 #: ../applets/maintained/feeds/feeds.py:409
 #: ../applets/maintained/feeds/feeds.py:493
 #: ../applets/maintained/feeds/feeds.py:1041
-#: ../applets/maintained/feeds/feeds.py:1115
+#: ../applets/maintained/feeds/feeds.py:1114
 msgid "Feeds Applet"
 msgstr ""
 
@@ -1945,28 +1944,28 @@ msgstr ""
 msgid "Show Only _New Feeds"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:1120
+#: ../applets/maintained/feeds/feeds.py:1119
 msgid "Applet to monitor web feeds"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:1163
+#: ../applets/maintained/feeds/feeds.py:1162
 msgid "OPML Import"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:1166
+#: ../applets/maintained/feeds/feeds.py:1165
 #, python-format
 msgid "Do you want to add %d feed?"
 msgid_plural "Do you want to add %d feeds?"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../applets/maintained/feeds/feeds.py:1194
-#: ../applets/maintained/feeds/feeds.py:1222
+#: ../applets/maintained/feeds/feeds.py:1193
+#: ../applets/maintained/feeds/feeds.py:1221
 #, python-format
 msgid "Could not open '%s'"
 msgstr ""
 
-#: ../applets/maintained/feeds/feeds.py:1207
+#: ../applets/maintained/feeds/feeds.py:1206
 #: ../applets/maintained/feeds/prefs.py:328
 #, python-format
 msgid "Could not save '%s'"
@@ -2083,19 +2082,19 @@ msgstr ""
 
 #. Username: label and entry
 #: ../applets/maintained/feeds/prefs.py:492
-#: ../applets/maintained/mail/mail.py:689
-#: ../applets/maintained/mail/mail.py:780
-#: ../applets/maintained/mail/mail.py:942
-#: ../applets/maintained/mail/mail.py:1049
+#: ../applets/maintained/mail/mail.py:729
+#: ../applets/maintained/mail/mail.py:820
+#: ../applets/maintained/mail/mail.py:971
+#: ../applets/maintained/mail/mail.py:1086
 msgid "Username:"
 msgstr ""
 
 #. Password: label and entry
 #: ../applets/maintained/feeds/prefs.py:506
-#: ../applets/maintained/mail/mail.py:692
-#: ../applets/maintained/mail/mail.py:783
-#: ../applets/maintained/mail/mail.py:945
-#: ../applets/maintained/mail/mail.py:1052
+#: ../applets/maintained/mail/mail.py:732
+#: ../applets/maintained/mail/mail.py:823
+#: ../applets/maintained/mail/mail.py:974
+#: ../applets/maintained/mail/mail.py:1089
 msgid "Password:"
 msgstr ""
 
@@ -2203,7 +2202,7 @@ msgid "Filesystem"
 msgstr ""
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:521
-#: ../applets/maintained/yama/yama.py:326
+#: ../applets/maintained/yama/yama.py:333
 msgid "Connect to Server..."
 msgstr ""
 
@@ -2399,7 +2398,7 @@ msgid "Show the number of items in the trash on top of the icon."
 msgstr ""
 
 #. This is a window title, %s is an applet's name.
-#: ../applets/maintained/garbage/prefs.vala:32 ../shared/python/awnlib.py:381
+#: ../applets/maintained/garbage/prefs.vala:32 ../shared/python/awnlib.py:379
 #, c-format, python-format
 msgid "%s Preferences"
 msgstr ""
@@ -2766,170 +2765,180 @@ msgid "Check Your Email from AWN"
 msgstr ""
 
 #: ../applets/maintained/mail/mail.desktop.in.h:2
-#: ../applets/maintained/mail/mail.py:261
-#: ../applets/maintained/mail/mail.py:1112
+#: ../applets/maintained/mail/mail.py:294
+#: ../applets/maintained/mail/mail.py:1149
 msgid "Mail Applet"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:39
+#: ../applets/maintained/mail/mail.py:40
 #, python-format
 msgid "You have %d new message"
 msgid_plural "You have %d new messages"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../applets/maintained/mail/mail.py:43
+#: ../applets/maintained/mail/mail.py:44
 #, python-format
 msgid "%d unread message"
 msgid_plural "%d unread messages"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../applets/maintained/mail/mail.py:88
-#: ../applets/maintained/mail/mail.py:649
-#: ../applets/maintained/mail/mail.py:665
-#: ../applets/maintained/mail/mail.py:740
-#: ../applets/maintained/mail/mail.py:756
-#: ../applets/maintained/mail/mail.py:833
-#: ../applets/maintained/mail/mail.py:927
+#: ../applets/maintained/mail/mail.py:89
+#: ../applets/maintained/mail/mail.py:689
+#: ../applets/maintained/mail/mail.py:705
+#: ../applets/maintained/mail/mail.py:780
+#: ../applets/maintained/mail/mail.py:796
+#: ../applets/maintained/mail/mail.py:873
+#: ../applets/maintained/mail/mail.py:958
 msgid "[No Subject]"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:113
-#: ../applets/maintained/mail/mail.py:241
+#: ../applets/maintained/mail/mail.py:121
+#: ../applets/maintained/mail/mail.py:274
 msgid "Mail Applet (Click to Log In)"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:262
+#: ../applets/maintained/mail/mail.py:130
+msgid "GNOME keyring not available: Password won't be saved"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:141
+msgid ""
+"Default GNOME keyring or \"login\" keyring not found:\n"
+"Password won't be saved"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:295
 #, python-format
 msgid "Logging in as %s"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:277
+#: ../applets/maintained/mail/mail.py:310
 msgid "Network error - Mail Applet"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:287
+#: ../applets/maintained/mail/mail.py:320
 msgid "New Mail - Mail Applet"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:371
+#: ../applets/maintained/mail/mail.py:404
 msgid "Mail"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:407
+#: ../applets/maintained/mail/mail.py:440
 msgid "Open Web Mail"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:416
+#: ../applets/maintained/mail/mail.py:449
 msgid "Open Desktop Client"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:425
+#: ../applets/maintained/mail/mail.py:458
 msgid "Refresh"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:434
+#: ../applets/maintained/mail/mail.py:467
 #: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:47
 #: ../applets/maintained/quit/quit.py:58
 #: ../applets/maintained/quit/quit.py:267
 msgid "Log Out"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:466
+#: ../applets/maintained/mail/mail.py:500
 msgid "No unread messages"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:468
+#: ../applets/maintained/mail/mail.py:502
 msgid "No new messages"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:484
+#: ../applets/maintained/mail/mail.py:518
 msgid "Wrong username or password"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:492
-#: ../applets/maintained/mail/mail.py:576
+#: ../applets/maintained/mail/mail.py:526
+#: ../applets/maintained/mail/mail.py:610
 msgid "Log In"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:540
+#: ../applets/maintained/mail/mail.py:574
 msgid "Type:"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:545
+#: ../applets/maintained/mail/mail.py:579
 msgid "Backend"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:638
-#: ../applets/maintained/mail/mail.py:729
+#: ../applets/maintained/mail/mail.py:677
+#: ../applets/maintained/mail/mail.py:769
 msgid ""
 "There seem to be problems with our connection to your account. Your best bet "
 "is probably to log out and try again."
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:651
-#: ../applets/maintained/mail/mail.py:742
+#: ../applets/maintained/mail/mail.py:691
+#: ../applets/maintained/mail/mail.py:782
 msgid "[Unknown]"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:712
+#: ../applets/maintained/mail/mail.py:752
 msgid "Google Apps"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:787
+#: ../applets/maintained/mail/mail.py:827
 msgid "Domain:"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:815
+#: ../applets/maintained/mail/mail.py:855
 msgid "Unix Spool"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:841
+#: ../applets/maintained/mail/mail.py:881
 msgid "Spool Path:"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:884
-#: ../applets/maintained/mail/mail.py:886
-#: ../applets/maintained/mail/mail.py:899
+#: ../applets/maintained/mail/mail.py:924
+#: ../applets/maintained/mail/mail.py:926
+#: ../applets/maintained/mail/mail.py:939
 msgid "Could not log in: "
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:893
+#: ../applets/maintained/mail/mail.py:933
 msgid "Could not log in: Username or password incorrect"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:949
-#: ../applets/maintained/mail/mail.py:1056
+#: ../applets/maintained/mail/mail.py:978
+#: ../applets/maintained/mail/mail.py:1093
 msgid "Server:"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:952
-#: ../applets/maintained/mail/mail.py:1059
+#: ../applets/maintained/mail/mail.py:981
+#: ../applets/maintained/mail/mail.py:1096
 msgid "Use SSL encryption"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:997
+#: ../applets/maintained/mail/mail.py:1030
 msgid "Server did not respond"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:1002
+#: ../applets/maintained/mail/mail.py:1035
 msgid "Could not log in"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:1008
+#: ../applets/maintained/mail/mail.py:1042
 msgid "Folder does not exst"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:1062
+#: ../applets/maintained/mail/mail.py:1099
 msgid "Get messages from only one folder"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:1066
+#: ../applets/maintained/mail/mail.py:1103
 msgid "Folder:"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:1115
+#: ../applets/maintained/mail/mail.py:1152
 msgid "An applet to check one's email"
 msgstr ""
 
@@ -3275,11 +3284,11 @@ msgstr ""
 msgid "Notification Area"
 msgstr ""
 
-#: ../applets/maintained/notification-area/notification-area.vala:638
+#: ../applets/maintained/notification-area/notification-area.vala:637
 msgid "There is already another notification area running on this screen!"
 msgstr ""
 
-#: ../applets/maintained/notification-area/notification-area.vala:642
+#: ../applets/maintained/notification-area/notification-area.vala:641
 msgid ""
 "Please remove the existing notification area and then restart the applet."
 msgstr ""
@@ -3380,7 +3389,7 @@ msgstr ""
 msgid "Notification Daemon"
 msgstr ""
 
-#: ../applets/maintained/notification-daemon/daemon.c:1421
+#: ../applets/maintained/notification-daemon/daemon.c:1425
 #, c-format
 msgid "%u is not a valid notification ID"
 msgstr ""
@@ -3510,7 +3519,7 @@ msgid "Quit-Log Out applet"
 msgstr ""
 
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:2
-#: ../applets/maintained/yama/yama.py:163
+#: ../applets/maintained/yama/yama.py:168
 msgid "Protect your computer from unauthorized use"
 msgstr ""
 
@@ -3524,12 +3533,12 @@ msgstr ""
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:1
 #: ../applets/maintained/quit/quit.py:48
-#: ../applets/maintained/yama/yama.py:181
+#: ../applets/maintained/yama/yama.py:186
 msgid "Shut Down..."
 msgstr ""
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:2
-#: ../applets/maintained/yama/yama.py:181
+#: ../applets/maintained/yama/yama.py:186
 msgid "Shut down the system"
 msgstr ""
 
@@ -3562,7 +3571,7 @@ msgstr ""
 #. Translators: %s is a username
 #. Translators: %s is a user name.
 #: ../applets/maintained/quit/quit.py:43
-#: ../applets/maintained/yama/yama.py:177
+#: ../applets/maintained/yama/yama.py:182
 #, python-format
 msgid "Log Out %s..."
 msgstr ""
@@ -3840,14 +3849,14 @@ msgid "A prettier desktop switcher"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:2
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2470
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2476
 msgid "Shiny Switcher"
 msgstr ""
 
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:642
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:735
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1977
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2044
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:643
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:736
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1978
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2045
 msgid "Applet Preferences"
 msgstr ""
 
@@ -4649,15 +4658,15 @@ msgstr ""
 msgid "Could not find any devices."
 msgstr ""
 
-#: ../applets/maintained/volume-control/volume-control.py:184
+#: ../applets/maintained/volume-control/volume-control.py:180
 msgid "_Open Volume Control"
 msgstr ""
 
-#: ../applets/maintained/volume-control/volume-control.py:379
+#: ../applets/maintained/volume-control/volume-control.py:378
 msgid "No GStreamer mixer found"
 msgstr ""
 
-#: ../applets/maintained/volume-control/volume-control.py:385
+#: ../applets/maintained/volume-control/volume-control.py:384
 msgid "No devices found"
 msgstr ""
 
@@ -4731,7 +4740,7 @@ msgstr ""
 
 #. Weather condition
 #: ../applets/maintained/weather/forecast.py:202
-#: ../applets/maintained/weather/weather.py:475
+#: ../applets/maintained/weather/weather.py:484
 msgid "DESCRIPTION"
 msgstr ""
 
@@ -5149,31 +5158,37 @@ msgstr ""
 msgid "T-Showers"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:184
-msgid "Monday"
-msgstr ""
-
-#: ../applets/maintained/weather/weathertext.py:185
-msgid "Tuesday"
-msgstr ""
-
-#: ../applets/maintained/weather/weathertext.py:186
-msgid "Wednesday"
+#. Please keep translation short, approx. 12 characters
+#. T-Storms = Thunderstorms
+#: ../applets/maintained/weather/weathertext.py:183
+msgid "T-Storms"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:187
-msgid "Thursday"
+msgid "Monday"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:188
-msgid "Friday"
+msgid "Tuesday"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:189
-msgid "Saturday"
+msgid "Wednesday"
 msgstr ""
 
 #: ../applets/maintained/weather/weathertext.py:190
+msgid "Thursday"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:191
+msgid "Friday"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:192
+msgid "Saturday"
+msgstr ""
+
+#: ../applets/maintained/weather/weathertext.py:193
 msgid "Sunday"
 msgstr ""
 
@@ -5203,20 +5218,20 @@ msgid "Network error in Weather"
 msgstr ""
 
 #: ../applets/maintained/weather/weather.py:213
-#: ../applets/maintained/weather/weather.py:255
+#: ../applets/maintained/weather/weather.py:259
 msgid "Fetching conditions for"
 msgstr ""
 
-#: ../applets/maintained/weather/weather.py:273
+#: ../applets/maintained/weather/weather.py:277
 msgid "Show _Map"
 msgstr ""
 
-#: ../applets/maintained/weather/weather.py:322
-#: ../applets/maintained/weather/weather.py:400
+#: ../applets/maintained/weather/weather.py:329
+#: ../applets/maintained/weather/weather.py:407
 msgid "No records found"
 msgstr ""
 
-#: ../applets/maintained/weather/weather.py:391
+#: ../applets/maintained/weather/weather.py:398
 msgid "Searching..."
 msgstr ""
 
@@ -5326,7 +5341,7 @@ msgid "Wobbly Zini"
 msgstr ""
 
 #: ../applets/maintained/yama/yama.desktop.in.h:1
-#: ../applets/maintained/yama/yama.py:47
+#: ../applets/maintained/yama/yama.py:53
 msgid "Main menu with places and recent documents"
 msgstr ""
 
@@ -5334,46 +5349,46 @@ msgstr ""
 msgid "Yet Another Menu Applet"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:46
+#: ../applets/maintained/yama/yama.py:52
 msgid "YAMA"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:177
+#: ../applets/maintained/yama/yama.py:182
 #, python-format
 msgid "Log out %s of this session to log in as a different user"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:195
+#: ../applets/maintained/yama/yama.py:200
 msgid "_Edit Menus"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:267
+#: ../applets/maintained/yama/yama.py:275
 msgid "Open your personal folder"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:275
+#: ../applets/maintained/yama/yama.py:282
 msgid "Open the contents of your desktop in a folder"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:326
+#: ../applets/maintained/yama/yama.py:333
 msgid "Connect to a remote computer or shared disk"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:356
+#: ../applets/maintained/yama/yama.py:363
 msgid "Clear all items from the recent documents list"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:409
+#: ../applets/maintained/yama/yama.py:416
 #, python-format
 msgid "Open '%s'"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:450
+#: ../applets/maintained/yama/yama.py:457
 #, python-format
 msgid "Mount %s"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:602
+#: ../applets/maintained/yama/yama.py:619
 msgid ""
 "Clearing the Recent Documents list will clear the following:\n"
 "* All items from the Places > Recent Documents menu item.\n"

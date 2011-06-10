@@ -49,7 +49,8 @@ user_dirs = [glib.USER_DIRECTORY_DOCUMENTS,
              glib.USER_DIRECTORY_DOWNLOAD,
              glib.USER_DIRECTORY_PUBLIC_SHARE,
              glib.USER_DIRECTORY_TEMPLATES]
-xdg_user_uris = ["file://%s" % glib.get_user_special_dir(dir) for dir in user_dirs]
+xdg_user_paths = (glib.get_user_special_dir(dir) for dir in user_dirs)
+xdg_user_uris = ["file://%s" % path for path in xdg_user_paths if path != user_path]
 
 
 class CommonFolderApplet:

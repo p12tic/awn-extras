@@ -20,7 +20,7 @@ Build-Depends: 	debhelper (>= 7),
 		libnotify-dev,
 		libwebkit-dev,
 		python-support (>= 0.7.0),
-		valac (>= 0.7.7),
+		valac (>= 0.7.7) | valac-0.12 | valac-0.10,
 		vala-awn-trunk (>= 0.3.9),
 		lsb-release,
 		awn-extras-optional-bd

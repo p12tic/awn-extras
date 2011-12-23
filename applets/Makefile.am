@@ -35,7 +35,6 @@ endif
 if WITH_GNOME
 CONDITIONAL_APPLETS += \
 	maintained/cairo-menu \
-	unmaintained/main-menu \
 	unmaintained/pandora \
 	unmaintained/stacks \
 	maintained/yama \

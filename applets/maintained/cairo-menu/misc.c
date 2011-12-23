@@ -43,7 +43,7 @@ _free_callback_container (CallbackContainer * c)
   /* yeah... this is a bit peculiar and needs to be changed */
   g_free(c->display_name);
   g_free(c->file_path);
-  g_free(c->icon_name);
+  g_free(c->icon);
   g_free(c);
 }
 
@@ -52,7 +52,7 @@ _create_icon (GtkButton *widget,CallbackContainer * c)
 {
   gtk_widget_hide (c->instance->menu);
   gtk_menu_popdown (GTK_MENU(c->context_menu));
-  c->instance->add_icon_fn (c->instance->applet,c->file_path,c->display_name,c->icon_name);
+  c->instance->add_icon_fn (c->instance->applet,c->file_path,c->display_name,c->icon);
 }
 
 gboolean 

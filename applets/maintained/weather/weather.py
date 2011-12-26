@@ -613,7 +613,7 @@ class WeatherApplet:
 
     class NetworkHandler(ThreadQueue):
 
-        __ws_key = "&prod=xoap&par=1048871467&key=12daac2f3a67cb39&link=xoap"
+        __ws_key = "&prod=xoap&par=1287722164&key=e11ec82daa20d876"
 
         def dict_from_xml(self, rootNode, keys, paths):
             """Given an XML node, iterate over keys and paths, grabbing the

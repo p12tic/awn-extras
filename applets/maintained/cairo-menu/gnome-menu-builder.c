@@ -767,6 +767,7 @@ find_menu_dir (MenuInstance * instance, GMenuTreeDirectory * root)
     }
   }
 done:
+  gmenu_tree_iter_unref(iter);
   return result;
 }
 

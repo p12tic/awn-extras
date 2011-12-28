@@ -63,7 +63,7 @@ gnome_menu_builder_la_SOURCES += \
     $(NULL)
 else
 gnome_menu_builder_la_SOURCES += \
-    gnome-menu-builder-gnome.c \
+    gnome-menu-builder.c \
     $(NULL)
 endif
 gnome_menu_builder_la_LIBADD =	\

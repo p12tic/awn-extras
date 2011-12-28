@@ -33,7 +33,7 @@ typedef struct
 {
   gchar        * file_path;
   gchar        * display_name;
-  GIcon        * icon;
+  gchar        * icon_name;
   GtkWidget    * context_menu;
   MenuInstance * instance;
 }CallbackContainer;

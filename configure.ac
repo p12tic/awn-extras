@@ -105,8 +105,11 @@ AC_SUBST(INDICATORICONSDIR)
 fi
 
 if test "$with_gnome" != "no"; then
-# main-menu, cairo-menu
-PKG_CHECK_MODULES(GNOME_MENU, [libgnome-menu-3.0])
+# main-menu
+PKG_CHECK_MODULES(GNOME_MENU, [libgnome-menu], 
+		  AM_CONDITIONAL(GNOME_MENU,true),
+		  AM_CONDITIONAL(GNOME_MENU,false))
+
 fi
 
 # webapplet
@@ -172,7 +175,14 @@ PKG_CHECK_MODULES(AWN_SYSTEM_MONITOR, [$gconf libgtop-2.0])
 PKG_CHECK_MODULES(NOTIFICATION_DAEMON, [$gconf $gstreampkg libnotify $url_label_module libwnck-1.0 x11])
 fi
 if test "$with_gnome" != "no"; then
-PKG_CHECK_MODULES(CAIRO_MENU_GNOME, [libgnome-menu-3.0 libnotify $icon_entry_module])
+PKG_CHECK_MODULES(CAIRO_MENU_GNOME3, 
+		  [libgnome-menu-3.0 libnotify $icon_entry_module],
+		  AM_CONDITIONAL(CAIRO_MENU_GNOME3,true),
+		  AM_CONDITIONAL(CAIRO_MENU_GNOME3,false))
+PKG_CHECK_MODULES(CAIRO_MENU_GNOME,
+		  [libgnome-menu libnotify $icon_entry_module],
+		  AM_CONDITIONAL(CAIRO_MENU_GNOME,true),
+		  AM_CONDITIONAL(CAIRO_MENU_GNOME,false))
 fi
 PKG_CHECK_MODULES(SHINY_SWITCHER, [libwnck-1.0 x11 xcomposite xrender])
 if test -n "$webapplet_modules"; then
@@ -363,6 +373,8 @@ applets/maintained/yama/Makefile
 applets/unmaintained/awnsystemmonitor/Makefile
 applets/unmaintained/awnsystemmonitor/awnsystemmonitor.desktop.in
 applets/unmaintained/dropper/Makefile
+applets/unmaintained/main-menu/Makefile
+applets/unmaintained/main-menu/main-menu.desktop.in
 applets/unmaintained/pandora/Makefile
 applets/unmaintained/stacks/Makefile
 po/Makefile.in

@@ -34,11 +34,26 @@ endif
 # --with-gnome
 if WITH_GNOME
 CONDITIONAL_APPLETS += \
-	maintained/cairo-menu \
 	unmaintained/pandora \
 	unmaintained/stacks \
 	maintained/yama \
 	$(NULL)
+if CAIRO_MENU_GNOME3
+CONDITIONAL_APPLETS += \
+	maintained/cairo-menu \
+	$(NULL)
+else 
+if CAIRO_MENU_GNOME
+CONDITIONAL_APPLETS += \
+	maintained/cairo-menu \
+	$(NULL)
+endif
+endif
+if GNOME_MENU
+CONDITIONAL_APPLETS += \
+	unmaintained/main-menu \
+	$(NULL)
+endif
 endif
 # --enable-indicator-applet
 if ENABLE_INDICATOR

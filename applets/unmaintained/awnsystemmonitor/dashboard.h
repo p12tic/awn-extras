@@ -23,13 +23,11 @@
 
 
 #include <libawn/awn-applet.h>
-#include <glib/gmacros.h>
-#include <glib/gerror.h>
+#include <glib.h>
 #include <gconf/gconf-value.h>
 
 #include <libawn/awn-dialog.h>
 #include <libawn/awn-applet-simple.h>
-#include <glib.h>
 #include <gtk/gtk.h>
 
 #include <glibtop/mem.h>

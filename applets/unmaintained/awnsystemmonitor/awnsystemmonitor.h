@@ -25,7 +25,7 @@
 //#include <libawn/awn-title.h>
 #include <libawn/awn-tooltip.h>
 
-#include <glib/gtypes.h>
+#include <glib.h>
 #include <glibtop/cpu.h>
 #include <gconf/gconf-client.h>
 

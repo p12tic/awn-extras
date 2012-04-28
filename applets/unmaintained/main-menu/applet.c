@@ -23,8 +23,7 @@
 
 #include <string.h>
 
-#include <glib/gmacros.h>
-#include <glib/gerror.h>
+#include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <libdesktop-agnostic/fdo.h>

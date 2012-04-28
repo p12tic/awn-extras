@@ -38,8 +38,7 @@
 
 
 #include <libawn/awn-applet.h>
-#include <glib/gmacros.h>
-#include <glib/gerror.h>
+#include <glib.h>
 
 #include <libawn/awn-dialog.h>
 #include <libawn/awn-applet-simple.h>
@@ -50,7 +49,6 @@
 
 #include <string.h>
 #include <gtk/gtk.h>
-#include <glib.h>
 #ifndef HAVE_GTK_URL_LABEL
 #include <libsexy/sexy-url-label.h>
 #endif

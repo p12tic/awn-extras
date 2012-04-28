@@ -295,7 +295,7 @@ populate (Menu *app)
   gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 0);
 
   apps = gmenu_tree_directory_get_contents (app->root);
-  if (app->root == GMENU_TREE_DIRECTORY(gmenu_tree_get_root_directory ((GMenuTree*)app->apps)))
+  if (app->root == GMENU_TREE_DIRECTORY(gmenu_tree_get_root_directory ((GMenuTree*)app->apps)) && app->settings)
   {
     list = g_slist_copy (apps);
     sets = g_slist_copy (gmenu_tree_directory_get_contents (app->settings));
@@ -422,7 +422,7 @@ awn_applet_factory_initp (const gchar *name, const gchar *uid, gint panel_id)
   if (!app->settings)
   {
     g_warning ("Unable to find settings.menu");
-    return FALSE;
+    //return FALSE;
   }
   app->tree =  (GMenuTree*)app->apps;
 

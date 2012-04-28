@@ -633,7 +633,7 @@ class WeatherApplet:
         @async_method
         @network_exception
         def get_locations(self, text):
-            url = "http://xoap.weather.com/search/search?where=" + urllib2.quote(text)
+            url = "http://xml.weather.com/search/search?where=" + urllib2.quote(text)
             with closing(urllib2.urlopen(url)) as usock:
                 with unlink_xml(usock) as xmldoc:
                     locations_list = []
@@ -647,7 +647,7 @@ class WeatherApplet:
         @with_overlays
         @network_exception
         def get_conditions(self, location_code):
-            url = "http://xoap.weather.com/weather/local/" + location_code + "?cc=*" + self.__ws_key
+            url = "http://xml.weather.com/weather/local/" + location_code + "?cc=*" + self.__ws_key
             with closing(urllib2.urlopen(url)) as usock:
                 with unlink_xml(usock) as xmldoc:
                     names = ['CITY', 'SUNRISE', 'SUNSET', 'DESCRIPTION', 'CODE', 'TEMP', 'FEELSLIKE', 'BAR', 'BARDESC', 'WINDSPEED', 'WINDGUST', 'WINDDIR', 'HUMIDITY', 'MOONPHASE']
@@ -679,7 +679,7 @@ class WeatherApplet:
         @with_overlays
         @network_exception
         def get_forecast(self, location_code):
-            url = "http://xoap.weather.com/weather/local/" + location_code + "?dayf=5" + self.__ws_key
+            url = "http://xml.weather.com/weather/local/" + location_code + "?dayf=5" + self.__ws_key
             with closing(urllib2.urlopen(url)) as usock:
                 with unlink_xml(usock) as xmldoc:
                     try:

@@ -27,12 +27,12 @@
 
 G_BEGIN_DECLS
 
-#define EGG_TYPE_TRAY_CHILD			(egg_tray_child_get_type ())
-#define EGG_TRAY_CHILD(obj)			(G_TYPE_CHECK_INSTANCE_CAST ((obj), EGG_TYPE_TRAY_CHILD, EggTrayChild))
-#define EGG_TRAY_CHILD_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST ((klass), EGG_TYPE_TRAY_CHILD, EggTrayChildClass))
-#define EGG_IS_TRAY_CHILD(obj)			(G_TYPE_CHECK_INSTANCE_TYPE ((obj), EGG_TYPE_TRAY_CHILD))
-#define EGG_IS_TRAY_CHILD_CLASS(klass)		(G_TYPE_CHECK_CLASS_TYPE ((klass), EGG_TYPE_TRAY_CHILD))
-#define EGG_TRAY_CHILD_GET_CLASS(obj)		(G_TYPE_INSTANCE_GET_CLASS ((obj), EGG_TYPE_TRAY_CHILD, EggTrayChildClass))
+#define EGG_TRAY_TYPE_CHILD			(egg_tray_child_get_type ())
+#define EGG_TRAY_CHILD(obj)			(G_TYPE_CHECK_INSTANCE_CAST ((obj), EGG_TRAY_TYPE_CHILD, EggTrayChild))
+#define EGG_TRAY_CHILD_CLASS(klass)		(G_TYPE_CHECK_CLASS_CAST ((klass), EGG_TRAY_TYPE_CHILD, EggTrayChildClass))
+#define EGG_IS_TRAY_CHILD(obj)			(G_TYPE_CHECK_INSTANCE_TYPE ((obj), EGG_TRAY_TYPE_CHILD))
+#define EGG_IS_TRAY_CHILD_CLASS(klass)		(G_TYPE_CHECK_CLASS_TYPE ((klass), EGG_TRAY_TYPE_CHILD))
+#define EGG_TRAY_CHILD_GET_CLASS(obj)		(G_TYPE_INSTANCE_GET_CLASS ((obj), EGG_TRAY_TYPE_CHILD, EggTrayChildClass))
 
 typedef struct _EggTrayChild	    EggTrayChild;
 typedef struct _EggTrayChildClass  EggTrayChildClass;

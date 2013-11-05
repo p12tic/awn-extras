@@ -313,7 +313,7 @@ egg_tray_child_new (GdkScreen *screen,
       new_colormap = TRUE;
     }
 
-  child = g_object_new (EGG_TYPE_TRAY_CHILD, NULL);
+  child = g_object_new (EGG_TRAY_TYPE_CHILD, NULL);
   child->icon_window = icon_window;
 
   gtk_widget_set_colormap (GTK_WIDGET (child), colormap);

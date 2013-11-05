@@ -10,5 +10,5 @@ dist_applet_DATA =  \
 
 dialect_iconsdir = $(applet_datadir)/icons
 dist_dialect_icons_DATA =	\
-	$(wildcard icons/*.png) \
+	$(wildcard $(srcdir)/icons/*.png) \
 	$(NULL)

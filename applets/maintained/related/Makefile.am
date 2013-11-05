@@ -52,6 +52,6 @@ related_la_LDFLAGS = $(APPLET_LINKER_FLAGS)
 #	na-prefs.ui	\
 #	$(NULL)
 
-EXTRA_DIST += $(wildcard *.h)
+EXTRA_DIST += $(wildcard $(srcdir)/*.h)
 
 # vim: set ts=8 sts=8 sw=8 :

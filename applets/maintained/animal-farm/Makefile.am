@@ -7,6 +7,6 @@ dist_applet_DATA =	\
 
 animalfarm_iconsdir = $(applet_datadir)/icons
 dist_animalfarm_icons_DATA = 		\
-	$(wildcard icons/*.svg)		\
+	$(wildcard $(srcdir)/icons/*.svg)		\
 	icons/AUTHORS			\
 	$(NULL)

@@ -13,10 +13,10 @@ dist_applet_DATA =  \
     $(NULL)
 
 gnome_themedir = $(applet_datadir)/themes/gnome
-dist_gnome_theme_DATA = $(wildcard themes/gnome/*.svg)
+dist_gnome_theme_DATA = $(wildcard $(srcdir)/themes/gnome/*.svg)
 
 onox_themedir = $(applet_datadir)/themes/onox
-dist_onox_theme_DATA = $(wildcard themes/onox/*.svg)
+dist_onox_theme_DATA = $(wildcard $(srcdir)/themes/onox/*.svg)
 
 tango_themedir = $(applet_datadir)/themes/tango
-dist_tango_theme_DATA = $(wildcard themes/tango/*.svg)
+dist_tango_theme_DATA = $(wildcard $(srcdir)/themes/tango/*.svg)

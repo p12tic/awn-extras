@@ -25,15 +25,15 @@ dist_feed_DATA = \
 	$(NULL)
 
 feedsdir = $(applet_datadir)/feeds
-dist_feeds_DATA = $(wildcard feeds/*.feed)
+dist_feeds_DATA = $(wildcard $(srcdir)/feeds/*.feed)
 
 pluginsdir = $(applet_datadir)/feed/plugins
-dist_plugins_DATA = $(wildcard feed/plugins/*.py)
+dist_plugins_DATA = $(wildcard $(srcdir)/feed/plugins/*.py)
 
 uidir = $(applet_datadir)/ui
 dist_ui_DATA = \
-	$(wildcard ui/*.svg) \
-	$(wildcard ui/*.ui) \
+	$(wildcard $(srcdir)/ui/*.svg) \
+	$(wildcard $(srcdir)/ui/*.ui) \
 	$(NULL)
 
 custom_icondir = $(applet_datadir)/icons

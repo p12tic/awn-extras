@@ -15,4 +15,4 @@ dist_applet_DATA =	\
 	$(NULL)
 
 imagesdir = $(applet_datadir)/images
-dist_images_DATA = $(wildcard images/*.png)
+dist_images_DATA = $(wildcard $(srcdir)/images/*.png)

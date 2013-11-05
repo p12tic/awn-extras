@@ -9,7 +9,7 @@ dist_applet_DATA =	\
 	$(NULL)
 
 imagesdir = $(applet_datadir)/images
-dist_images_DATA = $(wildcard images/cpufreq-*.svg)
+dist_images_DATA = $(wildcard $(srcdir)/images/cpufreq-*.svg)
 
 theme_moonbeamdir = $(applet_datadir)/themes/moonbeam
 dist_theme_moonbeam_DATA =           \

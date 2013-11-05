@@ -40,6 +40,6 @@ dist_prefs_DATA =	\
 	na-prefs.ui	\
 	$(NULL)
 
-EXTRA_DIST += $(wildcard *.h) egg-tray.vapi
+EXTRA_DIST += $(wildcard $(srcdir)/*.h) egg-tray.vapi
 
 # vim: set ts=8 sts=8 sw=8 :

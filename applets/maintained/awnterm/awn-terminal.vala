@@ -33,7 +33,7 @@ public interface TerminalDBus : GLib.Object {
 public class AwnTerminalApplet : AppletSimple, TerminalDBus
 {
   private Client config;
-  private Menu menu;
+  private Gtk.Menu menu;
   private Awn.Dialog dialog;
   private Gtk.Notebook notebook;
   private Gtk.FileChooserButton chooser;
@@ -382,7 +382,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
       ImageMenuItem prefs_item;
       Widget about_item;
 
-      this.menu = this.create_default_menu () as Menu;
+      this.menu = this.create_default_menu () as Gtk.Menu;
 
       prefs_item = new ImageMenuItem.from_stock (STOCK_PREFERENCES, null);
       prefs_item.activate.connect (this.on_prefs_activate);
@@ -393,7 +393,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
                                        "<michal.mhr@gmail.com>",
                                        AppletLicense.GPLV2, Build.VERSION);
       about_item.show ();
-      this.menu.append (about_item as MenuItem);
+      this.menu.append (about_item as Gtk.MenuItem);
     }
     this.menu.set_screen (null);
     this.get_icon ().popup_gtk_menu (this.menu, evt.button, evt.time);

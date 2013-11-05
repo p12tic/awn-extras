@@ -34,8 +34,8 @@ public class GarbageApplet : AppletSimple
 {
   public VFS.Trash trash;
   private Client config;
-  private Menu menu;
-  private MenuItem empty_menu_item;
+  private Gtk.Menu menu;
+  private Gtk.MenuItem empty_menu_item;
   private GarbagePrefs? prefs;
   private OverlayText? text_overlay;
   private OverlayThrobber? throbber_overlay;
@@ -203,16 +203,16 @@ public class GarbageApplet : AppletSimple
   private void
   on_context_menu_popup (EventButton evt)
   {
-    weak Menu ctx_menu;
+    weak Gtk.Menu ctx_menu;
     if (this.menu == null)
     {
       ImageMenuItem prefs_item;
       Widget about_item;
       SeparatorMenuItem sep_item;
 
-      this.menu = this.create_default_menu () as Menu;
+      this.menu = this.create_default_menu () as Gtk.Menu;
       this.empty_menu_item =
-        new MenuItem.with_mnemonic (Gettext._ ("_Empty Trash"));
+        new Gtk.MenuItem.with_mnemonic (Gettext._ ("_Empty Trash"));
       this.empty_menu_item.activate.connect (this.on_menu_empty_activate);
       this.empty_menu_item.set_sensitive (this.trash.file_count > 0);
       this.empty_menu_item.show ();
@@ -231,9 +231,9 @@ public class GarbageApplet : AppletSimple
                                            AppletLicense.GPLV2, Build.VERSION,
                                            Gettext._ ("A lightweight, cross-desktop trash applet"),
                                            null, null, "user-trash", null, authors, null, null);
-      this.menu.append (about_item as MenuItem);
+      this.menu.append (about_item as Gtk.MenuItem);
     }
-    ctx_menu = (Menu)this.menu;
+    ctx_menu = (Gtk.Menu)this.menu;
     ctx_menu.set_screen (null);
     this.get_icon ().popup_gtk_menu (ctx_menu, evt.button, evt.time);
   }

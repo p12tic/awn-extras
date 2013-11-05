@@ -35,6 +35,7 @@ ltmain.sh
 missing
 py-compile
 stamp-h1
+*.user*
 debian/*.debhelper.log
 debian/*.postinst.debhelper
 debian/*.postrm.debhelper

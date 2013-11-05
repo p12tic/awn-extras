@@ -5,7 +5,7 @@ SUBDIRS = \
 	shared/vala \
 	po \
 	$(NULL)
-	
+
 EXTRA_DIST = \
 	autogen.sh \
 	COPYING \
@@ -27,6 +27,8 @@ DISTCLEANFILES = \
         intltool-merge \
         intltool-update \
         $(NULL)
+
+VALAC = valac-0.12
 
 ACLOCAL_AMFLAGS = -I m4
 

@@ -1,5 +1,6 @@
 APPLET_NAME = awnterm
 APPLET_CFLAGS = $(VTE_CFLAGS)
+VALAC = valac-0.12
 VALA_FILES = \
 	awn-terminal.vala \
 	$(NULL)

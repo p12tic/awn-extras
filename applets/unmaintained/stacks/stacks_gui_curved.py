@@ -65,31 +65,31 @@ class StacksGuiCurved(gtk.Window):
     dragged_button = None
     stack_items = []
     maxquantity = 3
-    
 
-    
+
+
 
 
     currentwidth = 10
     currentheight = 10
- 
+
     angle_interval = 0.02
     direction = "RIGHT"
-    text_distance = 10    
+    text_distance = 10
     icon_padding = 7
     right_arrow_active = False
     left_arrow_active = False
     not_selected_draw_background = False
     tooltip_timer = None
     tooltip_timeout = 800
-    
+
     hide_timer = None
     hide_timeout = 500
-    
+
     display_manager = gtk.gdk.display_manager_get()
     default_display = display_manager.get_default_display()
-    
-    
+
+
     # Structures
     dialog = None
     hbox = None
@@ -141,8 +141,8 @@ class StacksGuiCurved(gtk.Window):
     		
     		self.error_label = gtk.Label(detected_errors_text)
     		hbox = gtk.HBox(False, 0)
-    		hbox.pack_start(self.error_image, False, False, 5)  
-    		hbox.pack_start(self.error_label, False, False, 10)  
+    		hbox.pack_start(self.error_image, False, False, 5)
+    		hbox.pack_start(self.error_label, False, False, 10)
     		self.errorwindow.add(hbox)
     		self.errorwindow.move(x,y)
     		self.errorwindow.show_all()
@@ -150,7 +150,7 @@ class StacksGuiCurved(gtk.Window):
     		return None
 
         self.applet = applet
-        
+
         curved_config = get_curved_gui_config(
                 self.applet.client,
                 self.applet.get_uid())
@@ -166,8 +166,8 @@ class StacksGuiCurved(gtk.Window):
         self.signal_ids.append(applet.connect("stacks-item-created", self._item_created_cb))
         self.signal_ids.append(applet.connect("stacks-gui-config", self.show_config))
         self.signal_ids.append(applet.connect("stacks-gui-request-hide", self._stacks_gui_request_hide))
-        
-        
+
+
 
         # Init the window
         gtk.Window.__init__(self)
@@ -192,39 +192,39 @@ class StacksGuiCurved(gtk.Window):
         self.connect('leave-notify-event', self.focus_out)
 
         awn.utils_ensure_transparent_bg(self)
-        
+
         self.hbox = gtk.HBox(False, 0)
         self.add(self.hbox)
         self.evb = gtk.EventBox()
         self.evb.set_visible_window(False)
         self.hbox.add(self.evb)
-        
+
         self.tooltip_window = gtk.Window()
         gtk.Window.__init__(self.tooltip_window)
-        
+
         self.set_tooltip_window_rgba_collormap(self.tooltip_window)
         self.tooltip_window.set_app_paintable(True)
         self.tooltip_window.set_decorated(False)
         self.tooltip_window.set_focus_on_map(True)
         self.tooltip_window.set_keep_above(True)
         self.tooltip_window.set_skip_pager_hint(True)
-        self.tooltip_window.set_skip_taskbar_hint(True)        
-        
+        self.tooltip_window.set_skip_taskbar_hint(True)
+
         self.tooltip_window.set_size_request(-1, 15)
         self.tooltip_window.connect('expose-event', self.draw_tooltip_window)
-        
+
         self.tooltip_window.hide()
-        
+
         self.tooltip_window.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_SPLASHSCREEN)
-        
+
         self.tooltip_image = gtk.Image()
-        
+
         self.tooltip_label = gtk.Label("")
 
         hbox = gtk.HBox(False, 0)
 
-        hbox.pack_start(self.tooltip_image, False, False, 5)  
-        hbox.pack_start(self.tooltip_label, False, False, 10)  
+        hbox.pack_start(self.tooltip_image, False, False, 5)
+        hbox.pack_start(self.tooltip_label, False, False, 10)
         self.tooltip_window.add(hbox)
 
         self.evb.add_events(gtk.gdk.BUTTON_PRESS_MASK |
@@ -281,7 +281,7 @@ class StacksGuiCurved(gtk.Window):
         			try:
         				vfs_uris.append(VfsUri(uri))
         			except TypeError:
-        				pass   
+        				pass
 
         		src_lst = []
         		dst_lst = []
@@ -295,7 +295,7 @@ class StacksGuiCurved(gtk.Window):
         		return True
 
         self.applet.effects.stop(awn.EFFECT_LAUNCHING)
- 
+
         return False
 
 
@@ -351,7 +351,7 @@ class StacksGuiCurved(gtk.Window):
     		self.tooltip_label.set_use_markup(True)
     		self.tooltip_window.resize(lw /pango.SCALE, lh*2/pango.SCALE)
     		
-    		tw = lw /pango.SCALE + icon.get_width() + 30 
+    		tw = lw /pango.SCALE + icon.get_width() + 30
     		th = lh*2/pango.SCALE
     		
     		
@@ -368,7 +368,7 @@ class StacksGuiCurved(gtk.Window):
     	self.tooltip_visible = False
     	
     	return False
- 
+
     def hide_tooltip (self):
     	if self.tooltip_timer:
     		gobject.source_remove(self.tooltip_timer)
@@ -376,15 +376,15 @@ class StacksGuiCurved(gtk.Window):
     	self.tooltip_window.hide()
     	self.tooltip_visible = False
     	
-    	    
+    	
     def scroll_stack (self, widget, event):
     	if self.config['browsing']:
 			if event.direction == gtk.gdk.SCROLL_DOWN and self.theres_more:
 				self.dialog_show_new(self.start_icon +1)
 			if event.direction == gtk.gdk.SCROLL_UP and self.start_icon > 0:
 				self.dialog_show_new(self.start_icon -1)
-    
-    
+
+
     def item_drag_data_get(self, widget, context, selection, info, time):
         #selection.set_uris([vfs_uri.as_string()])
         if self.dragged_button <> None:
@@ -392,13 +392,13 @@ class StacksGuiCurved(gtk.Window):
         	selection.set_uris([uri.as_string()])
         	
         	
-        
+
 
 
     def item_drag_begin(self, widget, context):
         self.just_dragged = True
 
-                
+
     def button_release(self, widget, event):
     	
         if event.button == 3:
@@ -423,10 +423,10 @@ class StacksGuiCurved(gtk.Window):
         elif event.button == 1 and self.right_arrow_active:
         	self.dialog_show_new(self.start_icon + self.maxquantity)
         	self.queue_draw()
-       
+
         self.just_dragged = False
-        return True        
-        
+        return True
+
     def focus_out(self, widget, event):
     	
     	self.queue_draw()
@@ -458,7 +458,7 @@ class StacksGuiCurved(gtk.Window):
 						if self.active_button <> si.id:
 							self.active_button = si.id
 							self.dragged_button = self.active_button
-							self.evb.drag_source_set_icon_pixbuf(si.icon)    
+							self.evb.drag_source_set_icon_pixbuf(si.icon)
 							self.queue_draw()							
 
 							self.hide_tooltip ()
@@ -499,7 +499,7 @@ class StacksGuiCurved(gtk.Window):
             print "Your screen doesn't support alpha channels!"
             color_map = screen.get_rgb_colormap()
         self.set_colormap(color_map)
-        return False        
+        return False
 
     def set_tooltip_window_rgba_collormap(self, widget):
         screen = self.tooltip_window.get_screen()
@@ -508,8 +508,8 @@ class StacksGuiCurved(gtk.Window):
             print "Your screen doesn't support alpha channels!"
             color_map = screen.get_rgb_colormap()
         self.tooltip_window.set_colormap(color_map)
-        return False     
-        
+        return False
+
 
     def _destroy_cb(self, widget):
         for id in self.signal_ids: self.applet.disconnect(id)
@@ -519,7 +519,7 @@ class StacksGuiCurved(gtk.Window):
     	if self.hide_timer == None:
     		self.hide_timer = gobject.timeout_add (self.hide_timeout, self._stacks_gui_hide_cb )
     	
-    
+
     def show_config(self, widget):
     	curved_cfg = CurvedStacksConfig(self.applet)
 
@@ -602,7 +602,7 @@ class StacksGuiCurved(gtk.Window):
         if self.context_menu_visible or self.tooltip_visible : return
         if self.config['close_on_focusout']:
             self._stacks_gui_hide_cb(widget)
-        
+
     def reposition(self, w, h):
         # borrowed from awn-applet-dialog.c: awn_applet_dialog_position_reset
 
@@ -614,7 +614,7 @@ class StacksGuiCurved(gtk.Window):
 		active_monitor_number = screen.get_monitor_at_point(ax, ay)
 		active_monitor_geometry = screen.get_monitor_geometry(active_monitor_number)
 		sw = active_monitor_geometry.width
-		screen_mid = sw / 2       
+		screen_mid = sw / 2
 		
 		icon_size = self.config['icon_size']
 
@@ -632,7 +632,7 @@ class StacksGuiCurved(gtk.Window):
 			if ax > screen_mid:
 				self.direction = "RIGHT"
 			else:
-				self.direction = "LEFT"     
+				self.direction = "LEFT"
 				   	
 		orient = self.applet.get_pos_type()
 
@@ -668,13 +668,13 @@ class StacksGuiCurved(gtk.Window):
 
     # Calculate stack item y coordinate
     def calc_y_position (self, i):
-  		y = self.curved_config['layout_radius'] * math.sin(math.radians(self.angle_interval * i)) 
+  		y = self.curved_config['layout_radius'] * math.sin(math.radians(self.angle_interval * i))
   		return y
 
     # Calculate stack item angle
     def calc_angle (self, i):
   		a = math.radians(self.angle_interval * i)
-  		return a        
+  		return a
 
 
     def new_stack_item(self, iter, x=0, y=0, angle = 0, id = 0):
@@ -694,26 +694,26 @@ class StacksGuiCurved(gtk.Window):
         self.full_redraw = True
         self.store = self.applet.backend.get_store()
         self.item_count=len(self.store)
-        
+
         if start_icon == None:
         	start_icon=0
-         
+
         if start_icon < 0:
         	start_icon=0
         	
-        
-        
+
+
         self.start_icon = start_icon
         self.active_button = None
 
         self.evb.drag_dest_set( gtk.DEST_DEFAULT_DROP | gtk.DEST_DEFAULT_MOTION,
                             self.dnd_targets,
-                            self.config['fileops'])       
+                            self.config['fileops'])
         self.evb.drag_source_set( gtk.gdk.BUTTON1_MASK,
                                 self.applet.dnd_targets,
                                 self.config['fileops'])
-         
-                
+
+
         icon_size = self.config['icon_size']
         ax, ay = self.applet.window.get_origin()
 
@@ -723,13 +723,13 @@ class StacksGuiCurved(gtk.Window):
         active_monitor_geometry = screen.get_monitor_geometry(active_monitor_number)
         max_height = active_monitor_geometry.height
         max_height -= self.applet.get_size() + self.applet.get_offset()
-        
+
         self.angle_interval = self.curved_config['layout_interval'] * icon_size / 50
-        
+
         #prepare the stack data to display
         self.theres_more = False
         iter = self.store.iter_nth_child(None, self.start_icon)
-        
+
         i = 0
         self.stack_items = []
         while iter:
@@ -755,17 +755,17 @@ class StacksGuiCurved(gtk.Window):
         	self.stack_items.append(si)
         	iter = self.store.iter_next(iter)
         	self.maxx = si.x
-        	self.maxy = si.y   
+        	self.maxy = si.y
         	if self.maxquantity < i: self.maxquantity = i
-        
 
-  
+
+
         self.width = int(round( self.text_distance + self.curved_config['label_length'] + icon_size + self.maxx + icon_size / 4))
-        
+
         self.right_arrow_enabled = False
         self.left_arrow_enabled = False
         self.icon_vertical_offset = 0
-        
+
         if (self.theres_more or self.start_icon > 0) and self.config['browsing']:
         	self.icon_vertical_offset = icon_size / 2
         	if self.theres_more:
@@ -777,16 +777,16 @@ class StacksGuiCurved(gtk.Window):
         self.icon_vertical_offset = self.icon_vertical_offset + 10
         #and finally show the stuff
         self.show_all()
-        
-    def draw_tooltip_window(self, widget, event):    
-            
+
+    def draw_tooltip_window(self, widget, event):
+
         # create the cairo context
         tooltip_context = self.tooltip_window.window.cairo_create()
-        
+
         rx = 1
         ry = 1
         rw, rh = self.tooltip_window.get_size()
-        
+
         rw = rw -2
         rh = rh -2
 
@@ -796,8 +796,8 @@ class StacksGuiCurved(gtk.Window):
 
         tooltip_context.paint ()
         tooltip_context.set_operator (cairo.OPERATOR_OVER)
-        
-        
+
+
         self.linear = cairo.LinearGradient(rx, ry, rx, ry+rh)
         r, g, b, a = rgba_values(self.curved_config['tooltip_bg_color1'])
         self.linear.add_color_stop_rgba(0, r, g, b, a)
@@ -805,27 +805,27 @@ class StacksGuiCurved(gtk.Window):
         self.linear.add_color_stop_rgba(0.5, r2, g2, b2, a2)
         self.linear.add_color_stop_rgba(1, r, g, b, a)
         tooltip_context.set_source(self.linear)
-        
+
         self.draw_rounded_rect(tooltip_context,rx,ry,rw,rh,15)
         tooltip_context.fill()
-        
+
         r, g, b, a = rgba_values(self.curved_config['tooltip_border_color'])
         tooltip_context.set_source_rgba (r, g, b, a)
         self.draw_rounded_rect(tooltip_context,rx,ry,rw,rh,15)
         tooltip_context.set_line_width (2)
         tooltip_context.stroke()
-        
+
         self.linear = cairo.LinearGradient(rx, ry, rx, ry+rh/4+15)
         self.linear.add_color_stop_rgba(0, 1, 1, 1, 0.45)
         self.linear.add_color_stop_rgba(0.5, 1, 1, 1, 0.15)
         self.linear.add_color_stop_rgba(1, 0, 0, 0, 0.05)
         tooltip_context.set_source(self.linear)
-        
+
         self.draw_top_rounded_rect(tooltip_context,rx,ry,rw,rh,15)
         tooltip_context.fill()
-        
+
     def draw_dialog(self, widget, event):
-    
+
         #print " > dialog exposed, redrawing < "
         self.reposition(self.width, self.height)
         if self.currentwidth <> self.width or self.currentheight <> self.height:
@@ -833,7 +833,7 @@ class StacksGuiCurved(gtk.Window):
         	self.currentheight = self.height
         	#self.set_size_request(self.width, self.height)
         	self.resize(self.width, self.height)
-        
+
         # create the cairo context
         context = self.window.cairo_create()
 
@@ -845,8 +845,8 @@ class StacksGuiCurved(gtk.Window):
         context.paint()
 
         context.set_operator(cairo.OPERATOR_OVER)
-        
-        
+
+
         icon_size = self.config['icon_size']
 
         pmcr = None
@@ -855,7 +855,7 @@ class StacksGuiCurved(gtk.Window):
         	pmcr = pm.cairo_create()
         	self.full_redraw = False
 
-        
+
         for si in self.stack_items[:]:
         	self.draw_stack_item(context, si, pmcr)
         	
@@ -904,7 +904,7 @@ class StacksGuiCurved(gtk.Window):
     		label_x = 0
     		angle = si.angle
     	else:
-    		icon_x = self.maxx - si.x + icon_size / 4 
+    		icon_x = self.maxx - si.x + icon_size / 4
     		label_x = icon_size
     		angle = -si.angle
     		
@@ -930,7 +930,7 @@ class StacksGuiCurved(gtk.Window):
     	label_width = 10
     	labletext = si.lbl_text
     	labletext, text_width, text_height = self.get_text_size(pango_layout, labletext,self.curved_config['label_length'])
-    	label_width = text_width + 10    
+    	label_width = text_width + 10
     	label_height = text_height	
     	y = icon_size / 2 - label_height / 2
 
@@ -1018,14 +1018,14 @@ class StacksGuiCurved(gtk.Window):
 			context.set_line_width (2)
 			context.stroke()    	
     	
-    
+
     def drawIcon(self, context, x, y, icon, selected = False):
 		icon_size = self.config['icon_size']
 		
 		iw = icon.get_width()
 		ih = icon.get_height()
 		
-		# adjust the icon position if it is smaller than the icon size. 
+		# adjust the icon position if it is smaller than the icon size.
 		x_adjust = 0
 		y_adjust = 0
 		if iw < icon_size: x_adjust = (icon_size - iw) / 2
@@ -1127,7 +1127,7 @@ class StacksGuiCurved(gtk.Window):
 
     def get_text_size(self, pango_layout, text, maxwidth):
 		potential_text = text
-		maxwidth = maxwidth - 50 
+		maxwidth = maxwidth - 50
 		pango_layout.set_text(potential_text)
 		text_width = pango_layout.get_pixel_size()[0]
 		end = -1
@@ -1142,8 +1142,8 @@ class StacksGuiCurved(gtk.Window):
 		#   A-----BQ
 		#  F       C
 		#  |     /-D
-		#  |  /-/   
-		#  E-/ 
+		#  |  /-/
+		#  E-/
 		ct.move_to(x+r,y)                      # Move to A
 		ct.line_to(x+w-r,y)                    # Straight line to B
 		ct.curve_to(x+w,y,x+w,y,x+w,y+r)       # Curve to C, Control points are both at Q
@@ -1152,7 +1152,7 @@ class StacksGuiCurved(gtk.Window):
 
 		ct.line_to(x,y+r)                    # Line to F
 		ct.curve_to(x,y,x,y,x+r,y)             # Curve to A
-		return        
+		return
 
     def draw_rounded_rect(self,ct,x,y,w,h,r = 16):
 		#   A****BQ
@@ -1169,7 +1169,7 @@ class StacksGuiCurved(gtk.Window):
 		ct.curve_to(x,y+h,x,y+h,x,y+h-r)       # Curve to G
 		ct.line_to(x,y+r)                      # Line to H
 		ct.curve_to(x,y,x,y,x+r,y)             # Curve to A
-		return        
+		return
         	
     def drawArrow (self, context, x, y, size, direction, selected = False):
     	
@@ -1193,8 +1193,8 @@ class StacksGuiCurved(gtk.Window):
 				context.set_source_rgba (1,1,1,0.85)
 			
 			context.move_to(x-size/2,y )
-			context.line_to(x+size/2,y+size/2)       
-			context.line_to(x+size/2,y-size/2)       
+			context.line_to(x+size/2,y+size/2)
+			context.line_to(x+size/2,y-size/2)
 			context.line_to(x-size/2,y )
 		else:
 			if selected:
@@ -1203,8 +1203,8 @@ class StacksGuiCurved(gtk.Window):
 				context.set_source_rgba (1,1,1,0.85)			
 
 			context.move_to(x+size/2,y )
-			context.line_to(x-size/2,y+size/2)       
-			context.line_to(x-size/2,y-size/2)       
+			context.line_to(x-size/2,y+size/2)
+			context.line_to(x-size/2,y-size/2)
 			context.line_to(x+size/2,y )
 		context.fill()
 		
@@ -1216,9 +1216,9 @@ class StacksGuiCurved(gtk.Window):
 		
 		return arrow_position
  	
-        	        
+        	
 class stack_item:
-	#objet with all stack data 
+	#objet with all stack data
 	
 	def __init__ (self,x,y,angle,vfs_uri, lbl_text, mime_type, icon, id = -1):
 		self.x=x
@@ -1246,13 +1246,13 @@ class CurvedStacksConfig(GladeWindow):
     def __init__(self, applet):
         GladeWindow.__init__(self)
         self.applet = applet
-        
+
         curved_config = get_curved_gui_config(
                 self.applet.client,
                 self.applet.get_uid())
         self.config = curved_config
         config = curved_config
-        
+
         #Setup the dialog with those configuration values
         #set label configuration
         self.widgets['label_length_box'].set_value(config['label_length'])
@@ -1327,7 +1327,7 @@ class CurvedStacksConfig(GladeWindow):
     	saveColor(client, "label_hover_border_color",self.widgets['label_hover_border_color'].get_color(),self.widgets['label_hover_border_color'].get_alpha())
         client.set_bool(GROUP_CURVED, "use_awn_title_font",self.widgets['use_awn_title_font_checkButton'].get_active())
     	client.set_string(GROUP_CURVED, "label_font",self.widgets['font_selector'].get_font_name())
-    
+
         #save layout configuration
         client.set_int(GROUP_CURVED, "layout_radius", int(round(self.widgets['layout_radius'].get_value())))
         client.set_int(GROUP_CURVED, "layout_interval", int(round(self.widgets['layout_interval'].get_value())))
@@ -1384,7 +1384,7 @@ def get_curved_gui_config(client, uid):
     config['hoverbox_contains_label'] = client.get_bool(GROUP_CURVED, "hoverbox_contains_label")
 
     return config
-    
+
 def rgba_values(v):
 	return v[0], v[1], v[2], v[3]
 

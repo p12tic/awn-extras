@@ -57,7 +57,7 @@ void init_settings (AwnTerm *applet)
 	gfloat opacity = 1.0;
 	applet->config = awn_config_client_new_for_applet ("awnterm", NULL);
 	
-	awn_config_client_notify_add (applet->config, 
+	awn_config_client_notify_add (applet->config,
 		AWN_CONFIG_CLIENT_DEFAULT_GROUP,
 		OPACITY,
 		(AwnConfigClientNotifyFunc)load_opacity,

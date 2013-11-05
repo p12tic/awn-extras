@@ -35,7 +35,7 @@ class Dialog(awn.AppletDialog):
         cr.set_operator(cairo.OPERATOR_CLEAR)
         cr.paint()
         cr.set_operator(cairo.OPERATOR_OVER)
-       
+
         for c in self.get_children():
           self.propagate_expose(c, event)
 

@@ -49,7 +49,7 @@ class Settings:
 
             #Set the functions to call for when <string> is changed as an empty list
             self._connects[string] = []
-            
+
             #Return the value
             return self._values[string]
 

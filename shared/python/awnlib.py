@@ -915,7 +915,7 @@ class Settings:
                 def applet_deleted_cb(applet):
                     self.__client.remove_instance()
                 client.connect("applet-deleted", applet_deleted_cb)
-                
+
                 self.__parent = client
             elif type_client is config.Client:
                 self.__client = client
@@ -951,7 +951,7 @@ class Settings:
                 try:
                     self.__client.set_value(self.__folder, key, value)
                 except:
-                    name = self.__parent.meta["name"] if self.__parent is not None else "UNKNOWN" 
+                    name = self.__parent.meta["name"] if self.__parent is not None else "UNKNOWN"
                     print "%s: Could not set new value for key '%s'" % (name, key)
                     raise
 

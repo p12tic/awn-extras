@@ -32,12 +32,12 @@ class SensorIcon():
     def __init__(self, theme, sensors, height, hand_color):
         """
         Initialize icon.
-        
+
         Load icon background, create cairo context and render background.
             theme: icon theme
             sensors: list of sensors who's values are shown in this icon
             height: applet height in pixels
-        
+
         """
         if len(sensors) is 1:
             self.__type = "single"

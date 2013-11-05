@@ -91,7 +91,7 @@ void _all_fixed_children(GtkFixedChild *node, Dashboard *p);
 static gboolean _toggle_gtk(GtkWidget *widget, GdkEventButton *event, Dashboard *p);
 static gboolean _apply_dash_colours(GtkWidget *widget, GdkEventButton *event, Dashboard *p);
 
-/*FIXME  --- 
+/*FIXME  ---
 static void show_main_window(Dashboard *Dashboard);
 static void hide_main_window(Dashboard *Dashboard);
 

@@ -37,7 +37,7 @@
 
 03/13/2010:
     applied patch from bug #534061 to fix color selection bug in preferences caused by not calling 'to_string()' in the returned gtk.gdk.Color object https://launchpad.net/bugs/534061
-    
+
 
 01/05/2010:
     PEP8 cleanup of all lines > 80 chars
@@ -51,7 +51,7 @@
     Fix for applet/font-sizing when changing orientation
     Changed instantiation of color objects to use gtk.gdk.color_parse instead of gtk.gdk.Color('#XXX') for older systems
     Changed handling of default preferences/unassigned keys
-    
+
 
 01/02/2010:
     Fixed bug which caused the unit of measure checkbutton to become out of sync with the gconf value
@@ -99,7 +99,7 @@
 12/16/2009:
     Added call to applet.errors.general if read access to /proc/net/dev fails.
     Made changes to TODO file
-    Change parser logic for to handle interfaces with less than 11 columns of output in 'netstat -iea'    
+    Change parser logic for to handle interfaces with less than 11 columns of output in 'netstat -iea'
 
 12/14/2009:
     Created preferences dialog to manage options -
@@ -139,7 +139,7 @@
         Cleaned up some naming conventions
     Created a new branch repository (previous was setup wrong): lp:~kylehuff/awn-extras/0.4-bandwidth-monitor
 
-11/27/2009:    
+11/27/2009:
     Applied patch from mhr3 which included -
         Changes to applet short-name
         Changes to Makefile.am

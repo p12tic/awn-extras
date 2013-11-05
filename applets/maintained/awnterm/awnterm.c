@@ -16,7 +16,7 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
- 
+
 #include "config.h"
 
 #include <libawn/awn-applet.h>
@@ -90,7 +90,7 @@ gboolean focus_out_cb (GtkWidget *window, GdkEventFocus *event, gpointer null)
     if (share_config_bool(SHR_KEY_FOCUS_LOSS) )
     {
     	gtk_widget_hide (window);
-    }        
+    }
 	return FALSE;
 }
 

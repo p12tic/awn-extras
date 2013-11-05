@@ -201,7 +201,7 @@ public class NotificationArea : GLib.Object
     // bind our config keys
     this.client = Awn.Config.get_default_for_applet (applet);
 
-    this.client.bind (DesktopAgnostic.Config.GROUP_DEFAULT, "icons_per_cell", 
+    this.client.bind (DesktopAgnostic.Config.GROUP_DEFAULT, "icons_per_cell",
                       this, "icons-per-cell",
                       true, DesktopAgnostic.Config.BindMethod.FALLBACK);
     this.client.bind (DesktopAgnostic.Config.GROUP_DEFAULT, "icon_size",
@@ -211,11 +211,11 @@ public class NotificationArea : GLib.Object
                       this, "extra-offset",
                       true, DesktopAgnostic.Config.BindMethod.FALLBACK);
 
-    this.client.bind (DesktopAgnostic.Config.GROUP_DEFAULT, "background_color", 
+    this.client.bind (DesktopAgnostic.Config.GROUP_DEFAULT, "background_color",
                       this, "background-color",
                       true, DesktopAgnostic.Config.BindMethod.FALLBACK);
 
-    this.client.bind (DesktopAgnostic.Config.GROUP_DEFAULT, "border_color", 
+    this.client.bind (DesktopAgnostic.Config.GROUP_DEFAULT, "border_color",
                       this, "border-color",
                       true, DesktopAgnostic.Config.BindMethod.FALLBACK);
   }
@@ -288,7 +288,7 @@ public class NotificationArea : GLib.Object
     }
     else
     {
-      DesktopAgnostic.Color da_color = 
+      DesktopAgnostic.Color da_color =
         new DesktopAgnostic.Color (eb.style.bg[Gtk.StateType.ACTIVE], 65535);
       if (eb.is_composited ())
       {
@@ -340,7 +340,7 @@ public class NotificationArea : GLib.Object
     }
     else
     {
-      DesktopAgnostic.Color da_color = 
+      DesktopAgnostic.Color da_color =
         new DesktopAgnostic.Color (eb.style.bg[Gtk.StateType.ACTIVE], 65535);
       if (this.applet.is_composited ())
       {
@@ -398,7 +398,7 @@ public class NotificationArea : GLib.Object
   private void table_refresh ()
   {
     if (this.applet == null || this.table == null) return;
-    
+
     int row = 0, col = 0;
     Gtk.PositionType position = this.applet.get_pos_type ();
 
@@ -413,7 +413,7 @@ public class NotificationArea : GLib.Object
       }
       else
       {
-        this.table.child_set (icon, 
+        this.table.child_set (icon,
                               "left-attach", col, "right-attach", col+1,
                               "top-attach", row, "bottom-attach", row+1);
         if (position == Gtk.PositionType.TOP ||
@@ -477,7 +477,7 @@ public class NotificationArea : GLib.Object
         position == Gtk.PositionType.BOTTOM)
     {
       num_cols = this.table.n_columns;
-      cols = elements % max_rows == 0 ? 
+      cols = elements % max_rows == 0 ?
         num_cols / max_rows : num_cols / max_rows + 1;
     }
     else
@@ -497,7 +497,7 @@ public class NotificationArea : GLib.Object
     int icon_size = (size - (this.max_rows - 1)) / this.max_rows;
     icon_size = icon_size * this._icon_size / 100;
 
-    // let's special case when we have two rows - use only even numbers for 
+    // let's special case when we have two rows - use only even numbers for
     // the icon sizes, so icons can have sharp edges
     if (this.max_rows == 2)
     {
@@ -635,7 +635,7 @@ awn_applet_factory_initp (string canonical_name, string uid, int panel_id)
   if (EggTray.Manager.check_running (Gdk.Screen.get_default ()))
   {
     string msg = Gettext._ ("There is already another notification area running on this screen!");
-    MessageDialog d = new MessageDialog (null, DialogFlags.MODAL, 
+    MessageDialog d = new MessageDialog (null, DialogFlags.MODAL,
                                          MessageType.ERROR, ButtonsType.CLOSE,
                                          "%s", msg);
     d.format_secondary_text (Gettext._ ("Please remove the existing notification area and then restart the applet."));

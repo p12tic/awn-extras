@@ -16,7 +16,7 @@ gmcs -out:mono-test.exe \
 
 You'll need the libmono-getoptions2.0-cil package for Mono.GetOptions.dll
 (but you can also use the *1.0-cil version).
-Also if you don't have libawn-sharp installed you can substitute 
+Also if you don't have libawn-sharp installed you can substitute
 the "-pkg:libawn-sharp" with "-r:/path/to/libawn-sharp.dll".
 
 Links:

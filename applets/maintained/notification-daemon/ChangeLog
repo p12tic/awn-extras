@@ -941,7 +941,7 @@ Tue Jan 10 22:57:51 PST 2006  Christian Hammond <chipx86@chipx86.com>
 	* src/eggnotificationbubblewidget.h (struct _DrawingPipeline):
 	Added intermediate pipeline for graphics rendering
 
-	* src/eggnotificationbubblewidget.c 
+	* src/eggnotificationbubblewidget.c
 	(_stencil_bubble*): These methods now take care of prerendering
 	the graphics to the pipeline and calculating the x, y offset of
 	the arrow
@@ -970,7 +970,7 @@ Tue Jan 10 22:57:51 PST 2006  Christian Hammond <chipx86@chipx86.com>
 
 	* src/eggnotificationbubblewidget.c (size_request_handler): removed
 	(egg_notification_bubble_widget_init): initialize draw_arrow to FALSE
-	(_populate_window): Move adding widgets to the table to the 
+	(_populate_window): Move adding widgets to the table to the
 	_layout_window method
 	(draw_bubble_widget): now can draw bubble without the arrow
 	(egg_notification_bubble_widget_set_draw_arrow): New method for setting
@@ -997,7 +997,7 @@ Tue Jan 10 22:57:51 PST 2006  Christian Hammond <chipx86@chipx86.com>
 	* src/notifydaemon.xml: make the Notify method async so we can get the
 	sender
 
-	* src/notifydaemon.c (_emit_action_invoked_signal):  Emits the dbus 
+	* src/notifydaemon.c (_emit_action_invoked_signal):  Emits the dbus
 	signal when one of the action buttons is clicked
 	(_emit_closed_signal): emits a Closed signal over the bus when the
 	bubble is closed
@@ -1006,7 +1006,7 @@ Tue Jan 10 22:57:51 PST 2006  Christian Hammond <chipx86@chipx86.com>
 	callback we hook up to the buttons' "clicked" signal
 	(notify_daemon_notify_handler): change to an async method
 	store the unique name of the sender that called us
-	setup buttons if actions have been added 
+	setup buttons if actions have been added
 	
 2005-11-22  John (J5) Palmieri  <johnp@redhat.com>
 
@@ -1019,7 +1019,7 @@ Tue Jan 10 22:57:51 PST 2006  Christian Hammond <chipx86@chipx86.com>
 
 2005-11-10  John (J5) Palmieri  <johnp@redhat.com>
 
-	* Makefile.am: remove Doxyfile.in ref 
+	* Makefile.am: remove Doxyfile.in ref
 
 2005-11-10  John (J5) Palmieri  <johnp@redhat.com>
 

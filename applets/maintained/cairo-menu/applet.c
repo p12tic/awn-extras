@@ -40,11 +40,11 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
 {
 
   AwnApplet *applet = AWN_APPLET( cairo_menu_applet_new (name, uid, panel_id) );
-  
+
   g_object_set (applet,
                 "display-name","Cairo Menu",
                 NULL);
-  
+
   return applet;
 
 }

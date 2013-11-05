@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Library General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
@@ -101,12 +101,12 @@ awn_desktop_lookup_new (void)
 
 /*
  If other attempts to find a desktop file fail then this function will
- typically get called which use tables of data to match problem apps to 
+ typically get called which use tables of data to match problem apps to
  desktop file names (refer to util.c)
  */
 gchar *
-awn_desktop_lookup_special_case (gchar * cmd, 
-                                 gchar *res_name, 
+awn_desktop_lookup_special_case (gchar * cmd,
+                                 gchar *res_name,
                                  gchar * class_name,
                                  gchar * wm_icon_name,
                                  gchar * wm_name,

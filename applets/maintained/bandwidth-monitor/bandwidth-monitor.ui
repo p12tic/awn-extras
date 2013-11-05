@@ -410,7 +410,7 @@
                     <child>
                       <object class="GtkLabel" id="label-appletSizeOverride">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Applet Size 
+                        <property name="label" translatable="yes">Applet Size
 Override</property>
                       </object>
                       <packing>

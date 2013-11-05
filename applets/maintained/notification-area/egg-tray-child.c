@@ -164,10 +164,10 @@ egg_tray_child_size_request (GtkWidget      *widget,
 
   /*
    * Make sure the icons have a meaningful size ..
-   */ 
+   */
   if ((request->width < 16) || (request->height < 16))
     {
-      g_warning (_("tray icon has requested a size of (%i x %i), resizing to (%i x %i)"), 
+      g_warning (_("tray icon has requested a size of (%i x %i), resizing to (%i x %i)"),
 		 req.width, req.height, nw, nh);
       request->width = nw;
       request->height = nh;
@@ -352,7 +352,7 @@ egg_tray_child_get_title (EggTrayChild *child)
 			       False, utf8_string,
 			       &type, &format, &nitems,
 			       &bytes_after, (guchar **)&val);
- 
+
   if (gdk_error_trap_pop () || result != Success)
     return NULL;
 
@@ -415,7 +415,7 @@ egg_tray_child_get_image_surface (EggTrayChild *child)
     width = widget->allocation.width;
     height = widget->allocation.height;
 
-    /* 
+    /*
      * If GDK wasn't bugged on intrepid, we wouldn't have to use
      * an extra surface.
      */
@@ -463,7 +463,7 @@ egg_tray_child_get_image_surface (EggTrayChild *child)
 
     g_array_sort (array, compare_colors);
 
-    // pick the color with a simple rule - most occurrences 
+    // pick the color with a simple rule - most occurrences
     //  (plus we use increased weight for the top right pixel)
     // if corner pixels are all different then we'll pick the "middle" one
     //  (black, gray, white -> gray)

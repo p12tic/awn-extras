@@ -58,8 +58,8 @@ void
 awn_cairo_string_to_color(const gchar *string, AwnColor *color)
 {
   float colors[4];
-  g_return_if_fail (string); 
-  g_return_if_fail (color); 
+  g_return_if_fail (string);
+  g_return_if_fail (color);
 
   hex2float(string, colors);
   color->red = colors[0];

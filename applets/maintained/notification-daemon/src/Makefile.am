@@ -1,1 +1,1 @@
-SUBDIRS = daemon 
+SUBDIRS = daemon

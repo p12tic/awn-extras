@@ -1,7 +1,7 @@
 <gconfschemafile>
 
     <schemalist>
-    
+
       <schema>
         <key>/schemas/apps/awn-file-browser/prefs/default_drag_action</key>
         <owner>awn-file-browser</owner>
@@ -12,7 +12,7 @@
           <long></long>
         </locale>
       </schema>
-      
+
       <schema>
         <key>/schemas/apps/awn-file-browser/prefs/applet_icon</key>
         <owner>awn-file-browser</owner>
@@ -22,8 +22,8 @@
           <short>Specify an icon to use for the file browser applet (button).</short>
           <long></long>
         </locale>
-      </schema>       
-      
+      </schema>
+
 	  <schema>
         <key>/schemas/apps/awn-file-browser/prefs/enable_browsing</key>
         <owner>awn-file-browser</owner>
@@ -34,7 +34,7 @@
           <long></long>
         </locale>
       </schema>
-      
+
       <schema>
         <key>/schemas/apps/awn-file-browser/prefs/show_files</key>
         <owner>awn-file-browser</owner>
@@ -67,7 +67,7 @@
           <long></long>
         </locale>
       </schema>
-      
+
       <schema>
         <key>/schemas/apps/awn-file-browser/prefs/show_desktop_items</key>
         <owner>awn-file-browser</owner>
@@ -78,7 +78,7 @@
           <long></long>
         </locale>
       </schema>
-      
+
       <schema>
         <key>/schemas/apps/awn-file-browser/prefs/enable_composite_applet_icon</key>
         <owner>awn-file-browser</owner>
@@ -99,7 +99,7 @@
           <short>Specify a full path to a folder to use as backend.</short>
           <long></long>
         </locale>
-      </schema>      
+      </schema>
 
       <schema>
         <key>/schemas/apps/awn-file-browser/prefs/icon_size</key>
@@ -110,8 +110,8 @@
           <short>The size of the file browser icons</short>
           <long></long>
         </locale>
-      </schema> 
-      
+      </schema>
+
 	  <schema>
         <key>/schemas/apps/awn-file-browser/prefs/maximum_rows</key>
         <owner>awn-file-browser</owner>
@@ -121,8 +121,8 @@
           <short>The maximum rows a file browser page should display</short>
           <long></long>
         </locale>
-      </schema> 
-      
+      </schema>
+
       <schema>
         <key>/schemas/apps/awn-file-browser/prefs/maximum_cols</key>
         <owner>awn-file-browser</owner>
@@ -132,8 +132,8 @@
           <short>The maximum columns a file browser page should display</short>
           <long></long>
         </locale>
-      </schema> 
+      </schema>
 
     </schemalist>
 
-</gconfschemafile>  
+</gconfschemafile>

@@ -123,7 +123,7 @@ hello_world_render (cairo_t *cr, int width, int height)
 }
 
 
-static gboolean 
+static gboolean
 time_handler (HelloWorld *helloworld)
 {
 	gtk_widget_queue_draw (GTK_WIDGET(helloworld->applet));

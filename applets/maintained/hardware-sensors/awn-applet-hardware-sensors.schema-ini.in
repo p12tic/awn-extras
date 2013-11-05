@@ -53,26 +53,26 @@ _description=In what row of dialog is the sensor shown.
 
 [DEFAULT/in_icon]
 type = list-boolean
-default = 
+default =
 _description=Whether to show a sensor in applet icon or not.
 
 [DEFAULT/high_values]
 type = list-float
-default = 
+default =
 _description=High value limit (at which alarm triggers) for each sensor.
 
 [DEFAULT/low_values]
 type = list-float
-default = 
+default =
 _description=Low value limit (at which alarm triggers) for each sensor.
 
 [DEFAULT/high_alarms]
 type = list-boolean
-default = 
+default =
 _description=Whether alarm should trigger at high value limit or not.
 
 [DEFAULT/low_alarms]
 type = list-boolean
-default = 
+default =
 _description=Whether alarm should trigger at low value limit or not.
 

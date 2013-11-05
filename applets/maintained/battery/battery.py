@@ -392,7 +392,7 @@ class UPowerBackend(AbstractBackend):
 
     def __set_dbus_interface(self, udi):
         self.__battery = UPowerBackend.__get_dbus_interface(self.__system_bus, udi)
-    
+
     @staticmethod
     def __get_property(interface, property_name):
         return interface.Get(UPowerBackend.device_iface_name, property_name)

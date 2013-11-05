@@ -10,12 +10,12 @@ _description=Set whether the applet should hide itself when it loses focus.
 
 [DEFAULT/global_hotkey]
 type = string
-default = 
+default =
 _description=Global hotkey used to activate the terminal.
 
 [DEFAULT/bg_img]
 type = string
-default = 
+default =
 _description=The applet's background image.
 
 [DEFAULT/main_terminal]

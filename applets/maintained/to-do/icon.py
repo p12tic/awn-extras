@@ -44,12 +44,12 @@ def icon(size2, settings, color, surface, last_height):
     cr = cairo.Context(surface)
   else:
     cr = cairo.Context(surface)
-  
+
   #Clear the surface
   cr.set_operator(cairo.OPERATOR_CLEAR)
   cr.paint()
   cr.set_operator(cairo.OPERATOR_OVER)
-  
+
   #Get some data
   num_items = 0
   new_progress = []
@@ -59,9 +59,9 @@ def icon(size2, settings, color, surface, last_height):
         if settings['progress'][i] != 100:
           num_items += 1
         new_progress.append(settings['progress'][i])
-  
+
   #Get the needed data based on the icon type
-  
+
   #progress: border shows progress, number shows percent completed
   if settings['icon_type']=='progress':
     if len(settings['progress'])==0:
@@ -71,7 +71,7 @@ def icon(size2, settings, color, surface, last_height):
       progress = float(sum(new_progress))/float(len(new_progress))
       progress = int(progress)
       number = str(progress)+'%'
-  
+
   #progress-items: border shows progress, number shows # items
   elif settings['icon_type']=='progress-items':
     if len(settings['progress'])==0:
@@ -81,20 +81,20 @@ def icon(size2, settings, color, surface, last_height):
       progress = float(sum(new_progress))/float(len(new_progress))
       progress = int(progress)
       number = str(num_items)
-  
+
   #items: number shows # items
   elif settings['icon_type']=='items':
     number = str(num_items)
-  
+
   #Draw the outer circle
   cr.set_source_rgba(float(color[2][0])/255.0,float(color[2][1])/255.0,\
     float(color[2][2])/255.0,settings['icon_opacity']/100.0)
   cr.arc(size/2.0,size/2.0,size/2.08,0,2*pi)
   cr.stroke()
   cr.close_path()
-  
+
   cr.set_line_width(2)
-  
+
   #Draw the inner border - either showing progress or not
   if settings['icon_type'] in ['progress','progress-items']:
     #(Probably) medium background
@@ -103,7 +103,7 @@ def icon(size2, settings, color, surface, last_height):
     cr.arc(size/2.0,size/2.0,size/2.18,0,2*pi)
     cr.stroke()
     cr.close_path()
-    
+
     #(Probably) lightest foreground to indicate progress
     cr.set_source_rgba(float(color[0][0])/255.0,float(color[0][1])/255.0,\
       float(color[0][2])/255.0,settings['icon_opacity']/100.0)
@@ -113,8 +113,8 @@ def icon(size2, settings, color, surface, last_height):
       ((3.0*pi)/2.0)+2*pi*(progress/100.0))
     cr.stroke()
     cr.close_path()
-  
-  
+
+
   #Draw the middle circle normally
   else:
     cr.set_source_rgba(float(color[0][0])/255.0,float(color[0][1])/255.0,\
@@ -122,14 +122,14 @@ def icon(size2, settings, color, surface, last_height):
     cr.arc(size/2.0,size/2.0,size/2.18,0,2*pi)
     cr.stroke()
     cr.close_path()
-  
+
   #Draw the inside circle and fill it
   cr.set_source_rgba(float(color[1][0])/255.0,float(color[1][1])/255.0,\
     float(color[1][2])/255.0,settings['icon_opacity']/100.0)
   cr.arc(size/2.0,size/2.0,size/2.235,0,2*pi)
   cr.clip()
   cr.paint()
-  
+
   #Draw the number
   #Set up the font of the number
   cr.select_font_face("monospace",cairo.FONT_SLANT_NORMAL,\
@@ -146,38 +146,38 @@ def icon(size2, settings, color, surface, last_height):
     cr.move_to(diff(13), diff(38))
     cr.set_font_size(diff(38))
     cr.show_text(number)
-  
+
   #2-digit number
   elif len(number) == 2:
     cr.move_to(diff(8), diff(33))
     cr.set_font_size(diff(26))
     cr.show_text(number)
-  
+
   #3+-digit number
   elif len(number) == 3:
     cr.move_to(diff(7), diff(30))
     cr.set_font_size(diff(19))
     cr.show_text(number)
-  
+
   #100% or this user is crazy (>= 1000 items)
   else:
     cr.move_to(diff(6), diff(29))
     cr.set_font_size(diff(15))
     cr.show_text(number)
-  
+
   #Finish the drawing
   cr.close_path()
   cr.set_line_width(1)
   cr.stroke()
-  
+
   del cr
   return surface
 
 def diff(num):
   global size
-  
+
   ans = num * (size / 48.0)
-  
+
   return ans
 
 def icon2(settings, color, surface, percent):
@@ -186,22 +186,22 @@ def icon2(settings, color, surface, percent):
     cr = cairo.Context(surface)
   else:
     cr = cairo.Context(surface)
-  
+
   #Clear the surface
   cr.set_operator(cairo.OPERATOR_CLEAR)
   cr.paint()
   cr.set_operator(cairo.OPERATOR_OVER)
   cr.set_line_width(1)
-  
+
   #Draw the outer circle
   cr.set_source_rgb(float(color[2][0])/255.0,float(color[2][1])/255.0,\
     float(color[2][2])/255.0)
   cr.arc(8, 8, 7, 0, 2 * pi)
   cr.stroke()
   cr.close_path()
-  
-  
-  
+
+
+
   #(Probably) lightest foreground to indicate progress
   cr.set_source_rgb(float(color[0][0])/255.0,float(color[0][1])/255.0,\
     float(color[0][2])/255.0)
@@ -216,11 +216,11 @@ def icon2(settings, color, surface, percent):
   cr.close_path()
   cr.fill()
   cr.paint()
-  
+
   #Finish the drawing
   cr.close_path()
   cr.set_line_width(1)
   cr.stroke()
-  
+
   del cr
   return surface

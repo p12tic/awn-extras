@@ -39,18 +39,18 @@ typedef struct
   AddIconFunc add_icon_fn;
   CheckMenuHiddenFunc check_menu_hidden_fn;
   gint flags;
-  guint  source_id;  
+  guint  source_id;
   gboolean done_once;
   GtkWidget * places;
   GtkWidget * recent;
   GtkWidget * session;
-  GtkWidget     * menu;  
+  GtkWidget     * menu;
   gchar *       submenu_name;
 }MenuInstance;
 
 typedef GtkWidget * (* MenuBuildFunc)  (MenuInstance * instance);
 
-typedef enum 
+typedef enum
 {
   MENU_TYPE_GUESS,
   MENU_TYPE_GNOME,

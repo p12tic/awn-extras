@@ -71,7 +71,7 @@ _description=Number of seconds before a cached window surface is considered to b
 [DEFAULT/scale_icon_position]
 type = integer
 default = 3
-_description=0... centre  1 NW    2 NE   3 SE  4 SW	
+_description=0... centre  1 NW    2 NE   3 SE  4 SW
 
 [DEFAULT/applet_border_width]
 type = integer

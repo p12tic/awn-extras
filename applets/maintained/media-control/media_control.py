@@ -185,7 +185,7 @@ class MediaControlApplet (awn.AppletSimple):
                            gtk.DEST_DEFAULT_DROP | gtk.DEST_DEFAULT_MOTION,
                            [("text/uri-list", 0, 0), ("text/plain", 0, 1)],
                            gtk.gdk.ACTION_COPY)
-        
+
         self.client = awn.config_get_default_for_applet(self)
 
         self.client.bind(GROUP_DEFAULT, "use_docklet",
@@ -295,7 +295,7 @@ class MediaControlApplet (awn.AppletSimple):
         icon_box = awn.IconBox(docklet)
 
         icon_loader = self.get_icon()
-        
+
         play_state = 'pause' if self.is_playing else 'play'
         play_button_size = (docklet.props.max_size + docklet.props.size) / 2
         play_pause = awn.Icon(bind_effects = False)
@@ -303,7 +303,7 @@ class MediaControlApplet (awn.AppletSimple):
             icon_loader.get_icon_at_size(play_button_size, play_state)
         )
         play_pause.connect("clicked", self.button_pp_press)
-        # we need to add the child in two steps, because IconBox overrides 
+        # we need to add the child in two steps, because IconBox overrides
         # add() method and it must be called to set proper size/orient etc.
         icon_box.add(play_pause)
         icon_box.set_child_packing(play_pause, False, True, 0, gtk.PACK_START)
@@ -427,7 +427,7 @@ class MediaControlApplet (awn.AppletSimple):
                 self.timer_running = False
                 self.update_song_info(True)
                 return False
- 
+
             self.timer_running = True
             gobject.timeout_add(150, timer_callback)
 
@@ -515,7 +515,7 @@ class MediaControlApplet (awn.AppletSimple):
             try:
                 if self.album_art_enabled and self.album_art_pixbuf is not None:
                     scaled_pixbuf = self.album_art_pixbuf.scale_simple(
-                        self.album_art_size, 
+                        self.album_art_size,
                         self.album_art_size,
                         gtk.gdk.INTERP_BILINEAR)
                     self.image.set_from_pixbuf(scaled_pixbuf)

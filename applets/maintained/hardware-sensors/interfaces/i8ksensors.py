@@ -74,7 +74,7 @@ def get_sensors(timeout=1):
 def get_i8kutil_ouput():
     """
     Return the content of /proc/i8k in a list of the form:
-    
+
     1.0 A17 2J59L02 52 2 1 8040 6420 1 2
     |   |   |       |  | | |    |    | |
     |   |   |       |  | | |    |    | +------- 10. buttons status
@@ -87,12 +87,12 @@ def get_i8kutil_ouput():
     |   |   +---------------------------------- 3.  serial number
     |   +-------------------------------------- 2.  BIOS version
     +------------------------------------------ 1.  /proc/i8k format version
-    
+
     A negative value, for example -22, indicates that the BIOS doesn't return
     the corresponding information. This is normal on some models/bioses.
-    
+
     The above was copied from i8kutils' README for convenience
-    
+
     """
     if os.path.exists(i8k_sensors_path):
         try:

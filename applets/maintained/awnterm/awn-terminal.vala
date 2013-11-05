@@ -133,7 +133,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
   {
     base.constructed ();
 
-    // set icon & tooltip    
+    // set icon & tooltip
     this.set_tooltip_text ("Awn Terminal");
     this.set_icon_name ("terminal");
 
@@ -172,7 +172,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     this.config = Awn.Config.get_default_for_applet (this);
     try
     {
-      this.config.bind (GROUP_DEFAULT, "opacity", 
+      this.config.bind (GROUP_DEFAULT, "opacity",
                         this, "bg-opacity",
                         false, BindMethod.FALLBACK);
       this.config.bind (GROUP_DEFAULT, "hide_on_unfocus",
@@ -181,7 +181,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
       this.config.bind (GROUP_DEFAULT, "global_hotkey",
                         this, "keybinding",
                         false, BindMethod.FALLBACK);
-      this.config.bind (GROUP_DEFAULT, "bg_img", 
+      this.config.bind (GROUP_DEFAULT, "bg_img",
                         this, "background-image",
                         false, BindMethod.FALLBACK);
       this.config.bind (GROUP_DEFAULT, "main_terminal",
@@ -264,7 +264,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
       this.notebook.set_show_tabs (false);
     }
 
-    Signal.connect_swapped (terminal, "child-exited", 
+    Signal.connect_swapped (terminal, "child-exited",
                             (GLib.Callback)this.exited_cb, this);
     Signal.connect_swapped (terminal, "key-press-event",
                             (GLib.Callback)this.key_press_cb, this);
@@ -383,12 +383,12 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
       Widget about_item;
 
       this.menu = this.create_default_menu () as Menu;
-      
+
       prefs_item = new ImageMenuItem.from_stock (STOCK_PREFERENCES, null);
       prefs_item.activate.connect (this.on_prefs_activate);
       prefs_item.show ();
       this.menu.append (prefs_item);
-      about_item = 
+      about_item =
         this.create_about_item_simple ("Copyright © 2009 Michal Hruby" +
                                        "<michal.mhr@gmail.com>",
                                        AppletLicense.GPLV2, Build.VERSION);
@@ -466,7 +466,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     {
       uint key;
       Awn.Keybinder.Egg.VirtualModifierType virt_mods;
-      
+
       Awn.Keybinder.Egg.keymap_virtualize_modifiers (Gdk.Keymap.get_default (), accel_mods, out virt_mods);
       this.keybinding = Awn.Keybinder.Egg.virtual_accelerator_name (accel_key, virt_mods);
     });
@@ -508,7 +508,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     this.chooser.set_preview_widget (this.preview_image);
     this.chooser.set_size_request (200, -1);
 
-    this.chooser.file_set.connect ((w) => 
+    this.chooser.file_set.connect ((w) =>
     {
       this.background_image = w.get_filename ();
     });
@@ -599,7 +599,7 @@ public class AwnTerminalApplet : AppletSimple, TerminalDBus
     {
       this.prefs_window.hide ();
     });
-    
+
     this.prefs_window.show_all ();
   }
 }
@@ -622,11 +622,11 @@ awn_applet_factory_initp (string canonical_name, string uid, int panel_id)
     warning ("Coudln't get ownership of org.awnproject.Applet.Terminal!");
   }
 
-  AwnTerminalApplet applet = new AwnTerminalApplet (canonical_name, 
+  AwnTerminalApplet applet = new AwnTerminalApplet (canonical_name,
                                                     uid, panel_id);
 
   conn.register_object ("/org/awnproject/Applet/Terminal", applet);
-                                                                
+
   return applet;
 }
 

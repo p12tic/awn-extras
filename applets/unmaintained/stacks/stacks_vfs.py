@@ -311,7 +311,7 @@ class Monitor(gobject.GObject):
             self.emit(signal, self.vfs_uri)
 
     def close(self):
-        try: 
+        try:
             self.monitor.cancel()
             self.monitor = None
             self.vfs_uri = None

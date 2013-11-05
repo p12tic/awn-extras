@@ -55,7 +55,7 @@ class StacksGuiDialog:
 
     hide_timer = None
     hide_timeout = 500
-    
+
     dnd_targets = [("text/uri-list", 0, 0), ("text/plain", 0, 1)]
 
     signal_ids = []
@@ -76,7 +76,7 @@ class StacksGuiDialog:
     def is_visible(self):
         if self.dialog is None: return False
         return self.dialog.flags() & gtk.VISIBLE != 0
-        
+
     def _destroy_cb(self, widget):
         for id in self.signal_ids: self.applet.disconnect(id)
         del self.signal_ids[:]
@@ -202,7 +202,7 @@ class StacksGuiDialog:
             self.store = store
 
         # get values from store
-        
+
         vfs_uri, lbl_text, mime_type, icon, button = self.store.get(
                 iter, COL_URI, COL_LABEL, COL_MIMETYPE, COL_ICON, COL_BUTTON)
         if button:
@@ -215,7 +215,7 @@ class StacksGuiDialog:
         button.add_events(gtk.gdk.BUTTON_PRESS_MASK |
                         gtk.gdk.BUTTON_RELEASE_MASK |
                         gtk.gdk.POINTER_MOTION_MASK |
-                        gtk.gdk.LEAVE_NOTIFY) 
+                        gtk.gdk.LEAVE_NOTIFY)
 
         button.drag_source_set( gtk.gdk.BUTTON1_MASK,
                                 self.applet.dnd_targets,
@@ -232,8 +232,8 @@ class StacksGuiDialog:
                         vfs_uri)
         button.connect( "drag-begin",
                         self.item_drag_begin)
-                        
-        
+
+
         if mime_type == "x-directory/normal":
         	button.connect("drag-motion", self.button_drag_motion)
         	button.connect("drag-leave", self.button_drag_leave)
@@ -241,9 +241,9 @@ class StacksGuiDialog:
         	button.drag_dest_set( gtk.DEST_DEFAULT_ALL,
                             self.dnd_targets,
                             self.config['fileops'])
-                            
-                     
-                        
+
+
+
         # add to vbox
         vbox = gtk.VBox(False, 4)
         button.add(vbox)

@@ -321,7 +321,7 @@ class Prefs:
     hbox = gtk.HBox(False, 6)
     hbox.pack_start(self.lmb_entry, True)
     hbox.pack_start(button, False)
-    
+
     vbox.pack_start(hbox, False)
 
     self.nbook.append_page(left_vbox, gtk.Label(_("Left Click")))
@@ -396,7 +396,7 @@ class Prefs:
     hbox = gtk.HBox(False, 6)
     hbox.pack_start(self.mmb_entry, True)
     hbox.pack_start(button, False)
-    
+
     vbox.pack_start(hbox, False)
 
     self.nbook.append_page(mid_vbox, gtk.Label(_("Middle Click")))

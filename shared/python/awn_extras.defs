@@ -27,7 +27,7 @@
   (values
 	  '("low" "NOTIFY_URGENCY_LOW")
 	  '("normal" "NOTIFY_URGENCY_NORMAL")
-	  '("critical" "NOTIFY_URGENCY_CRITICAL")    
+	  '("critical" "NOTIFY_URGENCY_CRITICAL")
   )
 )
 

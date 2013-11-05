@@ -3,21 +3,21 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Library General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
  */
- 
+
 #include <glib.h>
 #include "util.h"
 
-gdouble 
+gdouble
 get_double_time(void)
 {
   GTimeVal  timeval;
@@ -25,18 +25,18 @@ get_double_time(void)
   return  timeval.tv_sec + timeval.tv_usec / 1000000.0;
 }
 
-gint 
+gint
 get_conf_value_int ( GObject * object, gchar * prop_name)
 {
   gint  i,b;
   gchar * base_prop_name = g_strdup_printf( "%s-base",prop_name);
-  
+
   g_object_get(object,
                prop_name,&i,
                base_prop_name,&b,
                NULL);
   g_free (base_prop_name);
-  
+
   /*CONDITIONAL operator*/
   return i?i:b;
 }
@@ -49,7 +49,7 @@ do_bridge ( AwnApplet * applet,GObject *object,
   DesktopAgnosticConfigClient * client_baseconf;
   gchar * base_prop_name = g_strdup_printf( "%s-base",prop_name);
   GError *error = NULL;
-  
+
   g_object_get (applet,
                 "client-baseconf", &client_baseconf,
                 NULL);
@@ -81,18 +81,18 @@ do_bridge_error:
     g_critical ("Config Bridge Error: %s", error->message);
     g_error_free (error);
   }
-  
+
 }
 
 void
 connect_notify (GObject * object,gchar * prop_name,GCallback cb,gpointer data)
 {
   gchar * sig_name;
-  
-  sig_name = g_strdup_printf( "notify::%s",prop_name);  
+
+  sig_name = g_strdup_printf( "notify::%s",prop_name);
   g_signal_connect (object, sig_name,cb,data);
   g_free (sig_name);
-  sig_name = g_strdup_printf( "notify::%s-base",prop_name);  
+  sig_name = g_strdup_printf( "notify::%s-base",prop_name);
   g_signal_connect (object, sig_name,cb,data);
   g_free(sig_name);
 }
@@ -129,7 +129,7 @@ gint
 cmp_proc_info_percent_descending (AwnProcInfo *left, AwnProcInfo *right)
 {
   return cmp_proc_info_percent_ascending (right,left);
-} 
+}
 
 gint
 cmp_proc_state_cmd_ascending (AwnProcInfo *left, AwnProcInfo *right)
@@ -158,7 +158,7 @@ cmp_pid_descending (AwnProcInfo *left, AwnProcInfo *right)
 GList *
 get_process_info (void)
 {
- return awn_proc_info; 
+ return awn_proc_info;
 }
 
 void
@@ -187,7 +187,7 @@ void
 update_process_info (void)
 {
   static guint64 old_total_jiffies = 0;
-  
+
   if (!awn_proc_users)
   {
     g_debug ("%s: no users",__func__);
@@ -196,7 +196,7 @@ update_process_info (void)
   pid_t * p;
   gint y ;
   glibtop_proclist proclist;
-  GList * old_awn_proc_info=awn_proc_info;  
+  GList * old_awn_proc_info=awn_proc_info;
   guint64  total_jiffies;
   glibtop_cpu cpu;
   gdouble percent;
@@ -204,7 +204,7 @@ update_process_info (void)
 
   glibtop_get_cpu (&cpu);
   total_jiffies = cpu.total;
-  
+
   awn_proc_info = NULL;
 
 /*  p = glibtop_get_proclist(&proclist, GLIBTOP_KERN_PROC_RUID, getuid());*/
@@ -214,7 +214,7 @@ update_process_info (void)
   for (y = 0;y < proclist.number;y++)
   {
     AwnProcInfo * data = g_malloc (sizeof(AwnProcInfo));
-    GList       * search;    
+    GList       * search;
 
     data->pid = p[y];
     glibtop_get_proc_state(&data->proc_state, p[y]);
@@ -222,13 +222,13 @@ update_process_info (void)
 
     search = g_list_find_custom (old_awn_proc_info,GINT_TO_POINTER(p[y]),
                                  (GCompareFunc)_cmp_find_pid);
-    
+
     if (search)
     {
       AwnProcInfo * search_data = search->data;
       long time_diff;
-      double jiffies;      
-      
+      double jiffies;
+
       jiffies = total_jiffies - old_total_jiffies;
 //      g_debug ("%d  jiffies = %lf",p[y],jiffies);
       time_diff = (data->proc_time.utime + data->proc_time.stime) - (search_data->proc_time.utime+search_data->proc_time.stime);
@@ -244,8 +244,8 @@ update_process_info (void)
     total_per = total_per + percent;
     awn_proc_info = g_list_prepend (awn_proc_info,data);
   }
-  g_list_foreach (old_awn_proc_info,(GFunc)g_free,NULL);  
-  g_list_free (old_awn_proc_info);  
+  g_list_foreach (old_awn_proc_info,(GFunc)g_free,NULL);
+  g_list_free (old_awn_proc_info);
   g_free (p);
   old_total_jiffies = total_jiffies;
 }

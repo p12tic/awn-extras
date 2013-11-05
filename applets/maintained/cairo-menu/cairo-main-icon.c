@@ -49,7 +49,7 @@ struct _CairoMainIconPrivate {
   AwnApplet   * applet;
   MenuInstance * menu_instance;
   GtkWidget   * context_menu;
-  guint         autohide_cookie;  
+  guint         autohide_cookie;
 };
 
 
@@ -76,11 +76,11 @@ cairo_main_icon_get_property (GObject *object, guint property_id,
                               GValue *value, GParamSpec *pspec)
 {
   CairoMainIconPrivate * priv = GET_PRIVATE (object);
-  
+
   switch (property_id) {
   case PROP_APPLET:
     g_value_set_pointer (value,priv->applet);
-    break;                    
+    break;
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -91,7 +91,7 @@ cairo_main_icon_set_property (GObject *object, guint property_id,
                               const GValue *value, GParamSpec *pspec)
 {
   CairoMainIconPrivate * priv = GET_PRIVATE (object);
-  
+
   switch (property_id) {
   case PROP_APPLET:
       priv->applet = g_value_get_pointer (value);
@@ -109,7 +109,7 @@ cairo_main_icon_dispose (GObject *object)
 
 static void
 cairo_main_icon_finalize (GObject *object)
-{  
+{
   G_OBJECT_CLASS (cairo_main_icon_parent_class)->finalize (object);
 }
 
@@ -126,7 +126,7 @@ queue_menu_build (CairoMainIcon *icon)
 {
   CairoMainIconPrivate * priv = GET_PRIVATE (icon);
   priv->menu = menu_build (priv->menu_instance);
-  g_signal_connect(G_OBJECT(priv->menu), "deactivate", G_CALLBACK(_deactivate_event), icon);  
+  g_signal_connect(G_OBJECT(priv->menu), "deactivate", G_CALLBACK(_deactivate_event), icon);
   g_signal_connect(icon, "button-press-event", G_CALLBACK(_button_clicked_event), NULL);
   g_signal_connect_swapped(priv->applet,"size-changed",G_CALLBACK(size_changed_cb),icon);
   return FALSE;
@@ -138,10 +138,10 @@ cairo_main_icon_constructed (GObject *object)
   CairoMainIconPrivate * priv = GET_PRIVATE (object);
   GdkPixbuf * pbuf;
   gint size = awn_applet_get_size (priv->applet);
-  G_OBJECT_CLASS (cairo_main_icon_parent_class)->constructed (object);  
+  G_OBJECT_CLASS (cairo_main_icon_parent_class)->constructed (object);
 
   awn_themed_icon_set_info_simple (AWN_THEMED_ICON(object),"cairo-menu",awn_applet_get_uid (priv->applet),"gnome-main-menu");
-  awn_themed_icon_set_size (AWN_THEMED_ICON (object),size);  
+  awn_themed_icon_set_size (AWN_THEMED_ICON (object),size);
 
   gtk_drag_dest_set (GTK_WIDGET (object),
                        GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_DROP,
@@ -158,29 +158,29 @@ cairo_main_icon_constructed (GObject *object)
                                           0);
 
   g_idle_add ( (GSourceFunc)queue_menu_build, object);
-  awn_icon_set_tooltip_text (AWN_ICON (object), _("Main Menu"));  
+  awn_icon_set_tooltip_text (AWN_ICON (object), _("Main Menu"));
 }
 
-static void 
-cairo_main_icon_drag_data_received (GtkWidget        *widget, 
+static void
+cairo_main_icon_drag_data_received (GtkWidget        *widget,
                                     GdkDragContext   *context,
-                                    gint              x, 
-                                    gint              y, 
+                                    gint              x,
+                                    gint              y,
                                     GtkSelectionData *sdata,
                                     guint             info,
                                     guint             evt_time)
 {
-  CairoMainIconPrivate * priv = GET_PRIVATE (widget);  
+  CairoMainIconPrivate * priv = GET_PRIVATE (widget);
   gchar           *sdata_data;
   GStrv           i;
-  GStrv           tokens = NULL;  
+  GStrv           tokens = NULL;
   sdata_data = (gchar*)gtk_selection_data_get_data (sdata);
 
 
   if (strstr (sdata_data, "cairo_menu_item_dir:///"))
   {
     /*TODO move into a separate function */
-    tokens = g_strsplit  (sdata_data, "\n",-1);    
+    tokens = g_strsplit  (sdata_data, "\n",-1);
     for (i=tokens; *i;i++)
     {
       GStrv           sub_tokens = NULL;
@@ -197,11 +197,11 @@ cairo_main_icon_drag_data_received (GtkWidget        *widget,
         {
           cairo_menu_applet_add_icon (AWN_CAIRO_MENU_APPLET(priv->applet),sub_tokens[1],sub_tokens[2],sub_tokens[3]);
           gtk_drag_finish (context, TRUE, FALSE, evt_time);
-          g_strfreev (sub_tokens); 
+          g_strfreev (sub_tokens);
           g_strfreev (tokens);
           return;
         }
-        g_strfreev (sub_tokens); 
+        g_strfreev (sub_tokens);
       }
     }
     g_strfreev (tokens);
@@ -214,8 +214,8 @@ static void
 cairo_main_icon_class_init (CairoMainIconClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
-  GtkWidgetClass *wid_class = GTK_WIDGET_CLASS (klass);  
-  GParamSpec   *pspec;  
+  GtkWidgetClass *wid_class = GTK_WIDGET_CLASS (klass);
+  GParamSpec   *pspec;
 
   object_class->get_property = cairo_main_icon_get_property;
   object_class->set_property = cairo_main_icon_set_property;
@@ -223,14 +223,14 @@ cairo_main_icon_class_init (CairoMainIconClass *klass)
   object_class->finalize = cairo_main_icon_finalize;
   object_class->constructed = cairo_main_icon_constructed;
 
-  wid_class->drag_data_received = cairo_main_icon_drag_data_received;  
+  wid_class->drag_data_received = cairo_main_icon_drag_data_received;
 
   pspec = g_param_spec_pointer ("applet",
                                "applet",
                                "AwnApplet",
                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
   g_object_class_install_property (object_class, PROP_APPLET, pspec);
-  
+
   g_type_class_add_private (klass, sizeof (CairoMainIconPrivate));
 }
 
@@ -246,26 +246,26 @@ cairo_main_icon_init (CairoMainIcon *self)
 GtkWidget*
 cairo_main_icon_new (AwnApplet * applet)
 {
-  return g_object_new (AWN_TYPE_CAIRO_MAIN_ICON, 
+  return g_object_new (AWN_TYPE_CAIRO_MAIN_ICON,
                         "applet",applet,
                         "drag_and_drop",FALSE,
                         NULL);
 }
 
-static gboolean 
+static gboolean
 _button_clicked_event (CairoMainIcon *icon, GdkEventButton *event, gpointer null)
 {
   g_return_val_if_fail (AWN_IS_CAIRO_MAIN_ICON(icon), FALSE);
   CairoMainIconPrivate * priv = GET_PRIVATE (icon);
-  
+
   if (event->button == 1)
   {
     awn_icon_popup_gtk_menu (AWN_ICON (icon), priv->menu, event->button, event->time);
-     
+
     if (!priv->autohide_cookie)
-    {     
+    {
       priv->autohide_cookie = awn_applet_inhibit_autohide (AWN_APPLET(priv->applet),"CairoMenu" );
-    }            
+    }
     g_object_set(awn_overlayable_get_effects (AWN_OVERLAYABLE(icon)), "depressed", FALSE,NULL);
   }
   else if (event->button == 3)
@@ -279,7 +279,7 @@ _button_clicked_event (CairoMainIcon *icon, GdkEventButton *event, gpointer null
       item = awn_themed_icon_create_remove_custom_icon_item (AWN_THEMED_ICON(icon),NULL);
       gtk_menu_shell_append (GTK_MENU_SHELL(priv->context_menu), item);
 /*      item = gtk_image_menu_item_new_with_label("Applet Preferences");
-      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item), 
+      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item),
                                      gtk_image_new_from_stock (GTK_STOCK_PREFERENCES,GTK_ICON_SIZE_MENU));
       gtk_widget_show(item);
       gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
@@ -289,13 +289,13 @@ _button_clicked_event (CairoMainIcon *icon, GdkEventButton *event, gpointer null
                                                "Copyright 2007,2008, 2009 Rodney Cryderman <rcryderman@gmail.com>",
                                                AWN_APPLET_LICENSE_GPLV2,
                                                VERSION);
-      gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);      
-      g_signal_connect(G_OBJECT(priv->context_menu), "deactivate", G_CALLBACK(_deactivate_event), icon);      
+      gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
+      g_signal_connect(G_OBJECT(priv->context_menu), "deactivate", G_CALLBACK(_deactivate_event), icon);
     }
     if (!priv->autohide_cookie)
-    {     
+    {
       priv->autohide_cookie = awn_applet_inhibit_autohide (AWN_APPLET(priv->applet),"CairoMenu" );
-    }    
+    }
     awn_icon_popup_gtk_menu (AWN_ICON (icon), priv->context_menu, event->button, event->time);
     g_object_set(awn_overlayable_get_effects (AWN_OVERLAYABLE(icon)), "depressed", FALSE,NULL);
     awn_utils_show_menu_images (GTK_MENU (priv->context_menu));
@@ -304,7 +304,7 @@ _button_clicked_event (CairoMainIcon *icon, GdkEventButton *event, gpointer null
   {
     return TRUE;
   }
-  
+
   awn_icon_set_is_active (AWN_ICON(icon), TRUE);
   return TRUE;
 }
@@ -316,20 +316,20 @@ cairo_main_icon_refresh_menu (CairoMainIcon * icon)
   CairoMainIconPrivate * priv = GET_PRIVATE (icon);
 
   if (priv->autohide_cookie)
-  {     
+  {
     awn_applet_uninhibit_autohide (AWN_APPLET(priv->applet), priv->autohide_cookie);
     priv->autohide_cookie = 0;
-  }  
+  }
   priv->menu = menu_build (priv->menu_instance);
 }
 
-static gboolean 
+static gboolean
 _deactivate_event (GtkMenuShell *menushell,CairoMainIcon * icon)
 {
   CairoMainIconPrivate * priv = GET_PRIVATE (icon);
-  
+
   if (priv->autohide_cookie)
-  {     
+  {
     awn_applet_uninhibit_autohide (AWN_APPLET(priv->applet),priv->autohide_cookie);
     priv->autohide_cookie = 0;
   }

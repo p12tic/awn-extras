@@ -3,22 +3,22 @@ single_instance = false
 
 [DEFAULT/items]
 type = list-string
-default = 
+default =
 _description=List of items' names
 
 [DEFAULT/details]
 type = list-string
-default = 
+default =
 _description=List of items' details
 
 [DEFAULT/progress]
 type = list-integer
-default = 
+default =
 _description=List of items' progresses in percent (0-100)
 
 [DEFAULT/priority]
 type = list-integer
-default = 
+default =
 _description=List of items' priorities (0-3)
 
 [DEFAULT/color]
@@ -38,22 +38,22 @@ _description=What type of icon to display (progress, progress-items, items)
 
 [DEFAULT/colors]
 type = list-integer
-default = 
+default =
 _description=List of colors to use for the custom color
 
 [DEFAULT/category]
 type = list-integer
-default = 
+default =
 _description=The list of items' categories
 
 [DEFAULT/category_name]
 type = list-string
-default = 
+default =
 _description=The list of categories' names
 
 [DEFAULT/expanded]
 type = list-integer
-default = 
+default =
 _description=The list of categories that are expanded
 
 [DEFAULT/icon_opacity]

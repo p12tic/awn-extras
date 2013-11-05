@@ -94,7 +94,7 @@ class NormalDialog(gtk.Image):
 
         day_name, day_width = self.getTextWidth(context, day_name, 999)
         text_x = rect_x + (rect_width - day_width)/2
-        
+
         # for the curved dialog, we want the text closer to the days
         if self.whiteDayText:
             text_y = rect_y
@@ -173,7 +173,7 @@ class CurvedDialog(NormalDialog):
         NormalDialog.__init__(self, forecast)
         self.yPositions = [60, 30, 14, 30, 60]
         self.whiteDayText = True
-        
+
     def onExpose(self, widget, event):
         # first, create a transparent cairo context
         cr = widget.window.cairo_create()

@@ -57,4 +57,4 @@ GtkWidget* cairo_aux_icon_new (AwnApplet * applet, gchar * menu_name,gchar * dis
 
 G_END_DECLS
 
-#endif 
+#endif

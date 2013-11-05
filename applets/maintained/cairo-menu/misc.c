@@ -39,7 +39,7 @@ static GtkWidget * _get_recent_menu (GtkWidget * menu);
 
 void
 _free_callback_container (CallbackContainer * c)
-{  
+{
   /* yeah... this is a bit peculiar and needs to be changed */
   g_free(c->display_name);
   g_free(c->file_path);
@@ -47,7 +47,7 @@ _free_callback_container (CallbackContainer * c)
   g_free(c);
 }
 
-static void 
+static void
 _create_icon (GtkButton *widget,CallbackContainer * c)
 {
   gtk_widget_hide (c->instance->menu);
@@ -55,11 +55,11 @@ _create_icon (GtkButton *widget,CallbackContainer * c)
   c->instance->add_icon_fn (c->instance->applet,c->file_path,c->display_name,c->icon_name);
 }
 
-gboolean 
+gboolean
 _button_press_dir (GtkWidget *menu_item, GdkEventButton *event, CallbackContainer * c)
 {
   GtkWidget * popup;
-  GtkWidget * item; 
+  GtkWidget * item;
   switch (event->button)
   {
     case 3:
@@ -122,7 +122,7 @@ typedef struct {
 /*
  * Open volume, if mounting was successful, else show error message
  */
-static void 
+static void
 _mount_result (GObject *source_object, GAsyncResult *res, gpointer user_data)
 {
   MountData *mount_data = user_data;
@@ -139,7 +139,7 @@ _mount_result (GObject *source_object, GAsyncResult *res, gpointer user_data)
     root = g_mount_get_root (mount);
     uri = g_file_get_uri (root);
     cmd = g_strdup_printf("%s %s", XDG_OPEN, uri);
-    
+
     _exec (NULL, cmd);
 	
     g_object_unref (mount);
@@ -156,16 +156,16 @@ _mount_result (GObject *source_object, GAsyncResult *res, gpointer user_data)
       GtkWidget *dialog;
       gchar *name;
       gchar *primary_text;
-    
+
       name = g_volume_get_name (G_VOLUME (source_object));
       primary_text = g_strdup_printf (_("Unable to mount %s"), name);
-    
+
       dialog = gtk_message_dialog_new (NULL, /* parent */
-	                                   GTK_DIALOG_MODAL,     
+	                                   GTK_DIALOG_MODAL,
 	                                   GTK_MESSAGE_ERROR,
 	                                   GTK_BUTTONS_CLOSE,
 	                                   "%s", primary_text);
-    
+
       gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
                                                 "%s", error->message);
 
@@ -216,9 +216,9 @@ _launch (GtkWidget *widget,gchar * desktop_file)
   DesktopAgnosticFDODesktopEntry *entry;
   GError * error = NULL;
   gboolean startup_set = FALSE;
-  
+
   entry = get_desktop_entry (desktop_file);
-  
+
   if (entry == NULL)
   {
     return;
@@ -253,7 +253,7 @@ _launch (GtkWidget *widget,gchar * desktop_file)
         if (tokens2)
         {
           g_strfreev (tokens2);
-          screen_name = g_strdup ("0");          
+          screen_name = g_strdup ("0");
         }
       }
     }
@@ -265,7 +265,7 @@ _launch (GtkWidget *widget,gchar * desktop_file)
       }
       screen_name = g_strdup ("0");
     }
-    
+
     gdk_x11_display_broadcast_startup_message (gdk_display_get_default(),
                                                "new",
                                                "ID",id,
@@ -278,13 +278,13 @@ _launch (GtkWidget *widget,gchar * desktop_file)
     g_free (name);
     g_free (screen_name);
   }
-  
+
   desktop_agnostic_fdo_desktop_entry_launch (entry,0, NULL, &error);
   if (startup_set)
   {
     g_unsetenv ("DESKTOP_STARTUP_ID");
   }
-  
+
   if (error)
   {
     g_critical ("Error when launching: %s", error->message);
@@ -298,9 +298,9 @@ GtkWidget *
 get_gtk_image (const gchar const * icon_name)
 {
   GtkWidget *image = NULL;
-  GdkPixbuf *pbuf = NULL;  
+  GdkPixbuf *pbuf = NULL;
   gint width,height;
-  
+
   if (icon_name)
   {
     gtk_icon_size_lookup (GTK_ICON_SIZE_MENU,&width,&height);
@@ -313,7 +313,7 @@ get_gtk_image (const gchar const * icon_name)
                                        GTK_ICON_LOOKUP_FORCE_SIZE,
                                        NULL);
     }
-    
+
     if (!image)
     {
       if (!pbuf)
@@ -323,7 +323,7 @@ get_gtk_image (const gchar const * icon_name)
                                          height,
                                          TRUE,
                                          NULL);
-      }      
+      }
     }
     if (pbuf && GDK_IS_PIXBUF (pbuf)&&gdk_pixbuf_get_width(pbuf) > width)
     {
@@ -336,12 +336,12 @@ get_gtk_image (const gchar const * icon_name)
       g_object_unref (pbuf);
       pbuf = scaled;
     }
-    
+
     if (pbuf && GDK_IS_PIXBUF (pbuf))
     {
       image = gtk_image_new_from_pixbuf (pbuf);
-      g_object_unref (pbuf);        
-    }      
+      g_object_unref (pbuf);
+    }
   }
   return image;
 }
@@ -362,7 +362,7 @@ _remove_menu_item  (GtkWidget *menu_item,GtkWidget * menu)
 static void
 _remove_get_recent ( gpointer data,   GObject *where_the_object_was)
 {
-  GtkRecentManager *recent = gtk_recent_manager_get_default ();  
+  GtkRecentManager *recent = gtk_recent_manager_get_default ();
   guint id = GPOINTER_TO_UINT (data);
   g_signal_handler_disconnect (recent,id);
 }
@@ -376,7 +376,7 @@ _clear_dialog_response (GtkWidget *widget,
   {
     gtk_recent_manager_purge_items (recent, NULL);
   }
-  
+
   gtk_widget_destroy (widget);
 }
 
@@ -426,7 +426,7 @@ _recent_documents_clear (GtkMenuItem      *menuitem,
   gtk_window_set_skip_taskbar_hint (GTK_WINDOW (clear_recent_dialog), FALSE);
 
   gtk_window_set_icon_name (GTK_WINDOW (clear_recent_dialog), "gnome-main-menu");
-  
+
   g_signal_connect (clear_recent_dialog, "response",
                     G_CALLBACK (_clear_dialog_response), manager);
 
@@ -452,23 +452,23 @@ _recent_manager_changed (GtkRecentManager *recent, GtkWidget *parent)
 
 /*
  Updates the recent menu.
- This is also called by signal handler when there are updates to the 
- recent docs 
+ This is also called by signal handler when there are updates to the
+ recent docs
  */
-static GtkWidget * 
+static GtkWidget *
 _get_recent_menu (GtkWidget * menu)
-{  
+{
   g_return_val_if_fail (GTK_IS_MENU(menu),NULL);
   static gboolean done_once = FALSE;
   GtkRecentManager *recent = gtk_recent_manager_get_default ();
   GtkWidget * menu_item;
-  GtkWidget * image = NULL;  
+  GtkWidget * image = NULL;
   GList * recent_list;
   GList * iter;
   gint width,height;
   guint id;
 
-  gtk_container_foreach (GTK_CONTAINER (menu),(GtkCallback)_remove_menu_item,menu);  
+  gtk_container_foreach (GTK_CONTAINER (menu),(GtkCallback)_remove_menu_item,menu);
   gtk_icon_size_lookup (GTK_ICON_SIZE_MENU,&width,&height);
   recent_list = gtk_recent_manager_get_items (recent);
   if (recent_list)
@@ -508,7 +508,7 @@ _get_recent_menu (GtkWidget * menu)
         }
         if (image)
         {
-          gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);          
+          gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
         }
         if (gtk_recent_info_get_application_info (iter->data,app_name,
 #if GTK_CHECK_VERSION(2,16,0)
@@ -521,7 +521,7 @@ _get_recent_menu (GtkWidget * menu)
         {
           gchar * exec = g_strdup (app_exec);
           g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(_exec), exec);
-          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify) g_free,exec);          
+          g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify) g_free,exec);
         }
         gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
         g_free (app_name);
@@ -532,14 +532,14 @@ _get_recent_menu (GtkWidget * menu)
   image = get_gtk_image ("gtk-clear");
   if (image)
   {
-    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);          
+    gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
   }
   g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(_recent_documents_clear),recent);
-  gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);  
-  
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
+
   g_list_foreach (recent_list, (GFunc)gtk_recent_info_unref,NULL);
   g_list_free (recent_list);
-  gtk_widget_show_all (menu); 
+  gtk_widget_show_all (menu);
 
   done_once = TRUE;
   return menu;
@@ -548,12 +548,12 @@ _get_recent_menu (GtkWidget * menu)
 /*
  Returns a new recent menu widget every time it is called
  */
-GtkWidget * 
+GtkWidget *
 get_recent_menu (GtkWidget *parent)
 {
   guint id;
   GtkRecentManager *recent = gtk_recent_manager_get_default ();
-  
+
   if (parent)  /* else: recent is an aux icon */
   {
     /*
@@ -571,16 +571,16 @@ get_recent_menu (GtkWidget *parent)
     size = 0;
     g_object_get (recent, "size", &size, NULL);
     gtk_widget_set_sensitive (parent, size > 0);
-  
+
   /* end of panel-recent.c code */
   }
 
 
   GtkWidget *menu = cairo_menu_new();
-  g_signal_handlers_disconnect_by_func (recent,G_CALLBACK(_get_recent_menu),menu);  
+  g_signal_handlers_disconnect_by_func (recent,G_CALLBACK(_get_recent_menu),menu);
   _get_recent_menu (menu);
   id = g_signal_connect_swapped (recent,"changed",G_CALLBACK(_get_recent_menu),menu);
-  g_object_weak_ref (G_OBJECT(menu),(GWeakNotify)_remove_get_recent,GUINT_TO_POINTER(id));                   
+  g_object_weak_ref (G_OBJECT(menu),(GWeakNotify)_remove_get_recent,GUINT_TO_POINTER(id));
   return menu;
 }
 
@@ -606,8 +606,8 @@ get_menu_instance ( AwnApplet * applet,
   instance->done_once = FALSE;
   instance->places=NULL;
   instance->recent=NULL;
-  instance->session=NULL;  
-  instance->menu = NULL; 
+  instance->session=NULL;
+  instance->menu = NULL;
   instance->source_id = 0;
   instance->submenu_name = g_strdup(submenu_name);
   return instance;

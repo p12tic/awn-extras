@@ -8,7 +8,7 @@ _description=Backend type for this applet (0 - file, 1 - folder, 2 - plugger, 3 
 
 [DEFAULT/backend]
 type = string
-default = 
+default =
 _description=Stacks backend file/directory.
 
 [DEFAULT/close_on_focusout]
@@ -48,7 +48,7 @@ _description=Whether to browse stack contents.
 
 [DEFAULT/applet_icon_empty]
 type = string
-default = 
+default =
 _description=Icon to use for empty stack.
 
 [DEFAULT/applet_icon_full]
@@ -68,7 +68,7 @@ _description=Type of UI used for the stack.
 
 [DEFAULT/title]
 type = string
-default = 
+default =
 _description=Stack tooltip description.
 
 [DEFAULT/sort_method]

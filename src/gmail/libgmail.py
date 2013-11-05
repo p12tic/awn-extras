@@ -11,8 +11,8 @@ Version = '0.1.6.1' # (Aug 2007)
 # Maintainers: Waseem (wdaher@mit.edu) and Stas Z (stas@linux.isbeter.nl)
 #
 # Contacts support added by wdaher@mit.edu and Stas Z
-# (with massive initial help from 
-#  Adrian Holovaty's 'gmail.py' 
+# (with massive initial help from
+#  Adrian Holovaty's 'gmail.py'
 #  and the Johnvey Gmail API)
 #
 # License: GPL 2.0
@@ -92,13 +92,13 @@ def _parsePage(pageContent):
     """
     Parse the supplied HTML page and extract useful information from
     the embedded Javascript.
-    
+
     """
     lines = pageContent.splitlines()
     data = '\n'.join([x for x in lines if x and x[0] in ['D', ')', ',', ']']])
     #data = data.replace(',,',',').replace(',,',',')
     data = re.sub(',{2,}', ',', data)
-    
+
     result = []
     try:
         exec data in {'__builtins__': None}, {'D': lambda x: result.append(x)}
@@ -106,7 +106,7 @@ def _parsePage(pageContent):
         print info
         raise GmailError, 'Failed to parse data returned from gmail.'
 
-    items = result 
+    items = result
     itemsDict = {}
     namesFoundTwice = []
     for item in items:
@@ -120,7 +120,7 @@ def _parsePage(pageContent):
             # once (e.g. mail items, mail body etc) and automatically
             # places the values into list.
             # TODO: Check this actually works properly, it's early... :-)
-            
+
             if len(parsedValue) and type(parsedValue[0]) is types.ListType:
                     for item in parsedValue:
                         itemsDict[name].append(item)
@@ -163,7 +163,7 @@ class SmartRedirectHandler(urllib2.HTTPRedirectHandler):
         if new_host:
             req.add_header("Host", new_host.groups()[0])
         result = urllib2.HTTPRedirectHandler.http_error_302(
-            self, req, fp, code, msg, headers)              
+            self, req, fp, code, msg, headers)
         return result
 
 class CookieJar:
@@ -174,7 +174,7 @@ class CookieJar:
 
     (The only reason this is here is so I don't have to require
     the `ClientCookie` package.)
-    
+
     """
 
     def __init__(self):
@@ -212,8 +212,8 @@ class CookieJar:
                            ";".join(["%s=%s" % (k,v)
                                      for k,v in self._cookies.items()]))
 
-        
-    
+
+
 def _buildURL(**kwargs):
     """
     """
@@ -252,10 +252,10 @@ def _paramsToMime(params, filenames, files):
                 filename = item.get_filename()
                 contentType = item.get_content_type()
                 payload = item.get_payload(decode=True)
-                
+
             if not contentType:
                 contentType = "application/octet-stream"
-                
+
             mimeItem = MIMEBase(*contentType.split("/"))
             mimeItem.add_header("Content-Disposition", "form-data",
                                 name="file%s" % idx, filename=filename)
@@ -279,7 +279,7 @@ class GmailLoginFailure(Exception):
     or Gmail service error, for example.
     Extract the error message like this:
     try:
-        foobar 
+        foobar
     except GmailLoginFailure,e:
         mesg = e.message# or
         print e# uses the __str__
@@ -322,7 +322,7 @@ class GmailAccount:
 	self.inboxunread = None
         self._cachedQuotaInfo = None
         self._cachedLabelNames = None
-        
+
 
     def login(self):
         """
@@ -340,25 +340,25 @@ class GmailAccount:
                                      'Email': self.name,
                                      'Passwd': self._pw,
                                      })
-                                           
+
         headers = {'Host': 'www.google.com',
                    'User-Agent': 'Mozilla/5.0 (Compatible; libgmail-python)'}
 
         req = urllib2.Request(URL_LOGIN, data=data, headers=headers)
         pageData = self._retrievePage(req)
-        
+
         if not self.domain:
         # The GV cookie no longer comes in this page for
         # "Apps", so this bottom portion is unnecessary for it.
             # This requests the page that provides the required "GV" cookie.
-            RE_PAGE_REDIRECT = 'CheckCookie\?continue=([^"\']+)' 
-        
+            RE_PAGE_REDIRECT = 'CheckCookie\?continue=([^"\']+)'
+
             # TODO: Catch more failure exceptions here...?
             try:
                 link = re.search(RE_PAGE_REDIRECT, pageData).group(1)
                 redirectURL = urllib2.unquote(link)
                 redirectURL = redirectURL.replace('\\x26', '&')
-            
+
             except AttributeError:
                 raise GmailLoginFailure("Login failed. (Wrong username/password?)")
             # We aren't concerned with the actual content of this page,
@@ -370,16 +370,16 @@ class GmailAccount:
         """
         if self.opener is None:
             raise "Cannot find urlopener"
-        
+
         if not isinstance(urlOrRequest, urllib2.Request):
             req = urllib2.Request(urlOrRequest)
         else:
             req = urlOrRequest
-            
+
         self._cookieJar.setCookies(req)
         req.add_header('User-Agent',
                        'Mozilla/5.0 (Compatible; libgmail-python)')
-        
+
         try:
             resp = self.opener.open(req)
         except urllib2.HTTPError,info:
@@ -398,7 +398,7 @@ class GmailAccount:
     def _parsePage(self, urlOrRequest):
         """
         Retrieve & then parse the requested page content.
-        
+
         """
         items = _parsePage(self._retrievePage(urlOrRequest))
 
@@ -411,18 +411,18 @@ class GmailAccount:
 
             #self._cachedQuotaInfo = items[D_QUOTA]
 	    self.inboxunread = items['ds']
-	   
-	    
+	
+	
 
         except KeyError:
             pass
         #pprint.pprint(items)
-        
+
         try:
             self._cachedLabelNames = [category[CT_NAME] for category in items[D_CATEGORIES][0]]
         except KeyError:
             pass
-        
+
         return items
 
 
@@ -448,7 +448,7 @@ class GmailAccount:
         # Option to get *all* threads if multiple pages are used.
         while (start == 0) or (allPages and
                                len(threadsInfo) < threadListSummary[TS_TOTAL]):
-            
+
                 items = self._parseSearchResult(searchType, start, **kwargs)
                 #TODO: Handle single & zero result case better? Does this work?
                 try:
@@ -463,9 +463,9 @@ class GmailAccount:
                     # TODO: Check if the total or per-page values have changed?
                     threadListSummary = items[D_THREADLIST_SUMMARY][0]
                     threadsPerPage = threadListSummary[TS_NUM]
-    
+
                     start += threadsPerPage
-        
+
         # TODO: Record whether or not we retrieved all pages..?
         return GmailSearchResult(self, (searchType, kwargs), threadsInfo)
 
@@ -478,8 +478,8 @@ class GmailAccount:
         return self._retrievePage(_buildURL(view = U_PAGE_VIEW,
                                             name = "js",
                                             ver = version))
-        
-        
+
+
     def getMessagesByFolder(self, folderName, allPages = False):
         """
 
@@ -502,7 +502,7 @@ class GmailAccount:
         return self._parseThreadSearch(U_QUERY_SEARCH, q = query,
                                        allPages = allPages)
 
-    
+
     def getQuotaInfo(self, refresh = False):
         """
 
@@ -541,13 +541,13 @@ class GmailAccount:
         """
         return self._parseThreadSearch(U_CATEGORY_SEARCH,
                                        cat=label, allPages = allPages)
-    
+
     def getRawMessage(self, msgId):
         """
         """
         # U_ORIGINAL_MESSAGE_VIEW seems the only one that returns a page.
         # All the other U_* results in a 404 exception. Stas
-        PageView = U_ORIGINAL_MESSAGE_VIEW  
+        PageView = U_ORIGINAL_MESSAGE_VIEW
         return self._retrievePage(
             _buildURL(view=PageView, th=msgId))
 
@@ -556,8 +556,8 @@ class GmailAccount:
         """
         return self._parseThreadSearch(U_QUERY_SEARCH,
                                         q = "is:" + U_AS_SUBSET_UNREAD)
-        
-        
+
+
     def getUnreadMsgCount(self):
         """
         """
@@ -576,8 +576,8 @@ class GmailAccount:
         try:
             at = self._cookieJar._cookies[ACTION_TOKEN_COOKIE]
         except KeyError:
-            self.getLabelNames(True) 
-            at = self._cookieJar._cookies[ACTION_TOKEN_COOKIE]           
+            self.getLabelNames(True)
+            at = self._cookieJar._cookies[ACTION_TOKEN_COOKIE]
 
         return at
 
@@ -591,7 +591,7 @@ class GmailAccount:
                             to put into POST message. (Not officially
                             for external use, more to make feature
                             additional a little easier to play with.)
-        
+
         Note: Now returns `GmailMessageStub` instance with populated
               `id` (and `_account`) fields on success or None on failure.
 
@@ -653,7 +653,7 @@ class GmailAccount:
         for k,v in origPayloads.iteritems():
             data = data.replace(FMT_MARKER % k, v)
         ####
-        
+
         req = urllib2.Request(_buildURL(), data = data)
         req.add_header(*contentTypeHeader)
         items = self._parsePage(req)
@@ -663,7 +663,7 @@ class GmailAccount:
         # but the id is 0 and no message is sent
         result = None
         resultInfo = items[D_SENDMAIL_RESULT][0]
-        
+
         if resultInfo[SM_SUCCESS]:
             result = GmailMessageStub(id = resultInfo[SM_NEWTHREADID],
                                       _account = self)
@@ -705,8 +705,8 @@ class GmailAccount:
         items = self._parsePage(_buildURL(**params))
 
         return (items[D_ACTION_RESULT][0][AR_SUCCESS] == 1)
-        
-        
+
+
     def trashThread(self, thread):
         """
         """
@@ -714,7 +714,7 @@ class GmailAccount:
         # TODO: Should we check we have been given a `GmailThread` instance?
 
         result = self._doThreadAction(U_MARKTRASH_ACTION, thread)
-        
+
         # TODO: Mark as trashed on success?
         return result
 
@@ -816,7 +816,7 @@ class GmailAccount:
         for entry in addresses:
             if len(entry) >= 6 and entry[0]=='ce':
                 newGmailContact = GmailContact(entry[1], entry[2], entry[4], entry[5])
-                #### new code used to get all the notes 
+                #### new code used to get all the notes
                 #### not used yet due to lockdown problems
                 ##rawnotes = self._getSpecInfo(entry[1])
                 ##print rawnotes
@@ -837,13 +837,13 @@ class GmailAccount:
 
         The old signature of:
         addContact(name, email, notes='') is still
-        supported, but deprecated. 
+        supported, but deprecated.
         """
         if len(extra_args) > 0:
             # The user has passed in extra arguments
             # He/she is probably trying to invoke addContact
             # using the old, deprecated signature of:
-            # addContact(self, name, email, notes='')        
+            # addContact(self, name, email, notes='')
             # Build a GmailContact object and use that instead
             (name, email) = (myContact, extra_args[0])
             if len(extra_args) > 1:
@@ -854,10 +854,10 @@ class GmailAccount:
 
         # TODO: In the ideal world, we'd extract these specific
         # constants into a nice constants file
-        
+
         # This mostly comes from the Johnvey Gmail API,
         # but also from the gmail.py cited earlier
-        myURL = _buildURL(view='up')        
+        myURL = _buildURL(view='up')
 
         myDataList =  [ ('act','ec'),
                         ('at', self._cookieJar._cookies['GMAIL_AT']), # Cookie data?
@@ -964,7 +964,7 @@ class GmailAccount:
             # else now occupies this ID slot.
             # TODO: Perhaps signal this in some nice way
             #       to the end user?
-            
+
             print "Unable to delete."
             print "Has someone else been modifying the contacts list while we have?"
             print "Old version of person:",gmailContact
@@ -975,7 +975,7 @@ class GmailAccount:
 ##    def _getSpecInfo(self,id):
 ##        """
 ##        Return all the notes data.
-##        This is currently not used due to the fact that it requests pages in 
+##        This is currently not used due to the fact that it requests pages in
 ##        a dos attack manner.
 ##        """
 ##        myURL =_buildURL(search='contacts',ct_id=id,c=id,\
@@ -1004,7 +1004,7 @@ class GmailContact:
         # whose signature was __init__(self, id, name, email, notes='')
         id = -1
         notes = ''
-   
+
         if len(extra_args) > 0:
             (id, name) = (name, email)
             email = extra_args[0]
@@ -1082,7 +1082,7 @@ class GmailContact:
                      ('f', 'Work Fax'),
                      ('b', 'Pager')) }
         """
-        self.moreInfo = moreInfo 
+        self.moreInfo = moreInfo
     def getVCard(self):
         """Returns a vCard 3.0 for this
         contact, as a string"""
@@ -1172,7 +1172,7 @@ class GmailContactList:
         """
         This function returns a LIST
         of GmailContacts whose name is
-        'name'. 
+        'name'.
 
         Returns an empty list if no contacts
         were found
@@ -1216,7 +1216,7 @@ class GmailContactList:
             if entry.getId() == myId:
                 idList.append(entry)
         return idList
-    
+
 class GmailSearchResult:
     """
     """
@@ -1232,11 +1232,11 @@ class GmailSearchResult:
                 threadsInfo = [threadsInfo]
         except IndexError:
             print "No messages found"
-            
+
         self._account = account
         self.search = search # TODO: Turn into object + format nicely.
         self._threads = []
-        
+
         for thread in threadsInfo:
             self._threads.append(GmailThread(self, thread[0]))
 
@@ -1287,10 +1287,10 @@ class _LabelHandlerMixin(object):
     """
     def __init__(self):
         self._labels = None
-        
+
     def _makeLabelList(self, labelList):
         self._labels = labelList
-    
+
     def addLabel(self, labelName):
         """
         """
@@ -1312,20 +1312,20 @@ class _LabelHandlerMixin(object):
         result = \
                self._account._doThreadAction(U_REMOVECATEGORY_ACTION+labelName,
                                              self)
-        
+
         removeLabel = True
         try:
             self._labels.remove(labelName)
         except:
             removeLabel = False
             pass
-    
+
         # If we don't check both, we might end up in some weird inconsistent state
         return result and removeLabel
 
     def getLabels(self):
         return self._labels
-    
+
 
 
 class GmailThread(_LabelHandlerMixin):
@@ -1334,18 +1334,18 @@ class GmailThread(_LabelHandlerMixin):
           as the id of the last message in the thread. But it appears that
           the id of any message in the thread can be used to retrieve
           the thread information.
-    
+
     """
 
     def __init__(self, parent, threadsInfo):
         """
         """
         _LabelHandlerMixin.__init__(self)
-        
+
         # TODO Handle this better?
         self._parent = parent
         self._account = self._parent._account
-        
+
         self.id = threadsInfo[T_THREADID] # TODO: Change when canonical updated?
         self.subject = threadsInfo[T_SUBJECT_HTML]
 
@@ -1357,7 +1357,7 @@ class GmailThread(_LabelHandlerMixin):
 
         self._authors = threadsInfo[T_AUTHORS_HTML]
         self.info = threadsInfo
-    
+
         try:
             # TODO: Find out if this information can be found another way...
             #       (Without another page request.)
@@ -1392,7 +1392,7 @@ class GmailThread(_LabelHandlerMixin):
             return self.info[ attrs[name] ];
 
         raise AttributeError("no attribute %s" % name)
-        
+
     def __len__(self):
         """
         """
@@ -1404,7 +1404,7 @@ class GmailThread(_LabelHandlerMixin):
         """
         if not self._messages:
             self._messages = self._getMessages(self)
-            
+
         return iter(self._messages)
 
     def __getitem__(self, key):
@@ -1442,7 +1442,7 @@ class GmailThread(_LabelHandlerMixin):
                     msgsInfo = [msgsInfo]
                 for msg in msgsInfo:
                     result += [GmailMessage(thread, msg, isDraft = isDraft)]
-                           
+
 
         return result
 
@@ -1463,13 +1463,13 @@ class GmailMessageStub(_LabelHandlerMixin):
         _LabelHandlerMixin.__init__(self)
         self.id = id
         self._account = _account
-    
 
-        
+
+
 class GmailMessage(object):
     """
     """
-    
+
     def __init__(self, parent, msgData, isDraft = False):
         """
 
@@ -1479,7 +1479,7 @@ class GmailMessage(object):
         # TODO Handle this better?
         self._parent = parent
         self._account = self._parent._account
-        
+
         self.author = msgData[MI_AUTHORFIRSTNAME]
         self.id = msgData[MI_MSGID]
         self.number = msgData[MI_NUM]
@@ -1488,7 +1488,7 @@ class GmailMessage(object):
         self.cc = msgData[MI_CC]
         self.bcc = msgData[MI_BCC]
         self.sender = msgData[MI_AUTHOREMAIL]
-        
+
         self.attachments = [GmailAttachment(self, attachmentInfo)
                             for attachmentInfo in msgData[MI_ATTACHINFO-1]]
 
@@ -1496,7 +1496,7 @@ class GmailMessage(object):
 
         # TODO: Handle body differently if it's from a draft?
         self.isDraft = isDraft
-        
+
         self._source = None
 
 
@@ -1512,7 +1512,7 @@ class GmailMessage(object):
         return self._source
 
     source = property(_getSource, doc = "")
-        
+
 
 
 class GmailAttachment:
@@ -1542,7 +1542,7 @@ class GmailAttachment:
             self._content = self._account._retrievePage(
                 _buildURL(view=U_ATTACHMENT_VIEW, disp="attd",
                           attid=self.id, th=self._parent._parent.id))
-            
+
         return self._content
 
     content = property(_getContent, doc = "")
@@ -1555,7 +1555,7 @@ class GmailAttachment:
         to refer to the file when forwarding.)
 
         The id is of the form: "<thread_id>_<msg_id>_<attachment_id>"
-        
+
         """
         return "%s_%s_%s" % (self._parent._parent.id,
                              self._parent.id,
@@ -1598,7 +1598,7 @@ if __name__ == "__main__":
         name = sys.argv[1]
     except IndexError:
         name = raw_input("Gmail account name: ")
-        
+
     pw = getpass("Password: ")
     domain = raw_input("Domain? [leave blank for Gmail]: ")
 
@@ -1637,13 +1637,13 @@ if __name__ == "__main__":
                     result = ga.getMessagesByFolder(name, True)
                 else:
                     result = ga.getMessagesByLabel(name, True)
-                    
+
                 if not len(result):
                     print "No threads found in `%s`." % name
                     break
                 name = None
                 tot = len(result)
-                
+
                 i = 0
                 for thread in result:
                     print "%s messages in thread" % len(thread)
@@ -1658,5 +1658,5 @@ if __name__ == "__main__":
                 print "number of messages:",i
             except KeyboardInterrupt:
                 break
-            
+
     print "\n\nDone."

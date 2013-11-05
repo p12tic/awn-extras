@@ -2,7 +2,7 @@
 # Copyright (c) 2008:
 #   Mike (mosburger) Desjardins <desjardinsmike@gmail.com>
 #   Mike Rooney (launchpad.net/~michael) <mrooney@gmail.com>
-#     Please do not email the above person for support. The 
+#     Please do not email the above person for support. The
 #     email address is only there for license/copyright purposes.
 # Copyright (c) 2010 Gabor Karsay <gabor.karsay@gmx.at>
 #
@@ -27,7 +27,7 @@
 # strings, please insert them in alphabetical order.
 #
 # The program is not intended to be executed, however, it provides a small
-# test routine in case it's run from command line. 
+# test routine in case it's run from command line.
 
 
 from awn.extras import _
@@ -36,7 +36,7 @@ def N_(message): return message
 
 conditions = [
     N_("Blowing Snow"),
-    N_("Blustery"), 
+    N_("Blustery"),
     N_("Clear"),
     N_("Cloudy"),
     N_("Cold"),
@@ -102,9 +102,9 @@ forecast = [
     # Please keep translation short, approx. 12 characters
     N_("AM Rain / Wind"),
     # Please keep translation short, approx. 12 characters
-    N_("AM Showers"), 
+    N_("AM Showers"),
     # Please keep translation short, approx. 12 characters
-    N_("AM Snow Showers"), 
+    N_("AM Snow Showers"),
     # Please keep translation short, approx. 12 characters
     # T-Showers = Thunder Showers
     N_("AM T-Showers"),
@@ -112,9 +112,9 @@ forecast = [
     # T-Storms = Thunderstorms
     N_("AM T-Storms"),
     # Please keep translation short, approx. 12 characters
-    N_("Few Showers"), 
+    N_("Few Showers"),
     # Please keep translation short, approx. 12 characters
-    N_("Heavy Rain"), 
+    N_("Heavy Rain"),
     # Please keep translation short, approx. 12 characters
     # T-Storms = Thunderstorms
     N_("Isolated T-Storms"),
@@ -131,15 +131,15 @@ forecast = [
     # Please keep translation short, approx. 12 characters
     N_("PM Drizzle"),
     # Please keep translation short, approx. 12 characters
-    N_("PM Light Rain"), 
+    N_("PM Light Rain"),
     # Please keep translation short, approx. 12 characters
-    N_("PM Light Snow"), 
+    N_("PM Light Snow"),
     # Please keep translation short, approx. 12 characters
-    N_("PM Rain"), 
+    N_("PM Rain"),
     # Please keep translation short, approx. 12 characters
-    N_("PM Rain / Snow"), 
+    N_("PM Rain / Snow"),
     # Please keep translation short, approx. 12 characters
-    N_("PM Showers"), 
+    N_("PM Showers"),
     # Please keep translation short, approx. 12 characters
     # T-Showers = Thunder Showers
     N_("PM T-Showers"),

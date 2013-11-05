@@ -42,7 +42,7 @@ if CAIRO_MENU_GNOME3
 CONDITIONAL_APPLETS += \
 	maintained/cairo-menu \
 	$(NULL)
-else 
+else
 if CAIRO_MENU_GNOME
 CONDITIONAL_APPLETS += \
 	maintained/cairo-menu \

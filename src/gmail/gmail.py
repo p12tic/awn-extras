@@ -35,7 +35,7 @@ def cleanGmailMsg(n):
         re.sub("(\<[^\<\>]*\>)", "",
         msg.source)))
         # Wow, huh?
-    
+
     f = False
     h = []
     n = n.split("\n")
@@ -51,9 +51,9 @@ def cleanGmailMsg(n):
 class App (awn.AppletSimple):
     def __init__ (self, uid, orient, height):
         awn.AppletSimple.__init__ (self, uid, orient, height)
-        
+
         self.drawPWDlog()
-        
+
         theme = gtk.icon_theme_get_default()
         icon = theme.load_icon ("stock_mail-reply", height, 0)
         #icon = gdk.pixbuf_new_from_file ("/home/njp/Projects/test.png")
@@ -66,14 +66,14 @@ class App (awn.AppletSimple):
         self.connect ("leave-notify-event", self.leave_notify)
         self.pwDialog.connect ("focus-out-event", self.pw_dialog_focus_out)
         self.dialog.connect ("focus-out-event", self.dialog_focus_out)
-        
+
         # Show PWD/Mail dlog
         self.showDlog = lambda: self.pwDialog.show_all()
         # Redefine that once logged in
-    
+
     def drawPWDlog (self):
         self.pwDialog = awn.AppletDialog (self)
-        
+
         # Table based layout
         # Because we all yearn for web designing c. 1995
         pwdLayout = gtk.Table()
@@ -84,19 +84,19 @@ class App (awn.AppletSimple):
         pwdLayout.set_row_spacing(2, 24)
         pwdLayout.set_row_spacing(3, 1)
         pwdLayout.show_all()
-        
+
         # Title of Window
         titleLabel = gtk.Label("Name and Password:")
         pwdLayout.attach(titleLabel, 0, 2, 0, 2)
         titleLabel.show_all()
-        
+
         # Username input box
         entryUsr = gtk.Entry()
         entryUsr.set_activates_default(True)
         pwdLayout.attach(entryUsr, 0, 2, 1, 3)
         entryUsr.show_all()
         self.pwDialog.usrEntry = entryUsr # For later use
-        
+
         # Password input box
         entryPwd = gtk.Entry()
         entryPwd.set_visibility(False)
@@ -104,7 +104,7 @@ class App (awn.AppletSimple):
         pwdLayout.attach(entryPwd, 0, 2, 2, 4)
         entryPwd.show_all()
         self.pwDialog.pwdEntry = entryPwd # For later use
-        
+
         # Submit button
         submitPwd = gtk.Button(label = "Log In", use_underline = False)
         submitPwd.set_flags(gtk.CAN_DEFAULT)
@@ -112,7 +112,7 @@ class App (awn.AppletSimple):
         pwdLayout.attach(submitPwd, 0, 2, 4, 5)
         submitPwd.show_all()
         submitPwd.connect("clicked", self.submit_pwd)
-    
+
     def refresh(self, widget):
         global msgs
         self.dialog.hide()
@@ -122,11 +122,11 @@ class App (awn.AppletSimple):
         self.mail.DrawTheme(self)
         self.redrawDlog(msgs)
         self.dialog.show_all()
-      
+
     def redrawDlog(self, msgs):
         del self.dialog
         self.dialog = awn.AppletDialog (self)
-        
+
         layout = gtk.Table()
         layout.resize(3, 3)
         #layout.set_row_spacing(0, 20)
@@ -137,49 +137,49 @@ class App (awn.AppletSimple):
         layout.set_col_spacing(2, 50)
         self.dialog.add(layout)
         layout.show_all()
-        
+
         label = gtk.Label("%d Mails in %s" % (len(msgs), usr))
         layout.attach(label, 0, 4, 0, 1)
         label.show_all()
-        
+
         innerlyt = gtk.Table()
         innerlyt.resize(len(msgs), 2)
         innerlyt.set_row_spacings(20)
         innerlyt.set_col_spacing(0, 10)
         innerlyt.set_col_spacing(1, 80)
-        
+
         for i in range(len(msgs)):
             label = gtk.Label(str(i+1) + ":")
             innerlyt.attach(label, 0, 1, i, i+2)
             label.show_all()
-            
+
             label = gtk.Label(msgs[i])
             innerlyt.attach(label, 1, 2, i, i+2)
             label.show_all()
             print str(i+1) + ": " + msgs[i]
-        
+
         layout.attach(innerlyt, 0, 4, 1, 2)
-        
+
         button = gtk.Button(label = "Gmail")
         button.connect("clicked", self.showGmail)
         button.set_size_request(125, 27)
         layout.attach(button, 0, 2, 2, 3)
         button.show_all()
-        
+
         button = gtk.Button(label = "Refresh")
         button.connect("clicked", self.refresh)
         button.set_size_request(125, 27)
         layout.attach(button, 3, 4, 2, 3)
         button.show_all()
-        
+
         self.dialog.connect ("focus-out-event", self.dialog_focus_out)
     
     def submit_pwd (self, widget):
         global usr, pwd, theme
-        
+
         usr = self.pwDialog.usrEntry.get_text()
         pwd = self.pwDialog.pwdEntry.get_text()
-        
+
         # print "Submitted:", usr, pwd
         
         self.mail = GMail(theme)
@@ -193,20 +193,20 @@ class App (awn.AppletSimple):
             self.mail.DrawTheme(self)
 
             self.timer = gobject.timeout_add (60000, timer1, self, self.mail)
-            
+
             # redefine button click
             self.showDlog = lambda: self.dialog.show_all()
-            
+
             self.pwDialog.hide ()
             self.redrawDlog(msgs)
             self.dialog.show_all()
-    
+
     def button_press (self, widget, event):
         print "Showing"
         self.showDlog()
         self.title.hide (self)
         # Show dialog
-    
+
     def showGmail (self, widget):
         system('gnome-open http://mail.google.com/mail/')
 
@@ -217,7 +217,7 @@ class App (awn.AppletSimple):
     def pw_dialog_focus_out (self, widget, event):
         self.pwDialog.hide ()
         # Hide dialog
-    
+
     def enter_notify (self, widget, event):
         global msgs
         self.title.show (self, "%d New Messages in %s" % (len(msgs), usr))
@@ -236,18 +236,18 @@ class GMail:
     theme = "Default"
     p_layouta = None
     Hover = False
-    
+
     def __init__ (self, theme):
         self.theme = theme
 
     def check(self):
         global usr, pwd, msgs
         self.ga = libgmail.GmailAccount(usr, pwd)
-        
+
         self.ga.login()
-        
+
         self.sources = [cleanGmailSubject(i.subject) for i in self.ga.getMessagesByQuery("is:unread in:inbox")]
-        
+
         self.ms = self.ga.getunreadInfo()
 
         if self.ms != None :
@@ -259,11 +259,11 @@ class GMail:
             #self.msgs = self.msgs.replace(',' , '')
             #self.msgs = self.msgs.replace("'" , '')
             self.msgs = re.sub(r"\[|\]|(inbox)|,|'| ", "", str(self.ms))
-        else:    
+        else:
             self.msgs = "0"
-        
-        
-        
+
+
+
         #if str(self.msgs) == "1":
         #    txt = " Unread Message"
         #else:

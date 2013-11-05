@@ -63,16 +63,16 @@ font_size_names = [_("Small"), _("Medium"), _("Large")]
 class SensorsApplet:
     """
     Applet to show the hardware sensors readouts.
-    
+
     """
 
     def __init__(self, applet):
         """
         Initialize the entire applet.
-        
+
         Create applet icon and main dialog, initialize sensors and load
         settings.
-        
+
         """
         self.applet = applet
 
@@ -125,7 +125,7 @@ ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock and restart the applet.")
         """
         Initialize sensors for all interfaces. Return False if no sensors are
         found.
-        
+
         """
         self.sensors = []
         self.sensors += acpisensors.get_sensors()
@@ -150,7 +150,7 @@ ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock and restart the applet.")
         """
         Fill self.main_sensors with sensors that should be shown in the applet
         icon.
-        
+
         """
         self.main_sensors = []
         for sensor in self.sensors:
@@ -169,7 +169,7 @@ ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock and restart the applet.")
         """
         Create icon, create overlay, run the first icon update and start icon
         timer.
-        
+
         """
         self.__icon = SensorIcon(self.applet.settings["theme"],
                                  self.main_sensors,
@@ -200,7 +200,7 @@ ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock and restart the applet.")
     def update_icon(self, force=False):
         """
         Update applet icon to show the updated values.
-        
+
         """
         for main_sensor in self.main_sensors:
             main_sensor.read_sensor()
@@ -233,7 +233,7 @@ ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock and restart the applet.")
         """
         Load global and sensor settings and replace them with defaults if
         not set.
-        
+
         """
         # Setup the rightclick context menu.
         self.__pref_dialog = self.applet.dialog.new("preferences")
@@ -370,7 +370,7 @@ ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock and restart the applet.")
         for theme in self.__themes:
             # Add filename with '_' replaced width space
             theme_combobox.append_text(theme)
-        # If the set theme is not available, revert to default 
+        # If the set theme is not available, revert to default
         if self.applet.settings["theme"] not in self.__themes:
             self.__icon = None
             self.applet.settings["theme"] = self.__themes[0]
@@ -521,12 +521,12 @@ ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock and restart the applet.")
     def create_properties_dialog(self, sensor):
         """
         Create a dialog with individual sensors settings.
-        
+
         Create a dialog with settings for high and low values and alarms for
         the given sensor
         @param prefs: opened glade XML file
         @param sensor: the sensor for which this settings dialog is for
-        
+
         """
         prefs = gtk.Builder()
         prefs.add_from_file(ui_file)
@@ -697,7 +697,7 @@ ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock and restart the applet.")
     def update_dialog_rows(self):
         """
         Save dialog row setting and update main dialog.
-        
+
         """
         # Save dialog_row values
         self.applet.settings["dialog_row"] = \
@@ -722,7 +722,7 @@ ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock and restart the applet.")
     def label_edited_cb(self, cell_renderer, path, new_text):
         """
         Change specific sensor's label, save it and update dialog and icon.
-        
+
         """
         # Change label value in liststore
         self.__liststore[path][self.__column_label] = new_text
@@ -739,7 +739,7 @@ ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock and restart the applet.")
         """
         Toggle specific sensor's "show in dialog" properity, save it and update
         dialog.
-        
+
         """
         store = self.__liststore
         sensor = self.sensors[store[path][self.__column_idx]]
@@ -768,7 +768,7 @@ ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock and restart the applet.")
     def add_cb(self, widget, treeview_all):
         """
         Add selected sensors to main sensors (i.e. shown them in applet icon).
-        
+
         """
         # Get selected sensor
         selection = treeview_all.get_selection()
@@ -787,7 +787,7 @@ ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock and restart the applet.")
         """
         Remove selected sensors from main sensors (i.e. do not shown them in
         applet icon).
-        
+
         """
         # Get selected sensor
         selection = treeview_main.get_selection()
@@ -806,7 +806,7 @@ ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock and restart the applet.")
     def up_cb(self, widget, treeview):
         """
         Move selected sensors up in main applet dialog.
-        
+
         """
         # Get selected sensor
         selection = treeview.get_selection()
@@ -838,7 +838,7 @@ ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock and restart the applet.")
     def down_cb(self, widget, treeview):
         """
         Move selected sensors down in the main applet dialog.
-        
+
         """
         # Get selected sensor
         selection = treeview.get_selection()
@@ -885,7 +885,7 @@ ACPI, HDDTemp, LM-Sensors, nvidia-settings or nvclock and restart the applet.")
         def create_content(self):
             """
             (Re)creates sensor labels and values for main applet dialog
-            
+
             """
             # List of sensors to be shown in dialog
             shown_sensors = dict()

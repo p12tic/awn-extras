@@ -61,7 +61,7 @@ class Weather:
         self.__prefs_tab = WeatherPreferencesTab(prefs, self.__applet.binder, self.__weather_overlay)
 
         return self.__prefs_tab.get_prefs_widget()
-    
+
     def get_report_fetcher(self, code):
         print "creating report fetcher for %s" % code
         return metar.ReportFetcher(code)
@@ -84,7 +84,7 @@ class Weather:
             minutes1 = int(city_datetime.strftime("%M"))
 
             fa = lambda v: v + hours_offset_utc
-            fb = lambda v: (int(v), int(round(v % 1 * 60))) 
+            fb = lambda v: (int(v), int(round(v % 1 * 60)))
             srss = map(fb, map(fa, sun.sun_rise_set(year, month, day, report.longf, report.latf)))
 
             print report.stat_city, weather, sky, srss

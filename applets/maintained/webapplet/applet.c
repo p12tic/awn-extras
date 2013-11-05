@@ -101,7 +101,7 @@ site_clicked(GtkButton *button, WebSite *site)
                                 site->width, site->height);
   }
 
-  /* Set as new home page if this is either in the main menu, or 
+  /* Set as new home page if this is either in the main menu, or
    * in the dialog with 'set as new home page' checked */
   if (!GTK_IS_WIDGET(site->webapplet->check_home) ||
       gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(site->webapplet->check_home)))
@@ -465,7 +465,7 @@ _button_clicked_event (GtkWidget      *widget,
         gtk_widget_show_all (item);
         g_signal_connect (G_OBJECT (item), "activate",
                           G_CALLBACK (_show_location_dialog), webapplet);
-      }           
+      }
       item = awn_applet_create_about_item_simple(webapplet->applet,
                                                  "2008 Rodney Cryderman <rcryderman@gmail.com>\n"
                                                  "2008 Mark Lee <avant-wn@lazymalevolence.com>\n",
@@ -503,7 +503,7 @@ awn_applet_factory_initp (const gchar *name, gchar* uid, gint panel_id)
 
   awn_applet_simple_set_icon_name(AWN_APPLET_SIMPLE(webapplet->applet),
                                   ICON_NAME);
- 
+
   /*gtk_widget_show_all (GTK_WIDGET (webapplet->applet));*/
   awn_html_dialog_new (webapplet);
   gtk_window_set_focus_on_map (GTK_WINDOW (webapplet->mainwindow), TRUE);

@@ -79,7 +79,7 @@ class CairoClockApplet:
             element = i.get_element()
             if element is None:
                 continue
-            
+
             plugin_vbox = gtk.VBox(spacing=6)
 
             hbox = gtk.HBox()
@@ -199,7 +199,7 @@ class CairoClockApplet:
                 preferences.reparent(container)
                 page_number = self.preferences_notebook.append_page(container, gtk.Label(i.get_name()))
                 i.set_preferences_page_number(page_number)
-    
+
     def get_plugin(self, name):
         for i in self.__plugins:
             if i.get_name() == name:

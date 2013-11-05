@@ -24,7 +24,7 @@
     <long>Whether to honour client notification window positioning requests.</long>
    </locale>
   </schema>
-  
+
   <schema>
    <key>/schemas/apps/avant-window-navigator/applets/awn-notification-daemon/honour_gtk</key>
    <applyto>/apps/avant-window-navigator/applets/awn-notification-daemon/honour_gtk</applyto>
@@ -35,7 +35,7 @@
     <short>Honour gtk theme colours</short>
     <long>Whether to gtk colour scheme.</long>
    </locale>
-  </schema>  
+  </schema>
 
   <schema>
    <key>/schemas/apps/avant-window-navigator/applets/awn-notification-daemon/bg_colour</key>
@@ -48,7 +48,7 @@
     <long>Background colour in the form (Hex) rrggbbaa.</long>
    </locale>
   </schema>
-  
+
   <schema>
    <key>/schemas/apps/avant-window-navigator/applets/awn-notification-daemon/text_colour</key>
    <applyto>/apps/avant-window-navigator/applets/awn-notification-daemon/text_colour</applyto>
@@ -59,7 +59,7 @@
     <short>Text Colour</short>
     <long>Text colour in the form (Hex) rrggbbaa. Currently the alpha component is ignored</long>
    </locale>
-  </schema>  
+  </schema>
 
   <schema>
    <key>/schemas/apps/avant-window-navigator/applets/awn-notification-daemon/border_colour</key>
@@ -96,7 +96,7 @@
     <long>Gradient Factor applied to the notification window. Range of 0 to 1. The lower the number the more noticeable the effect.</long>
    </locale>
   </schema>
-  
+
   <schema>
    <key>/schemas/apps/avant-window-navigator/applets/awn-notification-daemon/override_x</key>
    <applyto>/apps/avant-window-navigator/applets/awn-notification-daemon/override_x</applyto>
@@ -108,7 +108,7 @@
     <long> NOTE:  This key should not be considered stable... it is likely to change.  Arbitrary X position for notification window.  Default is -1 which signifies awn-notification-daemon should place windows relative to its position in the bar.</long>
    </locale>
   </schema>
-  
+
   <schema>
    <key>/schemas/apps/avant-window-navigator/applets/awn-notification-daemon/override_y</key>
    <applyto>/apps/avant-window-navigator/applets/awn-notification-daemon/override_y</applyto>
@@ -120,7 +120,7 @@
     <long> NOTE:  This key should not be considered stable... it is likely to change.  Arbitrary Y position for notification window.  Default is -1 which signifies awn-notification-daemon should place windows relative to its position in the bar.</long>
    </locale>
   </schema>
-  
+
   <schema>
    <key>/schemas/apps/avant-window-navigator/applets/awn-notification-daemon/override_timeout</key>
    <applyto>/apps/avant-window-navigator/applets/awn-notification-daemon/override_timeout</applyto>
@@ -131,7 +131,7 @@
     <short>Timeout Overide</short>
     <long>This will override the client and default timeout periods for all notification windows with a timeout.  Value is in ms. A value less than or equal to 0 indicates that client and default values should be honoured.</long>
    </locale>
-  </schema>  
+  </schema>
 
   <schema>
    <key>/schemas/apps/avant-window-navigator/applets/awn-notification-daemon/show_icon</key>
@@ -143,7 +143,7 @@
     <short>Show icon</short>
     <long>Display icon for awn notification daemon.  Allows toggling of notification display</long>
    </locale>
-  </schema>  
+  </schema>
 
   <schema>
    <key>/schemas/apps/avant-window-navigator/applets/awn-notification-daemon/hide_opacity</key>
@@ -155,7 +155,7 @@
     <short>Increased opacity instead of Hiding</short>
     <long>If the value is >0.0 then this opacity value will be applied to window instead of hiding.</long>
    </locale>
-  </schema> 
-    
+  </schema>
+
  </schemalist>
 </gconfschemafile>

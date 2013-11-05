@@ -27,7 +27,7 @@
 
 #define MS_INTERVAL 40
 struct timeval	g_timeValue;
-typedef struct 
+typedef struct
 {
 	AwnApplet *applet;
 

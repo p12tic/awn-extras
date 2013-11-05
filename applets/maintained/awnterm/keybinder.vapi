@@ -31,7 +31,7 @@ namespace Awn {
       [CCode (cheader_filename = "eggaccelerators.h", cname = "egg_keymap_resolve_virtual_modifiers")]
       public static void keymap_resolve_virtual_modifiers (Gdk.Keymap keymap, VirtualModifierType virtual_mods, out Gdk.ModifierType mods);
     }
-    
+
     [CCode (cheader_filename = "keybinder.h", cprefix = "Awn")]
     public delegate void BindkeyHandler (string keystring);
     [CCode (cheader_filename = "keybinder.h", lower_case_cprefix = "awn_keybinder_")]

@@ -100,7 +100,7 @@ class RelatedApplet : AppletSimple
           "org.wncksync.Matcher",
           "/org/wncksync/Matcher",
           "org.wncksync.Matcher");
-      
+
         string df = matcher.desktop_file_for_xid ((uint32) window.get_xid ());
         if (df != null && df != "")
         {

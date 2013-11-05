@@ -75,7 +75,7 @@ public class DigitalClockPrefs : GLib.Object
 
     this.init_components (builder);
 
-    this.pos_changed_id = 
+    this.pos_changed_id =
       this.applet.position_changed.connect (this.on_applet_position_changed);
     this.on_applet_position_changed (applet.get_pos_type ());
 
@@ -128,21 +128,21 @@ public class DigitalClockPrefs : GLib.Object
 
     this.hour_12_radio = builder.get_object ("12_hour_radio") as Gtk.Widget;
     toggle = this.hour_12_radio as Gtk.ToggleButton;
-    toggle.toggled.connect ((w) => 
+    toggle.toggled.connect ((w) =>
     {
       if (w.get_active ()) this.is_12_hour = true;
     });
 
     this.hour_24_radio = builder.get_object ("24_hour_radio") as Gtk.Widget;
     toggle = this.hour_24_radio as Gtk.ToggleButton;
-    toggle.toggled.connect ((w) => 
+    toggle.toggled.connect ((w) =>
     {
       if (w.get_active ()) this.is_12_hour = false;
     });
 
     this.dbt_check = builder.get_object ("date_below_check") as Gtk.Widget;
     toggle = this.dbt_check as Gtk.ToggleButton;
-    toggle.toggled.connect ((w) => 
+    toggle.toggled.connect ((w) =>
     {
       this.date_before_time = !w.get_active ();
     });

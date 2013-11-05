@@ -3,12 +3,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Library General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
@@ -29,16 +29,16 @@ G_DEFINE_TYPE (AwnSysmon, awn_sysmon, AWN_TYPE_APPLET)
 
 typedef struct _AwnSysmonPrivate AwnSysmonPrivate;
 
-struct _AwnSysmonPrivate 
+struct _AwnSysmonPrivate
 {
   GtkWidget * box;
 
-  /*Made these into properties... 
-   
+  /*Made these into properties...
+
    treating them as pointers for now ...  because I'm not really
    sure of certain behaviours/interactions
    */
-  DesktopAgnosticConfigClient * client_baseconf; 
+  DesktopAgnosticConfigClient * client_baseconf;
   GSList    * icon_list;
 };
 
@@ -48,7 +48,7 @@ enum
   PROP_ICON_LIST,
   PROP_CLIENT_BASECONF,
   PROP_BRIDGE_BASECONF,
-  PROP_BRIDGE  
+  PROP_BRIDGE
 };
 
 static void
@@ -56,7 +56,7 @@ awn_sysmon_get_property (GObject *object, guint property_id,
                               GValue *value, GParamSpec *pspec)
 {
   AwnSysmonPrivate * priv = AWN_SYSMON_GET_PRIVATE (object);
-  switch (property_id) 
+  switch (property_id)
   {
     case PROP_ICON_LIST:
     {
@@ -77,7 +77,7 @@ awn_sysmon_get_property (GObject *object, guint property_id,
     }
     case PROP_CLIENT_BASECONF:
       g_value_set_pointer (value,priv->client_baseconf);
-      break;                
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -107,12 +107,12 @@ awn_sysmon_set_property (GObject *object, guint property_id,
   GValueArray *array;
   gint i;
 
-  AwnSysmonPrivate * priv = AWN_SYSMON_GET_PRIVATE (object);  
-  switch (property_id) 
+  AwnSysmonPrivate * priv = AWN_SYSMON_GET_PRIVATE (object);
+  switch (property_id)
   {
     case PROP_ICON_LIST:
       if (priv->icon_list)
-      {  
+      {
         priv->icon_list = free_string_slist (priv->icon_list);
       }
       array = g_value_get_boxed (value);
@@ -134,22 +134,22 @@ awn_sysmon_set_property (GObject *object, guint property_id,
 static void
 awn_sysmon_dispose (GObject *object)
 {
-  AwnSysmonPrivate * priv = AWN_SYSMON_GET_PRIVATE (object);  
+  AwnSysmonPrivate * priv = AWN_SYSMON_GET_PRIVATE (object);
 
   if (priv->client_baseconf)
   {
     g_object_unref (priv->client_baseconf);
   }
-  
+
   G_OBJECT_CLASS (awn_sysmon_parent_class)->dispose (object);
 }
 
 static void
 awn_sysmon_finalize (GObject *object)
 {
-  AwnSysmonPrivate * priv = AWN_SYSMON_GET_PRIVATE (object);  
+  AwnSysmonPrivate * priv = AWN_SYSMON_GET_PRIVATE (object);
   priv->icon_list = free_string_slist (priv->icon_list);
-  
+
   G_OBJECT_CLASS (awn_sysmon_parent_class)->finalize (object);
 }
 
@@ -164,12 +164,12 @@ awn_sysmon_constructed (GObject *object)
   if (G_OBJECT_CLASS (awn_sysmon_parent_class)->constructed )
   {
     G_OBJECT_CLASS (awn_sysmon_parent_class)->constructed (object);
-  }  
-  
-  priv = AWN_SYSMON_GET_PRIVATE (sysmon);        
+  }
+
+  priv = AWN_SYSMON_GET_PRIVATE (sysmon);
   GTimeVal cur_time;
 
-  
+
   g_object_get (object,
                 "canonical-name",&name,
                 "uid", &uid,
@@ -180,7 +180,7 @@ awn_sysmon_constructed (GObject *object)
   g_debug ("%s:  %s, %s",__func__,name,uid);
   priv->client_baseconf = awn_config_get_default_for_applet_by_info (name, uid,NULL);
   g_debug ("client_baseconf = %p",priv->client_baseconf);
-  
+
   desktop_agnostic_config_client_bind (priv->client_baseconf,
                                        "applet", "icon_list",
                                        G_OBJECT(object), "icon_list", FALSE,
@@ -196,7 +196,7 @@ awn_sysmon_constructed (GObject *object)
   if (!priv->icon_list)
   {
     icon = awn_CPUicon_new (AWN_APPLET(sysmon),"default1");
-    gtk_container_add (GTK_CONTAINER (priv->box), icon);  
+    gtk_container_add (GTK_CONTAINER (priv->box), icon);
     gtk_widget_show (icon);
   }
   else
@@ -210,7 +210,7 @@ awn_sysmon_constructed (GObject *object)
       {
         gchar *icon_id = g_strdup_printf ("%s-%s-%s",uid,tokens[0],tokens[1]);
         icon = awn_CPUicon_new (AWN_APPLET(sysmon),icon_id);
-        gtk_container_add (GTK_CONTAINER (priv->box), icon);  
+        gtk_container_add (GTK_CONTAINER (priv->box), icon);
         gtk_widget_show (icon);
         g_free (icon_id);
       }
@@ -221,20 +221,20 @@ awn_sysmon_constructed (GObject *object)
       g_strfreev(tokens);
     }
   }
-  /* 
+  /*
   icon = awn_CPUicon_new (GRAPH_CIRCLE,AWN_APPLET(sysmon));
-  gtk_container_add (GTK_CONTAINER (priv->box), icon);  
+  gtk_container_add (GTK_CONTAINER (priv->box), icon);
   gtk_widget_show (icon);
 
   icon = awn_CPUicon_new (GRAPH_BAR,AWN_APPLET(sysmon));
-  gtk_container_add (GTK_CONTAINER (priv->box), icon);  
-  gtk_widget_show (icon);  
+  gtk_container_add (GTK_CONTAINER (priv->box), icon);
+  gtk_widget_show (icon);
 
   icon = awn_loadicon_new (GRAPH_BAR,AWN_APPLET(sysmon));
-  gtk_container_add (GTK_CONTAINER (priv->box), icon); 
+  gtk_container_add (GTK_CONTAINER (priv->box), icon);
   gtk_widget_show (icon);
 */
-  
+
   g_free (name);
   g_free (uid);
 }
@@ -243,7 +243,7 @@ static void
 awn_sysmon_class_init (AwnSysmonClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
-  GParamSpec   *pspec;  
+  GParamSpec   *pspec;
 
   object_class->get_property = awn_sysmon_get_property;
   object_class->set_property = awn_sysmon_set_property;
@@ -256,20 +256,20 @@ awn_sysmon_class_init (AwnSysmonClass *klass)
                               "The list of icons for this applet instance",
                               G_TYPE_VALUE_ARRAY,
                               G_PARAM_READWRITE);
-  g_object_class_install_property (object_class, PROP_ICON_LIST, pspec);   
+  g_object_class_install_property (object_class, PROP_ICON_LIST, pspec);
 
   pspec = g_param_spec_pointer ("bridge",
                                "bridge",
                                "Config client bridge",
                                G_PARAM_READWRITE);
-  g_object_class_install_property (object_class, PROP_BRIDGE, pspec);   
+  g_object_class_install_property (object_class, PROP_BRIDGE, pspec);
 
   pspec = g_param_spec_pointer ("client-baseconf",
                                "client baseconf",
                                "config client baseconf",
                                G_PARAM_READWRITE);
-  g_object_class_install_property (object_class, PROP_CLIENT_BASECONF, pspec);   
-  
+  g_object_class_install_property (object_class, PROP_CLIENT_BASECONF, pspec);
+
   g_type_class_add_private (klass, sizeof (AwnSysmonPrivate));
 }
 
@@ -279,7 +279,7 @@ awn_sysmon_init (AwnSysmon *sysmon)
 {
   AwnSysmonPrivate *priv;
   priv = AWN_SYSMON_GET_PRIVATE (sysmon);
-  
+
   /* Create the icon box */
   priv->box = awn_icon_box_new_for_applet (AWN_APPLET (sysmon));
   gtk_container_add (GTK_CONTAINER (sysmon), priv->box);

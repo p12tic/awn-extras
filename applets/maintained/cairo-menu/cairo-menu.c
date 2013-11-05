@@ -84,7 +84,7 @@ _container_propagate_expose (GtkContainer   *container,
   g_return_if_fail (event != NULL);
 
   g_assert (child->parent == GTK_WIDGET (container));
-  
+
   if (GTK_WIDGET_DRAWABLE (child) &&
       GTK_WIDGET_NO_WINDOW (child) &&
       (child->window == event->window)&&
@@ -114,7 +114,7 @@ _expose_child (GtkWidget *child,gpointer   client_data)
     GtkWidget *container;
     GdkEventExpose *event;
   } *data = client_data;
-  
+
   gtk_container_propagate_expose (GTK_CONTAINER (data->container),
                                   child,
                                   data->event);
@@ -128,7 +128,7 @@ cairo_menu_expose (GtkWidget *widget,GdkEventExpose *event)
     GdkEventExpose *event;
   } data;
 
-  CairoMenuPrivate * priv = GET_PRIVATE(widget);  
+  CairoMenuPrivate * priv = GET_PRIVATE(widget);
   data.container = widget;
   data.event = event;
 
@@ -142,11 +142,11 @@ cairo_menu_expose (GtkWidget *widget,GdkEventExpose *event)
     x = event->area.x;
     y = event->area.y;
     width = event->area.width;
-    height = event->area.height;    
+    height = event->area.height;
     cairo_set_source_rgba (cr,1.0,0.0,0.0,0.5);
     cairo_rectangle (cr, x,y,width,height);
     cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
-    cairo_fill (cr);    
+    cairo_fill (cr);
 
     gtk_container_forall (GTK_CONTAINER (widget),_expose_child,&data);
 
@@ -154,7 +154,7 @@ cairo_menu_expose (GtkWidget *widget,GdkEventExpose *event)
     return TRUE;
   }
   else
-  {    
+  {
     return FALSE;
   }
 }
@@ -166,8 +166,8 @@ cairo_menu_constructed (GObject *object)
   {
     G_OBJECT_CLASS (cairo_menu_parent_class)->constructed (object);
   }
-  
-  g_signal_connect (object,"expose-event",G_CALLBACK(cairo_menu_expose),NULL);  
+
+  g_signal_connect (object,"expose-event",G_CALLBACK(cairo_menu_expose),NULL);
 }
 
 static void
@@ -175,7 +175,7 @@ cairo_menu_class_init (CairoMenuClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
-  
+
   g_type_class_add_private (klass, sizeof (CairoMenuPrivate));
 
   object_class->get_property = cairo_menu_get_property;
@@ -184,7 +184,7 @@ cairo_menu_class_init (CairoMenuClass *klass)
   object_class->finalize = cairo_menu_finalize;
   object_class->constructed = cairo_menu_constructed;
 
-//  widget_class->expose_event = cairo_menu_expose;  
+//  widget_class->expose_event = cairo_menu_expose;
 }
 
 static void

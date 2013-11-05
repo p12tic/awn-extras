@@ -92,7 +92,7 @@ typedef struct
   DesktopAgnosticConfigClient  *config;
 
   gchar * uid;
-  guint   cookie;  
+  guint   cookie;
 }Places;
 
 
@@ -429,8 +429,8 @@ static void get_places(Places * places)
     b_file = desktop_agnostic_vfs_bookmark_get_file (bookmark);
     b_alias = desktop_agnostic_vfs_bookmark_get_alias (bookmark);
     b_path = desktop_agnostic_vfs_file_get_path (b_file);
-    item->icon = g_strdup ("stock_folder");    
-    
+    item->icon = g_strdup ("stock_folder");
+
     if (b_path)
     {
       shell_quoted = g_shell_quote (b_path);
@@ -1192,8 +1192,8 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
     {
       menu = awn_applet_create_default_menu(AWN_APPLET(places->applet));
       item = gtk_image_menu_item_new_with_label("Applet Preferences");
-      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item), 
-                                     gtk_image_new_from_stock (GTK_STOCK_PREFERENCES,GTK_ICON_SIZE_MENU));     
+      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item),
+                                     gtk_image_new_from_stock (GTK_STOCK_PREFERENCES,GTK_ICON_SIZE_MENU));
       gtk_widget_show(item);
       gtk_menu_set_screen(GTK_MENU(menu), NULL);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
@@ -1224,7 +1224,7 @@ static gboolean _focus_out_event(GtkWidget *widget, GdkEventButton *event, Place
     {
       awn_applet_uninhibit_autohide (AWN_APPLET(places->applet), places->cookie);
       places->cookie=0;
-    }    
+    }
   }
 
   return TRUE;
@@ -1250,7 +1250,7 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
 {
   g_on_error_stack_trace(NULL);
   Places * places = g_malloc(sizeof(Places));
-  
+
   places->uid = g_strdup_printf ("single-%s",uid);
   GtkWidget *applet = places->applet = awn_applet_simple_new(name, places->uid, panel_id);
   g_object_set (applet,

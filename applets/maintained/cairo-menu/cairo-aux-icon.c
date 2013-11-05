@@ -47,7 +47,7 @@ struct _CairoAuxIconPrivate {
   gchar        * menu_name;
   gchar        * display_name;
   gchar        * icon_name;
-  guint         autohide_cookie;    
+  guint         autohide_cookie;
 };
 
 
@@ -69,7 +69,7 @@ cairo_aux_icon_get_property (GObject *object, guint property_id,
                               GValue *value, GParamSpec *pspec)
 {
   CairoAuxIconPrivate * priv = GET_PRIVATE (object);
-  
+
   switch (property_id) {
   case PROP_APPLET:
     g_value_set_pointer (value,priv->applet);
@@ -82,7 +82,7 @@ cairo_aux_icon_get_property (GObject *object, guint property_id,
     break;
   case PROP_ICON_NAME:
     g_value_set_string (value, priv->icon_name);
-    break;            
+    break;
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -93,7 +93,7 @@ cairo_aux_icon_set_property (GObject *object, guint property_id,
                               const GValue *value, GParamSpec *pspec)
 {
   CairoAuxIconPrivate * priv = GET_PRIVATE (object);
-  
+
   switch (property_id) {
   case PROP_APPLET:
       priv->applet = g_value_get_pointer (value);
@@ -106,7 +106,7 @@ cairo_aux_icon_set_property (GObject *object, guint property_id,
       break;
   case PROP_ICON_NAME:
       priv->icon_name = g_value_dup_string (value);
-      break;      
+      break;
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -119,7 +119,7 @@ cairo_aux_icon_dispose (GObject *object)
 
   if (priv->menu)
   {
-    gtk_widget_destroy (priv->menu);  
+    gtk_widget_destroy (priv->menu);
     priv->menu = NULL;
   }
   if (priv->context_menu)
@@ -156,7 +156,7 @@ queue_menu_build (CairoAuxIcon *icon)
   CairoAuxIconPrivate * priv = GET_PRIVATE (icon);
 
   priv->menu = menu_build (priv->menu_instance);
-  g_signal_connect(G_OBJECT(priv->menu), "deactivate", G_CALLBACK(_deactivate_event), icon);  
+  g_signal_connect(G_OBJECT(priv->menu), "deactivate", G_CALLBACK(_deactivate_event), icon);
   g_signal_connect(icon, "button-press-event", G_CALLBACK(_button_clicked_event), NULL);
   g_signal_connect_swapped(priv->applet,"size-changed",G_CALLBACK(size_changed_cb),icon);
   return FALSE;
@@ -170,10 +170,10 @@ cairo_aux_icon_constructed (GObject *object)
   gint size = awn_applet_get_size (priv->applet);
   gchar * applet_name = g_strdup_printf("cairo-menu-%s",priv->menu_name);
   gchar * base;
-  G_OBJECT_CLASS (cairo_aux_icon_parent_class)->constructed (object);  
+  G_OBJECT_CLASS (cairo_aux_icon_parent_class)->constructed (object);
 
   /*
-   applet_name can be a path with /'s.  These need to be retained for matching 
+   applet_name can be a path with /'s.  These need to be retained for matching
    purposes when building the menus... but we need to strip them out for set_info
    */
   base = g_path_get_basename (applet_name);
@@ -181,7 +181,7 @@ cairo_aux_icon_constructed (GObject *object)
   g_free (base);
   awn_themed_icon_set_size (AWN_THEMED_ICON (object),size);
   g_free (applet_name);
-  
+
   /* call our function in the module */
 
   priv->menu_instance = get_menu_instance (priv->applet,
@@ -193,15 +193,15 @@ cairo_aux_icon_constructed (GObject *object)
                                         0);
   g_idle_add ((GSourceFunc)queue_menu_build, object);
 
-  if (g_strcmp0(priv->display_name, "Places") == 0) 
+  if (g_strcmp0(priv->display_name, "Places") == 0)
   {
     awn_icon_set_tooltip_text (AWN_ICON(object), _("Places"));
   }
-  else if (g_strcmp0(priv->display_name, "Recent Documents") == 0) 
+  else if (g_strcmp0(priv->display_name, "Recent Documents") == 0)
   {
     awn_icon_set_tooltip_text (AWN_ICON(object),_("Recent Documents"));
   }
-  else if (g_strcmp0(priv->display_name, "Session") == 0) 
+  else if (g_strcmp0(priv->display_name, "Session") == 0)
   {
     awn_icon_set_tooltip_text (AWN_ICON(object),_("Session"));
   }
@@ -215,7 +215,7 @@ static void
 cairo_aux_icon_class_init (CairoAuxIconClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
-  GParamSpec   *pspec;  
+  GParamSpec   *pspec;
 
   object_class->get_property = cairo_aux_icon_get_property;
   object_class->set_property = cairo_aux_icon_set_property;
@@ -235,7 +235,7 @@ cairo_aux_icon_class_init (CairoAuxIconClass *klass)
                                 "",
                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
   g_object_class_install_property (object_class, PROP_MENU_NAME, pspec);
-  
+
   pspec = g_param_spec_string ("display_name",
                                "display_name",
                                "Display Name",
@@ -264,7 +264,7 @@ cairo_aux_icon_init (CairoAuxIcon *self)
 GtkWidget*
 cairo_aux_icon_new (AwnApplet * applet, gchar * menu_name, gchar * display_name, gchar * icon_name)
 {
-  return g_object_new (AWN_TYPE_CAIRO_AUX_ICON, 
+  return g_object_new (AWN_TYPE_CAIRO_AUX_ICON,
                         "applet",applet,
                         "menu_name",menu_name,
                         "display_name",display_name,
@@ -281,22 +281,22 @@ _remove_icon (GtkMenuItem * item, CairoAuxIcon * icon)
   cairo_menu_applet_remove_icon (AWN_CAIRO_MENU_APPLET(priv->applet),AWN_THEMED_ICON(icon));
 }
 
-static gboolean 
+static gboolean
 _button_clicked_event (CairoAuxIcon *icon, GdkEventButton *event, gpointer null)
 {
   GdkEventButton *event_button;
   event_button = (GdkEventButton *) event;
   CairoAuxIconPrivate * priv = GET_PRIVATE (icon);
-  
+
   if (event->button == 1)
   {
     awn_icon_popup_gtk_menu (AWN_ICON (icon), priv->menu, event->button, event->time);
 
     if (!priv->autohide_cookie)
-    {     
+    {
       priv->autohide_cookie = awn_applet_inhibit_autohide (AWN_APPLET(priv->applet),"CairoMenu" );
-    }                
-    g_object_set(awn_overlayable_get_effects (AWN_OVERLAYABLE(icon)), "depressed", FALSE,NULL);    
+    }
+    g_object_set(awn_overlayable_get_effects (AWN_OVERLAYABLE(icon)), "depressed", FALSE,NULL);
   }
   else if (event->button == 3)
   {
@@ -306,24 +306,24 @@ _button_clicked_event (CairoAuxIcon *icon, GdkEventButton *event, gpointer null)
     {
       priv->context_menu = awn_applet_create_default_menu (AWN_APPLET(priv->applet));
       gtk_menu_set_screen(GTK_MENU(priv->context_menu), NULL);
-      
+
       item = awn_themed_icon_create_remove_custom_icon_item (AWN_THEMED_ICON(icon),NULL);
       gtk_menu_shell_append (GTK_MENU_SHELL(priv->context_menu), item);
-/*      
+/*
       item = gtk_image_menu_item_new_with_label("Applet Preferences");
-      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item), 
+      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item),
                                      gtk_image_new_from_stock (GTK_STOCK_PREFERENCES,GTK_ICON_SIZE_MENU));
       gtk_widget_show(item);
       gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);*/
       gtk_menu_set_screen(GTK_MENU(priv->context_menu), NULL);
       item = gtk_image_menu_item_new_with_label(_("Remove Icon"));
-      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item), 
+      gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM(item),
                                      gtk_image_new_from_stock (GTK_STOCK_REMOVE,GTK_ICON_SIZE_MENU));
 
       gtk_widget_show(item);
       gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
       g_signal_connect (G_OBJECT(item),"activate",G_CALLBACK(_remove_icon),icon);
-      
+
 //      g_signal_connect(G_OBJECT(item), "button-press-event", G_CALLBACK(_show_prefs), NULL);
       item=awn_applet_create_about_item_simple(AWN_APPLET(priv->applet),
                                                "Copyright 2007,2008, 2009 Rodney Cryderman <rcryderman@gmail.com>",
@@ -334,27 +334,27 @@ _button_clicked_event (CairoAuxIcon *icon, GdkEventButton *event, gpointer null)
       awn_utils_show_menu_images (GTK_MENU (priv->context_menu));
     }
     if (!priv->autohide_cookie)
-    {     
+    {
       priv->autohide_cookie = awn_applet_inhibit_autohide (AWN_APPLET(priv->applet),"CairoMenu" );
-    }        
+    }
     awn_icon_popup_gtk_menu (AWN_ICON (icon), priv->context_menu, event->button, event->time);
-    g_object_set(awn_overlayable_get_effects (AWN_OVERLAYABLE(icon)), "depressed", FALSE,NULL);    
+    g_object_set(awn_overlayable_get_effects (AWN_OVERLAYABLE(icon)), "depressed", FALSE,NULL);
   }
   else
   {
     return TRUE;
   }
-  awn_icon_set_is_active (AWN_ICON(icon), TRUE);  
+  awn_icon_set_is_active (AWN_ICON(icon), TRUE);
   return TRUE;
 }
 
-static gboolean 
+static gboolean
 _deactivate_event (GtkMenuShell *menushell,CairoAuxIcon * icon)
 {
   CairoAuxIconPrivate * priv = GET_PRIVATE (icon);
-  
+
   if (priv->autohide_cookie)
-  {     
+  {
     awn_applet_uninhibit_autohide (AWN_APPLET(priv->applet),priv->autohide_cookie);
     priv->autohide_cookie = 0;
   }

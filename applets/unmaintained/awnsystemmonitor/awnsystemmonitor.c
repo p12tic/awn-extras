@@ -166,7 +166,7 @@ cpumeter_applet_new(AwnApplet *applet)
                                            "Copyright 2007 Mike (mosburger) Desjardins <desjardinsmike@gmail.com>\n",
                                            AWN_APPLET_LICENSE_GPLV2,
                                            VERSION);
-  gtk_menu_shell_append(GTK_MENU_SHELL(cpumeter->right_click_menu), item);    
+  gtk_menu_shell_append(GTK_MENU_SHELL(cpumeter->right_click_menu), item);
   cpumeter->timer_id = g_timeout_add(cpumeter->update_freq, (GSourceFunc)cpu_meter_render, cpumeter);
   return cpumeter;
 }
@@ -308,7 +308,7 @@ void render_graph(cairo_t * cr, LoadGraph * g, char* text, int width, int height
   /* Set the background color */
 
   awn_cairo_rounded_rect(cr, (double)PAD - 1, (double)1, (double)width - PAD - 4, (double)height - PAD - 1, ARC, ROUND_ALL);
- 
+
   cairo_set_source_rgba(cr, cpumeter->bg.red, cpumeter->bg.green, cpumeter->bg.blue, cpumeter->bg.alpha);
   cairo_fill(cr);
 
@@ -338,8 +338,8 @@ void render_graph(cairo_t * cr, LoadGraph * g, char* text, int width, int height
   }
 
 
-  guint top = PAD;  
-  guint bottom = height - PAD;  
+  guint top = PAD;
+  guint bottom = height - PAD;
 
   guint tallest = bottom - top;
   cairo_set_line_width(cr, 1.0);
@@ -374,7 +374,7 @@ void render_graph(cairo_t * cr, LoadGraph * g, char* text, int width, int height
 
   cairo_set_source_rgba(cr, cpumeter->border.red, cpumeter->border.green, cpumeter->border.blue, cpumeter->border.alpha);
 
-  awn_cairo_rounded_rect(cr, (double)PAD - 1, (double)1, (double) width - PAD - 4, (double)height - PAD - 1, ARC, ROUND_ALL);  
+  awn_cairo_rounded_rect(cr, (double)PAD - 1, (double)1, (double) width - PAD - 4, (double)height - PAD - 1, ARC, ROUND_ALL);
 
   cairo_stroke(cr);
 

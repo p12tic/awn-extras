@@ -8,5 +8,5 @@ _description=List of mountpoints that should remain hidden in the UI.
 
 [DEFAULT/execute-command]
 type = string
-default = 
+default =
 _description=Command to execute after mounting a mountpoint.

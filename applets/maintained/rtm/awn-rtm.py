@@ -20,8 +20,8 @@
 #       Boston, MA 02111-1307, USA.
 #
 #
-#  Thanks to ryancr the gtkmozembed bit from the Meebo Applet. 
-#  And Malept for the work around for the gtkmozebed bug in Ubuntu.   
+#  Thanks to ryancr the gtkmozembed bit from the Meebo Applet.
+#  And Malept for the work around for the gtkmozebed bug in Ubuntu.
 #  And Remember the Milk for such a great web app.
 #  And of course NJPatel for Avant Window Navigator and the AWN Test Python Applet.
 #
@@ -118,7 +118,7 @@ class App (awn.AppletSimple):
     elif event.button == 3:
       self.context_menu(widget, event)
     else:
-      if event.button == 1:  
+      if event.button == 1:
          if self.showing_dlog:
             self.dialog.hide()
          else:
@@ -143,7 +143,7 @@ class App (awn.AppletSimple):
     about_dialog.set_comments("RememberTheMilk is an on-line based prodcutivity application, and the RTM Applet brings it to your desktop. RTM Applet is not endorsed or certified by RememberTheMilk.")
     about_dialog.set_website("http://www.wiki.awn-project.org")
     about_dialog.connect("response", lambda d, r: d.destroy())
-    about_dialog.show() 
+    about_dialog.show()
 
 if __name__ == "__main__":
   awn.init (sys.argv[1:])

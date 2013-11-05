@@ -95,7 +95,7 @@ get_height (WebApplet *webapplet)
   return height;
 }
 
-const gchar * 
+const gchar *
 config_get_uri(WebApplet *webapplet)
 {
   static gchar * str=NULL;
@@ -131,19 +131,19 @@ config_set_site(WebApplet *webapplet, gchar *site)
   set_string(webapplet, CONFIG_SITE, site);
 }
 
-gint 
+gint
 config_get_width(WebApplet *webapplet)
 {
   return get_width (webapplet);
-}  
+}
 
-gint 
+gint
 config_get_height(WebApplet *webapplet)
 {
   return get_height (webapplet);
 }
 
-gboolean 
+gboolean
 config_get_enable_location_dialog(WebApplet *webapplet)
 {
   return get_bool (webapplet, CONFIG_ENABLE_LOCATION_CONFIG);

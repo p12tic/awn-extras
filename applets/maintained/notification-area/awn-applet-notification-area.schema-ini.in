@@ -15,12 +15,12 @@ _description=Extra offset from the panel's egde.
 
 [DEFAULT/background_color]
 type = color
-default = 
+default =
 _description=The background color of the notification-area.
 
 [DEFAULT/border_color]
 type = color
-default = 
+default =
 _description=The border color of the notification-area.
 
 ; vim: set ft=dosini :

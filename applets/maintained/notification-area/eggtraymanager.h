@@ -50,7 +50,7 @@ struct _EggTrayManager
   Atom message_data_atom;
   Atom orientation_atom;
 #endif
-  
+
   GtkWidget *invisible;
   GdkScreen *screen;
   GtkOrientation orientation;
@@ -73,7 +73,7 @@ struct _EggTrayManagerClass
 			      const gchar         *message,
 			      glong                id,
 			      glong                timeout);
-  
+
   void (* message_cancelled) (EggTrayManager      *manager,
 			      EggTrayChild *child,
 			      glong                id);

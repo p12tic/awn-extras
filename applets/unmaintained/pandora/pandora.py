@@ -74,11 +74,11 @@ class PandoraApplet:
     """ Listens to Pandora from Awn """
     def __init__(self, applet):
         self.applet = applet
-        
+
         applet.tooltip.set("Pandora")
-        
+
         self.dialog = applet.dialog.new("main")
-        
+
         self.moz = gtkmozembed.MozEmbed()
         try:
             pandurl=self.applet.settings["url"]

@@ -2,7 +2,7 @@
 # -*- coding: iso-8859-15 -*-
 #
 # Copyright (c) 2007 Mike (mosburger) Desjardins <desjardinsmike@gmail.com>
-#     Please do not email the above person for support. The 
+#     Please do not email the above person for support. The
 #     email address is only there for license/copyright purposes.
 #
 # This is the login dialog for a calendar applet for Avant Window Navigator.

@@ -108,7 +108,7 @@ fi
 
 if test "$with_gnome" != "no"; then
 # main-menu
-PKG_CHECK_MODULES(GNOME_MENU, [libgnome-menu], 
+PKG_CHECK_MODULES(GNOME_MENU, [libgnome-menu],
 		  AM_CONDITIONAL(GNOME_MENU,true),
 		  AM_CONDITIONAL(GNOME_MENU,false))
 
@@ -177,7 +177,7 @@ PKG_CHECK_MODULES(AWN_SYSTEM_MONITOR, [$gconf libgtop-2.0])
 PKG_CHECK_MODULES(NOTIFICATION_DAEMON, [$gconf $gstreampkg libnotify $url_label_module libwnck-1.0 x11])
 fi
 if test "$with_gnome" != "no"; then
-PKG_CHECK_MODULES(CAIRO_MENU_GNOME3, 
+PKG_CHECK_MODULES(CAIRO_MENU_GNOME3,
 		  [libgnome-menu-3.0 libnotify $icon_entry_module],
 		  AM_CONDITIONAL(CAIRO_MENU_GNOME3,true),
 		  AM_CONDITIONAL(CAIRO_MENU_GNOME3,false))

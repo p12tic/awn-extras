@@ -98,7 +98,7 @@ class WeatherCodeSearch(gtk.Window):
             self.go.set_sensitive(False)
         else:
             self.go.set_sensitive(True)
-        
+
     def ok_button(self, widget, window):
         treeselection = self.treeview.get_selection()
         (model, iter) = treeselection.get_selected()
@@ -154,24 +154,24 @@ class WeatherConfig:
         self.click_checkbox = self.wTree.get_widget("clickCheckbutton")
         if applet.settingsDict['open_til_clicked']:
             self.click_checkbox.set_active(False)
-        else: 
+        else:
             self.click_checkbox.set_active(True)
 
         self.click_checkbox2 = self.wTree.get_widget("curvedCheckbutton")
         if applet.settingsDict['curved_dialog']:
             self.click_checkbox2.set_active(True)
-        else: 
+        else:
             self.click_checkbox2.set_active(False)
-        
+
         self.temp_pos = self.wTree.get_widget("posCombobox")
 
         self.temp_pos.set_active(applet.settingsDict['temp_position'])
-        
+
         # TEMP_FONTSIZE
         self.tempspin = self.wTree.get_widget("fontSpinbutton")
         font_size = applet.settingsDict['temp_fontsize']
         self.tempspin.set_value(font_size)
-        
+
         # MAP_MAXWIDTH
         self.spin2 = self.wTree.get_widget("mapWidthSpinbutton")
         current_size = applet.settingsDict['map_maxwidth']
@@ -197,7 +197,7 @@ class WeatherConfig:
         hbox2 = gtk.HBox(True, 0)
         self.loc_label = self.wTree.get_widget("locationLabel")
         self.loc_label.set_markup("<b>" + self.location + "</b>")
-        
+
         # change location button
         search = self.wTree.get_widget("locationButton")
         search.connect("clicked", self.search_button, "search")
@@ -206,7 +206,7 @@ class WeatherConfig:
         ok.connect("clicked", self.ok_button, applet)
         cancel = self.wTree.get_widget("cancelButton")
         cancel.connect("clicked", self.cancel_button, applet)
-      
+
     def get_toplevel(self):
         return self.toplevel
 
@@ -220,7 +220,7 @@ class WeatherConfig:
         self.code_window.set_icon(icon)
 
         self.code_window.show_all()
-        
+
     def ok_button(self, widget, parent):
         mapping = {
             'location' : self.location,
@@ -235,7 +235,7 @@ class WeatherConfig:
             'frequency_5day' : self.spin3.get_value_as_int(),
             'frequency_map' : self.spin4.get_value_as_int(),
         }
-        
+
         for name, value in mapping.items():
             self.applet.applet.settings[name] = value
 

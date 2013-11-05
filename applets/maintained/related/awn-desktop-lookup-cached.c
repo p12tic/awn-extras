@@ -5,12 +5,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Library General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
@@ -140,7 +140,7 @@ awn_desktop_lookup_cached_add_dir (AwnDesktopLookupCached * lookup,const gchar *
             gchar * startup_wm = NULL;
             gchar * desktop_name = g_strdup (fname);
             DesktopNode * node;
-                        
+
             g_strdelimit (exec,"%",'\0');
             g_strstrip (exec);
 
@@ -166,7 +166,7 @@ awn_desktop_lookup_cached_add_dir (AwnDesktopLookupCached * lookup,const gchar *
 
             if ( desktop_name && (search = g_hash_table_lookup (priv->desktops_hash,desktop_name)))
             {
-              /*Happens often enough (ex.  "Terminal" ).  Not a big deal, we're 
+              /*Happens often enough (ex.  "Terminal" ).  Not a big deal, we're
                relatively conservative in using name for matching purposes*/
               g_free (desktop_name);
               desktop_name = NULL;
@@ -229,9 +229,9 @@ NAME_COLLSION:
 }
 
 static void
-_data_dir_changed (DesktopAgnosticVFSFileMonitor* monitor, 
-                       DesktopAgnosticVFSFile* self,                  
-                       DesktopAgnosticVFSFile* other, 
+_data_dir_changed (DesktopAgnosticVFSFileMonitor* monitor,
+                       DesktopAgnosticVFSFile* self,
+                       DesktopAgnosticVFSFile* other,
                        DesktopAgnosticVFSFileMonitorEvent event,
                        AwnDesktopLookupCached * lookup
                   )
@@ -250,7 +250,7 @@ awn_desktop_lookup_cached_constructed (GObject *object)
   GStrv iter = NULL;
   AwnDesktopLookupCachedPrivate * priv = GET_PRIVATE (object);
   gchar * applications_dir;
-  
+
   if ( G_OBJECT_CLASS (awn_desktop_lookup_cached_parent_class)->constructed)
   {
     G_OBJECT_CLASS (awn_desktop_lookup_cached_parent_class)->constructed (object);
@@ -378,7 +378,7 @@ _search_exec_sub (DesktopNode *a, gchar * b)
   {
     return 0;
   }
-  return -1;                 
+  return -1;
 }
 
 static int
@@ -398,7 +398,7 @@ _search_path (DesktopNode *a, gchar * b)
   {
     return 0;
   }
-  return -1;                 
+  return -1;
 }
 
 static int
@@ -489,7 +489,7 @@ awn_desktop_lookup_search_by_wnck_window (AwnDesktopLookupCached * lookup, WnckW
   {
     class_name_lwr = g_utf8_strdown (class_name,-1);
   }
-  cmd = glibtop_get_proc_args (&buf,wnck_window_get_pid (win),1024);    
+  cmd = glibtop_get_proc_args (&buf,wnck_window_get_pid (win),1024);
   full_cmd = get_full_cmd_from_pid ( wnck_window_get_pid (win));
   if (full_cmd)
   {
@@ -640,7 +640,7 @@ awn_desktop_lookup_search_by_wnck_window (AwnDesktopLookupCached * lookup, WnckW
     hit_method ++;
   }
   result = result?(g_file_test(result,G_FILE_TEST_EXISTS)?result:NULL):NULL;
-  
+
   if (!result)
   {
     if (res_name_lwr)
@@ -674,7 +674,7 @@ awn_desktop_lookup_search_by_wnck_window (AwnDesktopLookupCached * lookup, WnckW
     hit_method ++;
   }
   result = result?(g_file_test(result,G_FILE_TEST_EXISTS)?result:NULL):NULL;
-  
+
   if (!result)
   {
     if (cmd_basename)
@@ -684,7 +684,7 @@ awn_desktop_lookup_search_by_wnck_window (AwnDesktopLookupCached * lookup, WnckW
     hit_method ++;
   }
   result = result?(g_file_test(result,G_FILE_TEST_EXISTS)?result:NULL):NULL;
-  
+
   if (!result)
   {
     if (full_cmd)
@@ -700,7 +700,7 @@ awn_desktop_lookup_search_by_wnck_window (AwnDesktopLookupCached * lookup, WnckW
     hit_method ++;
   }
   result = result?(g_file_test(result,G_FILE_TEST_EXISTS)?result:NULL):NULL;
-  
+
   if (!result)
   {
     if (full_cmd)
@@ -722,7 +722,7 @@ awn_desktop_lookup_search_by_wnck_window (AwnDesktopLookupCached * lookup, WnckW
     hit_method ++;
   }
   result = result?(g_file_test(result,G_FILE_TEST_EXISTS)?result:NULL):NULL;
-  
+
   if (!result)
   {
     if (full_cmd)
@@ -738,7 +738,7 @@ awn_desktop_lookup_search_by_wnck_window (AwnDesktopLookupCached * lookup, WnckW
     hit_method ++;
   }
   result = result?(g_file_test(result,G_FILE_TEST_EXISTS)?result:NULL):NULL;
-  
+
   if (!result)
   {
     if (cmd)
@@ -756,7 +756,7 @@ awn_desktop_lookup_search_by_wnck_window (AwnDesktopLookupCached * lookup, WnckW
     hit_method ++;
   }
   result = result?(g_file_test(result,G_FILE_TEST_EXISTS)?result:NULL):NULL;
-  
+
   if (!result)
   {
     if (cmd)
@@ -766,7 +766,7 @@ awn_desktop_lookup_search_by_wnck_window (AwnDesktopLookupCached * lookup, WnckW
     hit_method ++;
   }
   result = result?(g_file_test(result,G_FILE_TEST_EXISTS)?result:NULL):NULL;
-  
+
   if (!result)
   {
     if (res_name)
@@ -776,7 +776,7 @@ awn_desktop_lookup_search_by_wnck_window (AwnDesktopLookupCached * lookup, WnckW
     hit_method ++;
   }
   result = result?(g_file_test(result,G_FILE_TEST_EXISTS)?result:NULL):NULL;
-  
+
   if (!result)
   {
     if (res_name_lwr)
@@ -786,7 +786,7 @@ awn_desktop_lookup_search_by_wnck_window (AwnDesktopLookupCached * lookup, WnckW
     hit_method ++;
   }
   result = result?(g_file_test(result,G_FILE_TEST_EXISTS)?result:NULL):NULL;
-  
+
   if (!result)
   {
     if (res_name)
@@ -796,7 +796,7 @@ awn_desktop_lookup_search_by_wnck_window (AwnDesktopLookupCached * lookup, WnckW
     hit_method ++;
   }
   result = result?(g_file_test(result,G_FILE_TEST_EXISTS)?result:NULL):NULL;
-  
+
   if (!result)
   {
     if (res_name_lwr)
@@ -806,7 +806,7 @@ awn_desktop_lookup_search_by_wnck_window (AwnDesktopLookupCached * lookup, WnckW
     hit_method ++;
   }
   result = result?(g_file_test(result,G_FILE_TEST_EXISTS)?result:NULL):NULL;
-#ifdef DEBUG  
+#ifdef DEBUG
   if (hit_method)
   {
     g_message ("%s: Hit method = %d",__func__,hit_method);
@@ -821,6 +821,6 @@ awn_desktop_lookup_search_by_wnck_window (AwnDesktopLookupCached * lookup, WnckW
   g_free (class_name_lwr);
   g_free (res_name_no_ext);
   g_free (class_name_no_ext);
-  g_free (res_name_no_ext_lwr);  
+  g_free (res_name_no_ext_lwr);
   return result;
 }

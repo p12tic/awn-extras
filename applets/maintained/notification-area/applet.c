@@ -33,7 +33,7 @@
 typedef struct {
   AwnApplet      *applet;
   EggTrayManager *manager;
-  
+
   GtkWidget      *align;
   GtkWidget      *table;
   GList          *icons;
@@ -50,7 +50,7 @@ static int   icon_size = 24;
 static int  use_alpha = 0;
 
 static void
-tray_icon_added (EggTrayManager *manager, 
+tray_icon_added (EggTrayManager *manager,
                  GtkWidget      *icon,
                  TrayApplet     *applet);
 
@@ -84,7 +84,7 @@ tray_applet_refresh (TrayApplet *applet)
 {
   GList *children; GList *c;
   gint col = 0, row = 0;
-  
+
   if( n_rows == 0 ) // auto-detect how much icons can on colomn
   {
 	n_rows = ceil(height/icon_size);
@@ -94,7 +94,7 @@ tray_applet_refresh (TrayApplet *applet)
 	icon_size = (height-n_rows)/n_rows;
   }
 
-  
+
   /* First lets go through existing icons, adding or deleting as necessary*/
   children = gtk_container_get_children (GTK_CONTAINER (applet->table));
   for (c = children; c != NULL; c = c->next)
@@ -105,7 +105,7 @@ tray_applet_refresh (TrayApplet *applet)
       if (!GTK_IS_WIDGET (icon))
         continue;
       del = GPOINTER_TO_INT (g_object_get_qdata (G_OBJECT(icon),del_quark));
-      
+
       if (del)
         {
           gtk_container_remove (GTK_CONTAINER (applet->table), icon);
@@ -128,7 +128,7 @@ tray_applet_refresh (TrayApplet *applet)
             }
         }
     }
-  
+
   /* now the new icons */
   children = applet->icons;
   for (c = children; c != NULL; c = c->next)
@@ -214,7 +214,7 @@ applet_expose_icon (GtkWidget *widget,
                     gpointer data)
 {
   cairo_t *cr = data;
-  
+
   if (egg_tray_child_is_composited (EGG_TRAY_CHILD(widget)))
   {
     gdk_cairo_set_source_pixmap (cr, widget->window,
@@ -345,20 +345,20 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
        (gtk_major_version > 2)){
     use_alpha=1;
   }
-  
+
   /* Er, why did I have to do this again ? */
   GtkWidget *widget = GTK_WIDGET (applet);
   while (widget->parent)
         widget = widget->parent;
   screen = gtk_widget_get_screen (GTK_WIDGET (widget));
-  
+
 
   if (egg_tray_manager_check_running(screen))
   {
     const gchar *msg = "There is already another notification area "
                        "running on this screen!";
 
-    GtkWidget *dialog = gtk_message_dialog_new (NULL, 
+    GtkWidget *dialog = gtk_message_dialog_new (NULL,
         GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE, "%s", msg);
 
     gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
@@ -400,10 +400,10 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
   gtk_table_set_col_spacings (GTK_TABLE (table), 2);
   gtk_table_set_row_spacings (GTK_TABLE (table), 1);
 
- 
+
   eb = gtk_event_box_new ();
   gtk_event_box_set_visible_window (GTK_EVENT_BOX (eb), TRUE);
-  
+
   align = gtk_alignment_new (0, 1, 1, 0);
   app->align = align;
 
@@ -413,7 +413,7 @@ awn_applet_factory_initp ( gchar* uid, gint orient, gint height )
 
   gtk_alignment_set_padding (GTK_ALIGNMENT (align),
                              0, offset, BORDER+1, BORDER+1);
-  
+
   gtk_container_add (GTK_CONTAINER (applet), align);
   gtk_container_add (GTK_CONTAINER (align), eb);
   gtk_widget_set_colormap (eb, gdk_screen_get_rgba_colormap (screen));

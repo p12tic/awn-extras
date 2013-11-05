@@ -41,7 +41,7 @@
 #define MAX_ITEMS_OR_SUBMENU 7
 
 GMenuTree *  main_menu_tree = NULL;
-GMenuTree *  settings_menu_tree = NULL;    
+GMenuTree *  settings_menu_tree = NULL;
 
 GtkWidget *  menu_build (MenuInstance * instance);
 static GtkWidget * submenu_build (MenuInstance * instance);
@@ -72,7 +72,7 @@ get_image_from_gicon (GIcon * gicon)
 
 static gboolean
 add_special_item (GtkWidget * menu,
-                  const gchar * name, 
+                  const gchar * name,
                   const gchar * binary,
                   const gchar * args,
                   ...)
@@ -151,7 +151,7 @@ _fill_session_menu (GtkWidget * menu)
     {
       add_special_item (menu,_("Suspend"),"dbus-send","--session --dest=org.freedesktop.PowerManagement --type=method_call --print-reply --reply-timeout=2000 /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Suspend","gnome-session-suspend",NULL);
     }
-    
+
     if (!add_special_item (menu,_("Hibernate"),"gnome-power-cmd","hibernate","gnome-session-hibernate",NULL))
     {
       add_special_item (menu,_("Hibernate"),"dbus-send","--session --dest=org.freedesktop.PowerManagement --type=method_call --print-reply --reply-timeout=2000 /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Hibernate","gnome-session-hibernate",NULL);
@@ -164,16 +164,16 @@ _fill_session_menu (GtkWidget * menu)
     {
 
     }
-      
+
     if (!add_special_item (menu,_("Hibernate"),"gnome-power-cmd","hibernate","gnome-session-hibernate",NULL))
     {
 
     }
   }
-  
+
   if (have_gnome_session_manager)
   {
-    add_special_item (menu,_("Shutdown"),"gnome-session-save","--shutdown-dialog --gui","gnome-shutdown","gnome-logout",NULL);  
+    add_special_item (menu,_("Shutdown"),"gnome-session-save","--shutdown-dialog --gui","gnome-shutdown","gnome-logout",NULL);
   }
   gtk_widget_show_all (menu);
   return FALSE;
@@ -193,20 +193,20 @@ get_session_menu(void)
   why are vfs network mounts not showing?
   The menu item order needs to be fixed.
  */
-static GtkWidget * 
+static GtkWidget *
 _get_places_menu (GtkWidget * menu)
-{  
+{
   static GVolumeMonitor* vol_monitor = NULL;
-  static DesktopAgnosticVFSGtkBookmarks *bookmarks_parser = NULL;  
+  static DesktopAgnosticVFSGtkBookmarks *bookmarks_parser = NULL;
   static DesktopAgnosticVFSTrash* trash_handler = NULL;
-  
+
   GtkWidget *item = NULL;
   GError *error = NULL;
   GtkWidget * image;
   gchar * exec;
   const gchar *desktop_dir = g_get_user_special_dir (G_USER_DIRECTORY_DESKTOP);
   const gchar *homedir = g_get_home_dir();
-  guint trash_file_count;    
+  guint trash_file_count;
 
   gtk_container_foreach (GTK_CONTAINER (menu),(GtkCallback)_remove_menu_item,menu);
 
@@ -218,7 +218,7 @@ _get_places_menu (GtkWidget * menu)
   add_special_item (menu,_("Desktop"),XDG_OPEN,desktop_dir?desktop_quoted:home_quoted,"desktop",NULL);
   g_free (home_quoted);
   g_free (desktop_quoted);
-  
+
   if (trash_handler)
     trash_file_count = desktop_agnostic_vfs_trash_get_file_count (trash_handler);
 
@@ -228,7 +228,7 @@ _get_places_menu (GtkWidget * menu)
     add_special_item (menu,_("Trash"),"nautilus","trash:///","stock_trash_full",NULL);
 
   add_special_item (menu,_("File System"),XDG_OPEN,"/","system",NULL);
-    
+
   if (!vol_monitor)
   {
     /*this is structured like this because get_places() is
@@ -246,17 +246,17 @@ _get_places_menu (GtkWidget * menu)
   g_signal_handlers_disconnect_by_func (vol_monitor, G_CALLBACK(_get_places_menu), menu);
   g_signal_handlers_disconnect_by_func (vol_monitor, G_CALLBACK(_get_places_menu), menu);
   g_signal_handlers_disconnect_by_func (vol_monitor, G_CALLBACK(_get_places_menu), menu);
-  g_signal_handlers_disconnect_by_func (vol_monitor, G_CALLBACK(_get_places_menu), menu);    
+  g_signal_handlers_disconnect_by_func (vol_monitor, G_CALLBACK(_get_places_menu), menu);
   g_signal_handlers_disconnect_by_func (vol_monitor, G_CALLBACK(_get_places_menu), menu);
   g_signal_handlers_disconnect_by_func (vol_monitor, G_CALLBACK(_get_places_menu), menu);
   g_signal_handlers_disconnect_by_func (vol_monitor, G_CALLBACK(_get_places_menu), menu);
   g_signal_handlers_disconnect_by_func (G_OBJECT (bookmarks_parser), G_CALLBACK (_get_places_menu), menu);
   g_signal_handlers_disconnect_by_func (trash_handler, G_CALLBACK(_get_places_menu), menu);
-    
+
   g_signal_connect_swapped(vol_monitor, "volume-changed", G_CALLBACK(_get_places_menu), menu);
   g_signal_connect_swapped(vol_monitor, "drive-changed", G_CALLBACK(_get_places_menu), menu);
   g_signal_connect_swapped(vol_monitor, "drive-connected", G_CALLBACK(_get_places_menu), menu);
-  g_signal_connect_swapped(vol_monitor, "drive-disconnected", G_CALLBACK(_get_places_menu), menu);    
+  g_signal_connect_swapped(vol_monitor, "drive-disconnected", G_CALLBACK(_get_places_menu), menu);
   g_signal_connect_swapped(vol_monitor, "mount-changed", G_CALLBACK(_get_places_menu), menu);
   g_signal_connect_swapped(vol_monitor, "mount-added", G_CALLBACK(_get_places_menu), menu);
   g_signal_connect_swapped(vol_monitor, "mount-removed", G_CALLBACK(_get_places_menu), menu);
@@ -281,7 +281,7 @@ _get_places_menu (GtkWidget * menu)
       g_object_unref (volume);
       continue;
     }
-    
+
 #if GLIB_CHECK_VERSION(2,20,0)
     /* Shadowed mounts should not be displayed, see GIO reference manual */
     if (g_mount_is_shadowed (mount))
@@ -295,7 +295,7 @@ _get_places_menu (GtkWidget * menu)
     GFile * file = g_mount_get_root (mount);
     gchar * uri = g_file_get_uri (file);
 
-    item = cairo_menu_item_new_with_label (name);    
+    item = cairo_menu_item_new_with_label (name);
 #if GTK_CHECK_VERSION(2,14,0)
     image = gtk_image_new_from_gicon (gicon, GTK_ICON_SIZE_MENU);
 #else
@@ -306,9 +306,9 @@ _get_places_menu (GtkWidget * menu)
     gtk_menu_shell_append (GTK_MENU_SHELL(menu),item);
 
     exec = g_strdup_printf("%s %s", XDG_OPEN, uri);
-    g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);  
+    g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);
     g_object_weak_ref (G_OBJECT(item), (GWeakNotify)g_free,exec);
-    
+
     g_free (name);
     g_free (uri);
     g_object_unref (file);
@@ -317,7 +317,7 @@ _get_places_menu (GtkWidget * menu)
 
   g_list_foreach (mounts,(GFunc)g_object_unref,NULL);
   g_list_free (mounts);
- 
+
   if (volumes)
   {
     item = gtk_separator_menu_item_new ();
@@ -327,7 +327,7 @@ _get_places_menu (GtkWidget * menu)
   /* Get Volumes */
 
   GtkWidget *volumes_menu;
-  
+
   volumes_menu = ((g_list_length (volumes) <= MAX_ITEMS_OR_SUBMENU)) ?
                  menu :
                  cairo_menu_new();
@@ -336,7 +336,7 @@ _get_places_menu (GtkWidget * menu)
   {
     GIcon * gicon = g_volume_get_icon (iter->data);
     gchar * name = g_volume_get_name (iter->data);
-    
+
     item = cairo_menu_item_new_with_label (name);
 #if GTK_CHECK_VERSION(2,14,0)
     image = gtk_image_new_from_gicon (gicon, GTK_ICON_SIZE_MENU);
@@ -355,7 +355,7 @@ _get_places_menu (GtkWidget * menu)
     g_free (name);
     g_object_unref (gicon);
   }
-  
+
   if (g_list_length (volumes) > MAX_ITEMS_OR_SUBMENU)
   {
     item = cairo_menu_item_new_with_label (_("Removable Media"));
@@ -374,7 +374,7 @@ _get_places_menu (GtkWidget * menu)
   item = gtk_separator_menu_item_new ();
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
 
-    
+
   /* Bookmarks */
   GSList *bookmarks;
   GSList *node;
@@ -389,7 +389,7 @@ _get_places_menu (GtkWidget * menu)
     gchar *b_uri;
     gchar *shell_quoted = NULL;
     item = NULL;
-    
+
     bookmark = (DesktopAgnosticVFSBookmark*)node->data;
     b_file = desktop_agnostic_vfs_bookmark_get_file (bookmark);
     b_alias = desktop_agnostic_vfs_bookmark_get_alias (bookmark);
@@ -412,10 +412,10 @@ _get_places_menu (GtkWidget * menu)
       else
       {
         gchar * base = g_path_get_basename (b_path);
-        item = cairo_menu_item_new_with_label (base);        
+        item = cairo_menu_item_new_with_label (base);
         g_free (base);
       }
-      g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);              
+      g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
     }
     else if ( strncmp(b_uri, "http", 4)==0 )
@@ -433,7 +433,7 @@ _get_places_menu (GtkWidget * menu)
         item = cairo_menu_item_new_with_label (b_uri);
         g_free (base);
       }
-      g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);              
+      g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
     }
     /*
@@ -457,7 +457,7 @@ _get_places_menu (GtkWidget * menu)
       }
       if (item)
       {
-        g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);      
+        g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(_exec), exec);
         gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
       }
     }
@@ -465,7 +465,7 @@ _get_places_menu (GtkWidget * menu)
     if (item)
     {
       /* Set icons for known paths and remote destinations */
-      
+
       if (g_strcmp0 (b_uri, "computer:///") == 0)
       {
         image = get_gtk_image ("computer");
@@ -530,7 +530,7 @@ _get_places_menu (GtkWidget * menu)
   return menu;
 }
 
-GtkWidget * 
+GtkWidget *
 get_places_menu (void)
 {
   GtkWidget *menu = cairo_menu_new();
@@ -564,7 +564,7 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
   {
     menu = cairo_menu_new ();
   }
-  
+
   for (;;)
   {
 
@@ -593,7 +593,7 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
           g_signal_connect(G_OBJECT(menu_item), "activate", G_CALLBACK(_launch), desktop_file);
 //          g_signal_connect(G_OBJECT(menu_item), "button-release-event", G_CALLBACK(_launch), desktop_file);
           cairo_menu_item_set_source (AWN_CAIRO_MENU_ITEM(menu_item),uri);
-          g_free (uri);          
+          g_free (uri);
         }
 	gmenu_tree_item_unref(mentry);
 	}
@@ -606,7 +606,7 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
         {
           CallbackContainer * c;
           gchar * drop_data;
-          c = g_malloc0 (sizeof(CallbackContainer));          
+          c = g_malloc0 (sizeof(CallbackContainer));
           c->icon_name = g_icon_to_string(gmenu_tree_directory_get_icon (directory));
           image = get_gtk_image (c->icon_name);
           if (!image)
@@ -620,11 +620,11 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
           if (image)
           {
             gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-          }        
+          }
           gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
           c->file_path = g_strdup(gmenu_tree_directory_get_desktop_file_path (directory));
           c->display_name = g_strdup (gmenu_tree_directory_get_name (directory));
-          c->instance = instance;          
+          c->instance = instance;
           /*
            TODO: possibly change data
            */
@@ -643,7 +643,7 @@ fill_er_up(MenuInstance * instance,GMenuTreeDirectory *directory, GtkWidget * me
 
       case GMENU_TREE_ITEM_SEPARATOR:
         menu_item = gtk_separator_menu_item_new ();
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);          
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
         break;
 
       case GMENU_TREE_ITEM_ALIAS:
@@ -699,12 +699,12 @@ _search_dialog (GtkMenuItem * item, MenuInstance * instance)
 static gboolean
 _delayed_update (MenuInstance * instance)
 {
-  instance->source_id=0;  
-  instance->menu = menu_build (instance);  
+  instance->source_id=0;
+  instance->menu = menu_build (instance);
   return FALSE;
 }
 
-static void 
+static void
 _menu_modified_cb(GMenuTree *tree,MenuInstance * instance)
 {
 
@@ -732,7 +732,7 @@ find_menu_dir (MenuInstance * instance, GMenuTreeDirectory * root)
     return root;
   }
 
-  iter = gmenu_tree_directory_iter(root);  
+  iter = gmenu_tree_directory_iter(root);
   for (;;)
   {
 
@@ -747,7 +747,7 @@ find_menu_dir (MenuInstance * instance, GMenuTreeDirectory * root)
           if (g_strcmp0(txt,instance->submenu_name)==0 )
           {
             result = directory;
-            break;            
+            break;
           }
           else if (!result)  /*we're continuing looping if result to unref the remaining items*/
           {
@@ -784,11 +784,11 @@ clear_menu (MenuInstance * instance)
       {
         gtk_container_remove (GTK_CONTAINER (instance->menu),iter->data);
         /*TODO  check if this is necessary*/
-        g_list_free (children);        
+        g_list_free (children);
         children = iter = gtk_container_get_children (GTK_CONTAINER(instance->menu));
         continue;
       }
-      iter=g_list_next (iter);     
+      iter=g_list_next (iter);
     }
     if (children)
     {
@@ -800,13 +800,13 @@ clear_menu (MenuInstance * instance)
 static gboolean
 _submenu_delayed_update (MenuInstance * instance)
 {
-  instance->source_id=0;  
-  instance->menu = submenu_build (instance);  
+  instance->source_id=0;
+  instance->menu = submenu_build (instance);
   return FALSE;
 }
 
 
-static void 
+static void
 _submenu_modified_cb(GMenuTree *tree,MenuInstance * instance)
 {
 
@@ -819,7 +819,7 @@ _submenu_modified_cb(GMenuTree *tree,MenuInstance * instance)
   }
 }
 
-static void 
+static void
 _remove_main_submenu_cb(MenuInstance * instance,GObject *where_the_object_was)
 {
   g_debug ("%s",__func__);
@@ -827,10 +827,10 @@ _remove_main_submenu_cb(MenuInstance * instance,GObject *where_the_object_was)
   g_signal_handlers_disconnect_by_func(main_menu_tree,G_CALLBACK(_submenu_modified_cb), instance);
 }
 
-static void 
+static void
 _remove_settings_submenu_cb(MenuInstance * instance,GObject *where_the_object_was)
 {
-  g_debug ("%s",__func__);  
+  g_debug ("%s",__func__);
   GMenuTreeDirectory *main_root;
   g_signal_handlers_disconnect_by_func(settings_menu_tree,G_CALLBACK(_submenu_modified_cb), instance);
 }
@@ -865,13 +865,13 @@ submenu_build (MenuInstance * instance)
   }
   g_assert (main_menu_tree);
   /*
-   get_places_menu() and get_recent_menu() are 
+   get_places_menu() and get_recent_menu() are
    responsible for managing updates in place.  Session should only need
    to be created once or may eventually need to follow the previously mentioned
    behaviour.   Regardless... they should only need to be created here from scratch,
    this fn should _not_ be invoked in a refresh of those menus.
 
-   We don't want to rebuild the whole menu tree everytime a vfs change occurs 
+   We don't want to rebuild the whole menu tree everytime a vfs change occurs
    or a document is accessed
    */
   if (g_strcmp0(instance->submenu_name,":::PLACES")==0)
@@ -881,18 +881,18 @@ submenu_build (MenuInstance * instance)
   }
   else if (g_strcmp0(instance->submenu_name,":::RECENT")==0)
   {
-    g_assert (!instance->menu);    
+    g_assert (!instance->menu);
     menu = get_recent_menu (NULL);
   }
   else if (g_strcmp0(instance->submenu_name,":::SESSION")==0)
   {
-    g_assert (!instance->menu);    
+    g_assert (!instance->menu);
     menu = get_session_menu ();
   }
   else
   {
-    GMenuTreeDirectory * menu_dir = NULL;    
-    
+    GMenuTreeDirectory * menu_dir = NULL;
+
     main_root = gmenu_tree_get_root_directory(main_menu_tree);
     //g_assert (gmenu_tree_item_get_type( (GMenuTreeItem*)main_root) == GMENU_TREE_ITEM_DIRECTORY);
     g_assert (main_root);
@@ -913,7 +913,7 @@ submenu_build (MenuInstance * instance)
       g_object_weak_ref (G_OBJECT(menu), (GWeakNotify)_remove_settings_submenu_cb,instance);
     }
     if (menu_dir)
-    {      
+    {
       gmenu_tree_item_unref(menu_dir);
     }
     gmenu_tree_item_unref(main_root);
@@ -929,7 +929,7 @@ submenu_build (MenuInstance * instance)
  TODO: add network, and trash
 
  */
-GtkWidget * 
+GtkWidget *
 menu_build (MenuInstance * instance)
 {
   GMenuTreeDirectory *root;
@@ -944,8 +944,8 @@ menu_build (MenuInstance * instance)
   {
     return instance->menu = submenu_build (instance);
   }
-  
-  clear_menu (instance);    
+
+  clear_menu (instance);
   if (!main_menu_tree)
   {
 	  GError *err;
@@ -978,9 +978,9 @@ menu_build (MenuInstance * instance)
     }
   }
   if  (instance->menu)
-  {  
+  {
       menu_item = gtk_separator_menu_item_new ();
-      gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);  
+      gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
   }
   if (settings_menu_tree)
   {
@@ -995,18 +995,18 @@ menu_build (MenuInstance * instance)
     else
     {
       sub_menu = fill_er_up (instance, root,instance->menu);
-#if 0      
+#if 0
       sub_menu = fill_er_up(instance,root,NULL);
-      c = g_malloc0 (sizeof(CallbackContainer));        
+      c = g_malloc0 (sizeof(CallbackContainer));
       c->icon_name = g_strdup(gmenu_tree_directory_get_icon (root));
       image = get_gtk_image (c->icon_name);
-      txt = gmenu_tree_entry_get_name((GMenuTreeEntry*)root);        
-      menu_item = cairo_menu_item_new_with_label (txt?txt:"unknown");        
+      txt = gmenu_tree_entry_get_name((GMenuTreeEntry*)root);
+      menu_item = cairo_menu_item_new_with_label (txt?txt:"unknown");
       gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
       if (image)
       {
         gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-      }        
+      }
       gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
       c->file_path = g_strdup(gmenu_tree_directory_get_desktop_file_path (root));
       c->display_name = g_strdup ("Settings");
@@ -1018,17 +1018,17 @@ menu_build (MenuInstance * instance)
       g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);
 #endif
     }
-    gmenu_tree_item_unref(root);    
+    gmenu_tree_item_unref(root);
   }
-    
-    /*TODO Check to make sure it is needed. Should not be displayed if 
+
+    /*TODO Check to make sure it is needed. Should not be displayed if
       all flags are of the NO persuasion.*/
   if  (instance->menu)
   {
      menu_item = gtk_separator_menu_item_new ();
-     gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);  
+     gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
   }
-  
+
   if (! (instance->flags & MENU_BUILD_NO_PLACES) )
   {
     if (instance->places)
@@ -1052,7 +1052,7 @@ menu_build (MenuInstance * instance)
       {
         gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
       }
-      gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);            
+      gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
       gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
       c = g_malloc0 (sizeof(CallbackContainer));
       c->file_path = g_strdup(":::PLACES");
@@ -1066,7 +1066,7 @@ menu_build (MenuInstance * instance)
       g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);
     }
   }
-  
+
   if (! (instance->flags & MENU_BUILD_NO_RECENT))
   {
     if (instance->recent)
@@ -1074,13 +1074,13 @@ menu_build (MenuInstance * instance)
       GList * children = gtk_container_get_children (GTK_CONTAINER(instance->menu));
       menu_item =instance->recent;
       gtk_menu_reorder_child (GTK_MENU(instance->menu),menu_item,g_list_length (children));
-      g_list_free (children);        
+      g_list_free (children);
     }
     else
     {
       gchar * icon_name;
       instance->recent = menu_item = cairo_menu_item_new_with_label (_("Recent Documents"));
-      sub_menu = get_recent_menu (menu_item);        
+      sub_menu = get_recent_menu (menu_item);
       image = get_gtk_image (icon_name = "document-open-recent");
       if (!image)
       {
@@ -1110,7 +1110,7 @@ menu_build (MenuInstance * instance)
      (!instance->check_menu_hidden_fn (instance->applet,":::RECENT") || !instance->check_menu_hidden_fn (instance->applet,":::PLACES")) )
   {
     menu_item = gtk_separator_menu_item_new ();
-    gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);  
+    gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
   }
 
   if (! (instance->flags & MENU_BUILD_NO_SESSION))
@@ -1120,17 +1120,17 @@ menu_build (MenuInstance * instance)
       GList * children = gtk_container_get_children (GTK_CONTAINER(instance->menu));
       menu_item =instance->session;
       gtk_menu_reorder_child (GTK_MENU(instance->menu),menu_item,g_list_length (children));
-      g_list_free (children); 
+      g_list_free (children);
     }
     else
-    {    
+    {
       sub_menu = get_session_menu ();
       instance->session = menu_item = cairo_menu_item_new_with_label (_("Session"));
       image = get_gtk_image ("session-properties");
       if (image)
       {
         gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-      }        
+      }
       gtk_menu_item_set_submenu (GTK_MENU_ITEM(menu_item),sub_menu);
       gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
 
@@ -1146,11 +1146,11 @@ menu_build (MenuInstance * instance)
       g_object_weak_ref (G_OBJECT(menu_item),(GWeakNotify)_free_callback_container,c);
     }
   }
-  
+
   if (! (instance->flags & MENU_BUILD_NO_SEARCH))
-  {  
+  {
     if ( !instance->submenu_name)
-    {    
+    {
       /*generates a compiler warning due to the ellipse*/
       menu_item = cairo_menu_item_new_with_label (_("search\342\200\246"));
       /* add proper ellipse*/
@@ -1158,24 +1158,24 @@ menu_build (MenuInstance * instance)
       if (image)
       {
         gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-      }        
+      }
       gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
       g_signal_connect (menu_item,"activate",G_CALLBACK(_search_dialog),instance);
     }
   }
-  
+
   if (! (instance->flags & MENU_BUILD_NO_RUN))
   {
     if ( !instance->submenu_name)
-    {    
-      /*generates a compiler warning due to the ellipse*/    
+    {
+      /*generates a compiler warning due to the ellipse*/
       menu_item = cairo_menu_item_new_with_label (_("Launch\342\200\246"));
       /* add proper ellipse*/
       image = get_gtk_image ("gnome-run");
       if (image)
       {
         gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-      }        
+      }
       gtk_menu_shell_append(GTK_MENU_SHELL(instance->menu),menu_item);
       g_signal_connect (menu_item,"activate",G_CALLBACK(_run_dialog),instance);
     }
@@ -1191,14 +1191,14 @@ menu_build (MenuInstance * instance)
     }
   }
   if ( !instance->check_menu_hidden_fn || instance->check_menu_hidden_fn (instance->applet,":::PLACES"))
-  {    
+  {
     if (instance->places)
     {
       gtk_widget_hide (instance->places);
-    }  
-  }    
+    }
+  }
   if ( !instance->check_menu_hidden_fn || instance->check_menu_hidden_fn (instance->applet,":::SESSION"))
-  {    
+  {
     if (instance->session)
     {
       gtk_widget_hide (instance->session);

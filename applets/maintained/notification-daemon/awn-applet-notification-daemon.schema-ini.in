@@ -70,7 +70,7 @@ _description=If the value is >0.0 then this opacity value will be applied to win
 
 [DEFAULT/default_sound]
 type = string
-default = 
+default =
 _description=The default sound file used unless a notification supplies the 'sound-file' or 'suppress-sound' hint. Leave empty for no default sound.
 
 [DEFAULT/bold_text_body]

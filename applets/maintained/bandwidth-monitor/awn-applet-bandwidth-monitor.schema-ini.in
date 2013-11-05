@@ -8,7 +8,7 @@ _description=The base display unit for transfer speed (0: bits, 1: bytes)
 
 [DEFAULT/interface]
 type = string
-default = 
+default =
 _description=The interface currently selected
 
 [DEFAULT/draw_threshold]

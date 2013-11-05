@@ -90,8 +90,8 @@ class FolderBackend(Backend):
     def clear(self):
         dialog = gtk.Dialog(_("Confirm removal"),
                             None,
-                            gtk.DIALOG_MODAL | 
-                            gtk.DIALOG_DESTROY_WITH_PARENT | 
+                            gtk.DIALOG_MODAL |
+                            gtk.DIALOG_DESTROY_WITH_PARENT |
                             gtk.DIALOG_NO_SEPARATOR,
                             (gtk.STOCK_NO, gtk.RESPONSE_REJECT,
                             gtk.STOCK_YES, gtk.RESPONSE_ACCEPT))

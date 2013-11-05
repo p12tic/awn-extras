@@ -6,7 +6,7 @@ INCLUDES =							\
 	-DPREFIX=\"$(prefix)\"					\
 	-DSYSCONFDIR=\"$(sysconfdir)\"				\
 	-DDATADIR=\"$(datadir)\"				\
-	-DLIBDIR=\"$(libdir)\"    
+	-DLIBDIR=\"$(libdir)\"
 
 HELLOWORLD_SOURCES =                              \
 	applet.c									\
@@ -15,7 +15,7 @@ HELLOWORLD_SOURCES =                              \
 
 HELLOWORLD_LDADD =                        \
         $(DEPS_LIBS)
-        
+
 
 helloworldlibdir = $(libdir)/awn/applets/helloworld
 helloworldlib_LTLIBRARIES = helloworld.la

@@ -222,7 +222,7 @@ class YamaApplet:
                     # Delete old items
                     for i in xrange(len(items)):
                         items.pop().destroy()
-    
+
                     index = len(self.applications_items) + 2 if items is self.settings_items else 0  # + 2 = separator + Places
                     self.append_directory(tree.root, self.menu, index=index, item_list=items)
                     # Refresh menu to re-initialize the widget

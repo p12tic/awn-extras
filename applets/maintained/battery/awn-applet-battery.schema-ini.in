@@ -3,7 +3,7 @@ single_instance = false
 
 [DEFAULT/battery-udi]
 type = string
-default = 
+default =
 _description=HAL UDI of battery.
 
 [DEFAULT/level-notify-high]
@@ -18,7 +18,7 @@ _description=If charge level drops below this threadhold, a warning will be disp
 
 [DEFAULT/low-level-unit]
 type = string
-default = 
+default =
 _description=Unit of low level threshold (Percent or Time Remaining).
 
 [DEFAULT/notify-high-level]

@@ -33,10 +33,10 @@ AM_GLIB_GNU_GETTEXT
 slicelocaledir='${prefix}/${DATADIRNAME}/locale'
 AC_SUBST(slicelocaledir)
 
-PKG_CHECK_MODULES(DEPS, 
-                  gtk+-2.0 
+PKG_CHECK_MODULES(DEPS,
+                  gtk+-2.0
                   awn
-                  libgnome-menu 
+                  libgnome-menu
                   gnome-desktop-2.0
                   librsvg-2.0)
 AC_SUBST(DEPS_CFLAGS)

@@ -50,7 +50,7 @@ icons = {
     "20": image_path + "20.png", # fog
     "21": image_path + "21.png", # haze
     "22": image_path + "22.png", # smoke
-    "23": image_path + "23.png", # blustery 
+    "23": image_path + "23.png", # blustery
     "24": image_path + "24.png", # windy
     "25": image_path + "25.png",	# cold
     "26": image_path + "26.png", # cloudy

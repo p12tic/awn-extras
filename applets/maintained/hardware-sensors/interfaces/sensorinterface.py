@@ -37,7 +37,7 @@ class Sensor(object):
         label: a descriptive label
         show: whether to show sensor in main applet dialog or not
         in_icon: whether to show sensor in applet icon or not
-    
+
     """
 
     def __init__(self, id, name, sensor_value):

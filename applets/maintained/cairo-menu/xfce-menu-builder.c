@@ -43,7 +43,7 @@ fill_er_up(GMenuTreeDirectory *directory)
   DesktopAgnosticFDODesktopEntry *entry;
   gchar * icon_name;
   GtkWidget * image;
-  
+
   while (tmp != NULL)
   {
     GMenuTreeItem *item = tmp->data;
@@ -84,7 +84,7 @@ fill_er_up(GMenuTreeDirectory *directory)
         if (image)
         {
           gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-        }        
+        }
         gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
         g_free (icon_name);
         break;
@@ -116,13 +116,13 @@ fill_er_up(GMenuTreeDirectory *directory)
     gmenu_tree_item_unref(tmp->data);
     tmp = tmp->next;
   }
-  g_slist_free(items);  
+  g_slist_free(items);
   gtk_widget_show_all (menu);
   return menu;
 }
 
 
-GtkWidget * 
+GtkWidget *
 gnome_menu_build (void)
 {
   GMenuTree *  menu_tree;
@@ -134,7 +134,7 @@ gnome_menu_build (void)
   GtkWidget   *menu_item;
   GtkWidget * sub_menu;
   const gchar * txt;
-  
+
   menu_tree = gmenu_tree_lookup("gnome-applications.menu", GMENU_TREE_FLAGS_NONE);
 
   if (menu_tree)
@@ -166,7 +166,7 @@ gnome_menu_build (void)
       if (image)
       {
         gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-      }        
+      }
       gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
       g_free (icon_name);
       gmenu_tree_item_unref (root);
@@ -174,7 +174,7 @@ gnome_menu_build (void)
   }
 
   menu_item = gtk_separator_menu_item_new ();
-  gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);  
+  gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
 
   menu_item = cairo_menu_item_new ();
   gtk_menu_item_set_label (GTK_MENU_ITEM(menu_item),"Session");
@@ -182,7 +182,7 @@ gnome_menu_build (void)
   if (image)
   {
     gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-  }        
+  }
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
 
   menu_item = cairo_menu_item_new ();
@@ -192,11 +192,11 @@ gnome_menu_build (void)
   if (image)
   {
     gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),image);
-  }        
+  }
   gtk_menu_shell_append(GTK_MENU_SHELL(menu),menu_item);
 
-  
+
   gtk_widget_show_all (menu);
-  
+
   return menu;
 }

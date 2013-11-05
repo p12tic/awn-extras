@@ -166,7 +166,7 @@ class OverlayWindow(gtk.Window):
                            gtk.gdk.ACTION_COPY)
 
         self.connect("drag-data-received", self.no_target_drop)
-        
+
         # We will use this themed icon to get the hi-res pixbufs
         self.icon_cache = awn.ThemedIcon()
         self.icon_cache.set_applet_info("dropper", uid)

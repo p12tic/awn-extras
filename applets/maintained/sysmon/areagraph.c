@@ -3,12 +3,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Library General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
@@ -28,14 +28,14 @@ G_DEFINE_TYPE (Awn_Areagraph, awn_areagraph, AWN_TYPE_GRAPH)
 
 typedef struct _Awn_AreagraphPrivate AwnAreagraphPrivate;
 
-struct _Awn_AreagraphPrivate 
+struct _Awn_AreagraphPrivate
 {
   gdouble max_val;
   gdouble min_val;
   guint num_points;
   gint cur_point;
   gint num_shift;
-  gdouble partial;  
+  gdouble partial;
   gdouble prev_value;
 };
 
@@ -59,18 +59,18 @@ awn_areagraph_get_property (GObject *object, guint property_id,
 {
   AwnAreagraphPrivate * priv;
   priv = AWN_AREAGRAPH_GET_PRIVATE (object);
-  
-  switch (property_id) 
+
+  switch (property_id)
   {
     case PROP_NUM_POINTS:
-      g_value_set_uint (value, priv->num_points); 
-      break;     
+      g_value_set_uint (value, priv->num_points);
+      break;
     case PROP_MIN_VAL:
-      g_value_set_double (value, priv->min_val); 
-      break;     
+      g_value_set_double (value, priv->min_val);
+      break;
     case PROP_MAX_VAL:
-      g_value_set_double (value, priv->max_val); 
-      break;           
+      g_value_set_double (value, priv->max_val);
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -82,18 +82,18 @@ awn_areagraph_set_property (GObject *object, guint property_id,
 {
   AwnAreagraphPrivate * priv;
   priv = AWN_AREAGRAPH_GET_PRIVATE (object);
-  
-  switch (property_id) 
+
+  switch (property_id)
   {
     case PROP_NUM_POINTS:
       priv->num_points = g_value_get_uint (value);
-      break;     
+      break;
     case PROP_MIN_VAL:
       priv->min_val = g_value_get_double (value);
-      break;     
+      break;
     case PROP_MAX_VAL:
       priv->max_val = g_value_get_double (value);
-      break;           
+      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
   }
@@ -121,10 +121,10 @@ awn_areagraph_class_init (Awn_AreagraphClass *klass)
   object_class->set_property = awn_areagraph_set_property;
   object_class->dispose = awn_areagraph_dispose;
   object_class->finalize = awn_areagraph_finalize;
-  
+
   AWN_GRAPH_CLASS(klass)->render_to_context = _awn_areagraph_render_to_context;
   AWN_GRAPH_CLASS(klass)->add_data = _awn_areagraph_add_data;
-  
+
   pspec = g_param_spec_uint (   "num_points",
                                 "NumPoints",
                                 "Number of points on graph",
@@ -132,7 +132,7 @@ awn_areagraph_class_init (Awn_AreagraphClass *klass)
                                 G_MAXUINT,
                                 48,
                                 G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
-  g_object_class_install_property (object_class, PROP_NUM_POINTS, pspec);      
+  g_object_class_install_property (object_class, PROP_NUM_POINTS, pspec);
   pspec = g_param_spec_double (   "min_val",
                                 "MinVal",
                                 "Minimum Value",
@@ -140,7 +140,7 @@ awn_areagraph_class_init (Awn_AreagraphClass *klass)
                                 +1000000.0,
                                 0,
                                 G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
-  g_object_class_install_property (object_class, PROP_MIN_VAL, pspec);      
+  g_object_class_install_property (object_class, PROP_MIN_VAL, pspec);
   pspec = g_param_spec_double (   "max_val",
                                 "MaxVal",
                                 "Maximum Value",
@@ -148,12 +148,12 @@ awn_areagraph_class_init (Awn_AreagraphClass *klass)
                                 +1000000.0,
                                 0,
                                 G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
-  
-  g_object_class_install_property (object_class, PROP_MAX_VAL, pspec);    
 
-  
+  g_object_class_install_property (object_class, PROP_MAX_VAL, pspec);
+
+
   g_type_class_add_private (klass, sizeof (AwnAreagraphPrivate));
-  
+
 }
 
 static void _awn_areagraph_render_to_context(AwnGraph * graph,
@@ -163,18 +163,18 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
   /*Can be optimized.  FIXME
    */
   AwnAreagraphPrivate * priv;
-  AwnGraphPrivate * graph_priv;  
+  AwnGraphPrivate * graph_priv;
   gint  i;
   gint  end_point;
   gint  x=0;
   gdouble * values = NULL;
   gdouble vert_scale = 1.0;
-  
+
   priv = AWN_AREAGRAPH_GET_PRIVATE (graph);
   graph_priv = AWN_GRAPH_GET_PRIVATE (graph);
-  
+
   cairo_save (cr);
-    
+
   if (priv->num_points != width)
   {
     g_free (graph_priv->data);
@@ -191,11 +191,11 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
   else
   {
     end_point = ((gint) priv->cur_point) ;
-  }  
-  
+  }
+
   cairo_set_operator (cr, CAIRO_OPERATOR_CLEAR);
   cairo_paint (cr);
-  
+
   cairo_paint (cr);
   vert_scale = height / (double) (priv->max_val - priv->min_val);
   cairo_scale (cr, width / (double)priv->num_points, vert_scale);
@@ -211,8 +211,8 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
     if (i >= priv->num_points )
     {
       i = -1;
-    }    
-    x++;    
+    }
+    x++;
   }
 #else
   cairo_move_to (cr, x- 0.5,priv->max_val - priv->min_val);
@@ -229,8 +229,8 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
       if (i >= priv->num_points )
       {
         i = -1;
-      }    
-      
+      }
+
       if (values[i+1] >= prev_val)
       {
         cairo_line_to (cr, x- 0.5, priv->max_val - priv->min_val - values[old_i]);
@@ -241,10 +241,10 @@ static void _awn_areagraph_render_to_context(AwnGraph * graph,
       }
     }
   }
-  cairo_line_to (cr, x- 0.5,priv->max_val - priv->min_val);  
+  cairo_line_to (cr, x- 0.5,priv->max_val - priv->min_val);
   cairo_close_path (cr);
   cairo_fill (cr);
-  
+
 #endif
   cairo_restore (cr);
 }
@@ -258,20 +258,20 @@ static void _awn_areagraph_add_data(AwnGraph * graph,
   gint i;
   glong count;
   gdouble total=0.0;
-  
+
   g_return_if_fail (list);
   const AwnGraphSinglePoint *area_graph_point = g_list_first (list)->data;
 
-  priv = AWN_AREAGRAPH_GET_PRIVATE (graph);  
+  priv = AWN_AREAGRAPH_GET_PRIVATE (graph);
   graph_priv = AWN_GRAPH_GET_PRIVATE(graph);
-  
+
   priv->partial = area_graph_point->points - floor (area_graph_point->points);
   values = graph_priv->data;
   i=priv->cur_point;
   total = priv->partial + area_graph_point->points;
-  count = lround ( total );      
+  count = lround ( total );
   priv->num_shift = (gint)count;  /*FIXME*/
-  
+
   if ( total >= 1.0)
   {
     /*special case the first bit */
@@ -280,21 +280,21 @@ static void _awn_areagraph_add_data(AwnGraph * graph,
     count--;
     priv->partial =  total - floor (total);
     priv->prev_value = area_graph_point->value;
-                  
+
     while (count)
     {
-      i++; 
+      i++;
       if (i >= priv->num_points)
       {
         i = 0;
-      }       
+      }
       values[i] = area_graph_point->value;
       count--;
     }
     if (i >= priv->num_points)
     {
       i = 0;
-    }    
+    }
   }
   priv->cur_point = i +1;
 }
@@ -304,7 +304,7 @@ awn_areagraph_init (Awn_Areagraph *self)
 {
   AwnAreagraphPrivate * priv;
   AwnGraphPrivate * graph_priv;
-  
+
   priv = AWN_AREAGRAPH_GET_PRIVATE (self);
   graph_priv = AWN_GRAPH_GET_PRIVATE (self);
 
@@ -314,22 +314,22 @@ awn_areagraph_init (Awn_Areagraph *self)
   priv->cur_point = 0;
   priv->partial = 0.0;
   priv->prev_value = 0.0;
-  
+
   graph_priv->data =g_new0(gdouble, priv->num_points);
-  
+
 }
 
 GtkWidget*
 awn_areagraph_new (gint num_points, gdouble min_val, gdouble max_val)
 {
-  return g_object_new (AWN_TYPE_AREAGRAPH, 
+  return g_object_new (AWN_TYPE_AREAGRAPH,
                        "num_points",num_points,
                        "min_val", min_val,
                        "max_val", max_val,
                        NULL);
 }
 
-void 
+void
 awn_areagraph_clear (Awn_Areagraph *self, gdouble val)
 {
   int i;
@@ -337,8 +337,8 @@ awn_areagraph_clear (Awn_Areagraph *self, gdouble val)
   AwnAreagraphPrivate * priv;
 
   graph_priv = AWN_GRAPH_GET_PRIVATE (self);
-  priv = AWN_AREAGRAPH_GET_PRIVATE (self);  
-    
+  priv = AWN_AREAGRAPH_GET_PRIVATE (self);
+
   for (i=0; i<priv->num_points;i++)
   {
     ((gdouble *)graph_priv->data)[i]=val;

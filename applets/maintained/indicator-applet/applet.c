@@ -688,7 +688,7 @@ da_expose_event(GtkWidget *da, GdkEventExpose *event, IndicatorApplet *iapplet)
   }
 }
 
-static gboolean 
+static gboolean
 deactivate_event (GtkMenuShell *menushell, IndicatorApplet *iapplet)
 {
   g_object_set (awn_overlayable_get_effects

@@ -1,6 +1,6 @@
 [DEFAULT/dummy]
 type = string
-default = 
+default =
 _description=Dummy.
 
 ; vim: set ft=dosini :

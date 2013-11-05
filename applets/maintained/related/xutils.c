@@ -54,7 +54,7 @@ latin1_to_utf8 (const char *latin1)
 {
   GString *str;
   const char *p;
-  
+
   str = g_string_new (NULL);
 
   p = latin1;
@@ -74,7 +74,7 @@ _wnck_get_wmclass (Window xwindow,
 {
   XClassHint ch;
   char *retval;
-  
+
   _wnck_error_trap_push ();
 
   ch.res_name = NULL;
@@ -84,7 +84,7 @@ _wnck_get_wmclass (Window xwindow,
                  &ch);
 
   _wnck_error_trap_pop ();
-  
+
   retval = NULL;
 
   if (res_class)
@@ -92,12 +92,12 @@ _wnck_get_wmclass (Window xwindow,
 
   if (res_name)
     *res_name = NULL;
-  
+
   if (ch.res_name)
     {
       if (res_name)
         *res_name = latin1_to_utf8 (ch.res_name);
-      
+
       XFree (ch.res_name);
     }
 
@@ -105,7 +105,7 @@ _wnck_get_wmclass (Window xwindow,
     {
       if (res_class)
         *res_class = latin1_to_utf8 (ch.res_class);
-      
+
       XFree (ch.res_class);
     }
 }
@@ -116,13 +116,13 @@ _wnck_get_client_name (Window xwindow, char **client_name)
 {
   XTextProperty	text_prop;
   Status status;
-  
+
   _wnck_error_trap_push ();
 
 	status = XGetWMClientMachine(gdk_display, xwindow, &text_prop);
 
   _wnck_error_trap_pop ();
-  
+
   if (!status)
   {
     *client_name = NULL;
@@ -134,7 +134,7 @@ _wnck_get_client_name (Window xwindow, char **client_name)
   }
   if (text_prop.value)
   {
-    *client_name = latin1_to_utf8 (text_prop.value);       
+    *client_name = latin1_to_utf8 (text_prop.value);
     XFree (text_prop.value);
   }
 }
@@ -857,7 +857,7 @@ _wnck_get_icon_at_size (WnckWindow *window,
   }
 
   icon = wnck_window_get_icon (window);
-  icon_scaled = gdk_pixbuf_scale_simple (icon, width, height, 
+  icon_scaled = gdk_pixbuf_scale_simple (icon, width, height,
                                          GDK_INTERP_BILINEAR);
 
   return icon_scaled;
@@ -914,7 +914,7 @@ get_icon (const gchar *name, guint size)
   {
     if (g_file_test (name, G_FILE_TEST_EXISTS))
     {
-      pixbuf = gdk_pixbuf_new_from_file_at_scale (name, size, size, 
+      pixbuf = gdk_pixbuf_new_from_file_at_scale (name, size, size,
                                                   TRUE, &error);
       if (error)
       {
@@ -923,34 +923,34 @@ get_icon (const gchar *name, guint size)
         error = NULL;
      }
       return pixbuf;
-    } 
+    }
   }
 
   stripped = strip_extension (name);
-  
+
   pixbuf = gtk_icon_theme_load_icon (theme,
                                      stripped,
                                      size,
                                      GTK_ICON_LOOKUP_FORCE_SVG, &error);
   if (error)
-  {   
+  {
     /*g_warning ("Error loading icon: %s\n", error->message);*/
     g_error_free (error);
     error = NULL;
   }
-  
+
   /* Always try and send back something */
   if (pixbuf == NULL)
     pixbuf = gtk_icon_theme_load_icon (theme, "stock_folder",
                                        size, 0, NULL);
-  
+
   width = gdk_pixbuf_get_width (pixbuf);
   height = gdk_pixbuf_get_height (pixbuf);
 
   if (width != size || height != size)
   {
     GdkPixbuf *temp = pixbuf;
-    pixbuf = gdk_pixbuf_scale_simple (temp, 
+    pixbuf = gdk_pixbuf_scale_simple (temp,
                                       size,
                                       size,
                                       GDK_INTERP_HYPER);
@@ -963,7 +963,7 @@ get_icon (const gchar *name, guint size)
 }
 
 GdkPixbuf *
-xutils_get_named_icon (const gchar *icon_name, 
+xutils_get_named_icon (const gchar *icon_name,
                        gint         width,
                        gint         height)
 {

@@ -490,7 +490,7 @@ static gboolean render(GtkWidget ** pwidget, gint interval, CPU_plug_data **p)
     old_time = time(NULL);
     return FALSE;
   }
-    
+
   data->timer = data->timer - interval;
   if (data->timer <= 0)
   {

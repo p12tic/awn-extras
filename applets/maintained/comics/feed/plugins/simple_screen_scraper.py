@@ -57,7 +57,7 @@ class SimpleScreenScraper(Feed):
     def parse_file(self, filename):
         '''Mandatory for plugins.
         Parses given file (a downloaded feed) and puts each found item
-        into a dict with the keys URL (path to the image), LINK to the 
+        into a dict with the keys URL (path to the image), LINK to the
         page, TITLE for that link, DATE (a timestamp) and IMAGES (list of
         images, only needed for new comics).
         Each of this dicts has to be put into self.items with DATE as key.'''
@@ -76,7 +76,7 @@ class SimpleScreenScraper(Feed):
                 self.name = self.unescape_html(title_re.findall(data)[0])
             except IndexError:
                 self.name = "Comic"
-            
+
 
         images = []
         images += [self.make_absolute_url(u, self.url)

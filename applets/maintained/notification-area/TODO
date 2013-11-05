@@ -1,4 +1,4 @@
-applet.c 
+applet.c
 line 219:
 
 This seems to be failing, and not drawing when composite is on,

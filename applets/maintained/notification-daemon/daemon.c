@@ -1523,13 +1523,13 @@ gboolean hide_icon(gpointer data)
   G_daemon_config.awn_icon = gdk_pixbuf_new(GDK_COLORSPACE_RGB, TRUE, 8, 1, 1);
   gdk_pixbuf_fill(G_daemon_config.awn_icon, 0x00000000);
   awn_applet_simple_set_icon_pixbuf(AWN_APPLET_SIMPLE(G_daemon_config.awn_app), G_daemon_config.awn_icon);
-//  g_object_unref(G_daemon_config.awn_icon);  
+//  g_object_unref(G_daemon_config.awn_icon);
   G_daemon_config.awn_icon = NULL;
 
   return FALSE;
 }
 
-static void 
+static void
 config_get_color(DesktopAgnosticConfigClient *client, gchar * group,const gchar *key, DesktopAgnosticColor **color)
 {
   GError *error = NULL;
@@ -1579,7 +1579,7 @@ static void read_config(void)
       {
         unsigned int pid=0;
         proxy = dbus_g_proxy_new_for_name (connection,
-                                             "org.freedesktop.DBus", 
+                                             "org.freedesktop.DBus",
                                              "/org/freedesktop/DBus",
                                              "org.freedesktop.DBus");
 
@@ -1653,13 +1653,13 @@ static void read_config(void)
       G_daemon_config.awn_text_str[6] = '\0';
 
     config_get_color (conf_client, DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_BG,&G_daemon_config.awn_border);
-  }    
+  }
   G_daemon_config.awn_border_width = desktop_agnostic_config_client_get_int (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_BORDER_WIDTH,NULL);
 
   G_daemon_config.awn_gradient_factor = desktop_agnostic_config_client_get_float (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_GRADIENT_FACTOR,NULL);
 
   G_daemon_config.awn_override_x = desktop_agnostic_config_client_get_int (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_OVERRIDE_X,NULL);
-    
+
   G_daemon_config.awn_override_y = desktop_agnostic_config_client_get_int (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_OVERRIDE_Y,NULL);
 
   G_daemon_config.timeout = desktop_agnostic_config_client_get_int (conf_client,  DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,GCONF_KEY_AWN_TIMEOUT,NULL);
@@ -1672,16 +1672,16 @@ static void read_config(void)
   done_once = TRUE;
 }
 
-static void 
+static void
 _change_config_cb(const gchar *group, const gchar *key, const GValue *value, gpointer user_data)
 {
-  read_config ();  
+  read_config ();
   g_debug ("%s",__func__);
 }
 
 static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, void * null)
 {
-  static GtkWidget *menu=NULL;  
+  static GtkWidget *menu=NULL;
   G_daemon_config.show_status = !G_daemon_config.show_status;
   if (event->button == 1)
   {
@@ -1693,7 +1693,7 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
     else
     {
 //      gdk_pixbuf_fill(G_daemon_config.awn_icon, 0x00000033);
-      awn_applet_simple_set_icon_state(AWN_APPLET_SIMPLE(G_daemon_config.awn_app),"Off");      
+      awn_applet_simple_set_icon_state(AWN_APPLET_SIMPLE(G_daemon_config.awn_app),"Off");
     }
 
 //    awn_applet_simple_set_icon(AWN_APPLET_SIMPLE(G_daemon_config.awn_app), G_daemon_config.awn_icon);
@@ -1706,7 +1706,7 @@ static gboolean _button_clicked_event(GtkWidget *widget, GdkEventButton *event, 
       gtk_menu_set_screen (GTK_MENU (menu), NULL);
     }
     gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
-                    event->button, event->time);    
+                    event->button, event->time);
   }
   return TRUE;
 }
@@ -1724,12 +1724,12 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
 
   G_daemon_config.awn_app = applet = AWN_APPLET(awn_applet_simple_new(name, uid, panel_id));
   theme_client = awn_config_get_default (AWN_PANEL_ID_DEFAULT, &error);
-  
+
   gint height = awn_applet_get_size(applet);
 
   G_daemon_config.awn_app_height = height;
   G_daemon_config.show_status = TRUE;
-  
+
   g_object_set (applet,
                 "display-name","Awn Notification Daemon",
                 NULL);
@@ -1758,7 +1758,7 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
 
   g_log_set_always_fatal(G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL);
 
-/*  
+/*
    //Disabling sound until gstreamer init crash can be fixed.
    sound_init();
    */
@@ -1768,7 +1768,7 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
   error = NULL;
 
   read_config();
-  
+
   connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
 
   while (connection == NULL)
@@ -1813,7 +1813,7 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
                                GCONF_KEY_AWN_KILL_ND,
                                (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
                                applet, NULL);
-  
+
   desktop_agnostic_config_client_notify_add(conf_client,
                                DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                GCONF_KEY_AWN_BG,
@@ -1837,7 +1837,7 @@ AwnApplet* awn_applet_factory_initp(const gchar *name,
                                GCONF_KEY_AWN_GRADIENT_FACTOR,
                                (DesktopAgnosticConfigNotifyFunc)_change_config_cb,
                                applet, NULL);
-  
+
   desktop_agnostic_config_client_notify_add(conf_client,
                                DESKTOP_AGNOSTIC_CONFIG_GROUP_DEFAULT,
                                GCONF_KEY_AWN_TEXT_COLOUR,

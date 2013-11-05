@@ -32,29 +32,29 @@ typedef struct _CairoMenuItemPrivate CairoMenuItemPrivate;
 struct _CairoMenuItemPrivate {
   gboolean cairo_style;
   gchar * drag_source_data;
-#if !GTK_CHECK_VERSION (2,16,0)  
+#if !GTK_CHECK_VERSION (2,16,0)
   gchar * label;
 #endif
 
   PangoFontDescription *font_description;
-  
+
 };
 
 enum
 {
   PROP_0,
-#if !GTK_CHECK_VERSION (2,16,0)    
+#if !GTK_CHECK_VERSION (2,16,0)
   PROP_LABEL
-#endif    
+#endif
 };
 static void
 cairo_menu_item_get_property (GObject *object, guint property_id,
                               GValue *value, GParamSpec *pspec)
 {
   CairoMenuItemPrivate * priv = GET_PRIVATE(object);
-  
+
   switch (property_id) {
-#if !GTK_CHECK_VERSION (2,16,0)    
+#if !GTK_CHECK_VERSION (2,16,0)
   case PROP_LABEL:
       g_value_set_string (value,priv->label);
       break;
@@ -69,9 +69,9 @@ cairo_menu_item_set_property (GObject *object, guint property_id,
                               const GValue *value, GParamSpec *pspec)
 {
   CairoMenuItemPrivate * priv = GET_PRIVATE(object);
-  
+
   switch (property_id) {
-#if !GTK_CHECK_VERSION (2,16,0)    
+#if !GTK_CHECK_VERSION (2,16,0)
   case PROP_LABEL:
     if (priv->label)
     {
@@ -97,13 +97,13 @@ cairo_menu_item_dispose (GObject *object)
 static void
 cairo_menu_item_finalize (GObject *object)
 {
-  CairoMenuItemPrivate * priv = GET_PRIVATE(object);  
+  CairoMenuItemPrivate * priv = GET_PRIVATE(object);
   if (priv->drag_source_data)
   {
  //   g_free(priv->drag_source_data);
     priv->drag_source_data = NULL;
   }
-#if !GTK_CHECK_VERSION (2,16,0)  
+#if !GTK_CHECK_VERSION (2,16,0)
   g_free (priv->label);
 #endif
   if (G_OBJECT_CLASS (cairo_menu_item_parent_class)->finalize)
@@ -115,17 +115,17 @@ cairo_menu_item_finalize (GObject *object)
   {
     pango_font_description_free (priv->font_description);
   }
-  
+
 }
 
 static gboolean
 cairo_menu_item_expose (GtkWidget *widget,GdkEventExpose *event)
 {
-  CairoMenuItemPrivate * priv = GET_PRIVATE(widget);  
+  CairoMenuItemPrivate * priv = GET_PRIVATE(widget);
 
   if (priv->cairo_style)
   {
-    PangoLayout *layout;    
+    PangoLayout *layout;
     double x,y,width,height;
     gchar * label;
 
@@ -138,20 +138,20 @@ cairo_menu_item_expose (GtkWidget *widget,GdkEventExpose *event)
     x = event->area.x;
     y = event->area.y;
     width = event->area.width;
-    height = event->area.height;    
-    cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);    
+    height = event->area.height;
+    cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
     cairo_set_source_rgba (cr,0.0,1.0,0.0,0.1);
     cairo_rectangle (cr, x,y,width,height);
-    cairo_fill (cr);    
+    cairo_fill (cr);
     layout = pango_cairo_create_layout (cr);
 
     pango_font_description_set_absolute_size (priv->font_description,  height * 0.8 * PANGO_SCALE);
     pango_layout_set_font_description (layout, priv->font_description);
-    pango_layout_set_text (layout, label, -1);  
+    pango_layout_set_text (layout, label, -1);
 
     cairo_set_source_rgba (cr,1.0,1.0,1.0,0.3);
     cairo_move_to (cr,x+height * 1.1,y+height*0.1);
-    pango_cairo_show_layout (cr, layout);          
+    pango_cairo_show_layout (cr, layout);
     cairo_destroy (cr);
     g_object_unref (layout);
     g_free (label);
@@ -167,7 +167,7 @@ static void
 cairo_menu_item_constructed (GObject *object)
 {
   CairoMenuItemPrivate * priv = GET_PRIVATE(object);
-  
+
   if (G_OBJECT_CLASS (cairo_menu_item_parent_class)->constructed)
   {
     G_OBJECT_CLASS (cairo_menu_item_parent_class)->constructed (object);
@@ -189,7 +189,7 @@ cairo_menu_item_class_init (CairoMenuItemClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
-  
+
   object_class->get_property = cairo_menu_item_get_property;
   object_class->set_property = cairo_menu_item_set_property;
   object_class->dispose = cairo_menu_item_dispose;
@@ -199,7 +199,7 @@ cairo_menu_item_class_init (CairoMenuItemClass *klass)
 //  widget_class->expose_event = cairo_menu_item_expose;
 
 #if !GTK_CHECK_VERSION (2,16,0)
-  GParamSpec   *pspec;    
+  GParamSpec   *pspec;
   pspec = g_param_spec_string ("label",
                                "label",
                                "Text Label String",
@@ -207,7 +207,7 @@ cairo_menu_item_class_init (CairoMenuItemClass *klass)
                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT);
   g_object_class_install_property (object_class, PROP_LABEL, pspec);
 #endif
-  
+
   g_type_class_add_private (klass, sizeof (CairoMenuItemPrivate));
 
 
@@ -233,13 +233,13 @@ cairo_menu_item_init (CairoMenuItem *self)
       newmap = gdk_screen_get_rgba_colormap (screen);
     }
     gtk_widget_set_colormap (GTK_WIDGET(self),newmap);
-    awn_utils_ensure_transparent_bg (GTK_WIDGET(self));      
+    awn_utils_ensure_transparent_bg (GTK_WIDGET(self));
   }
 }
 
 GtkWidget*
 cairo_menu_item_new (void)
-{  
+{
   return g_object_new (AWN_TYPE_CAIRO_MENU_ITEM,
 #if GTK_CHECK_VERSION (2,16,0)
                       "always-show-image",TRUE,
@@ -252,16 +252,16 @@ cairo_menu_item_new_with_label (const gchar * label)
 {
   return g_object_new (AWN_TYPE_CAIRO_MENU_ITEM,
                         "label",label,
-#if GTK_CHECK_VERSION (2,16,0)                       
+#if GTK_CHECK_VERSION (2,16,0)
                         "always-show-image",TRUE,
 #endif
                         NULL);
 }
 
 /*
- Drag and drop 
+ Drag and drop
  */
-static const GtkTargetEntry drop_types[] = 
+static const GtkTargetEntry drop_types[] =
 {
   { (gchar*)"STRING", 0, 0 },
   { (gchar*)"text/plain", 0,  },

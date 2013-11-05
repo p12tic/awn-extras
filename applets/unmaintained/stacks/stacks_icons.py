@@ -67,7 +67,7 @@ class Thumbnailer:
             if thumb:
                 # Fixup the thumbnail a bit
                 thumb = self._nicer_dimensions(thumb)
-                
+
                 return thumb
         except:
             pass
@@ -83,7 +83,7 @@ class Thumbnailer:
         #       directly from gnome_vfs_uri_is_local_scheme.
         try:
             scheme = uri.split("://")[0]
-            return not scheme or scheme in ("file", "help", "ghelp", "gnome-help", 
+            return not scheme or scheme in ("file", "help", "ghelp", "gnome-help",
                 "trash", "man", "info", "hardware", "search", "pipe","gnome-trash")
         except:
             return False

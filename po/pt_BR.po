@@ -4185,10 +4185,10 @@ msgstr ""
 #. gtk_menu_item_set_submenu (GTK_MENU_ITEM(item),submenu);
 #. item = gtk_menu_item_new_with_label ("CPU");
 #. gtk_menu_shell_append(GTK_MENU_SHELL(submenu), item);
-#. 
+#.
 #. item = gtk_menu_item_new_with_label ("Remove Icon");
 #. gtk_menu_shell_append(GTK_MENU_SHELL(priv->context_menu), item);
-#. 
+#.
 #: ../applets/maintained/sysmon/cpuicon.c:610
 msgid "Render Background"
 msgstr ""

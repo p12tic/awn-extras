@@ -59,7 +59,7 @@ typedef struct
 {
   long id, len;
   long remaining_len;
-  
+
   long timeout;
   char *str;
 #ifdef GDK_WINDOWING_X11
@@ -134,7 +134,7 @@ static void
 egg_tray_manager_class_init (EggTrayManagerClass *klass)
 {
   GObjectClass *gobject_class;
-  
+
   parent_class = g_type_class_peek_parent (klass);
   gobject_class = (GObjectClass *)klass;
 
@@ -150,7 +150,7 @@ egg_tray_manager_class_init (EggTrayManagerClass *klass)
 						      GTK_TYPE_ORIENTATION,
 						      GTK_ORIENTATION_HORIZONTAL,
 						      G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
-  
+
   manager_signals[TRAY_ICON_ADDED] =
     g_signal_new ("tray_icon_added",
 		  G_OBJECT_CLASS_TYPE (klass),
@@ -214,14 +214,14 @@ static void
 egg_tray_manager_finalize (GObject *object)
 {
   EggTrayManager *manager;
-  
+
   manager = EGG_TRAY_MANAGER (object);
 
   egg_tray_manager_unmanage (manager);
 
   g_list_free (manager->messages);
   g_hash_table_destroy (manager->socket_table);
-  
+
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
@@ -283,7 +283,7 @@ egg_tray_manager_plug_removed (GtkSocket       *socket,
 
   g_hash_table_remove (manager->socket_table, GINT_TO_POINTER (child->icon_window));
   g_signal_emit (manager, manager_signals[TRAY_ICON_REMOVED], 0, child);
-  
+
   /* This destroys the socket. */
   return FALSE;
 }
@@ -294,7 +294,7 @@ egg_tray_manager_handle_dock_request (EggTrayManager       *manager,
 {
   Window icon_window = xevent->data.l[2];
   GtkWidget *child;
- 
+
   if (g_hash_table_lookup (manager->socket_table, GINT_TO_POINTER (icon_window)))
     {
       /* We already got this notification earlier, ignore this one */
@@ -319,7 +319,7 @@ egg_tray_manager_handle_dock_request (EggTrayManager       *manager,
   gdk_error_trap_push ();
 
   gtk_socket_add_id (GTK_SOCKET (child), icon_window);
-  
+
   gdk_flush ();
   gdk_error_trap_pop ();
 
@@ -329,7 +329,7 @@ egg_tray_manager_handle_dock_request (EggTrayManager       *manager,
       if (GTK_IS_WIDGET (child)) gtk_widget_destroy (child);
       return;
     }
-  g_hash_table_insert (manager->socket_table, GINT_TO_POINTER(icon_window), 
+  g_hash_table_insert (manager->socket_table, GINT_TO_POINTER(icon_window),
                        child);
   gtk_widget_show(child);
 }
@@ -398,7 +398,7 @@ egg_tray_manager_handle_message_data (EggTrayManager       *manager,
 {
   GList *p;
   int len;
-  
+
   /* Try to see if we can find the
    * pending message in the list
    */
@@ -428,7 +428,7 @@ egg_tray_manager_handle_message_data (EggTrayManager       *manager,
 		}
 	      manager->messages = g_list_remove_link (manager->messages,
 						      p);
-	      
+	
 	      pending_message_free (msg);
 	    }
 
@@ -478,9 +478,9 @@ egg_tray_manager_handle_cancel_message (EggTrayManager       *manager,
 					XClientMessageEvent  *xevent)
 {
   GtkSocket *socket;
-  
+
   socket = g_hash_table_lookup (manager->socket_table, GINT_TO_POINTER (xevent->window));
-  
+
   if (socket)
     {
       g_signal_emit (manager, manager_signals[MESSAGE_CANCELLED], 0,
@@ -538,7 +538,7 @@ egg_tray_manager_window_filter (GdkXEvent *xev, GdkEvent *event, gpointer data)
   return GDK_FILTER_CONTINUE;
 }
 
-#endif  
+#endif
 
 static void
 egg_tray_manager_unmanage (EggTrayManager *manager)
@@ -555,17 +555,17 @@ egg_tray_manager_unmanage (EggTrayManager *manager)
   g_assert (GTK_IS_INVISIBLE (invisible));
   g_assert (GTK_WIDGET_REALIZED (invisible));
   g_assert (GDK_IS_WINDOW (invisible->window));
-  
+
   display = GDK_WINDOW_XDISPLAY (invisible->window);
-  
+
   if (XGetSelectionOwner (display, manager->selection_atom) ==
       GDK_WINDOW_XWINDOW (invisible->window))
     {
-      timestamp = gdk_x11_get_server_time (invisible->window);      
+      timestamp = gdk_x11_get_server_time (invisible->window);
       XSetSelectionOwner (display, manager->selection_atom, None, timestamp);
     }
 
-  gdk_window_remove_filter (invisible->window, egg_tray_manager_window_filter, manager);  
+  gdk_window_remove_filter (invisible->window, egg_tray_manager_window_filter, manager);
 
   manager->invisible = NULL; /* prior to destroy for reentrancy paranoia */
   gtk_widget_destroy (invisible);
@@ -606,7 +606,7 @@ egg_tray_manager_manage_xscreen (EggTrayManager *manager, Screen *xscreen)
   char *selection_atom_name;
   guint32 timestamp;
   GdkScreen *screen;
-  
+
   g_return_val_if_fail (EGG_IS_TRAY_MANAGER (manager), FALSE);
   g_return_val_if_fail (manager->screen == NULL, FALSE);
 
@@ -620,10 +620,10 @@ egg_tray_manager_manage_xscreen (EggTrayManager *manager, Screen *xscreen)
   screen = gdk_display_get_screen (gdk_x11_lookup_xdisplay (DisplayOfScreen (xscreen)),
 				   XScreenNumberOfScreen (xscreen));
   manager->screen = screen;
-  
+
   invisible = gtk_invisible_new_for_screen (screen);
   gtk_widget_realize (invisible);
-  
+
   gtk_widget_add_events (invisible, GDK_PROPERTY_CHANGE_MASK | GDK_STRUCTURE_MASK);
 
   selection_atom_name = g_strdup_printf ("_NET_SYSTEM_TRAY_S%d",
@@ -641,7 +641,7 @@ egg_tray_manager_manage_xscreen (EggTrayManager *manager, Screen *xscreen)
 					   FALSE);
   egg_tray_manager_set_orientation_property (manager);
   egg_tray_manager_set_visual_property (manager);
-  
+
   timestamp = gdk_x11_get_server_time (invisible->window);
   XSetSelectionOwner (DisplayOfScreen (xscreen), manager->selection_atom,
 		      GDK_WINDOW_XWINDOW (invisible->window), timestamp);
@@ -686,7 +686,7 @@ egg_tray_manager_manage_xscreen (EggTrayManager *manager, Screen *xscreen)
       manager->invisible = NULL;
 
       manager->screen = NULL;
- 
+
       return FALSE;
     }
 }
@@ -701,7 +701,7 @@ egg_tray_manager_manage_screen (EggTrayManager *manager,
   g_return_val_if_fail (manager->screen == NULL, FALSE);
 
 #ifdef GDK_WINDOWING_X11
-  return egg_tray_manager_manage_xscreen (manager, 
+  return egg_tray_manager_manage_xscreen (manager,
 					  GDK_SCREEN_XSCREEN (screen));
 #else
   return FALSE;

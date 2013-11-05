@@ -2,7 +2,7 @@
 # Copyright (C) 2007, 2008:
 #   Mike Rooney (launchpad.net/~michael) <mrooney@gmail.com>
 #   Mike (mosburger) Desjardins <desjardinsmike@gmail.com>
-#     Please do not email the above person for support. The 
+#     Please do not email the above person for support. The
 #     email address is only there for license/copyright purposes.
 # Copyright (C) 2009 - 2010  onox <denkpadje@gmail.com>
 #
@@ -229,7 +229,7 @@ class WeatherApplet:
 
         global overlay_fsm
         overlay_fsm = OverlayStateMachine(disconnect_overlay, throbber_overlay)
-        
+
         def show_map(widget):
             if self.map_dialog is None:
                 self.fetch_weather_map(show=True)
@@ -487,7 +487,7 @@ class WeatherApplet:
                 feels_like = self.convert_temperature(self.cached_conditions['FEELSLIKE'])
                 if feels_like != "N/A" and feels_like != temp:
                     title += " (%s)" % (feels_like + u" \u00B0" + unit)
-    
+
             self.applet.tooltip.set(title)
             self.set_icon(self.cached_conditions["CODE"])
 

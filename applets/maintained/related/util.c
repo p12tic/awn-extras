@@ -1,16 +1,16 @@
-/* 
- * Copyright (C) 2009 Rodney Cryderman <rcryderman@gmail.com> 
- *  
+/*
+ * Copyright (C) 2009 Rodney Cryderman <rcryderman@gmail.com>
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Library General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor Boston, MA 02110-1301,  USA
@@ -30,16 +30,16 @@
 
 
 /*
- TODO: Split/cleanup this and related code in taskmanager-c into a separater 
-      object/lib once it comes time to do a caching of results + tracking of app 
-      use (early in 0.6).  
-  
-      The various uses are kind of obvious.  Such as use by shinyswitcher. And 
+ TODO: Split/cleanup this and related code in taskmanager-c into a separater
+      object/lib once it comes time to do a caching of results + tracking of app
+      use (early in 0.6).
+
+      The various uses are kind of obvious.  Such as use by shinyswitcher. And
       use your imagination.
- 
+
       Special casing info should be moved into separate datafiles/db.
- 
-      Tool to analyze and special case windows by advanced users ala xprop 
+
+      Tool to analyze and special case windows by advanced users ala xprop
       (point and click) and analyze.
 
       For 0.6:
@@ -47,8 +47,8 @@
         start making use of WM_WINDOW_ROLE when it is available
         Make use of _NET_WM_ICON_NAME
         Make use of _NET_WM_NAME
- 
- 
+
+
  */
 
 static gchar * generate_id_from_cmd(gchar *cmd,gchar *res_name,
@@ -106,17 +106,17 @@ typedef gchar *(*fn_gen_id)(const gchar *,const gchar*,const gchar*,const gchar*
 
 
 /*Assign an id to a desktop file
- 
+
  exec field,name field,desktop filename,id
  */
-static DesktopMatch desktop_regexes[] = 
+static DesktopMatch desktop_regexes[] =
 {
   {".*ooffice.*-writer.*",NULL,NULL,"OpenOffice-Writer"},
   {".*ooffice.*-draw.*",NULL,NULL,"OpenOffice-Draw"},
   {".*ooffice.*-impress.*",NULL,NULL,"OpenOffice-Impress"},
   {".*ooffice.*-calc.*",NULL,NULL,"OpenOffice-Calc"},
   {".*ooffice.*-math.*",NULL,NULL,"OpenOffice-Math"},
-  {".*ooffice.*-base.*",NULL,NULL,"OpenOffice-Base"},  
+  {".*ooffice.*-base.*",NULL,NULL,"OpenOffice-Base"},
   {".*amsn.*","aMSN",".*amsn.*desktop.*","aMSN"},
   {".*prism-google-calendar",".*Google.*Calendar.*","prism-google-calendar","prism-google-calendar"},
   {".*prism-google-analytics",".*Google.*Analytics.*","prism-google-analytics","prism-google-analytics"},
@@ -131,7 +131,7 @@ static DesktopMatch desktop_regexes[] =
 /*
  cmd, res name, class name, window title, id
  */
-static  WindowMatch window_regexes[] = 
+static  WindowMatch window_regexes[] =
 {
   /*Do not bother trying to parse an open office command line for the type of window*/
   {".*prism.*google.*calendar.*","Prism","Navigator",".*[Cc]alendar.*","prism-google-calendar"},
@@ -143,18 +143,18 @@ static  WindowMatch window_regexes[] =
   {".*prism.*google.*talk.*","Prism","Navigator",".*[Tt]alk.*","prism-google-talk"},
 
   {NULL,"Prism","Webrunner",NULL,generate_id_from_cmd},
-  
+
   {".*office.*",".*OpenOffice.*",".*VCLSalFrame.*",".*Writer.*","OpenOffice-Writer"},
   {".*office.*",".*OpenOffice.*",".*VCLSalFrame.*",".*Draw.*","OpenOffice-Draw"},
   {".*office.*",".*OpenOffice.*",".*VCLSalFrame.*",".*Impress.*","OpenOffice-Impress"},
   {".*office.*",".*OpenOffice.*",".*VCLSalFrame.*",".*Calc.*","OpenOffice-Calc"},
   {".*office.*",".*OpenOffice.*",".*VCLSalFrame.*",".*Math.*","OpenOffice-Math"},
   {".*office.*",".*OpenOffice.*",".*VCLSalFrame.*",".*Base.*","OpenOffice-Base"},
-  {".*office.*",".*OpenOffice.*",".*VCLSalFrame.*","^Database.*Wizard$","OpenOffice-Base"},      
+  {".*office.*",".*OpenOffice.*",".*VCLSalFrame.*","^Database.*Wizard$","OpenOffice-Base"},
   {NULL,"Amsn","amsn",".*aMSN.*","aMSN"},
   {NULL,"Chatwindow","container.*",".*Buddies.*Chat.*","aMSN"},
   {NULL,"Chatwindow","container.*",".*Untitled.*[wW]indow.*","aMSN"},
-  {NULL,"Chatwindow","container.*",".*Offline.*Messaging.*","aMSN"},  
+  {NULL,"Chatwindow","container.*",".*Offline.*Messaging.*","aMSN"},
   {NULL,"Chatwindow","container.*",NULL,"aMSN"},
   {NULL,"Toplevel","cfg",".*Preferences.*-.*Config.*","aMSN"},
   {NULL,"Toplevel","plugin_selector",".*Select.*Plugins.*","aMSN"},
@@ -162,7 +162,7 @@ static  WindowMatch window_regexes[] =
   {NULL,"Toplevel","eventlog_hist",".*History.*eventlog.*","aMSN"},
   {NULL,"Toplevel","alarm_cfg.*",".*Alarm.*settings.*contact.*","aMSN"},
   {NULL,"Toplevel","dpbrowser",".*Display.*Pictures.*Browser.*","aMSN"},
-  {NULL,"Toplevel","change_name",".*Change.*Nick.*aMSN.*","aMSN"},  
+  {NULL,"Toplevel","change_name",".*Change.*Nick.*aMSN.*","aMSN"},
   {NULL,"Toplevel","_listchoose","Send.*File","aMSN"},
   {NULL,"Toplevel","_listchoose","Send.*Message","aMSN"},
   {NULL,"Toplevel","_listchoose","Send.*to.*Mobile.*Device","aMSN"},
@@ -183,7 +183,7 @@ static  WindowMatch window_regexes[] =
 /*
  cmd, res name, class name, title, desktop
  */
-static  WindowToDesktopMatch window_to_desktop_regexes[] = 
+static  WindowToDesktopMatch window_to_desktop_regexes[] =
 {
   /*Do not bother trying to parse an open office command line for the type of window*/
   {".*prism.*google.*calendar.*","Prism","Navigator",".*[Cc]alendar.*","prism-google-calendar"},
@@ -202,22 +202,22 @@ static  WindowToDesktopMatch window_to_desktop_regexes[] =
   {".*office.*",".*OpenOffice.*",".*VCLSalFrame.*",".*Math.*","openoffice.org-math"},
   {".*office.*",".*OpenOffice.*",".*VCLSalFrame.*",".*Base.*","openoffice.org-base"},
   {".*office.*",".*OpenOffice.*",".*VCLSalFrame.*","^Database.*Wizard$","openoffice.org-base"},
-  
+
     /*Ubuntu*/
   {".*office.*",".*OpenOffice.*",".*VCLSalFrame.*",".*Writer.*","ooo-writer"},
   {".*office.*",".*OpenOffice.*",".*VCLSalFrame.*",".*Draw.*","ooo-draw"},
   {".*office.*",".*OpenOffice.*",".*VCLSalFrame.*",".*Impress.*","ooo-impress"},
   {".*office.*",".*OpenOffice.*",".*VCLSalFrame.*",".*Calc.*","ooo-calc"},
   {".*office.*",".*OpenOffice.*",".*VCLSalFrame.*",".*Math.*","ooo-math"},
-  {".*office.*",".*OpenOffice.*",".*VCLSalFrame.*",".*Base.*","ooo-base"},  
+  {".*office.*",".*OpenOffice.*",".*VCLSalFrame.*",".*Base.*","ooo-base"},
   {".*office.*",".*OpenOffice.*",".*VCLSalFrame.*","^Database.*Wizard$","ooo-base"},
-  
+
   {".*gimp.*",".*Gimp.*",".*gimp.*",".*GNU.*Image.*Manipulation.*Program.*","gimp"},
-  {".*system-config-printer.*applet.*py.*",".*Applet.*py.*",".*applet.*",".*Print.*Status.*","redhat-manage-print-jobs"},  
+  {".*system-config-printer.*applet.*py.*",".*Applet.*py.*",".*applet.*",".*Print.*Status.*","redhat-manage-print-jobs"},
   {".*amsn","Amsn","amsn",".*aMSN.*","amsn"},
   {NULL,"Chatwindow","container.*",".*Buddies.*Chat.*","amsn"},
-  {NULL,"Chatwindow","container.*",".*Untitled.*window.*","amsn"},  
-  {".*linuxdcpp","Linuxdcpp","linuxdcpp","LinuxDC\\+\\+","dc++"},    
+  {NULL,"Chatwindow","container.*",".*Untitled.*window.*","amsn"},
+  {".*linuxdcpp","Linuxdcpp","linuxdcpp","LinuxDC\\+\\+","dc++"},
   {NULL,"tvtime","TVWindow","^tvtime","net-tvtime"},
   {NULL,"VirtualBox",NULL,".*VirtualBox.*","virtualbox-ose"},
   {NULL,"VirtualBox",NULL,".*VirtualBox.*","virtualbox"},
@@ -227,7 +227,7 @@ static  WindowToDesktopMatch window_to_desktop_regexes[] =
   {NULL,NULL,NULL,NULL,NULL}
 };
 
-static  WindowWait windows_to_wait[] = 
+static  WindowWait windows_to_wait[] =
 {
   {".*OpenOffice.*",".*VCLSalFrame.*","^OpenOffice\\.org.*",1000},
   {NULL,NULL,NULL,0}
@@ -238,14 +238,14 @@ static  WindowWait windows_to_wait[] =
  Only set something to USE_NEVER if the app sets it to something truly, truly,
  ugly (There are multiple bug reports about just how ugly it is ), as this will
  override the display of the app window icon even when the user has configured
- taskman to always use them.  USE_ALWAYS is disregarded (for overlays) if the 
+ taskman to always use them.  USE_ALWAYS is disregarded (for overlays) if the
  icons are sufficiently similar.
  */
-static  IconUse icon_regexes[] = 
+static  IconUse icon_regexes[] =
 {
   {NULL,".*OpenOffice.*",".*VCLSalFrame.*",NULL/*,USE_NEVER*/},
   {NULL,"Pidgin","pidgin",NULL/*,USE_ALWAYS*/},
-  {".*gimp.*",".*Gimp.*",".*gimp.*",NULL/*,USE_ALWAYS*/},  
+  {".*gimp.*",".*Gimp.*",".*gimp.*",NULL/*,USE_ALWAYS*/},
   {NULL,NULL,NULL,NULL/*,USE_DEFAULT*/}
 };
 
@@ -261,21 +261,21 @@ generate_id_from_cmd(gchar *cmd,gchar *res_name,gchar *class_name, gchar*title)
 }
 
 /*
- Special Casing should NOT be used for anything but a last resort.  
+ Special Casing should NOT be used for anything but a last resort.
  Other matching algororithms are NOT used if something is special cased.
 */
 gchar *
 get_special_id_from_desktop (DesktopAgnosticFDODesktopEntry * entry)
 {
   /*
-   Exec,Name,filename, special_id.  If all in the first 3 match then the 
+   Exec,Name,filename, special_id.  If all in the first 3 match then the
    special_id is returned.
-   
+
    TODO  put data into a separate file
-   
+
    TODO  optimize the regex handling.
    */
-  
+
   DesktopMatch  *iter;
   for (iter = desktop_regexes; iter->id; iter++)
   {
@@ -291,7 +291,7 @@ get_special_id_from_desktop (DesktopAgnosticFDODesktopEntry * entry)
       {
         continue;
       }
-#ifdef DEBUG      
+#ifdef DEBUG
       g_debug ("%s: iter->exec = %s, exec = %s",__func__,iter->exec,exec);
 #endif
       match = g_regex_match_simple(iter->exec, exec,0,0);
@@ -311,9 +311,9 @@ get_special_id_from_desktop (DesktopAgnosticFDODesktopEntry * entry)
       {
         continue;
       }
-        
-#ifdef DEBUG      
-        g_debug ("%s: iter->name = %s, name = %s",__func__,iter->name,name);      
+
+#ifdef DEBUG
+        g_debug ("%s: iter->name = %s, name = %s",__func__,iter->name,name);
 #endif
       match = g_regex_match_simple(iter->name, name,0,0);
       g_free (name);
@@ -324,7 +324,7 @@ get_special_id_from_desktop (DesktopAgnosticFDODesktopEntry * entry)
     {
       DesktopAgnosticVFSFile *file = desktop_agnostic_fdo_desktop_entry_get_file (entry);
       gchar *filename = desktop_agnostic_vfs_file_get_path (file);
-#ifdef DEBUG      
+#ifdef DEBUG
       g_debug ("%s: iter->filename = %s, filename = %s",__func__,iter->filename,filename);
 #endif
       match = g_regex_match_simple(iter->filename, filename,0,0);
@@ -341,25 +341,25 @@ get_special_id_from_desktop (DesktopAgnosticFDODesktopEntry * entry)
 }
 
 /*
- Special Casing should NOT be used for anything but a last resort.  
+ Special Casing should NOT be used for anything but a last resort.
  Other matching algororithms are NOT used if something is special cased.
 */
 gchar *
 get_special_id_from_window_data (gchar * cmd, gchar *res_name, gchar * class_name,const gchar *title)
 {
   /*
-   Exec,Name,filename, special_id.  If all in the first 3 match then the 
+   Exec,Name,filename, special_id.  If all in the first 3 match then the
    special_id is returned.
 
    TODO  put data into a separate file
-   
+
    TODO  optimize the regex handling.
    */
   WindowMatch  *iter;
   for (iter = window_regexes; iter->id; iter++)
   {
     gboolean  match = TRUE;
-#ifdef DEBUG      
+#ifdef DEBUG
       g_debug ("%s: iter->cmd = %s, cmd = %s",__func__,iter->cmd,cmd);
 #endif
     if (iter->cmd)
@@ -368,16 +368,16 @@ get_special_id_from_window_data (gchar * cmd, gchar *res_name, gchar * class_nam
       if (!match)
         continue;
     }
-#ifdef DEBUG      
+#ifdef DEBUG
       g_debug ("%s: iter->res_name = %s, res_name = %s",__func__,iter->res_name,res_name);
-#endif    
+#endif
     if (iter->res_name)
     {
-      match = res_name && g_regex_match_simple(iter->res_name, res_name,0,0); 
+      match = res_name && g_regex_match_simple(iter->res_name, res_name,0,0);
       if (!match)
         continue;
     }
-#ifdef DEBUG      
+#ifdef DEBUG
       g_debug ("%s: iter->class_name = %s, class_name = %s",__func__,iter->class_name,class_name);
 #endif
     if (iter->class_name)
@@ -385,8 +385,8 @@ get_special_id_from_window_data (gchar * cmd, gchar *res_name, gchar * class_nam
       match = class_name && g_regex_match_simple(iter->class_name, class_name,0,0);
       if (!match)
         continue;
-    } 
-#ifdef DEBUG      
+    }
+#ifdef DEBUG
       g_debug ("%s: iter->title = %s, title = %s",__func__,iter->title,title);
 #endif
     if (iter->title)
@@ -394,8 +394,8 @@ get_special_id_from_window_data (gchar * cmd, gchar *res_name, gchar * class_nam
       match = title && g_regex_match_simple(iter->title, title,0,0);
       if (!match)
         continue;
-    } 
-#ifdef DEBUG    
+    }
+#ifdef DEBUG
     g_debug ("%s:  Special cased Window ID: '%s'",__func__,(gchar *)iter->id);
 #endif
     if ( iter->id && (iter->id != generate_id_from_cmd) )
@@ -408,7 +408,7 @@ get_special_id_from_window_data (gchar * cmd, gchar *res_name, gchar * class_nam
       /*conditional operator*/
       return fn(iter->cmd,iter->res_name,iter->class_name,iter->title);
     }
-    
+
   }
   return NULL;
 }
@@ -417,11 +417,11 @@ GSList *
 get_special_desktop_from_window_data (gchar * cmd, gchar *res_name, gchar * class_name,const gchar *title)
 {
   /*
-   Exec,Name,filename, special_id.  If all in the first 3 match then the 
+   Exec,Name,filename, special_id.  If all in the first 3 match then the
    special_id is returned.
 
    TODO  put data into a separate file
-   
+
    TODO  optimize the regex handling.
    */
   GSList * result=NULL;
@@ -432,7 +432,7 @@ get_special_desktop_from_window_data (gchar * cmd, gchar *res_name, gchar * clas
   for (iter = window_to_desktop_regexes; iter->desktop; iter++)
   {
     gboolean  match = TRUE;
-    
+
     if (iter->cmd)
     {
 #ifdef DEBUG
@@ -447,7 +447,7 @@ get_special_desktop_from_window_data (gchar * cmd, gchar *res_name, gchar * clas
 #ifdef DEBUG
       g_debug ("%s: iter->res_name = %s, res_name = %s",__func__,iter->res_name,res_name);
 #endif
-      match = res_name && g_regex_match_simple(iter->res_name, res_name,0,0); 
+      match = res_name && g_regex_match_simple(iter->res_name, res_name,0,0);
       if (!match)
         continue;
     }
@@ -460,7 +460,7 @@ get_special_desktop_from_window_data (gchar * cmd, gchar *res_name, gchar * clas
       if (!match)
         continue;
     }
-#ifdef DEBUG      
+#ifdef DEBUG
       g_debug ("%s: iter->title = %s, title = %s",__func__,iter->title,title);
 #endif
     if (iter->title)
@@ -469,7 +469,7 @@ get_special_desktop_from_window_data (gchar * cmd, gchar *res_name, gchar * clas
       if (!match)
         continue;
     }
-#ifdef DEBUG    
+#ifdef DEBUG
     g_debug ("%s:  Special cased desktop: '%s'",__func__,iter->desktop);
 #endif
     result = g_slist_append (result, (gchar*)iter->desktop);
@@ -481,27 +481,27 @@ gboolean
 get_special_wait_from_window_data (gchar *res_name, gchar * class_name,const gchar *title)
 {
   /*
-   Exec,Name,filename, special_id.  If all in the first 3 match then the 
+   Exec,Name,filename, special_id.  If all in the first 3 match then the
    special_id is returned.
 
    TODO  put data into a separate file
-   
+
    TODO  optimize the regex handling.
    */
   WindowWait  *iter;
   for (iter = windows_to_wait; iter->wait; iter++)
   {
     gboolean  match = TRUE;
-#ifdef DEBUG      
+#ifdef DEBUG
       g_debug ("%s: iter->res_name = %s, res_name = %s",__func__,iter->res_name,res_name);
-#endif    
+#endif
     if (iter->res_name)
     {
-      match = res_name && g_regex_match_simple(iter->res_name, res_name,0,0); 
+      match = res_name && g_regex_match_simple(iter->res_name, res_name,0,0);
       if (!match)
         continue;
     }
-#ifdef DEBUG      
+#ifdef DEBUG
       g_debug ("%s: iter->class_name = %s, class_name = %s",__func__,iter->class_name,class_name);
 #endif
     if (iter->class_name)
@@ -509,8 +509,8 @@ get_special_wait_from_window_data (gchar *res_name, gchar * class_name,const gch
       match = class_name && g_regex_match_simple(iter->class_name, class_name,0,0);
       if (!match)
         continue;
-    } 
-#ifdef DEBUG      
+    }
+#ifdef DEBUG
       g_debug ("%s: iter->title = %s, title = %s",__func__,iter->title,title);
 #endif
     if (iter->title)
@@ -518,8 +518,8 @@ get_special_wait_from_window_data (gchar *res_name, gchar * class_name,const gch
       match = title && g_regex_match_simple(iter->title, title,0,0);
       if (!match)
         continue;
-    } 
-#ifdef DEBUG    
+    }
+#ifdef DEBUG
     g_debug ("%s:  Special Wait Window ID:",__func__);
 #endif
     return TRUE;
@@ -534,7 +534,7 @@ get_win_icon_use (gchar * cmd,gchar *res_name, gchar * class_name,const gchar *t
   for (iter = icon_regexes; iter->use != USE_DEFAULT; iter++)
   {
     gboolean  match = TRUE;
-#ifdef DEBUG      
+#ifdef DEBUG
       g_debug ("%s: iter->cmd = %s, cmd = %s",__func__,iter->cmd,cmd);
 #endif
     if (iter->cmd)
@@ -543,16 +543,16 @@ get_win_icon_use (gchar * cmd,gchar *res_name, gchar * class_name,const gchar *t
       if (!match)
         continue;
     }
-#ifdef DEBUG      
+#ifdef DEBUG
       g_debug ("%s: iter->res_name = %s, res_name = %s",__func__,iter->res_name,res_name);
-#endif    
+#endif
     if (iter->res_name)
     {
-      match = res_name && g_regex_match_simple(iter->res_name, res_name,0,0); 
+      match = res_name && g_regex_match_simple(iter->res_name, res_name,0,0);
       if (!match)
         continue;
     }
-#ifdef DEBUG      
+#ifdef DEBUG
       g_debug ("%s: iter->class_name = %s, class_name = %s",__func__,iter->class_name,class_name);
 #endif
     if (iter->class_name)
@@ -560,7 +560,7 @@ get_win_icon_use (gchar * cmd,gchar *res_name, gchar * class_name,const gchar *t
       match = class_name && g_regex_match_simple(iter->class_name, class_name,0,0);
       if (!match)
         continue;
-    } 
+    }
 #ifdef DEBUG
       g_debug ("%s: iter->title = %s, title = %s",__func__,iter->title,title);
 #endif
@@ -578,14 +578,14 @@ get_win_icon_use (gchar * cmd,gchar *res_name, gchar * class_name,const gchar *t
   return USE_DEFAULT;
 }
 */
-gchar * 
+gchar *
 get_full_cmd_from_pid (gint pid)
 {
   gchar   * full_cmd = NULL;
   gchar   **cmd_argv;
   glibtop_proc_args buf;
   gchar * temp;
-  
+
   cmd_argv = glibtop_get_proc_argv (&buf,pid,1024);
   if (cmd_argv)
   {
@@ -597,11 +597,11 @@ get_full_cmd_from_pid (gint pid)
       g_free (temp);
     }
   }
-  g_strfreev (cmd_argv);   
+  g_strfreev (cmd_argv);
   return full_cmd;
 }
 
-gboolean 
+gboolean
 check_if_blacklisted (gchar * name)
 {
   const gchar ** iter;
@@ -720,7 +720,7 @@ usable_desktop_file_from_path ( const gchar * path)
   DesktopAgnosticVFSFile *file;
   GError *error = NULL;
   DesktopAgnosticFDODesktopEntry * entry;
-  
+
   file = desktop_agnostic_vfs_file_new_for_path (path, &error);
 
   if (error)
@@ -741,12 +741,12 @@ usable_desktop_file_from_path ( const gchar * path)
   }
 
   entry = desktop_agnostic_fdo_desktop_entry_new_for_file (file, &error);
-  
+
   if (error)
   {
     g_critical ("Error when trying to load the launcher: %s", error->message);
     g_error_free (error);
-    g_object_unref (file);    
+    g_object_unref (file);
     return FALSE;
   }
 

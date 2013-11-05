@@ -7,7 +7,7 @@ from gtk.glade import *
 from gtk import gdk
 from awn.extras import _
 from desktopagnostic.config import GROUP_DEFAULT
- 
+
 #from stacks_applet import StacksApplet
 from stacks_backend import *
 from stacks_glade import GladeWindow
@@ -147,16 +147,16 @@ class StacksConfig(GladeWindow):
             self.widgets['layout_combobox'].set_sensitive(False)
         else:
             self.widgets['layout_combobox'].set_active(config['gui_type']-1)
-            
+
         if config['gui_type'] == 2:
         	self.widgets['layout_settings_button'].set_sensitive(True)
         	self.widgets['dimension_label'].hide_all()
         	self.widgets['dimension_hbox'].hide_all()
         else:
-        	self.widgets['layout_settings_button'].set_sensitive(False)                        
+        	self.widgets['layout_settings_button'].set_sensitive(False)
         	self.widgets['dimension_label'].show_all()
         	self.widgets['dimension_hbox'].show_all()
-            
+
 
         if (preferences & PREF_DIMENSION) == 0:
             self.widgets['dimension_label'].set_sensitive(False)
@@ -190,7 +190,7 @@ class StacksConfig(GladeWindow):
             self.widgets['operations_label'].set_sensitive(False)
             self.widgets['operations_info_label'].set_sensitive(False)
             self.widgets['operations_hbox'].set_sensitive(False)
-            
+
         else:
             # get file oprations
             actions = config['fileops']
@@ -216,10 +216,10 @@ class StacksConfig(GladeWindow):
 
         # get sort methode
         self.widgets['sort_direction_combobox'].set_active(config['sort_direction']-1)
-        
+
         # get sort folders before files
         self.widgets['sort_folders_before_files'].set_active(config['sort_folders_before_files'])
-        
+
     def on_folder_backend_button_toggled(self, *args):
     	folder_backend_mode = self.widgets['folder_backend_button'].get_active()
     	self.widgets['location_label'].set_sensitive(folder_backend_mode)
@@ -285,15 +285,15 @@ class StacksConfig(GladeWindow):
         	gui_type = self.config['gui_type']
         	if gui_type < 1 or gui_type > 3:
         		gui_type = STACKS_GUI_DIALOG
-        	self.applet.set_gui(gui_type)   
+        	self.applet.set_gui(gui_type)
         	print "Reverted to previous gui settings" 	    	
         	
         self.destroy()
-        
+
     def on_layout_settings_button_clicked(self, *args):
 
         self.applet.emit("stacks-gui-config")
-        
+
     def on_layout_combobox_changed(self, *args):
         #the stack gui is changed, we must update it.
     	gui_type = self.widgets['layout_combobox'].get_active() +1
@@ -302,7 +302,7 @@ class StacksConfig(GladeWindow):
     		self.widgets['dimension_label'].hide_all()
         	self.widgets['dimension_hbox'].hide_all()
     	else:
-    		self.widgets['layout_settings_button'].set_sensitive(False)        
+    		self.widgets['layout_settings_button'].set_sensitive(False)
     		self.widgets['dimension_label'].show_all()
         	self.widgets['dimension_hbox'].show_all()
 
@@ -311,7 +311,7 @@ class StacksConfig(GladeWindow):
         	if gui_type < 1 or gui_type > 3:
 				gui_type = STACKS_GUI_DIALOG
 
-        	self.applet.set_gui(gui_type)   
+        	self.applet.set_gui(gui_type)
 
     def on_ok_button_clicked(self, *args):
         # set backend (and type)
@@ -393,12 +393,12 @@ class StacksConfig(GladeWindow):
         sort_direction = self.widgets['sort_direction_combobox'].get_active() + 1
         self.applet.client.set_int(GROUP_DEFAULT, "sort_direction",
                                    int(sort_direction))
-                    
+
         # get sort folders before files
         self.applet.client.set_bool(GROUP_DEFAULT, "sort_folders_before_files",
                 self.widgets['sort_folders_before_files'].get_active())
-        
-        
+
+
         # set file operations
         actions = 0
         if self.widgets['copy_check'].get_active():
@@ -410,7 +410,7 @@ class StacksConfig(GladeWindow):
         self.applet.client.set_int(GROUP_DEFAULT, "file_operations", actions)
         # destroy window
         self.window.destroy()
-        
+
         self.applet.backend_get_config()
 
     def set_current_page(self, page):
@@ -491,7 +491,7 @@ def get_config_dict(client, uid):
 
     config['sort_folders_before_files'] = \
         client.get_bool(GROUP_DEFAULT, "sort_folders_before_files")
-    
+
     config['sort_direction'] = client.get_int(GROUP_DEFAULT, "sort_direction")
-    
+
     return config

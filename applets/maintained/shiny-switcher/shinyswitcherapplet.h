@@ -124,7 +124,7 @@ typedef struct {
 
 GType awn_shiny_switcher_get_type (void);
 
-AwnShinySwitcher* awn_shiny_switcher_new (const gchar *name, const gchar *uid, 
+AwnShinySwitcher* awn_shiny_switcher_new (const gchar *name, const gchar *uid,
                                           gint panel_id);
 
 G_END_DECLS

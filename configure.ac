@@ -365,8 +365,6 @@ applets/maintained/sysmon/sysmon.desktop.in
 applets/maintained/thinkhdaps/Makefile
 applets/maintained/to-do/Makefile
 applets/maintained/tomboy-applet/Makefile
-applets/maintained/vala-test/Makefile
-applets/maintained/vala-test/vala-test.desktop.in
 applets/maintained/volume-control/Makefile
 applets/maintained/weather/Makefile
 applets/maintained/webapplet/Makefile

@@ -3,9 +3,6 @@ NULL =
 CONDITIONAL_APPLETS =
 
 if HAVE_VALA
-if MAINTAINER_MODE
-CONDITIONAL_APPLETS += maintained/vala-test
-endif
 if HAVE_LIBZG
 CONDITIONAL_APPLETS += \
 	maintained/related \

@@ -1,11 +1,11 @@
 [DEFAULT/rows]
 type = integer
-default = 2
+default = 1
 _description=The number of rows in the pager.
 
 [DEFAULT/columns]
 type = integer
-default = 3
+default = 4
 _description=The number of columns in the pager.
 
 [DEFAULT/background_alpha_active]
@@ -20,7 +20,7 @@ _description=Alpha value to apply to inactive workspace background.
 
 [DEFAULT/applet_scale]
 type = float
-default = 0.95
+default = 0.8
 _description=Scales the applet size relative to the maximum icon size
 
 [DEFAULT/show_icon_mode]

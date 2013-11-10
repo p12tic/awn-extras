@@ -184,7 +184,7 @@ public class GarbageApplet : AppletSimple
   {
     try
     {
-      string[] argv = new string[] { "xdg-open", "trash:" };
+      string[] argv = new string[] { "xdg-open", "trash:/" };
       spawn_on_screen (this.get_screen (),
                        null,
                        argv,

@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-X-AWN-AppletType=Python
-Name=Show Desktop
-Comment=Hide your windows and show your desktop
-Exec=showdesktop/showdesktop.py
-Icon=desktop
-X-AWN-AppletCategory=Utility

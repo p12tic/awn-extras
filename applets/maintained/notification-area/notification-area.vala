@@ -543,7 +543,7 @@ public class NotificationArea : GLib.Object
     // workaround for https://bugzilla.gnome.org/show_bug.cgi?id=604579
     if (!gpm_workaround_done && icon.get_title () == "gnome-power-manager")
     {
-      Timeout.add (2000, workaround_gpm_bug);
+      GLib.Timeout.add (2000, workaround_gpm_bug);
       gpm_workaround_done = true;
     }
 
@@ -588,7 +588,7 @@ public class NotificationArea : GLib.Object
     }
     if (this.redraw_timer != 0)
     {
-      Timeout.add (this.redraw_timer, this.redraw_scheduler);
+      GLib.Timeout.add (this.redraw_timer, this.redraw_scheduler);
     }
     return false;
   }
@@ -602,7 +602,7 @@ public class NotificationArea : GLib.Object
         // problem with redraw + fade-out auto-hide, composited windows really
         // don't like the hiding (same workaround is implemented in AwnPanel)
         this.redraw_timer = 50;
-        Timeout.add (this.redraw_timer, this.redraw_scheduler);
+        GLib.Timeout.add (this.redraw_timer, this.redraw_scheduler);
       }
     }
     return false;

@@ -10,7 +10,6 @@ APPLET_CFLAGS = \
 	$(NULL)
 
 VALA_FILES = \
-	related-applet.vala	\
 	$(NULL)
 
 AM_VALAFLAGS = \
@@ -28,7 +27,7 @@ APPLET_LIBS = \
 	$(ZEITGEIST_LIBS)	\
 	$(NULL)
 
-include $(top_srcdir)/Makefile.vala-applet
+include $(top_srcdir)/Makefile.c-applet
 #include $(top_srcdir)/Makefile.schemas
 
 applet_LTLIBRARIES = related.la
@@ -36,6 +35,7 @@ related_la_SOURCES = \
 	$(VALA_C_FILES) \
 	awn-desktop-lookup.c \
 	awn-desktop-lookup-cached.c \
+	related-applet.c \
 	xutils.c \
 	util.c \
 	$(NULL)

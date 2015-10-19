@@ -13,17 +13,14 @@ applets/maintained/bandwidth-monitor/interfaces_dialog.py
 [type: gettext/ini]applets/maintained/battery/awn-applet-battery.schema-ini.in
 applets/maintained/battery/battery.desktop.in
 applets/maintained/battery/battery.py
-[type: gettext/glade]applets/maintained/battery/battery-status.glade
 [type: gettext/glade]applets/maintained/battery/battery.ui
 applets/maintained/battery/messagehandler.py
 [type: gettext/ini]applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in
 applets/maintained/cairo-clock/cairo-clock.desktop.in
 applets/maintained/cairo-clock/cairo-clock.py
-[type: gettext/glade]applets/maintained/cairo-clock/cairo-clock.glade
 [type: gettext/glade]applets/maintained/cairo-clock/cairo-clock.ui
 applets/maintained/cairo-clock/locations.py
 [type: gettext/ini]applets/maintained/cairo-menu/awn-applet-cairo-menu.schema-ini.in
-applets/maintained/cairo-menu/backend-gnome.c
 applets/maintained/cairo-menu/cairo-aux-icon.c
 applets/maintained/cairo-menu/cairo-main-icon.c
 applets/maintained/cairo-menu/cairo-menu.desktop.in.in
@@ -50,7 +47,6 @@ applets/maintained/comics/feed/__init__.py
 applets/maintained/comics/main.py
 applets/maintained/common-folder/common-folder.desktop.in
 applets/maintained/common-folder/common-folder.py
-[type: gettext/glade]applets/maintained/cpufreq/cpufreq.glade
 [type: gettext/ini]applets/maintained/cpufreq/awn-applet-cpufreq.schema-ini.in
 applets/maintained/cpufreq/cpufreq.desktop.in
 applets/maintained/cpufreq/cpufreq.py
@@ -63,7 +59,6 @@ applets/maintained/dialect/dialect.py
 [type: gettext/glade]applets/maintained/digital-clock/dg-prefs.ui
 applets/maintained/digital-clock/digital-clock.desktop.in.in
 applets/maintained/digital-clock/digital-clock.vala
-[type: gettext/glade]applets/maintained/digital-clock/pref.glade
 [type: gettext/glade]applets/maintained/dialect/dialect.ui
 [type: gettext/ini]applets/maintained/feeds/awn-applet-feeds.schema-ini.in
 applets/maintained/feeds/classes.py
@@ -98,7 +93,6 @@ applets/maintained/media-icons/media-icon-next.desktop.in
 applets/maintained/media-icons/media-icon-previous.desktop.in
 applets/maintained/media-icons/media-icons.desktop.in
 applets/maintained/media-icons/media-icons.py
-[type: gettext/glade]applets/maintained/media-player/media-player-prefs.glade
 [type: gettext/ini]applets/maintained/media-player/awn-applet-media-player.schema-ini.in
 applets/maintained/media-player/media-player.desktop.in
 applets/maintained/media-player/media_player.py
@@ -106,7 +100,6 @@ applets/maintained/media-player/media_player.py
 [type: gettext/ini]applets/maintained/mount/awn-applet-mount.schema-ini.in
 applets/maintained/mount/mount.desktop.in
 applets/maintained/mount/mount.py
-[type: gettext/glade]applets/maintained/mount/mount-applet.glade
 [type: gettext/glade]applets/maintained/mount/mount.ui
 [type: gettext/ini]applets/maintained/notification-area/awn-applet-notification-area.schema-ini.in
 applets/maintained/notification-area/egg-tray-child.c
@@ -117,7 +110,6 @@ applets/maintained/notification-area/notification-area.vala
 [type: gettext/ini]applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in
 applets/maintained/notification-daemon/notification-daemon.desktop.in.in
 applets/maintained/notification-daemon/daemon.c
-applets/maintained/notification-daemon/data/awn-notification-daemon.schemas.in
 applets/maintained/places/applet.c
 [type: gettext/ini]applets/maintained/places/awn-applet-places.schema-ini.in
 applets/maintained/places/places.desktop.in.in
@@ -133,7 +125,6 @@ applets/maintained/related/related.desktop.in.in
 [type: gettext/glade]applets/maintained/shiny-switcher/shiny-prefs.ui
 applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in
 applets/maintained/shiny-switcher/shinyswitcherapplet.c
-[type: gettext/glade]applets/maintained/shiny-switcher/shiny-prefs.glade
 applets/maintained/showdesktop/applet.vala
 applets/maintained/showdesktop/showdesktop.desktop.in.in
 [type: gettext/ini]applets/maintained/slickswitcher/awn-applet-slickswitcher.schema-ini.in
@@ -155,7 +146,6 @@ applets/maintained/tomboy-applet/tomboy-applet.py
 [type: gettext/ini]applets/maintained/volume-control/awn-applet-volume-control.schema-ini.in
 applets/maintained/volume-control/volume-control.desktop.in
 applets/maintained/volume-control/volume-control.py
-[type: gettext/glade]applets/maintained/volume-control/volume-control.glade
 [type: gettext/glade]applets/maintained/volume-control/volume-control.ui
 [type: gettext/ini]applets/maintained/weather/awn-applet-weather.schema-ini.in
 applets/maintained/weather/forecast.py
@@ -163,9 +153,6 @@ applets/maintained/weather/weathertext.py
 applets/maintained/weather/weather.desktop.in
 applets/maintained/weather/weather.py
 [type: gettext/glade]applets/maintained/weather/weather.ui
-[type: gettext/glade]applets/maintained/weather/weather-prefs.glade
-applets/maintained/weather/weatherprefs.py
-applets/maintained/weather/forecastdialogs.py
 applets/maintained/webapplet/applet.c
 [type: gettext/ini]applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in
 applets/maintained/webapplet/webapplet.desktop.in.in
@@ -179,7 +166,3 @@ applets/unmaintained/main-menu/main-menu.desktop.in.in
 [type: gettext/ini]applets/unmaintained/pandora/awn-applet-pandora.schema-ini.in
 applets/unmaintained/pandora/pandora.desktop.in
 shared/python/awnlib.py
-src/digg/awn-digg.desktop.in.in
-src/filebrowser/filebrowser.schemas.in
-src/switcher/switcher.schemas.in
-src/trash/trash.schemas.in

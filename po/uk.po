@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: awn-extras\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-27 20:54+0100\n"
+"POT-Creation-Date: 2011-06-09 20:47+0200\n"
 "PO-Revision-Date: 2011-01-03 14:31+0000\n"
 "Last-Translator: Fedik <Unknown>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Launchpad-Export-Date: 2011-01-04 13:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
@@ -62,7 +63,7 @@ msgid "Preferences"
 msgstr "Налаштування"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:427
-#: ../applets/maintained/file-browser-launcher/prefs.py:162
+#: ../applets/maintained/file-browser-launcher/prefs.py:165
 #: ../applets/maintained/shiny-switcher/shiny-prefs.ui.h:16
 #, c-format
 msgid "Behavior"
@@ -74,8 +75,8 @@ msgid "Hide when focus is lost"
 msgstr "Приховати при втраті фокусу"
 
 #: ../applets/maintained/awnterm/awn-terminal.vala:458
-#: ../applets/maintained/file-browser-launcher/prefs.py:259
-#: ../applets/maintained/file-browser-launcher/prefs.py:334
+#: ../applets/maintained/file-browser-launcher/prefs.py:262
+#: ../applets/maintained/file-browser-launcher/prefs.py:337
 msgid "Action"
 msgstr "Дія"
 
@@ -236,7 +237,7 @@ msgid ""
 msgstr ""
 
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:40
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:261
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:260
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.desktop.in.h:2
 msgid "Bandwidth Monitor"
 msgstr "Монітор мережі"
@@ -247,21 +248,21 @@ msgstr "Монітор пропускної здатності мережі"
 
 #. Reset the Sum Interface records to zero
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:56
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:125
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:126
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:127
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:128
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:129
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:194
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:195
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:196
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:197
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:198
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:239
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:240
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:241
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:242
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:243
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:244
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:245
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:247
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:246
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:51
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:251
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:390
@@ -278,52 +279,52 @@ msgstr "н/д"
 
 #. Reset the Multi Interface records to zero
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:76
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:132
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:133
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:134
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:135
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:136
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:201
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:202
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:203
 #: ../applets/maintained/bandwidth-monitor/awn-bwm.py:204
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:205
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:248
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:783
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:247
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:777
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:50
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:248
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:393
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:411
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:412
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:708
 msgid "Multi Interface"
 msgstr "Декілька інтерфейсів"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:329
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:328
 msgid "Scanning"
 msgstr "Сканування"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:330
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:329
 msgid "Devices"
 msgstr "Пристрої"
 
 #. kilobytes per second
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:356
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:355
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:875
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:21
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:81
 msgid "KBps"
 msgstr "КБ/с"
 
 #. kilobits per second
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:360
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:359
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:876
 #: ../applets/maintained/bandwidth-monitor/bwmprefs.py:84
 msgid "Kbps"
 msgstr "Кбіт/с"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:394
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:393
 msgid "Use KBps instead of Kbps"
 msgstr "Використовувати КБ/с замість Кб/с"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:408
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:407
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:20
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:597
 #: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:600
@@ -331,54 +332,54 @@ msgstr "Використовувати КБ/с замість Кб/с"
 msgid "Interfaces"
 msgstr "Інтерфейси"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:421
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:420
 msgid "Please select a valid Network Device"
 msgstr "Оберіть діючий мережевий пристрій"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:423
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:422
 #, python-format
 msgid "Total Sent: %s - Total Received: %s (All Interfaces)"
 msgstr "Загалом відправлено: %s - Загалом отримано: %s (Всі інтерфейси)"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:838
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:469
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:832
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:470
 msgid "No Device"
 msgstr "Нема пристрою"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:839
-#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:470
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:833
+#: ../applets/maintained/bandwidth-monitor/interfaces_dialog.py:471
 msgid "Please select a valid device"
 msgstr "Оберіть діючий пристрій"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:875
 msgid "Bps"
 msgstr "Б/с"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:875
 msgid "MBps"
 msgstr "МБ/с"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:875
 msgid "GBps"
 msgstr "ГБ/с"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:880
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:875
 msgid "TBps"
 msgstr "ТБ/с"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:876
 msgid "bps"
 msgstr "біт/с"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:876
 msgid "Mbps"
 msgstr "Мбіт/с"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:876
 msgid "Gbps"
 msgstr "Гбіт/с"
 
-#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:881
+#: ../applets/maintained/bandwidth-monitor/awn-bwm.py:876
 msgid "Tbps"
 msgstr "Тбіт/с"
 
@@ -456,7 +457,7 @@ msgstr "Малювати рамку"
 #. Put the general tab together
 #: ../applets/maintained/bandwidth-monitor/bandwidth-monitor.ui.h:16
 #: ../applets/maintained/cairo-clock/cairo-clock.py:166
-#: ../applets/maintained/file-browser-launcher/prefs.py:212
+#: ../applets/maintained/file-browser-launcher/prefs.py:215
 #: ../applets/maintained/hardware-sensors/hardware-sensors.ui.h:9
 #: ../applets/maintained/to-do/prefs.py:60
 msgid "General"
@@ -605,8 +606,7 @@ msgstr "Унікальний ідентифікатор батареї."
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:2
 msgid ""
 "If charge level drops below this threadhold, a warning will be displayed."
-msgstr ""
-"При падінні заряду, нижче вказаної мережу, буде показано попередження."
+msgstr "При падінні заряду, нижче вказаної мережу, буде показано попередження."
 
 #: ../applets/maintained/battery/awn-applet-battery.schema-ini.in.h:3
 msgid "If charge level reaches this threshold, a notification will be sent."
@@ -743,7 +743,7 @@ msgstr "_Повідомляти при досягнені рівня заряд�
 
 #: ../applets/maintained/battery/battery.ui.h:10
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:23
-#: ../applets/maintained/mail/mail.ui.h:8
+#: ../applets/maintained/mail/mail.ui.h:7
 #: ../applets/maintained/volume-control/volume-control.ui.h:8
 #: ../applets/maintained/weather/weather.ui.h:18
 msgid "_Theme:"
@@ -786,8 +786,7 @@ msgstr ""
 "заповнено."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:2
-msgid ""
-"If enabled, besides hours and minutes, the seconds will be visible too."
+msgid "If enabled, besides hours and minutes, the seconds will be visible too."
 msgstr "Якщо увімкнено, то крім годин та хвилин, буде показано секунди."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:3
@@ -816,8 +815,7 @@ msgstr ""
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:8
 #: ../applets/maintained/hardware-sensors/awn-applet-hardware-sensors.schema-ini.in.h:10
 msgid "Temperature unit (0: Celsius, 1: Fahrenheit, 2: Kelvin)."
-msgstr ""
-"одиниця вимірювання температури (0: Цельсій, 1: Фаренгейт, 2: Келвін)."
+msgstr "одиниця вимірювання температури (0: Цельсій, 1: Фаренгейт, 2: Келвін)."
 
 #: ../applets/maintained/cairo-clock/awn-applet-cairo-clock.schema-ini.in.h:9
 msgid "The name of the theme of the analog clock."
@@ -879,15 +877,15 @@ msgstr "Бофорти"
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:8
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
 #: ../applets/maintained/weather/weather.py:59
-#: ../applets/maintained/weather/weather.py:562
-#: ../applets/maintained/weather/weather.py:567
+#: ../applets/maintained/weather/weather.py:572
+#: ../applets/maintained/weather/weather.py:577
 msgid "Celsius"
 msgstr "Градуси Цельсія"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:9
 #: ../applets/maintained/hardware-sensors/sensorvalues/units.py:34
 #: ../applets/maintained/weather/weather.py:59
-#: ../applets/maintained/weather/weather.py:560
+#: ../applets/maintained/weather/weather.py:570
 msgid "Fahrenheit"
 msgstr "Градуси Фаренгейта"
 
@@ -896,8 +894,7 @@ msgid "Find _Next"
 msgstr "Знайти _наступне"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:11
-msgid ""
-"If enabled, besides hours and minutes, the seconds will be visible too"
+msgid "If enabled, besides hours and minutes, the seconds will be visible too"
 msgstr "Якщо увімкнено, то крім годин та хвилин, буде показано секунди"
 
 #: ../applets/maintained/cairo-clock/cairo-clock.ui.h:12
@@ -974,24 +971,24 @@ msgid "Edit"
 msgstr "Редагувати"
 
 #: ../applets/maintained/cairo-menu/cairo-aux-icon.c:198
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1037
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1051
-#: ../applets/maintained/file-browser-launcher/prefs.py:249
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1042
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1056
+#: ../applets/maintained/file-browser-launcher/prefs.py:252
 #: ../applets/maintained/places/places.desktop.in.in.h:2
-#: ../applets/maintained/yama/yama.py:255
+#: ../applets/maintained/yama/yama.py:268
 msgid "Places"
 msgstr "Місця"
 
 #: ../applets/maintained/cairo-menu/cairo-aux-icon.c:202
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1074
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1089
-#: ../applets/maintained/yama/yama.py:331
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1079
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1094
+#: ../applets/maintained/yama/yama.py:349
 msgid "Recent Documents"
 msgstr "Недавні документи"
 
 #: ../applets/maintained/cairo-menu/cairo-aux-icon.c:206
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1120
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1131
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1125
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1136
 msgid "Session"
 msgstr "Сеанс"
 
@@ -1024,9 +1021,8 @@ msgstr "Вихід"
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:146
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:1
 #: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:46
-#: ../applets/maintained/quit/quit.py:57
-#: ../applets/maintained/quit/quit.py:265
-#: ../applets/maintained/yama/yama.py:154
+#: ../applets/maintained/quit/quit.py:57 ../applets/maintained/quit/quit.py:265
+#: ../applets/maintained/yama/yama.py:168
 msgid "Lock Screen"
 msgstr "Блокувати екран"
 
@@ -1047,64 +1043,63 @@ msgid "Shutdown"
 msgstr "Вимкнути"
 
 #: ../applets/maintained/cairo-menu/gnome-menu-builder.c:213
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:381
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:584
-#: ../applets/maintained/file-browser-launcher/prefs.py:234
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:384
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:587
+#: ../applets/maintained/file-browser-launcher/prefs.py:237
 msgid "Computer"
 msgstr "Комп'ютер"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:214
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:217
 msgid "Home"
 msgstr "Домівка"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:215
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:218
 #: ../applets/maintained/places/applet.c:344
-#: ../applets/maintained/yama/yama.py:264
 msgid "Desktop"
 msgstr "Стільниця"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:221
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:223
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:609
-#: ../applets/maintained/file-browser-launcher/prefs.py:236
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:226
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:228
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:612
+#: ../applets/maintained/file-browser-launcher/prefs.py:239
 msgid "Trash"
 msgstr "Смітник"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:225
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:230
 msgid "File System"
 msgstr "Файлова система"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:356
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:361
 msgid "Removable Media"
 msgstr "Від'єднувані носії"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:367
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:587
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:372
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:590
 msgid "Network"
 msgstr "Мережа"
 
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:368
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:373
 msgid "Connect to Server"
 msgstr "З'єднатися з сервером"
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1147
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1152
 msgid "Search…"
 msgstr "Пошук..."
 
 #. generates a compiler warning due to the ellipse
-#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1164
+#: ../applets/maintained/cairo-menu/gnome-menu-builder.c:1169
 msgid "Launch…"
 msgstr "Запуск..."
 
 #: ../applets/maintained/cairo-menu/misc.c:161
-#: ../applets/maintained/yama/yama.py:606
+#: ../applets/maintained/yama/yama.py:634
 #, c-format, python-format
 msgid "Unable to mount %s"
 msgstr "Не вдається приєднати %s"
 
 #: ../applets/maintained/cairo-menu/misc.c:407
-#: ../applets/maintained/yama/yama.py:585
+#: ../applets/maintained/yama/yama.py:613
 msgid "Clear the Recent Documents list?"
 msgstr "Очистити список недавно використаних документів?"
 
@@ -1121,9 +1116,9 @@ msgstr ""
 "• Усі елементи зі списку недавно використаних документів усіх програм."
 
 #: ../applets/maintained/cairo-menu/misc.c:423
-#: ../applets/maintained/cairo-menu/misc.c:532
-#: ../applets/maintained/yama/yama.py:345
-#: ../applets/maintained/yama/yama.py:590
+#: ../applets/maintained/cairo-menu/misc.c:531
+#: ../applets/maintained/yama/yama.py:363
+#: ../applets/maintained/yama/yama.py:618
 msgid "Clear Recent Documents"
 msgstr "Очистити недавні документи"
 
@@ -1323,33 +1318,51 @@ msgstr "Нема запланованих подій"
 msgid "The user agent to send when retrieving comics."
 msgstr "Поле \"UserAgent\" при отримання коміксів"
 
-#: ../applets/maintained/comics/comics_add.py:57
+#: ../applets/maintained/comics/comics_add.py:59
 #, python-format
 msgid "Failed to download %s. Press \"next\" to try again."
 msgstr "Не вдалося завантажити %s. Натисніть \"далі\", щоб спробувати знову."
 
-#: ../applets/maintained/comics/comics_add.py:63
+#: ../applets/maintained/comics/comics_add.py:65
 msgid "The URL is not a valid comic feed. Press \"next\" to try again"
 msgstr ""
 "Вказана адреса не є лентою коміксів. Можете спробувати ще натиснувши \"далі\""
 
-#: ../applets/maintained/comics/comics_add.py:140
+#: ../applets/maintained/comics/comics_add.py:169
 #, python-format
-msgid "Connecting to <i>%s</i>..."
-msgstr "Під'єднуюсь до <i>%s</i>..."
+msgid "Overwrite comic \"%s\"?"
+msgstr ""
 
-#: ../applets/maintained/comics/comics_add.py:174
-#, python-format
+#: ../applets/maintained/comics/comics_add.py:171
+msgid "This comic is already installed with different settings."
+msgstr ""
+
+#: ../applets/maintained/comics/comics_add.py:224
+#, fuzzy
 msgid ""
 "This guide has finished.\n"
-"\n"
-"Press \"apply\" to add <i>%s</i>."
+"Press \"apply\" to add the comic."
 msgstr ""
 "Це керівництво закінчилось.\n"
 "\n"
 "Натисніть \"застосувати\" щоб додати <i>%s</i>."
 
-#: ../applets/maintained/comics/comics_add.py:198
+#: ../applets/maintained/comics/comics_add.py:233
+#, python-format
+msgid "Connecting to <i>%s</i>..."
+msgstr "Під'єднуюсь до <i>%s</i>..."
+
+#: ../applets/maintained/comics/comics_add.py:282
+#, fuzzy
+msgid ""
+"This guide has finished.\n"
+"You can change the name of this comic. Press \"apply\" to add it."
+msgstr ""
+"Це керівництво закінчилось.\n"
+"\n"
+"Натисніть \"застосувати\" щоб додати <i>%s</i>."
+
+#: ../applets/maintained/comics/comics_add.py:312
 #, python-format
 msgid ""
 "Found <b>%(name)s</b>!\n"
@@ -1362,53 +1375,90 @@ msgstr ""
 
 #. Initialise notifications
 #: ../applets/maintained/comics/comics.desktop.in.h:1
-#: ../applets/maintained/comics/comics.py:179
+#: ../applets/maintained/comics/comics.py:46
 #: ../applets/maintained/comics/main.py:294
 #: ../applets/maintained/comics/main.py:300
 msgid "Comics!"
 msgstr "Комікси!"
 
 #: ../applets/maintained/comics/comics.desktop.in.h:2
+#: ../applets/maintained/comics/comics.py:97
 msgid "View your favourite comics on your desktop"
 msgstr "Переглядайте улюблені комікси прямо на робочому столі"
 
-#: ../applets/maintained/comics/comics_manage.py:51
-msgid "Shared comics"
-msgstr "Спільні комікси"
+#. Translators: checkbox to show comic
+#: ../applets/maintained/comics/comics_manage.py:93
+#, fuzzy
+msgid "Show"
+msgstr "Дощі"
 
-#: ../applets/maintained/comics/comics_manage.py:52
-msgid "Your comics"
-msgstr "Ваші комікси"
+#: ../applets/maintained/comics/comics_manage.py:94
+#, fuzzy
+msgid "Comic"
+msgstr "Комікси"
 
-#: ../applets/maintained/comics/comics_manage.py:119
-#, python-format
-msgid "Failed to remove <i>%s</i>."
+#: ../applets/maintained/comics/comics_manage.py:124
+#, fuzzy, python-format
+msgid "Are you sure you want to remove the comic \"%(name)s\"?"
+msgid_plural "Are you sure you want to remove the %(number)d selected comics?"
+msgstr[0] "Ви впевнені, що бажаєте вилучити цей елемент?"
+msgstr[1] "Ви впевнені, що бажаєте вилучити цей елемент?"
+msgstr[2] "Ви впевнені, що бажаєте вилучити цей елемент?"
+
+#: ../applets/maintained/comics/comics_manage.py:129
+msgid "This will remove the comic from your personal comics list."
+msgid_plural "This will remove these comics from your personal comics list."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: ../applets/maintained/comics/comics_manage.py:156
+#, fuzzy, python-format
+msgid "Failed to remove '%s'."
 msgstr "Невдалось видалити <i>%s</i>."
 
-#: ../applets/maintained/comics/comics_manage.py:125
+#: ../applets/maintained/comics/comics_manage.py:162
 #: ../applets/maintained/feeds/feeds.py:391
 msgid "Error"
 msgstr "Помилка"
 
-#: ../applets/maintained/comics/comics.py:155
-msgid "Comics"
+#: ../applets/maintained/comics/comics.py:176
+#, fuzzy
+msgid "My Comics"
 msgstr "Комікси"
 
-#: ../applets/maintained/comics/comics.py:159
-msgid "Manage Comics"
-msgstr "Керуваннями коміксами"
+#: ../applets/maintained/comics/comics.py:179
+#: ../applets/maintained/feeds/feeds.py:1041 ../shared/python/awnlib.py:130
+#, python-format
+msgid "_About %s"
+msgstr "_Про %s"
 
-#: ../applets/maintained/comics/comics.py:211
+#: ../applets/maintained/comics/comics.py:237
 #: ../applets/maintained/comics/main.py:192
 #, python-format
 msgid "There is a new strip of %s!"
 msgstr "Новий комікс %s!"
 
-#: ../applets/maintained/comics/comics_view.py:164
+#. Translators: This is a date/time format string. You can check the
+#. output in terminal with 'date +"%%A %d %B"'.
+#: ../applets/maintained/comics/comics_view.py:167
 msgid "%A %d %B"
 msgstr "%A %d %B"
 
+#: ../applets/maintained/comics/comics_view.py:369
+msgid "Size"
+msgstr "Розмір"
+
+#: ../applets/maintained/comics/comics_view.py:383
+msgid "Show link"
+msgstr "Показати посилання"
+
 #: ../applets/maintained/comics/comics_view.py:532
+#, fuzzy
+msgid "Save comic as…"
+msgstr "Спільні комікси"
+
+#: ../applets/maintained/comics/comics_view.py:563
 #, python-format
 msgid "Failed to save <i>%s</i>."
 msgstr "Невдалося зберегти <i>%s</i>."
@@ -1418,60 +1468,67 @@ msgid "Add Comic"
 msgstr "Додати комікс"
 
 #: ../applets/maintained/comics/ui/add.ui.h:2
+msgid "Add a comic by URL"
+msgstr ""
+
+#: ../applets/maintained/comics/ui/add.ui.h:3
+msgid ""
+"Comics! needs either an RSS feed or a web page with a comic.\n"
+"\n"
+"Comics from feeds contain several strips. You may find suitable feeds on "
+"dedicated comics websites like <a href=\"http://www.gocomics.com/features/"
+"rsspage\">gocomics.com</a>.\n"
+"\n"
+"Using a web page only the current comic is shown. You may find web pages "
+"searching the web for \"comics\" or \"webcomics\"."
+msgstr ""
+
+#: ../applets/maintained/comics/ui/add.ui.h:8
 msgid "Downloading Comic"
 msgstr "Завантаження коміксу"
 
-#: ../applets/maintained/comics/ui/add.ui.h:3
-msgid "Enter the URL of the RSS feed:"
-msgstr "Введіть URL або RSS адресу стрічки:"
+#: ../applets/maintained/comics/ui/add.ui.h:9
+#, fuzzy
+msgid "Name of the comic:"
+msgstr "Назва пристрою"
 
-#: ../applets/maintained/comics/ui/add.ui.h:4
+#: ../applets/maintained/comics/ui/add.ui.h:10
+#, fuzzy
+msgid "Please select how you want to add a comic:"
+msgstr "Оберіть діючий пристрій"
+
+#: ../applets/maintained/comics/ui/add.ui.h:11
 msgid "Ready to add comic!"
 msgstr "Все готово для додавання коміксу!"
 
-#: ../applets/maintained/comics/ui/add.ui.h:5
+#: ../applets/maintained/comics/ui/add.ui.h:12
 msgid "Select Comic"
 msgstr "Виберіть комікс"
 
-#: ../applets/maintained/comics/ui/add.ui.h:6
+#: ../applets/maintained/comics/ui/add.ui.h:13
 msgid "Select Image"
 msgstr "Виберіть зображення"
 
-#: ../applets/maintained/comics/ui/add.ui.h:7
+#: ../applets/maintained/comics/ui/add.ui.h:14
+msgid "Select a comic from a list"
+msgstr ""
+
+#: ../applets/maintained/comics/ui/add.ui.h:15
 msgid "The guide found more than one image. Please select which one to use."
 msgstr "Знайдено більше одного зображення. Оберіть потрібне."
 
-#: ../applets/maintained/comics/ui/add.ui.h:8
-msgid ""
-"This guide will help you to add a new comic.\n"
-"\n"
-"To find comics suitable for adding, you may search the Internet for \"comics "
-"rss\".\n"
-"\n"
-"Press \"next\" to proceed."
+#: ../applets/maintained/comics/ui/add.ui.h:16
+msgid "This guide will help you to add a new comic."
 msgstr ""
-"Це керівництво допоможе Вам додати новий комікс.\n"
-"\n"
-"Для того щоб знайти підходящий комікс, ви можете пошукати щось на зразок "
-"\"комікси rss\".\n"
-"\n"
-"Натисніть \"далі\" щоб продовжити."
+
+#: ../applets/maintained/comics/ui/add.ui.h:17
+#, fuzzy
+msgid "URL of the RSS feed or web page:"
+msgstr "Введіть URL або RSS адресу стрічки:"
 
 #: ../applets/maintained/comics/ui/manage.ui.h:1
 msgid "Manage comics"
 msgstr "Керування коміксами"
-
-#: ../applets/maintained/comics/ui/manage.ui.h:2
-msgid "The following comics are installed:"
-msgstr "Встановлено наступні комікси:"
-
-#: ../applets/maintained/comics/ui/view.ui.h:1
-msgid "Show link"
-msgstr "Показати посилання"
-
-#: ../applets/maintained/comics/ui/view.ui.h:2
-msgid "Size"
-msgstr "Розмір"
 
 #: ../applets/maintained/comics/main.py:152
 #, python-format
@@ -1491,9 +1548,9 @@ msgstr "Відображає ярлики основних папок та за�
 msgid "Applet to launch common folders and bookmarks"
 msgstr "Аплет для швидкого відкриття основних папок та закладок"
 
-#: ../applets/maintained/common-folder/common-folder.py:93
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:385
-#: ../applets/maintained/yama/yama.py:262
+#: ../applets/maintained/common-folder/common-folder.py:88
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:388
+#: ../applets/maintained/yama/yama.py:275
 msgid "Home Folder"
 msgstr "Домашня тека"
 
@@ -1511,7 +1568,7 @@ msgstr "Аплет для стеження за частотою процесо�
 msgid "CPU Frequency Monitor"
 msgstr "Індикатор частоти процесора"
 
-#: ../applets/maintained/cpufreq/cpufreq.py:234
+#: ../applets/maintained/cpufreq/cpufreq.py:235
 msgid ""
 "<span size=\"large\"><b>Scaling unavailable</b></span>\n"
 "\n"
@@ -1523,11 +1580,11 @@ msgstr ""
 "Вибраним процесором, зміна\n"
 "частоти не підтримується ."
 
-#: ../applets/maintained/cpufreq/cpufreq.py:262
+#: ../applets/maintained/cpufreq/cpufreq.py:263
 msgid "GHz"
 msgstr "ГГц"
 
-#: ../applets/maintained/cpufreq/cpufreq.py:265
+#: ../applets/maintained/cpufreq/cpufreq.py:266
 msgid "MHz"
 msgstr "МГц"
 
@@ -1563,8 +1620,7 @@ msgstr "Дія для лівої кнопки миші (0: назад, 1: мен
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:6
 msgid "Middle click action (0: previous, 1: menu, 2: next, 3: none)."
-msgstr ""
-"Дія для середньої кнопки миші (0: назад, 1: меню, 2: далі, 3: немає)."
+msgstr "Дія для середньої кнопки миші (0: назад, 1: меню, 2: далі, 3: немає)."
 
 #: ../applets/maintained/dialect/awn-applet-dialect.schema-ini.in.h:7
 msgid "Overlay selected layout flag on icon."
@@ -1670,8 +1726,7 @@ msgstr "_Розмір прапорця:"
 msgid ""
 "If selected, scrolling up or down with your mouse wheel will select the next "
 "or previous layout in your user list"
-msgstr ""
-"Якщо обрано, то розкладку можна перемикати прокручуванням колеса мишки"
+msgstr "Якщо обрано, то розкладку можна перемикати прокручуванням колеса мишки"
 
 #. Keyboard layouts
 #: ../applets/maintained/dialect/dialect.ui.h:14
@@ -1892,8 +1947,8 @@ msgstr "Без назви"
 #: ../applets/maintained/feeds/feeds.py:243
 #: ../applets/maintained/feeds/feeds.py:409
 #: ../applets/maintained/feeds/feeds.py:493
-#: ../applets/maintained/feeds/feeds.py:1038
-#: ../applets/maintained/feeds/feeds.py:1112
+#: ../applets/maintained/feeds/feeds.py:1041
+#: ../applets/maintained/feeds/feeds.py:1114
 msgid "Feeds Applet"
 msgstr "Аплет стрічки новин"
 
@@ -1935,52 +1990,47 @@ msgstr[1] "%s Нових повідомленнь - Стрічка новин"
 msgstr[2] "%s Нових повідомленнь - Стрічка новин"
 
 #. +Add Feed button
-#: ../applets/maintained/feeds/feeds.py:532
+#: ../applets/maintained/feeds/feeds.py:535
 msgid "_Add Feed"
 msgstr "_Додати стрічку новин"
 
-#: ../applets/maintained/feeds/feeds.py:581
+#: ../applets/maintained/feeds/feeds.py:584
 msgid "Open this feed's website"
 msgstr "Відкрити сайт цієї стрічки"
 
-#: ../applets/maintained/feeds/feeds.py:590
+#: ../applets/maintained/feeds/feeds.py:593
 #: ../applets/maintained/feeds/prefs.py:270
 msgid "Loading..."
 msgstr "Завантаження..."
 
-#: ../applets/maintained/feeds/feeds.py:628
-#: ../applets/maintained/feeds/feeds.py:787
+#: ../applets/maintained/feeds/feeds.py:631
+#: ../applets/maintained/feeds/feeds.py:790
 msgid "Show this feed's items"
 msgstr "Показати повідомлення цієї стрічки"
 
-#: ../applets/maintained/feeds/feeds.py:777
+#: ../applets/maintained/feeds/feeds.py:780
 msgid "Hide this feed's items"
 msgstr "Приховати повідомлення цієї стрічки"
 
 #. Create the items
-#: ../applets/maintained/feeds/feeds.py:1033
+#: ../applets/maintained/feeds/feeds.py:1036
 #: ../applets/maintained/feeds/prefs.py:359
 msgid "Add Feed"
 msgstr "Додати стрічку"
 
-#: ../applets/maintained/feeds/feeds.py:1035
+#: ../applets/maintained/feeds/feeds.py:1038
 msgid "Show Only _New Feeds"
 msgstr "Показати лише _Нові стрічки"
 
-#: ../applets/maintained/feeds/feeds.py:1038 ../shared/python/awnlib.py:125
-#, python-format
-msgid "_About %s"
-msgstr "_Про %s"
-
-#: ../applets/maintained/feeds/feeds.py:1117
+#: ../applets/maintained/feeds/feeds.py:1119
 msgid "Applet to monitor web feeds"
 msgstr "Аплет перегляду веб стрічок"
 
-#: ../applets/maintained/feeds/feeds.py:1160
+#: ../applets/maintained/feeds/feeds.py:1162
 msgid "OPML Import"
 msgstr "Імпорт OPML"
 
-#: ../applets/maintained/feeds/feeds.py:1163
+#: ../applets/maintained/feeds/feeds.py:1165
 #, python-format
 msgid "Do you want to add %d feed?"
 msgid_plural "Do you want to add %d feeds?"
@@ -1988,13 +2038,13 @@ msgstr[0] "Бажаєте додати стрічку %d ?"
 msgstr[1] "Бажаєте додати стрічки %d ?"
 msgstr[2] "Бажаєте додати  %d  стрічки?"
 
-#: ../applets/maintained/feeds/feeds.py:1191
-#: ../applets/maintained/feeds/feeds.py:1219
+#: ../applets/maintained/feeds/feeds.py:1193
+#: ../applets/maintained/feeds/feeds.py:1221
 #, python-format
 msgid "Could not open '%s'"
 msgstr "Не вдається відкрити '%s'"
 
-#: ../applets/maintained/feeds/feeds.py:1204
+#: ../applets/maintained/feeds/feeds.py:1206
 #: ../applets/maintained/feeds/prefs.py:328
 #, python-format
 msgid "Could not save '%s'"
@@ -2077,7 +2127,7 @@ msgid "Source:"
 msgstr "Джерело:"
 
 #: ../applets/maintained/feeds/prefs.py:373
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:590
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:593
 #: ../applets/maintained/tomboy-applet/tomboy-applet.py:151
 msgid "Search"
 msgstr "Пошук"
@@ -2111,19 +2161,19 @@ msgstr "URL:"
 
 #. Username: label and entry
 #: ../applets/maintained/feeds/prefs.py:492
-#: ../applets/maintained/mail/mail.py:384
-#: ../applets/maintained/mail/mail.py:643
-#: ../applets/maintained/mail/mail.py:796
-#: ../applets/maintained/mail/mail.py:890
+#: ../applets/maintained/mail/mail.py:729
+#: ../applets/maintained/mail/mail.py:820
+#: ../applets/maintained/mail/mail.py:971
+#: ../applets/maintained/mail/mail.py:1086
 msgid "Username:"
 msgstr "Користувач:"
 
 #. Password: label and entry
 #: ../applets/maintained/feeds/prefs.py:506
-#: ../applets/maintained/mail/mail.py:388
-#: ../applets/maintained/mail/mail.py:646
-#: ../applets/maintained/mail/mail.py:799
-#: ../applets/maintained/mail/mail.py:893
+#: ../applets/maintained/mail/mail.py:732
+#: ../applets/maintained/mail/mail.py:823
+#: ../applets/maintained/mail/mail.py:974
+#: ../applets/maintained/mail/mail.py:1089
 msgid "Password:"
 msgstr "Пароль:"
 
@@ -2224,61 +2274,61 @@ msgstr "Запуск файлового менеджера"
 
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.desktop.in.h:2
 #: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:63
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1281
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1290
 msgid "File Browser Launcher"
 msgstr "Запуск переглядача файлів"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:389
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:572
-#: ../applets/maintained/file-browser-launcher/prefs.py:234
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:392
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:575
+#: ../applets/maintained/file-browser-launcher/prefs.py:237
 msgid "Filesystem"
 msgstr "Файлова система"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:518
-#: ../applets/maintained/yama/yama.py:315
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:521
+#: ../applets/maintained/yama/yama.py:333
 msgid "Connect to Server..."
 msgstr "З'єднання з сервером..."
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:593
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:596
 msgid "CD/DVD Burner"
 msgstr "Запис CD/DVD дисків"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:596
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:599
 msgid "Fonts"
 msgstr "Шрифти"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:600
-#: ../applets/maintained/file-browser-launcher/prefs.py:295
-#: ../applets/maintained/file-browser-launcher/prefs.py:370
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:603
+#: ../applets/maintained/file-browser-launcher/prefs.py:298
+#: ../applets/maintained/file-browser-launcher/prefs.py:373
 msgid "Folder"
 msgstr "Тека"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:606
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:609
 #, python-format
 msgid "Trash (%d)"
 msgstr "Кошик (%d)"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:716
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:719
 msgid "DVD Drive"
 msgstr "Привід DVD"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:720
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:723
 msgid "CD Drive"
 msgstr "Привід CD"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1063
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1069
 msgid "Eject"
 msgstr "Витягнути"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1071
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1077
 msgid "Empty Trash"
 msgstr "Очистити смітник"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1094
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1100
 msgid "Confirm deletion"
 msgstr "Підтвердити видалення"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1102
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1108
 msgid ""
 "<big><b>Are you sure you want to delete\n"
 "every item from the trash?</b></big>"
@@ -2286,11 +2336,11 @@ msgstr ""
 "<big><b>Ви справді хочете очистити\n"
 "корзину?</b></big>"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1104
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1110
 msgid "This action cannot be undone."
 msgstr "Цю дію не можна буде скасувати"
 
-#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1284
+#: ../applets/maintained/file-browser-launcher/file-browser-launcher.py:1293
 msgid "A customizable launcher for browsing your files."
 msgstr "Налаштовуваний запуск переглядача файлів"
 
@@ -2298,89 +2348,89 @@ msgstr "Налаштовуваний запуск переглядача фай�
 msgid "File Browser Launcher Preferences"
 msgstr "Параметри запуску переглядача файлів"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:101
+#: ../applets/maintained/file-browser-launcher/prefs.py:104
 msgid "File Browser"
 msgstr "Переглядач файлів"
 
 #. xdg-open (aka system default)
-#: ../applets/maintained/file-browser-launcher/prefs.py:111
+#: ../applets/maintained/file-browser-launcher/prefs.py:114
 msgid "System Default"
 msgstr "Системний"
 
 #. Last option: custom with an entry for the app name
-#: ../applets/maintained/file-browser-launcher/prefs.py:135
+#: ../applets/maintained/file-browser-launcher/prefs.py:138
 msgid "Other"
 msgstr "Інше"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:171
+#: ../applets/maintained/file-browser-launcher/prefs.py:174
 msgid "One icon with dialog"
 msgstr "Одна іконка з діалогом"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:176
+#: ../applets/maintained/file-browser-launcher/prefs.py:179
 msgid "One icon with docklet"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:183
+#: ../applets/maintained/file-browser-launcher/prefs.py:186
 msgid "Multiple icons"
 msgstr "Декілька іконок"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:190
+#: ../applets/maintained/file-browser-launcher/prefs.py:193
 msgid "Focus text entry"
 msgstr "Фокус на текстовому полі"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:199
+#: ../applets/maintained/file-browser-launcher/prefs.py:202
 msgid "Open place when clicked"
 msgstr "Відкривати місце при кліку"
 
 #. Show all places
-#: ../applets/maintained/file-browser-launcher/prefs.py:219
+#: ../applets/maintained/file-browser-launcher/prefs.py:222
 msgid "Show all places"
 msgstr "Показувати всі місця"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:234
+#: ../applets/maintained/file-browser-launcher/prefs.py:237
 msgid "Home folder"
 msgstr "Домашня тека"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:235
+#: ../applets/maintained/file-browser-launcher/prefs.py:238
 msgid "Mounted local drives"
 msgstr "Змонтовані локальні пристрої"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:235
+#: ../applets/maintained/file-browser-launcher/prefs.py:238
 msgid "Mounted network drives"
 msgstr "Змонтовані мережеві пристрої"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:236
+#: ../applets/maintained/file-browser-launcher/prefs.py:239
 msgid "Connect to server"
 msgstr "З'єднання з сервером"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:236
+#: ../applets/maintained/file-browser-launcher/prefs.py:239
 msgid "Bookmarks"
 msgstr "Закладки"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:270
-#: ../applets/maintained/file-browser-launcher/prefs.py:345
+#: ../applets/maintained/file-browser-launcher/prefs.py:273
+#: ../applets/maintained/file-browser-launcher/prefs.py:348
 msgid "Display dialog/docklet"
 msgstr ""
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:270
-#: ../applets/maintained/file-browser-launcher/prefs.py:345
+#: ../applets/maintained/file-browser-launcher/prefs.py:273
+#: ../applets/maintained/file-browser-launcher/prefs.py:348
 msgid "Open the folder"
 msgstr "Відкрити теку"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:271
-#: ../applets/maintained/file-browser-launcher/prefs.py:346
+#: ../applets/maintained/file-browser-launcher/prefs.py:274
+#: ../applets/maintained/file-browser-launcher/prefs.py:349
 msgid "Nothing"
 msgstr "Нічого"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:324
+#: ../applets/maintained/file-browser-launcher/prefs.py:327
 msgid "Left Click"
 msgstr "Клік лівою кнопкою миші"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:399
+#: ../applets/maintained/file-browser-launcher/prefs.py:402
 msgid "Middle Click"
 msgstr "Клік середньою кнопкою миші"
 
-#: ../applets/maintained/file-browser-launcher/prefs.py:552
+#: ../applets/maintained/file-browser-launcher/prefs.py:555
 msgid "Choose a folder"
 msgstr "Оберіть теку"
 
@@ -2426,8 +2476,7 @@ msgstr "Неможливо відправити файл(и) до кошика: 
 
 #. vim: set ft=vala et ts=2 sts=2 sw=2 ai :
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:1
-msgid ""
-"Enable the confirmation dialog form when one wishes to empty the trash."
+msgid "Enable the confirmation dialog form when one wishes to empty the trash."
 msgstr "Запитувати підтвердження перед очищенням кошика."
 
 #: ../applets/maintained/garbage/awn-applet-garbage.schema-ini.in.h:2
@@ -2435,7 +2484,7 @@ msgid "Show the number of items in the trash on top of the icon."
 msgstr "Показувати кількість елементів в кошику в вершній частині значка."
 
 #. This is a window title, %s is an applet's name.
-#: ../applets/maintained/garbage/prefs.vala:32 ../shared/python/awnlib.py:374
+#: ../applets/maintained/garbage/prefs.vala:32 ../shared/python/awnlib.py:379
 #, c-format, python-format
 msgid "%s Preferences"
 msgstr "%s Налаштування"
@@ -2655,7 +2704,7 @@ msgstr "об/хв"
 
 #: ../applets/maintained/indicator-applet/applet.c:89
 #: ../applets/maintained/indicator-applet/applet.c:182
-#: ../applets/maintained/indicator-applet/applet.c:784
+#: ../applets/maintained/indicator-applet/applet.c:797
 #: ../applets/maintained/indicator-applet/indicator-applet.desktop.in.in.h:2
 msgid "Indicator Applet"
 msgstr "Аплет сповіщення"
@@ -2713,23 +2762,23 @@ msgstr "Кількість стовпчиків:"
 msgid "Enable Applet Icon mode"
 msgstr ""
 
-#: ../applets/maintained/indicator-applet/applet.c:764
+#: ../applets/maintained/indicator-applet/applet.c:777
 msgid "Me menu"
 msgstr "Моє меню"
 
-#: ../applets/maintained/indicator-applet/applet.c:768
+#: ../applets/maintained/indicator-applet/applet.c:781
 msgid "Messaging menu"
 msgstr "Меню повідомлень"
 
-#: ../applets/maintained/indicator-applet/applet.c:772
+#: ../applets/maintained/indicator-applet/applet.c:785
 msgid "Network menu"
 msgstr "Меню мережі"
 
-#: ../applets/maintained/indicator-applet/applet.c:776
+#: ../applets/maintained/indicator-applet/applet.c:789
 msgid "Indicator Applet Session"
 msgstr ""
 
-#: ../applets/maintained/indicator-applet/applet.c:780
+#: ../applets/maintained/indicator-applet/applet.c:793
 msgid "Sound Menu"
 msgstr "Меню звуку"
 
@@ -2776,15 +2825,15 @@ msgid "Display any network errors"
 msgstr "показувати помилки мережі"
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:2
-msgid "Hide the icon if there is no new mail"
-msgstr "Приховувати іконку якщо відсутні нові повідомлення"
-
-#: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:3
 msgid "The Desktop Email client to use"
 msgstr "Клієнт електронної пошти"
 
-#: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:4
+#: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:3
 msgid "The Email backend to use"
+msgstr ""
+
+#: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:4
+msgid "The Unix Spool file"
 msgstr ""
 
 #: ../applets/maintained/mail/awn-applet-mail.schema-ini.in.h:5
@@ -2804,12 +2853,12 @@ msgid "Check Your Email from AWN"
 msgstr "Перевірка пошти з AWN"
 
 #: ../applets/maintained/mail/mail.desktop.in.h:2
-#: ../applets/maintained/mail/mail.py:136
-#: ../applets/maintained/mail/mail.py:942
+#: ../applets/maintained/mail/mail.py:294
+#: ../applets/maintained/mail/mail.py:1149
 msgid "Mail Applet"
 msgstr "Аплет пошти"
 
-#: ../applets/maintained/mail/mail.py:39
+#: ../applets/maintained/mail/mail.py:40
 #, python-format
 msgid "You have %d new message"
 msgid_plural "You have %d new messages"
@@ -2817,7 +2866,7 @@ msgstr[0] "У вас %d нове повідомлення"
 msgstr[1] "У вас %d нових повідомлення"
 msgstr[2] "У вас %d нових повідомлень"
 
-#: ../applets/maintained/mail/mail.py:43
+#: ../applets/maintained/mail/mail.py:44
 #, python-format
 msgid "%d unread message"
 msgid_plural "%d unread messages"
@@ -2825,78 +2874,92 @@ msgstr[0] "%d непрочитане повідомлення"
 msgstr[1] "%d непрочитаних повідомленнь"
 msgstr[2] "%d непрочитаних повідомленнь"
 
-#: ../applets/maintained/mail/mail.py:76
+#: ../applets/maintained/mail/mail.py:89 ../applets/maintained/mail/mail.py:689
+#: ../applets/maintained/mail/mail.py:705
+#: ../applets/maintained/mail/mail.py:780
+#: ../applets/maintained/mail/mail.py:796
+#: ../applets/maintained/mail/mail.py:873
+#: ../applets/maintained/mail/mail.py:958
+msgid "[No Subject]"
+msgstr "[Тема Не Вказана]"
+
+#: ../applets/maintained/mail/mail.py:121
+#: ../applets/maintained/mail/mail.py:274
 msgid "Mail Applet (Click to Log In)"
 msgstr "Аплет пошти (клікніть щоб увійти)"
 
-#: ../applets/maintained/mail/mail.py:137
+#: ../applets/maintained/mail/mail.py:130
+msgid "GNOME keyring not available: Password won't be saved"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:141
+msgid ""
+"Default GNOME keyring or \"login\" keyring not found:\n"
+"Password won't be saved"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:295
 #, python-format
 msgid "Logging in as %s"
 msgstr "Вхід як %s"
 
-#: ../applets/maintained/mail/mail.py:161
+#: ../applets/maintained/mail/mail.py:310
 msgid "Network error - Mail Applet"
 msgstr "помилка мережі - Аплет пошти"
 
-#: ../applets/maintained/mail/mail.py:170
+#: ../applets/maintained/mail/mail.py:320
 msgid "New Mail - Mail Applet"
 msgstr "Нова пошта - Аплет пошти"
 
-#: ../applets/maintained/mail/mail.py:274
+#: ../applets/maintained/mail/mail.py:404
 msgid "Mail"
 msgstr "Пошта"
 
-#: ../applets/maintained/mail/mail.py:310
+#: ../applets/maintained/mail/mail.py:440
 msgid "Open Web Mail"
 msgstr "Відкрити веб пошту"
 
-#: ../applets/maintained/mail/mail.py:319
+#: ../applets/maintained/mail/mail.py:449
 msgid "Open Desktop Client"
 msgstr "Відкрити програму перегляду пошти"
 
-#: ../applets/maintained/mail/mail.py:328
+#: ../applets/maintained/mail/mail.py:458
 msgid "Refresh"
 msgstr "Оновити"
 
-#: ../applets/maintained/mail/mail.py:337
-#: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:47
-#: ../applets/maintained/quit/quit.py:58
+#: ../applets/maintained/mail/mail.py:467 ../applets/maintained/quit/quit.py:39
+#: ../applets/maintained/quit/quit.py:47 ../applets/maintained/quit/quit.py:58
 #: ../applets/maintained/quit/quit.py:267
 msgid "Log Out"
 msgstr "Вийти"
 
-#: ../applets/maintained/mail/mail.py:367
+#: ../applets/maintained/mail/mail.py:500
 msgid "No unread messages"
 msgstr "Немає непрочитаних листів"
 
-#: ../applets/maintained/mail/mail.py:369
+#: ../applets/maintained/mail/mail.py:502
 msgid "No new messages"
 msgstr "Немає нових листів"
 
-#: ../applets/maintained/mail/mail.py:408
+#: ../applets/maintained/mail/mail.py:518
 msgid "Wrong username or password"
 msgstr "Неправильний логін чи пароль"
 
-#: ../applets/maintained/mail/mail.py:416
-#: ../applets/maintained/mail/mail.py:477
+#: ../applets/maintained/mail/mail.py:526
+#: ../applets/maintained/mail/mail.py:610
 msgid "Log In"
 msgstr "Вхід"
 
-#: ../applets/maintained/mail/mail.py:453
+#: ../applets/maintained/mail/mail.py:574
 msgid "Type:"
 msgstr "Тип:"
 
-#: ../applets/maintained/mail/mail.py:458
+#: ../applets/maintained/mail/mail.py:579
 msgid "Backend"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:514
-#: ../applets/maintained/mail/mail.py:742
-msgid "Could not log in: No username"
-msgstr "Неможливо увійти: не вказано ім'я"
-
-#: ../applets/maintained/mail/mail.py:522
-#: ../applets/maintained/mail/mail.py:592
+#: ../applets/maintained/mail/mail.py:677
+#: ../applets/maintained/mail/mail.py:769
 msgid ""
 "There seem to be problems with our connection to your account. Your best bet "
 "is probably to log out and try again."
@@ -2904,76 +2967,68 @@ msgstr ""
 "Виникла проблема при вході до Вашого акаунту. Можливо допоможе вийти та "
 "спробувати знову"
 
-#: ../applets/maintained/mail/mail.py:533
-#: ../applets/maintained/mail/mail.py:549
-#: ../applets/maintained/mail/mail.py:603
-#: ../applets/maintained/mail/mail.py:619
-#: ../applets/maintained/mail/mail.py:687
-#: ../applets/maintained/mail/mail.py:781
-msgid "[No Subject]"
-msgstr "[Тема Не Вказана]"
-
-#: ../applets/maintained/mail/mail.py:535
-#: ../applets/maintained/mail/mail.py:605
+#: ../applets/maintained/mail/mail.py:691
+#: ../applets/maintained/mail/mail.py:782
 msgid "[Unknown]"
 msgstr "[невідомо]"
 
-#: ../applets/maintained/mail/mail.py:571
+#: ../applets/maintained/mail/mail.py:752
 msgid "Google Apps"
 msgstr "Google Apps"
 
-#: ../applets/maintained/mail/mail.py:583
-msgid "Could not log in: No username or domain"
-msgstr "Неможливо увійти: Відсутні ім’я користувача, або домен"
-
-#: ../applets/maintained/mail/mail.py:650
+#: ../applets/maintained/mail/mail.py:827
 msgid "Domain:"
 msgstr "Домен:"
 
-#: ../applets/maintained/mail/mail.py:673
+#: ../applets/maintained/mail/mail.py:855
 msgid "Unix Spool"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:695
+#: ../applets/maintained/mail/mail.py:881
 msgid "Spool Path:"
 msgstr ""
 
-#: ../applets/maintained/mail/mail.py:736
-#: ../applets/maintained/mail/mail.py:738
+#: ../applets/maintained/mail/mail.py:924
+#: ../applets/maintained/mail/mail.py:926
+#: ../applets/maintained/mail/mail.py:939
 msgid "Could not log in: "
 msgstr "Неможливо увійти: "
 
-#: ../applets/maintained/mail/mail.py:747
+#: ../applets/maintained/mail/mail.py:933
 msgid "Could not log in: Username or password incorrect"
 msgstr "Неможливо увійти: невірне ім'я чи пароль"
 
-#: ../applets/maintained/mail/mail.py:803
-#: ../applets/maintained/mail/mail.py:897
+#: ../applets/maintained/mail/mail.py:978
+#: ../applets/maintained/mail/mail.py:1093
 msgid "Server:"
 msgstr "Сервер:"
 
-#: ../applets/maintained/mail/mail.py:806
-#: ../applets/maintained/mail/mail.py:900
+#: ../applets/maintained/mail/mail.py:981
+#: ../applets/maintained/mail/mail.py:1096
 msgid "Use SSL encryption"
 msgstr "Користуватись шифруванням SSL"
 
-#: ../applets/maintained/mail/mail.py:843
+#: ../applets/maintained/mail/mail.py:1030
+msgid "Server did not respond"
+msgstr ""
+
+#: ../applets/maintained/mail/mail.py:1035
 msgid "Could not log in"
 msgstr "Неможливо увійти"
 
-#: ../applets/maintained/mail/mail.py:849
+#: ../applets/maintained/mail/mail.py:1042
 msgid "Folder does not exst"
 msgstr "Тека не існує"
 
-#: ../applets/maintained/mail/mail.py:903
+#: ../applets/maintained/mail/mail.py:1099
 msgid "Get messages from only one folder"
 msgstr "Отримати повідомлення лише з однієї папки"
 
-#: ../applets/maintained/mail/mail.py:907
+#: ../applets/maintained/mail/mail.py:1103
 msgid "Folder:"
 msgstr "Тека:"
 
-#: ../applets/maintained/mail/mail.py:945
+#: ../applets/maintained/mail/mail.py:1152
 msgid "An applet to check one's email"
 msgstr "Аплет для перевірки пошти"
 
@@ -2993,11 +3048,7 @@ msgstr "_Повідомляти про помилки мережі"
 msgid "_Email client:"
 msgstr "_Поштовий клієнт:"
 
-#: ../applets/maintained/mail/mail.ui.h:7
-msgid "_Hide applet if no new messages"
-msgstr "_Приховувати аплет коли нема нових листів"
-
-#: ../applets/maintained/mail/mail.ui.h:9
+#: ../applets/maintained/mail/mail.ui.h:8
 msgid "minutes"
 msgstr "хвилин"
 
@@ -3326,11 +3377,11 @@ msgstr "Область сповіщення"
 msgid "Notification Area"
 msgstr "Область сповіщення"
 
-#: ../applets/maintained/notification-area/notification-area.vala:638
+#: ../applets/maintained/notification-area/notification-area.vala:637
 msgid "There is already another notification area running on this screen!"
 msgstr "Інша область сповіщень вже працює на цьому екрані!"
 
-#: ../applets/maintained/notification-area/notification-area.vala:642
+#: ../applets/maintained/notification-area/notification-area.vala:641
 msgid ""
 "Please remove the existing notification area and then restart the applet."
 msgstr ""
@@ -3347,8 +3398,7 @@ msgstr "Товщина рамки. Значення \"0\" вкаже, що ні�
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:3
 msgid ""
 "Border colour in the form (Hex) rrggbbaa.  Also use for the timer widget"
-msgstr ""
-"Колір фону з (Hex) rrggbbaa.  Також використовується для віджету часу"
+msgstr "Колір фону з (Hex) rrggbbaa.  Також використовується для віджету часу"
 
 #: ../applets/maintained/notification-daemon/awn-applet-notification-daemon.schema-ini.in.h:4
 msgid ""
@@ -3436,7 +3486,7 @@ msgstr ""
 msgid "Notification Daemon"
 msgstr "Служба повідомлень"
 
-#: ../applets/maintained/notification-daemon/daemon.c:1421
+#: ../applets/maintained/notification-daemon/daemon.c:1425
 #, c-format
 msgid "%u is not a valid notification ID"
 msgstr "%u невірний ID повідомлення"
@@ -3571,7 +3621,7 @@ msgid "Quit-Log Out applet"
 msgstr "Аплет Виходу/Завершення сесії"
 
 #: ../applets/maintained/quit/quit-lock-screen.desktop.in.h:2
-#: ../applets/maintained/yama/yama.py:154
+#: ../applets/maintained/yama/yama.py:168
 msgid "Protect your computer from unauthorized use"
 msgstr "Захистити ваш комп'ютер від несанкціонованого використання"
 
@@ -3584,13 +3634,12 @@ msgid "Log out of this session to log in as a different user"
 msgstr "Вийти з сеансу та зайти під іншим ім'ям"
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:1
-#: ../applets/maintained/quit/quit.py:48
-#: ../applets/maintained/yama/yama.py:176
+#: ../applets/maintained/quit/quit.py:48 ../applets/maintained/yama/yama.py:186
 msgid "Shut Down..."
 msgstr "Вимкнути..."
 
 #: ../applets/maintained/quit/quit-shut-down.desktop.in.h:2
-#: ../applets/maintained/yama/yama.py:176
+#: ../applets/maintained/yama/yama.py:186
 msgid "Shut down the system"
 msgstr "Вимкнути комп'ютер"
 
@@ -3616,16 +3665,14 @@ msgstr ""
 
 #: ../applets/maintained/quit/quit.py:39 ../applets/maintained/quit/quit.py:48
 #: ../applets/maintained/quit/quit.py:59 ../applets/maintained/quit/quit.py:89
-#: ../applets/maintained/quit/quit.py:90
-#: ../applets/maintained/quit/quit.py:233
+#: ../applets/maintained/quit/quit.py:90 ../applets/maintained/quit/quit.py:233
 #: ../applets/maintained/quit/quit.py:269
 msgid "Shut Down"
 msgstr "Вимкнути"
 
 #. Translators: %s is a username
 #. Translators: %s is a user name.
-#: ../applets/maintained/quit/quit.py:43
-#: ../applets/maintained/yama/yama.py:172
+#: ../applets/maintained/quit/quit.py:43 ../applets/maintained/yama/yama.py:182
 #, python-format
 msgid "Log Out %s..."
 msgstr "Завершити сеанс %s..."
@@ -3730,14 +3777,14 @@ msgstr "Кількість рядків."
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:19
 msgid ""
-"When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t"
-"2...all but active win\t3..all."
+"When to  overly the app icon:  0...no\t1...on inactive workspace onlt\t2..."
+"all but active win\t3..all."
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:20
 msgid ""
-"When to scale icons:  0...none  1...on all active ws  2...on_active_win "
-"3...all"
+"When to scale icons:  0...none  1...on all active ws  2...on_active_win 3..."
+"all"
 msgstr ""
 
 #: ../applets/maintained/shiny-switcher/awn-applet-shinyswitcher.schema-ini.in.h:21
@@ -3907,14 +3954,14 @@ msgid "A prettier desktop switcher"
 msgstr "Симпатичний перемикач робочих областей"
 
 #: ../applets/maintained/shiny-switcher/shinyswitcher.desktop.in.in.h:2
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2470
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2476
 msgid "Shiny Switcher"
 msgstr "Блискучий перемикач"
 
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:642
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:735
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1977
-#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2044
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:643
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:736
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:1978
+#: ../applets/maintained/shiny-switcher/shinyswitcherapplet.c:2045
 msgid "Applet Preferences"
 msgstr "Налаштування апплету"
 
@@ -4181,8 +4228,8 @@ msgstr "SlickSwitcher"
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:1
 msgid ""
-"CPU graph type to use.  Note that some Icons do not support all graph types. "
-" If this occurs an icon will revert to it's own default (value of 0)."
+"CPU graph type to use.  Note that some Icons do not support all graph "
+"types.  If this occurs an icon will revert to it's own default (value of 0)."
 msgstr ""
 
 #: ../applets/maintained/sysmon/awn-applet-sysmon.schema-ini.in.h:2
@@ -4285,7 +4332,7 @@ msgstr "%s захищено від струсів"
 msgid "%s not protected from shocks"
 msgstr "%s незахищено від струсів"
 
-#: ../applets/maintained/thinkhdaps/thinkhdaps.py:153
+#: ../applets/maintained/thinkhdaps/thinkhdaps.py:151
 msgid "No hard disk found"
 msgstr "Жорсткий диск не знайдено"
 
@@ -4718,15 +4765,15 @@ msgstr ""
 msgid "Could not find any devices."
 msgstr "Неможливо виявити пристроїв"
 
-#: ../applets/maintained/volume-control/volume-control.py:184
+#: ../applets/maintained/volume-control/volume-control.py:180
 msgid "_Open Volume Control"
 msgstr "_Відкрити регулятор гучності"
 
-#: ../applets/maintained/volume-control/volume-control.py:379
+#: ../applets/maintained/volume-control/volume-control.py:378
 msgid "No GStreamer mixer found"
 msgstr "Не знайдено мікшера GStreamer"
 
-#: ../applets/maintained/volume-control/volume-control.py:385
+#: ../applets/maintained/volume-control/volume-control.py:384
 msgid "No devices found"
 msgstr "Пристроїв не знайдено"
 
@@ -4801,7 +4848,7 @@ msgstr "Завтра"
 
 #. Weather condition
 #: ../applets/maintained/weather/forecast.py:202
-#: ../applets/maintained/weather/weather.py:475
+#: ../applets/maintained/weather/weather.py:484
 msgid "DESCRIPTION"
 msgstr "ОПИС"
 
@@ -4890,302 +4937,377 @@ msgid "Light Rain with Thunder"
 msgstr "Слабкий дощ з грозою"
 
 #: ../applets/maintained/weather/weathertext.py:58
+#, fuzzy
+msgid "Light Snow"
+msgstr "Д.О. Легкий сніг"
+
+#: ../applets/maintained/weather/weathertext.py:59
 msgid "Light Snow Showers"
 msgstr "Незначний сніг"
 
-#: ../applets/maintained/weather/weathertext.py:59
+#: ../applets/maintained/weather/weathertext.py:60
 msgid "Mist"
 msgstr "Імла"
 
-#: ../applets/maintained/weather/weathertext.py:60
+#: ../applets/maintained/weather/weathertext.py:61
 msgid "Mixed Precipitation"
 msgstr "Змішані опади"
 
-#: ../applets/maintained/weather/weathertext.py:61
+#: ../applets/maintained/weather/weathertext.py:62
 msgid "Mixed Rain and Hail"
 msgstr "Дощ з градом"
 
-#: ../applets/maintained/weather/weathertext.py:62
+#: ../applets/maintained/weather/weathertext.py:63
 msgid "Mixed Rain and Sleet"
 msgstr "Дощ із снігом"
 
-#: ../applets/maintained/weather/weathertext.py:63
+#: ../applets/maintained/weather/weathertext.py:64
 msgid "Mixed Rain and Snow"
 msgstr "Дощ із снігом"
 
-#: ../applets/maintained/weather/weathertext.py:64
+#: ../applets/maintained/weather/weathertext.py:65
 msgid "Mostly Cloudy"
 msgstr "Переважно хмарно"
 
-#: ../applets/maintained/weather/weathertext.py:65
+#: ../applets/maintained/weather/weathertext.py:66
 msgid "N/A"
 msgstr "Н/Д"
 
-#: ../applets/maintained/weather/weathertext.py:66
+#: ../applets/maintained/weather/weathertext.py:67
 msgid "Partly Cloudy"
 msgstr "Мінлива хмарність"
 
-#: ../applets/maintained/weather/weathertext.py:67
+#: ../applets/maintained/weather/weathertext.py:68
 msgid "Scattered Showers"
 msgstr "Місцями злива"
 
-#: ../applets/maintained/weather/weathertext.py:68
+#: ../applets/maintained/weather/weathertext.py:69
 msgid "Scattered Snow Showers"
 msgstr "Місцями снігопади"
 
-#: ../applets/maintained/weather/weathertext.py:69
+#: ../applets/maintained/weather/weathertext.py:70
 msgid "Scattered Thunderstorms"
 msgstr "Розсіяні грози"
 
-#: ../applets/maintained/weather/weathertext.py:70
+#: ../applets/maintained/weather/weathertext.py:71
 msgid "Severe Thunderstorms"
 msgstr "Сильні грози"
 
-#: ../applets/maintained/weather/weathertext.py:71
+#: ../applets/maintained/weather/weathertext.py:72
 msgid "Showers"
 msgstr "Дощі"
 
-#: ../applets/maintained/weather/weathertext.py:72
+#: ../applets/maintained/weather/weathertext.py:73
 msgid "Showers in the Vicinity"
 msgstr ""
 
-#: ../applets/maintained/weather/weathertext.py:73
+#: ../applets/maintained/weather/weathertext.py:74
 msgid "Sleet"
 msgstr "Мокрий сніг"
 
-#: ../applets/maintained/weather/weathertext.py:74
+#: ../applets/maintained/weather/weathertext.py:75
 msgid "Smoke"
 msgstr "Дим"
 
-#: ../applets/maintained/weather/weathertext.py:75
+#: ../applets/maintained/weather/weathertext.py:76
 msgid "Snow"
 msgstr "Сніг"
 
-#: ../applets/maintained/weather/weathertext.py:76
+#: ../applets/maintained/weather/weathertext.py:77
+#, fuzzy
+msgid "Snow and Fog"
+msgstr "Легкий сніг/Туман"
+
+#: ../applets/maintained/weather/weathertext.py:78
 msgid "Snow Flurries"
 msgstr "Сніжний шквал"
 
-#: ../applets/maintained/weather/weathertext.py:77
+#: ../applets/maintained/weather/weathertext.py:79
 msgid "Snow Showers"
 msgstr "Снігопад"
 
-#: ../applets/maintained/weather/weathertext.py:78
+#: ../applets/maintained/weather/weathertext.py:80
 msgid "Thunder Showers"
 msgstr "Грозові дощі"
 
-#: ../applets/maintained/weather/weathertext.py:79
+#: ../applets/maintained/weather/weathertext.py:81
 msgid "Thunderstorms"
 msgstr "Гроза"
 
-#: ../applets/maintained/weather/weathertext.py:80
+#: ../applets/maintained/weather/weathertext.py:82
 msgid "Tornado"
 msgstr "Смерч"
 
-#: ../applets/maintained/weather/weathertext.py:81
+#: ../applets/maintained/weather/weathertext.py:83
 msgid "Tropical Storm"
 msgstr "Тропічний шторм"
 
-#: ../applets/maintained/weather/weathertext.py:82
+#: ../applets/maintained/weather/weathertext.py:84
 msgid "Windy"
 msgstr "Вітряно"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:87
+#: ../applets/maintained/weather/weathertext.py:89
 msgid "AM Clouds / PM Sun"
 msgstr "Д.О. Хмари / П.О. Сонце"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:89
+#: ../applets/maintained/weather/weathertext.py:91
 msgid "AM Drizzle"
 msgstr "Д.О. Мряка"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:91
+#: ../applets/maintained/weather/weathertext.py:93
 msgid "AM Drizzle / Wind"
 msgstr "Д.О. Мряка/Вітер"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:93
+#: ../applets/maintained/weather/weathertext.py:95
 msgid "AM Fog / PM Sun"
 msgstr "Д.О. Туман/П.О. Сонце"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:95
+#: ../applets/maintained/weather/weathertext.py:97
 msgid "AM Light Rain"
 msgstr "Д.О. Легкий дощ"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:97
+#: ../applets/maintained/weather/weathertext.py:99
 msgid "AM Light Snow"
 msgstr "Д.О. Легкий сніг"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:99
+#: ../applets/maintained/weather/weathertext.py:101
 msgid "AM Rain / Snow"
 msgstr "Д.О. Дощ/Сніг"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:101
+#: ../applets/maintained/weather/weathertext.py:103
 msgid "AM Rain / Wind"
 msgstr "Д.О. Дощ/Вітер"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:103
+#: ../applets/maintained/weather/weathertext.py:105
 msgid "AM Showers"
 msgstr "Д.О. Дощик"
 
 #. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:107
+#, fuzzy
+msgid "AM Snow Showers"
+msgstr "Снігопад"
+
+#. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
-#: ../applets/maintained/weather/weathertext.py:106
+#: ../applets/maintained/weather/weathertext.py:110
 msgid "AM T-Showers"
 msgstr "Д.О. Грім/Дощ"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
-#: ../applets/maintained/weather/weathertext.py:109
+#: ../applets/maintained/weather/weathertext.py:113
 msgid "AM T-Storms"
 msgstr "Д.О. Гроза"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:111
+#: ../applets/maintained/weather/weathertext.py:115
 msgid "Few Showers"
 msgstr "Слаб. Опади"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:113
+#: ../applets/maintained/weather/weathertext.py:117
 msgid "Heavy Rain"
 msgstr "Сильний дощ"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
-#: ../applets/maintained/weather/weathertext.py:116
+#: ../applets/maintained/weather/weathertext.py:120
 msgid "Isolated T-Storms"
 msgstr "Місцями грози"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:118
+#: ../applets/maintained/weather/weathertext.py:122
 msgid "Light Rain"
 msgstr "Легкий дощ"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:120
+#: ../applets/maintained/weather/weathertext.py:124
 msgid "Light Rain / Wind"
 msgstr "Легкий дощ/Вітер"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:122
+#: ../applets/maintained/weather/weathertext.py:126
 msgid "Light Snow / Fog"
 msgstr "Легкий сніг/Туман"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:124
+#: ../applets/maintained/weather/weathertext.py:128
 msgid "Mostly Sunny"
 msgstr "Переважно сонячно"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:126
+#: ../applets/maintained/weather/weathertext.py:130
 msgid "Partly Cloudy / Wind"
 msgstr "Мінлива хмарність/Вітер"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:128
+#: ../applets/maintained/weather/weathertext.py:132
+#, fuzzy
+msgid "PM Drizzle"
+msgstr "Д.О. Мряка"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:134
 msgid "PM Light Rain"
 msgstr "П.О. Легкий дощ"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:130
+#: ../applets/maintained/weather/weathertext.py:136
+#, fuzzy
+msgid "PM Light Snow"
+msgstr "Д.О. Легкий сніг"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:138
+#, fuzzy
+msgid "PM Rain"
+msgstr "Дощ"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:140
+#, fuzzy
+msgid "PM Rain / Snow"
+msgstr "Д.О. Дощ/Сніг"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:142
 msgid "PM Showers"
 msgstr "П.О. Дощик"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
-#: ../applets/maintained/weather/weathertext.py:133
+#: ../applets/maintained/weather/weathertext.py:145
 msgid "PM T-Showers"
 msgstr "П.О. Грім/Дощ"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
-#: ../applets/maintained/weather/weathertext.py:136
+#: ../applets/maintained/weather/weathertext.py:148
 msgid "PM T-Storms"
 msgstr "П.О. Гроза"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:138
+#: ../applets/maintained/weather/weathertext.py:150
 msgid "Rain"
 msgstr "Дощ"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:140
+#: ../applets/maintained/weather/weathertext.py:152
+#, fuzzy
+msgid "Rain / Snow"
+msgstr "Д.О. Дощ/Сніг"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:154
 msgid "Rain / Snow Showers"
 msgstr "Дощ/Мокрий сніг"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:142
+#: ../applets/maintained/weather/weathertext.py:156
 msgid "Rain / Thunder"
 msgstr "Дощ / Грім"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:144
+#: ../applets/maintained/weather/weathertext.py:158
 msgid "Rain / Wind"
 msgstr "Дощ / Вітер"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:146
+#: ../applets/maintained/weather/weathertext.py:160
 msgid "Scattered Showers / Wind"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
 #. T-Storms = Thunderstorms
-#: ../applets/maintained/weather/weathertext.py:149
+#: ../applets/maintained/weather/weathertext.py:163
 msgid "Scattered T-Storms"
 msgstr ""
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:151
+#: ../applets/maintained/weather/weathertext.py:165
 msgid "Showers / Wind"
 msgstr "Опади /Вітер"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:153
+#: ../applets/maintained/weather/weathertext.py:167
+#, fuzzy
+msgid "Snow Shower"
+msgstr "Снігопад"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:169
+msgid "Snow to Rain"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:171
+msgid "Snow to Wintry Mix"
+msgstr ""
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:173
+#, fuzzy
+msgid "Snow / Wind"
+msgstr "Опади /Вітер"
+
+#. Please keep translation short, approx. 12 characters
+#: ../applets/maintained/weather/weathertext.py:175
 msgid "Sunny"
 msgstr "Сонячно"
 
 #. Please keep translation short, approx. 12 characters
-#: ../applets/maintained/weather/weathertext.py:155
+#: ../applets/maintained/weather/weathertext.py:177
 msgid "Sunny / Wind"
 msgstr "Сонячно / Вітер"
 
 #. Please keep translation short, approx. 12 characters
 #. T-Showers = Thunder Showers
-#: ../applets/maintained/weather/weathertext.py:158
+#: ../applets/maintained/weather/weathertext.py:180
 msgid "T-Showers"
 msgstr "Грози"
 
-#: ../applets/maintained/weather/weathertext.py:162
+#. Please keep translation short, approx. 12 characters
+#. T-Storms = Thunderstorms
+#: ../applets/maintained/weather/weathertext.py:183
+#, fuzzy
+msgid "T-Storms"
+msgstr "Д.О. Гроза"
+
+#: ../applets/maintained/weather/weathertext.py:187
 msgid "Monday"
 msgstr "Понеділок"
 
-#: ../applets/maintained/weather/weathertext.py:163
+#: ../applets/maintained/weather/weathertext.py:188
 msgid "Tuesday"
 msgstr "Вівторок"
 
-#: ../applets/maintained/weather/weathertext.py:164
+#: ../applets/maintained/weather/weathertext.py:189
 msgid "Wednesday"
 msgstr "Середа"
 
-#: ../applets/maintained/weather/weathertext.py:165
+#: ../applets/maintained/weather/weathertext.py:190
 msgid "Thursday"
 msgstr "Четвер"
 
-#: ../applets/maintained/weather/weathertext.py:166
+#: ../applets/maintained/weather/weathertext.py:191
 msgid "Friday"
 msgstr "П’ятниця"
 
-#: ../applets/maintained/weather/weathertext.py:167
+#: ../applets/maintained/weather/weathertext.py:192
 msgid "Saturday"
 msgstr "Субота"
 
-#: ../applets/maintained/weather/weathertext.py:168
+#: ../applets/maintained/weather/weathertext.py:193
 msgid "Sunday"
 msgstr "Неділя"
 
@@ -5216,20 +5338,20 @@ msgid "Network error in Weather"
 msgstr "Мережева помилка при отримання прогнозу"
 
 #: ../applets/maintained/weather/weather.py:213
-#: ../applets/maintained/weather/weather.py:255
+#: ../applets/maintained/weather/weather.py:259
 msgid "Fetching conditions for"
 msgstr "Отримую умови для"
 
-#: ../applets/maintained/weather/weather.py:273
+#: ../applets/maintained/weather/weather.py:277
 msgid "Show _Map"
 msgstr "Показати Мапу"
 
-#: ../applets/maintained/weather/weather.py:322
-#: ../applets/maintained/weather/weather.py:400
+#: ../applets/maintained/weather/weather.py:329
+#: ../applets/maintained/weather/weather.py:407
 msgid "No records found"
 msgstr "Записів незнайдено"
 
-#: ../applets/maintained/weather/weather.py:391
+#: ../applets/maintained/weather/weather.py:398
 msgid "Searching..."
 msgstr "Пошук…"
 
@@ -5298,8 +5420,7 @@ msgstr "Веб аплет"
 
 #. vim: set et ts=2 sts=2 sw=2 :
 #: ../applets/maintained/webapplet/awn-applet-webapplet.schema-ini.in.h:1
-msgid ""
-"Flag that enables usage of the \"Open Location\" dialog in the applet."
+msgid "Flag that enables usage of the \"Open Location\" dialog in the applet."
 msgstr ""
 "Прапорець, що дозволяє використовувати \"Відкрити розташування\" в діалозі "
 "аплету."
@@ -5343,7 +5464,7 @@ msgid "Wobbly Zini"
 msgstr ""
 
 #: ../applets/maintained/yama/yama.desktop.in.h:1
-#: ../applets/maintained/yama/yama.py:47
+#: ../applets/maintained/yama/yama.py:53
 msgid "Main menu with places and recent documents"
 msgstr "Головне меню з дисками та останніми документами"
 
@@ -5351,46 +5472,46 @@ msgstr "Головне меню з дисками та останніми док
 msgid "Yet Another Menu Applet"
 msgstr "Ще один аплет меню"
 
-#: ../applets/maintained/yama/yama.py:46
+#: ../applets/maintained/yama/yama.py:52
 msgid "YAMA"
 msgstr ""
 
-#: ../applets/maintained/yama/yama.py:172
+#: ../applets/maintained/yama/yama.py:182
 #, python-format
 msgid "Log out %s of this session to log in as a different user"
 msgstr "Вийти з сеансу користувача %s та зайти під іншим ім'ям"
 
-#: ../applets/maintained/yama/yama.py:190
+#: ../applets/maintained/yama/yama.py:200
 msgid "_Edit Menus"
 msgstr "_Редагувати меню"
 
-#: ../applets/maintained/yama/yama.py:262
+#: ../applets/maintained/yama/yama.py:275
 msgid "Open your personal folder"
 msgstr "Відкрити Вашу персональну теку"
 
-#: ../applets/maintained/yama/yama.py:264
+#: ../applets/maintained/yama/yama.py:282
 msgid "Open the contents of your desktop in a folder"
 msgstr "Відкрити вміст робочого столу у теці"
 
-#: ../applets/maintained/yama/yama.py:315
+#: ../applets/maintained/yama/yama.py:333
 msgid "Connect to a remote computer or shared disk"
 msgstr "З'єднатись з віддаленим комп'ютером або спільним диском"
 
-#: ../applets/maintained/yama/yama.py:345
+#: ../applets/maintained/yama/yama.py:363
 msgid "Clear all items from the recent documents list"
 msgstr "Очистити список недавно використаних документів"
 
-#: ../applets/maintained/yama/yama.py:398
+#: ../applets/maintained/yama/yama.py:416
 #, python-format
 msgid "Open '%s'"
 msgstr "Відкрити '%s'"
 
-#: ../applets/maintained/yama/yama.py:439
+#: ../applets/maintained/yama/yama.py:457
 #, python-format
 msgid "Mount %s"
 msgstr "Приєднати %s"
 
-#: ../applets/maintained/yama/yama.py:591
+#: ../applets/maintained/yama/yama.py:619
 msgid ""
 "Clearing the Recent Documents list will clear the following:\n"
 "* All items from the Places > Recent Documents menu item.\n"
@@ -5454,6 +5575,42 @@ msgstr "Слухати інтернет радіо Pandora"
 msgid "Pandora Radio"
 msgstr "Радіо Pandora"
 
+#~ msgid "Your comics"
+#~ msgstr "Ваші комікси"
+
+#~ msgid "Manage Comics"
+#~ msgstr "Керуваннями коміксами"
+
+#~ msgid ""
+#~ "This guide will help you to add a new comic.\n"
+#~ "\n"
+#~ "To find comics suitable for adding, you may search the Internet for "
+#~ "\"comics rss\".\n"
+#~ "\n"
+#~ "Press \"next\" to proceed."
+#~ msgstr ""
+#~ "Це керівництво допоможе Вам додати новий комікс.\n"
+#~ "\n"
+#~ "Для того щоб знайти підходящий комікс, ви можете пошукати щось на зразок "
+#~ "\"комікси rss\".\n"
+#~ "\n"
+#~ "Натисніть \"далі\" щоб продовжити."
+
+#~ msgid "The following comics are installed:"
+#~ msgstr "Встановлено наступні комікси:"
+
+#~ msgid "Hide the icon if there is no new mail"
+#~ msgstr "Приховувати іконку якщо відсутні нові повідомлення"
+
+#~ msgid "Could not log in: No username"
+#~ msgstr "Неможливо увійти: не вказано ім'я"
+
+#~ msgid "Could not log in: No username or domain"
+#~ msgstr "Неможливо увійти: Відсутні ім’я користувача, або домен"
+
+#~ msgid "_Hide applet if no new messages"
+#~ msgstr "_Приховувати аплет коли нема нових листів"
+
 #~ msgid "No"
 #~ msgstr "Ні"
 
@@ -5481,17 +5638,17 @@ msgstr "Радіо Pandora"
 #~ "If this is checked the applet border will use the selected color. If "
 #~ "unchecked, border will be transparent"
 #~ msgstr ""
-#~ "Якщо обрано, то буде використано вказаний колір для рамки. В іншому випадку, "
-#~ "рамка буде прозорою."
+#~ "Якщо обрано, то буде використано вказаний колір для рамки. В іншому "
+#~ "випадку, рамка буде прозорою."
 
 #~ msgid ""
 #~ "Sets the minimum threshold for scaling to not show large spikes for small "
-#~ "amounts of traffic. e.g.: Setting to 32.0 KBps will cause the graph to only "
-#~ "draw if throughput exceeds 32.0 KBps"
+#~ "amounts of traffic. e.g.: Setting to 32.0 KBps will cause the graph to "
+#~ "only draw if throughput exceeds 32.0 KBps"
 #~ msgstr ""
-#~ "Встановлення мінімального порогу масштабування, для того щоб не показувати "
-#~ "незначний рівень трафіку. Встановивши 32,0 КБайт/с, на графіку будуть "
-#~ "відображатись лише значення вище які 32,0 КБайт/с."
+#~ "Встановлення мінімального порогу масштабування, для того щоб не "
+#~ "показувати незначний рівень трафіку. Встановивши 32,0 КБайт/с, на графіку "
+#~ "будуть відображатись лише значення вище які 32,0 КБайт/с."
 
 #~ msgid "IP Address"
 #~ msgstr "IP-адреса"
@@ -5516,13 +5673,13 @@ msgstr "Радіо Pandora"
 #~ "\n"
 #~ "This applet allows you to change your keyboard input language with just a "
 #~ "click of the mouse.\n"
-#~ "You can select any of the available input languages on your system, or from "
-#~ "a list you most commonly use.\n"
+#~ "You can select any of the available input languages on your system, or "
+#~ "from a list you most commonly use.\n"
 #~ "\n"
 #~ "See the Mouse Actions and Layout Lists tabs for configuration options.\n"
 #~ "\n"
-#~ "The applet depends on the python xklavier module (available from "
-#~ "http://download.sugarlabs.org/sources/external/python-xklavier/python-"
+#~ "The applet depends on the python xklavier module (available from http://"
+#~ "download.sugarlabs.org/sources/external/python-xklavier/python-"
 #~ "xklavier-0.1.tar.gz).\n"
 #~ "\n"
 #~ "This applet is licensed under GPL2. The flag icons distributed with this "
@@ -5534,15 +5691,16 @@ msgstr "Радіо Pandora"
 #~ "\n"
 #~ "(C) 2009, Lachlan Turner (Denham 2010)\n"
 #~ "\n"
-#~ "Цей аплет дозволяє Вам змінювати розкладку клавіатури одним кліком мишки.\n"
+#~ "Цей аплет дозволяє Вам змінювати розкладку клавіатури одним кліком "
+#~ "мишки.\n"
 #~ "Ви можете обрати будь яку мову доступну у Вашій системі, чи із списку "
 #~ "найбільш Вами використовуваних..\n"
 #~ "\n"
 #~ "Дивіться налаштування дій мишки і списку розкладок для налаштувань "
 #~ "додаткових параметрів.\n"
 #~ "\n"
-#~ "Аплет залежить від модуля python xklavier (можна завантажити на "
-#~ "http://download.sugarlabs.org/sources/external/python-xklavier/python-"
+#~ "Аплет залежить від модуля python xklavier (можна завантажити на http://"
+#~ "download.sugarlabs.org/sources/external/python-xklavier/python-"
 #~ "xklavier-0.1.tar.gz).\n"
 #~ "\n"
 #~ "Аплет ліцензовано під GPL2. Значки прапорців, що розповсюджуяться з цим "
@@ -5574,14 +5732,16 @@ msgstr "Радіо Pandora"
 #~ "Лівий клік:\n"
 #~ "\n"
 #~ "\tНаступна розкладка\t\tвибір наступної розкладки із списку користувача.\n"
-#~ "\tПопередня розкладка\tвибір попередньої розкладки із списку користувача.\n"
+#~ "\tПопередня розкладка\tвибір попередньої розкладки із списку "
+#~ "користувача.\n"
 #~ "\tМеню\t\t\tвибір розкладки із меню.\n"
 #~ "\tНемає\t\t\tкнопка не буде виконувати якихось дій.\n"
 #~ "\n"
 #~ "Клік середньою кнопкою:\n"
 #~ "\n"
 #~ "\tНаступна розкладка\t\tвибір наступної розкладки із списку користувача.\n"
-#~ "\tПопередня розкладка\tвибір попередньої розкладки із списку користувача.\n"
+#~ "\tПопередня розкладка\tвибір попередньої розкладки із списку "
+#~ "користувача.\n"
 #~ "\tМеню\t\t\tвибір розкладки із меню.\n"
 #~ "\tНемає\t\t\tкнопка не буде виконувати якихось дій.\n"
 #~ "\n"
@@ -5619,7 +5779,8 @@ msgstr "Радіо Pandora"
 #~ "\n"
 #~ "Непрозорість прапорця:\n"
 #~ "\n"
-#~ "\tДіапазон від 0.0 (прапорця не видно) до 0.9 (прапорець майже непрозорий).\n"
+#~ "\tДіапазон від 0.0 (прапорця не видно) до 0.9 (прапорець майже "
+#~ "непрозорий).\n"
 
 #~ msgid ""
 #~ "\n"
@@ -5633,7 +5794,8 @@ msgstr "Радіо Pandora"
 #~ "\tThe list of layouts you commonly use.\n"
 #~ "\tThe maximum number of layouts is restricted by the X11 xkb system "
 #~ "(currently 4).\n"
-#~ "\tSelect an item and click the remove button to delete from your user list.\n"
+#~ "\tSelect an item and click the remove button to delete from your user "
+#~ "list.\n"
 #~ "\tYou can order the list by drag and drop.\n"
 #~ "\n"
 #~ "Keyboard Toggle:\n"
@@ -5643,16 +5805,16 @@ msgstr "Радіо Pandora"
 #~ "Список розкладок системи:\n"
 #~ "\n"
 #~ "\tПовний список  доступних розкладок.\n"
-#~ "\tОберіть позицію та натисніть \"додати\", щоб додати розкладку у Ваш список "
-#~ "користувача.\n"
+#~ "\tОберіть позицію та натисніть \"додати\", щоб додати розкладку у Ваш "
+#~ "список користувача.\n"
 #~ "\n"
 #~ "Список користувача:\n"
 #~ "\n"
 #~ "\tСписок розкладок які Ви зазвичай використовуєте.\n"
 #~ "\tМаксимальна кількість розкладок обмежена налаштуванням  X11 xkb (наразі "
 #~ "4).\n"
-#~ "\tОберіть позицію та натисніть \"видалити\", щоб прибрати розкладку з Вашого "
-#~ "списку. \n"
+#~ "\tОберіть позицію та натисніть \"видалити\", щоб прибрати розкладку з "
+#~ "Вашого списку. \n"
 #~ "\tВи можете відсортувати Ваш список, з допомогою перетягування.\n"
 #~ "\n"
 #~ "Клавіатурні скорочення:\n"

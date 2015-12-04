@@ -3,7 +3,7 @@ AC_INIT([awn-extras],
         [0.4.1],
         [https://bugs.launchpad.net/awn-extras])
 
-AM_INIT_AUTOMAKE([-Wno-portability 1.8 tar-ustar])
+AM_INIT_AUTOMAKE([1.11 -Wno-portability tar-ustar foreign])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR(applets)
 AM_CONFIG_HEADER(config.h)
@@ -240,12 +240,9 @@ has_vala=no
 LDA_VAPIDIR=`$PKG_CONFIG --variable=vapidir desktop-agnostic`
 AWN_VAPIDIR=`$PKG_CONFIG --variable=vapidir awn`
 if test -n "$LDA_VAPIDIR" -a -n "$AWN_VAPIDIR" -a -f "$AWN_VAPIDIR/awn.vapi"; then
-    VALA_PROG_VALAC(0.7.7)
+    AM_PROG_VALAC([0.12.0],[has_vala=yes],[has_vala=no])
     AC_SUBST(LDA_VAPIDIR)
     AC_SUBST(AWN_VAPIDIR)
-    if test -n "$VALAC"; then
-        has_vala=yes
-    fi
 fi
 AM_CONDITIONAL(HAVE_VALA, test "$has_vala" = "yes")
 AM_CONDITIONAL(HAVE_LIBZG, test "$has_libzg" = "yes")

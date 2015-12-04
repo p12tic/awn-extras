@@ -28,8 +28,6 @@ DISTCLEANFILES = \
         intltool-update \
         $(NULL)
 
-VALAC = valac-0.12
-
 ACLOCAL_AMFLAGS = -I m4
 
 DISTCHECK_CONFIGURE_FLAGS = --disable-pymod-checks
